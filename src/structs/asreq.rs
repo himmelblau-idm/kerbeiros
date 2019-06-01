@@ -21,7 +21,7 @@ pub struct AsReq {
     req_body: KdcReqBody
 }
 
-impl<'a> AsReq {
+impl AsReq {
 
     pub fn new(domain: &String, username: &String, hostname: &String) -> KerberosResult<AsReq> {
         let mut as_req = AsReq{

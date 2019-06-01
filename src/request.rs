@@ -6,7 +6,7 @@ use std::io::{Write, Read};
 use std::io;
 use std::time::Duration;
 use std::result::Result;
-use super::super::byteparser;
+use super::byteparser;
 use super::KerberosResult;
 use super::error::*;
 use failure::ResultExt;

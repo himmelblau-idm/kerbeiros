@@ -1,7 +1,8 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+mod structs;
+mod client;
+mod request;
+mod error;
+mod byteparser;
+
+pub use error::{KerberosResult, KerberosError, KerberosErrorKind};
+pub use client::KerberosClient;

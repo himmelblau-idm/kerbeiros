@@ -1,5 +1,5 @@
 use asn1::*;
-use super::super::super::byteparser;
+use super::super::byteparser;
 
 pub struct KerberosFlags {
     flags: u32
