@@ -1,15 +1,7 @@
 use super::super::error::*;
-use super::kerberostime::*;
-use super::int32::*;
-use super::realm::*;
-use super::principalname::*;
-use super::kerberosstring::*;
-use super::microseconds::*;
-use asn1::*;
-use asn1_derive::*;
 
 pub struct KrbError {
-    pvno: i8,
+    /*pvno: i8,
     msg_type: i8,
     ctime: Option<KerberosTime>,
     cusec: Option<Microseconds>,
@@ -21,12 +13,12 @@ pub struct KrbError {
     realm: Option<Realm>,
     sname: PrincipalName,
     e_text: Option<KerberosString>,
-    e_data: Option<Vec<u8>>
+    e_data: Option<Vec<u8>>*/
 }
 
 impl KrbError {
 
-    pub fn parse(raw: &Vec<u8>) -> KerberosResult<KrbError> {
+    pub fn parse(_raw: &Vec<u8>) -> KerberosResult<KrbError> {
         unimplemented!()
     }
 

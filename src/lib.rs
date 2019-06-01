@@ -6,3 +6,4 @@ mod byteparser;
 
 pub use error::{KerberosResult, KerberosError, KerberosErrorKind};
 pub use client::KerberosClient;
+pub use structs::*;

@@ -54,7 +54,7 @@ impl KdcReqBody {
         self.kdc_options.set_flags(options);
     }
 
-    fn set_cname(&mut self, name_type: i32, name_string: KerberosString) {
+    pub fn set_cname(&mut self, name_type: i32, name_string: KerberosString) {
         self.cname = Some(PrincipalName::new(name_type, name_string));
     }
 
@@ -97,7 +97,7 @@ impl KdcReqBody {
 
     pub fn set_username(&mut self, username: &String) -> Result<(), KerberosError> {
         let kerberos_str = KerberosString::from(username)?;
-        self.cname = Some(PrincipalName::new(NT_PRINCIPAL, kerberos_str));
+        self.set_cname(NT_PRINCIPAL, kerberos_str);
         return Ok(());
     }
 

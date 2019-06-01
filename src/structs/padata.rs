@@ -100,7 +100,8 @@ pub enum PaData {
 }
 
 impl PaData {
-    fn into_Int32(&self) -> Int32 {
+
+    fn into_int32(&self) -> Int32 {
         match self {
             PaData::PaPacRequest(_) => Int32::new(128)
         }
@@ -143,7 +144,7 @@ impl PaDataAsn1 {
     }
 
     fn _set_asn1_values(&mut self, pa_data: &PaData) {
-        self.set_padata_type(pa_data.into_Int32().asn1_type());
+        self.set_padata_type(pa_data.into_int32().asn1_type());
         self.set_padata_value(OctetString::new(pa_data.bytes_value()));
     }
 

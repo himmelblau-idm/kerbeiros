@@ -87,19 +87,19 @@ impl AsReq {
         return self.req_body.push_sname(name_string);
     }
 
-    fn set_till(&mut self, date: DateTime<Utc>) {
+    pub fn set_till(&mut self, date: DateTime<Utc>) {
         self.req_body.set_till(date);
     }
 
-    fn set_default_rtime(&mut self) {
+    pub fn set_default_rtime(&mut self) {
         self.set_rtime(Utc::now().checked_add_signed(Duration::weeks(20 * 52)).unwrap())
     }
 
-    fn set_rtime(&mut self, date: DateTime<Utc>) {
+    pub fn set_rtime(&mut self, date: DateTime<Utc>) {
         self.req_body.set_rtime(date);
     }
 
-    fn set_nonce(&mut self, nonce: u32) {
+    pub fn set_nonce(&mut self, nonce: u32) {
         self.req_body.set_nonce(nonce);
     }
 

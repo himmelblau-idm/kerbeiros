@@ -21,6 +21,8 @@ pub use asreq::AsReq;
 pub use krberror::KrbError;
 pub use ticket::TGT;
 
+pub use kdcoptions::*;
+pub use principalname::*;
 
 #[cfg(test)]
 mod tests {

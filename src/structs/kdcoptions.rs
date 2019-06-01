@@ -1,12 +1,12 @@
 use super::kerberosflags::{KerberosFlags, KerberosFlagsAsn1};
 
 
-// pub static NO_OPTION: u32 = 0x0;
+pub static NO_OPTION: u32 = 0x0;
 pub static FORWARDABLE: u32 = 0x40;
-// pub static FORWARDED: u32 = 0x20;
+pub static FORWARDED: u32 = 0x20;
 pub static PROXIABLE: u32 = 0x10;
-// pub static PROXY: u32 = 0x08;
-// pub static ALLOW_POSTDATE: u32 = 0x04;
+pub static PROXY: u32 = 0x08;
+pub static ALLOW_POSTDATE: u32 = 0x04;
 pub static POSTDATED: u32 = 0x02;
 pub static RENEWABLE: u32 = 0x8000;
 pub static OPT_HARDWARE_AUTH: u32 = 0x1000;
