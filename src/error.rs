@@ -21,7 +21,9 @@ pub enum KerberosErrorKind {
     #[fail(display = "Invalid ascii string")]
     InvalidAscii,
     #[fail(display = "Undefined type of principal name: {}", _0)]
-    PrincipalNameTypeUndefined(String)
+    PrincipalNameTypeUndefined(String),
+    #[fail(display = "Invalid microseconds value {}. Max is 999999", _0)]
+    InvalidMicroseconds(u32)
 }
 
 impl KerberosError {
