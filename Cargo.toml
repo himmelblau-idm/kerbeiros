@@ -1,0 +1,15 @@
+[package]
+name = "kerby"
+version = "0.1.0"
+authors = ["Zer1t0 <Zer1t0@mail.com>"]
+edition = "2018"
+
+[dependencies]
+asn1 = { path = "../asn1" }
+asn1_derive = { path = "../asn1/asn1_derive" }
+
+ascii = "0.9.1"
+chrono = "0.4"
+failure = "0.1.5"
+failure_derive = "0.1.5"
+rand = "0.6.5"
