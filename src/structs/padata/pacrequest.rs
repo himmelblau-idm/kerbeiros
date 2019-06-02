@@ -18,6 +18,14 @@ impl PacRequest {
     pub fn asn1_type(&self) -> PacRequestAsn1 {
         return PacRequestAsn1::new(&self);
     }
+
+    pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
+        let mut pac_request_asn1 = PacRequestAsn1::new_empty();
+        pac_request_asn1.decode(raw)?;
+        return Ok(pac_request_asn1.no_asn1_type().unwrap());
+
+    }
+
 }
 
 

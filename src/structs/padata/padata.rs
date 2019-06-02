@@ -5,27 +5,27 @@ use super::super::int32::*;
 use super::super::super::error::*;
 
 
-pub static PA_TGS_REQ : i32 = 1;
-pub static PA_ENC_TIMESTAMP : i32 = 2;
-pub static PA_ETYPE_INFO : i32 = 11;
-pub static PA_PK_AS_REQ_OLD : i32 = 14;
-pub static PA_PK_AS_REP_OLD : i32 = 15;
-pub static PA_PK_AS_REQ : i32 = 16;
-pub static PA_PK_AS_REP : i32 = 17;
-pub static PA_ETYPE_INFO2 : i32 = 19;
-pub static PA_PAC_REQUEST : i32 = 128;
-pub static PA_SVR_REFERRAL_INFO : i32 = 20;
-pub static PA_FX_COOKIE : i32 = 133;
-pub static PA_FX_FAST : i32 = 136;
-pub static PA_FX_ERROR : i32 = 137;
-pub static PA_ENCRYPTED_CHALLENGE : i32 = 138;
-pub static PA_SUPPORTED_ENCTYPES : i32 = 165;
-pub static PA_PAC_OPTIONS : i32 = 167;
+pub const PA_TGS_REQ : i32 = 1;
+pub const PA_ENC_TIMESTAMP : i32 = 2;
+pub const PA_ETYPE_INFO : i32 = 11;
+pub const PA_PK_AS_REQ_OLD : i32 = 14;
+pub const PA_PK_AS_REP_OLD : i32 = 15;
+pub const PA_PK_AS_REQ : i32 = 16;
+pub const PA_PK_AS_REP : i32 = 17;
+pub const PA_ETYPE_INFO2 : i32 = 19;
+pub const PA_PAC_REQUEST : i32 = 128;
+pub const PA_SVR_REFERRAL_INFO : i32 = 20;
+pub const PA_FX_COOKIE : i32 = 133;
+pub const PA_FX_FAST : i32 = 136;
+pub const PA_FX_ERROR : i32 = 137;
+pub const PA_ENCRYPTED_CHALLENGE : i32 = 138;
+pub const PA_SUPPORTED_ENCTYPES : i32 = 165;
+pub const PA_PAC_OPTIONS : i32 = 167;
 
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum PaData {
-    //Raw(Int32, Vec<u8>),
+    Raw(Int32, Vec<u8>),
     /*EncTimestamp(EncTimestamp),
     PkAsReq(PkAsReq),
     PkAsRep(PkAkRep),
@@ -37,13 +37,14 @@ impl PaData {
 
     fn get_padata_type(&self) -> Int32 {
         match self {
-            // PaData::Raw(padata_type,_) => padata_type.clone(),
+            PaData::Raw(padata_type,_) => padata_type.clone(),
             PaData::PacRequest(_) => Int32::new(PA_PAC_REQUEST)
         }
     } 
 
     fn get_padata_value_as_bytes(&self) -> Vec<u8> {
         match self {
+            PaData::Raw(_, padata_value) => padata_value.clone(),
             PaData::PacRequest(pac_request) => pac_request.asn1_type().encode().unwrap()
         }
     }
@@ -84,22 +85,31 @@ impl PaDataAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<PaData> {
-        return Err(KerberosErrorKind::NotAvailableData)?;
-        /*
         let padata_type_asn1 = self.get_padata_type().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         let padata_type = padata_type_asn1.no_asn1_type()?;
         let padata_value_asn1 = self.get_padata_value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         let padata_value = padata_value_asn1.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
 
+        println!("data_type = {}", *padata_type);
         let padata = match *padata_type {
             PA_PAC_REQUEST => {
-                PaData::PacRequest()
+                match PacRequest::parse(padata_value) {
+                    Ok(pac_request) => {
+                        println!("pipa");
+                        PaData::PacRequest(pac_request)
+                    },
+                    Err(_) => {
+                        println!("ea");
+                        PaData::Raw(padata_type, padata_value.clone())
+                    }
+                }
             },
-            _ => PaData::Raw(padata_type, padata_value.clone())
+            _ => {
+                PaData::Raw(padata_type, padata_value.clone())
+            }
         };
 
         return Ok(padata);
-        */
     }
 
 }
@@ -150,7 +160,7 @@ mod test {
                         0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
                         0xa2, 0x09, 0x04, 0x07, 0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0x00]).unwrap();
 
-        assert_eq!(PaData::PacRequest(PacRequest::new(true)), padata_asn1.no_asn1_type().unwrap());
+        assert_eq!(PaData::PacRequest(PacRequest::new(false)), padata_asn1.no_asn1_type().unwrap());
     }
 
 }

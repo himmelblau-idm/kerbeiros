@@ -17,11 +17,12 @@ mod kdcoptions;
 mod krberror;
 
 pub use asreq::AsReq;
-pub use krberror::KrbError;
+pub use krberror::*;
 pub use ticket::TGT;
 
 pub use kdcoptions::*;
 pub use principalname::*;
+pub use padata::*;
 
 #[cfg(test)]
 mod tests {
