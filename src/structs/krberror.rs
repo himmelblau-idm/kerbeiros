@@ -19,7 +19,7 @@ pub struct KrbError {
     error_code: Int32,
     crealm: Option<Realm>,
     cname: Option<PrincipalName>,
-    realm: Option<Realm>,
+    realm: Realm,
     sname: PrincipalName,
     e_text: Option<KerberosString>,
     e_data: Option<Vec<u8>>
@@ -38,7 +38,7 @@ impl KrbError {
             error_code: Int32::new(0),
             crealm: None,
             cname: None,
-            realm: None,
+            realm: Realm::from("").unwrap(),
             sname: PrincipalName::new(0, KerberosString::from("").unwrap()),
             e_text: None,
             e_data: None
@@ -131,6 +131,10 @@ impl KrbErrorAsn1 {
 
         let error_code = self.get_error_code().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         krb_error.error_code = error_code.no_asn1_type()?;
+
+        if let Some(crealm) = self.get_crealm() {
+            krb_error.crealm = Some(crealm.no_asn1_type()?);
+        }
 
 
         return Ok(krb_error);
