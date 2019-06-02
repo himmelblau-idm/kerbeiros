@@ -136,6 +136,10 @@ impl KrbErrorAsn1 {
             krb_error.crealm = Some(crealm.no_asn1_type()?);
         }
 
+        if let Some(cname) = self.get_cname() {
+            krb_error.cname = Some(cname.no_asn1_type()?);
+        }
+
 
         return Ok(krb_error);
     }
