@@ -5,9 +5,16 @@ use super::int32::*;
 use super::realm::*;
 use super::principalname::*;
 use super::kerberosstring::*;
+use super::padata::*;
 use asn1::*;
 use asn1_derive::*;
 use chrono::Utc;
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Edata {
+    Raw(Vec<u8>),
+    MethodData(MethodData)
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct KrbError {
@@ -23,7 +30,7 @@ pub struct KrbError {
     realm: Realm,
     sname: PrincipalName,
     e_text: Option<KerberosString>,
-    e_data: Option<Vec<u8>>
+    e_data: Option<Edata>
 }
 
 impl KrbError {
@@ -153,7 +160,7 @@ impl KrbErrorAsn1 {
 
         if let Some(e_data) = self.get_e_data() {
             let e_data_value = e_data.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-            krb_error.e_data = Some(e_data_value.clone());
+            krb_error.e_data = Some(Edata::Raw(e_data_value.clone()));
         }
 
         return Ok(krb_error);
@@ -204,7 +211,7 @@ mod test {
         krb_error.realm = Realm::from("KINGDOM.HEARTS").unwrap();
         krb_error.sname = PrincipalName::new(NT_SRV_INST, KerberosString::from("krbtgt").unwrap());
         krb_error.sname.push(KerberosString::from("KINGDOM.HEARTS").unwrap());
-        krb_error.e_data = Some(vec![0x30, 0x73, 
+        krb_error.e_data = Some(Edata::Raw(vec![0x30, 0x73, 
         0x30, 0x50, 
             0xa1, 0x03, 0x02, 0x01, 0x13, 
             0xa2, 0x49, 0x04, 0x47, 
@@ -218,7 +225,7 @@ mod test {
                     0xa1, 0x16, 0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79, 
         0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x02, 0xa2, 0x02, 0x04, 0x00, 
         0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x10, 0xa2, 0x02, 0x04, 0x00, 
-        0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x0f, 0xa2, 0x02, 0x04, 0x00]);
+        0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x0f, 0xa2, 0x02, 0x04, 0x00]));
 
         assert_eq!(krb_error, krb_error_asn1.no_asn1_type().unwrap());
 

@@ -14,7 +14,6 @@ mod ticket;
 mod asreq;
 mod kdcreqbody;
 mod kdcoptions;
-mod kerbpapacrequest;
 mod krberror;
 
 pub use asreq::AsReq;

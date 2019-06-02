@@ -11,7 +11,6 @@ use super::etype::*;
 use super::kerberosstring::*;
 use super::principalname::*;
 use super::hostaddress::HostAddress;
-use super::kerbpapacrequest::KerbPaPacRequest;
 
 
 pub struct AsReq {
