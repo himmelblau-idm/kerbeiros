@@ -52,7 +52,7 @@ impl AsReq {
     }
 
     fn request_pac(&mut self) {
-        self.push_padata(PaData::PaPacRequest(KerbPaPacRequest::new(true)));
+        self.push_padata(PaData::PacRequest(PacRequest::new(true)));
     }
 
     fn push_padata(&mut self, padata: PaData) {

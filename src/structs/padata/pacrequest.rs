@@ -1,0 +1,91 @@
+use asn1::*;
+use asn1_derive::*;
+use super::super::super::error::*;
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PacRequest {
+    include_pac: bool
+}
+
+impl PacRequest {
+
+    pub fn new(include_pac: bool) -> Self {
+        return Self {
+            include_pac
+        };
+    }
+
+    pub fn asn1_type(&self) -> PacRequestAsn1 {
+        return PacRequestAsn1::new(&self);
+    }
+}
+
+
+#[derive(Asn1Sequence)]
+pub struct PacRequestAsn1 {
+    #[seq_comp(context_tag = 0)]
+    include_pac: SeqField<Boolean>
+}
+
+impl PacRequestAsn1 {
+
+    fn new(pac_request: &PacRequest) -> PacRequestAsn1 {
+        let mut pac_request_asn1 = Self::new_empty();
+        
+        pac_request_asn1.set_include_pac(Boolean::new(pac_request.include_pac));
+
+        return pac_request_asn1;
+    }
+
+    fn new_empty() -> Self {
+        return Self{
+            include_pac: SeqField::new()
+        };
+    }
+
+    fn no_asn1_type(&self) -> KerberosResult<PacRequest> {
+        let include_pac_asn1 =  self.get_include_pac().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let include_pac = include_pac_asn1.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+
+        return Ok(PacRequest::new(*include_pac));
+    }
+
+}
+
+
+#[cfg(test)]
+mod test{
+    use super::*;
+
+    #[test]
+    fn test_encode_pac_request_true() {
+        assert_eq!(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff],
+        PacRequest::new(true).asn1_type().encode().unwrap());
+    }
+
+    #[test]
+    fn test_encode_pac_request_false() {
+        assert_eq!(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0x00],
+        PacRequest::new(false).asn1_type().encode().unwrap());
+    }
+
+
+    #[test]
+    fn test_decode_pac_request_true() {
+        let mut pac_request_asn1 = PacRequestAsn1::new_empty();
+
+        pac_request_asn1.decode(&[0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff]).unwrap();
+
+        assert_eq!(PacRequest::new(true), pac_request_asn1.no_asn1_type().unwrap());
+    }
+
+    #[test]
+    fn test_decode_pac_request_false() {
+        let mut pac_request_asn1 = PacRequestAsn1::new_empty();
+
+        pac_request_asn1.decode(&[0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0x00]).unwrap();
+
+        assert_eq!(PacRequest::new(false), pac_request_asn1.no_asn1_type().unwrap());
+    }
+
+}
