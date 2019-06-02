@@ -40,6 +40,7 @@ pub struct MicrosecondsAsn1 {
 }
 
 impl MicrosecondsAsn1 {
+    
     fn new(value: &Microseconds) -> Self {
         return Self{
             subtype: Integer::new(value.get() as i64)
@@ -52,7 +53,7 @@ impl MicrosecondsAsn1 {
         };
     }
 
-    fn no_asn1_type(&self) -> KerberosResult<Microseconds> {
+    pub fn no_asn1_type(&self) -> KerberosResult<Microseconds> {
         let value = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         return Microseconds::new(*value as u32);
     }

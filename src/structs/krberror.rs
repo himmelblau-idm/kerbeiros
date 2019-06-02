@@ -7,12 +7,13 @@ use super::principalname::*;
 use super::kerberosstring::*;
 use asn1::*;
 use asn1_derive::*;
+use chrono::Utc;
 
 pub struct KrbError {
     pvno: i8,
     msg_type: i8,
     ctime: Option<KerberosTime>,
-    /*cusec: Option<Microseconds>,
+    cusec: Option<Microseconds>,
     stime: KerberosTime,
     susec: Microseconds,
     error_code: Int32,
@@ -21,7 +22,7 @@ pub struct KrbError {
     realm: Option<Realm>,
     sname: PrincipalName,
     e_text: Option<KerberosString>,
-    e_data: Option<Vec<u8>>*/
+    e_data: Option<Vec<u8>>
 }
 
 impl KrbError {
@@ -30,7 +31,17 @@ impl KrbError {
         return Self {
             pvno: 5,
             msg_type: 30,
-            ctime: None
+            ctime: None,
+            cusec: None,
+            stime: KerberosTime::new(Utc::now()),
+            susec: Microseconds::new(0).unwrap(),
+            error_code: Int32::new(0),
+            crealm: None,
+            cname: None,
+            realm: None,
+            sname: PrincipalName::new(0, KerberosString::from("").unwrap()),
+            e_text: None,
+            e_data: None
         }
     }
 
@@ -103,10 +114,23 @@ impl KrbErrorAsn1 {
         let msg_type_value = msg_type.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         krb_error.msg_type = *msg_type_value as i8;
 
-        /*
+        
         if let Some(ctime) = self.get_ctime() {
-            krb_error.ctime = ctime.no_asn1_type()?;
-        }*/
+            krb_error.ctime = Some(ctime.no_asn1_type()?);
+        }
+
+        if let Some(cusec) = self.get_cusec() {
+            krb_error.cusec = Some(cusec.no_asn1_type()?);
+        }
+
+        let stime = self.get_stime().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        krb_error.stime = stime.no_asn1_type()?;
+
+        let susec = self.get_susec().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        krb_error.susec = susec.no_asn1_type()?;
+
+        let error_code = self.get_error_code().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        krb_error.error_code = error_code.no_asn1_type()?;
 
 
         return Ok(krb_error);
