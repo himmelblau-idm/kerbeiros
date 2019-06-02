@@ -1,5 +1,4 @@
 use asn1::*;
-
 use super::super::error::*;
 
 pub struct Microseconds{
@@ -53,7 +52,7 @@ impl MicrosecondsAsn1 {
         };
     }
 
-    fn non_asn1_type(&self) -> KerberosResult<Microseconds> {
+    fn no_asn1_type(&self) -> KerberosResult<Microseconds> {
         let value = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         return Microseconds::new(*value as u32);
     }
@@ -159,7 +158,7 @@ mod test {
         let mut mic_asn1 = MicrosecondsAsn1::new_empty();
         mic_asn1.decode(&[0x02, 0x03, 0x05, 0x34, 0x2f]).unwrap();
 
-        assert_eq!(341039, mic_asn1.non_asn1_type().unwrap().value);
+        assert_eq!(341039, mic_asn1.no_asn1_type().unwrap().value);
     }
 
     #[should_panic (expected = "Invalid value")]

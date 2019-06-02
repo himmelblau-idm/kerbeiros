@@ -9,10 +9,10 @@ use asn1::*;
 use asn1_derive::*;
 
 pub struct KrbError {
-    /*pvno: i8,
+    pvno: i8,
     msg_type: i8,
     ctime: Option<KerberosTime>,
-    cusec: Option<Microseconds>,
+    /*cusec: Option<Microseconds>,
     stime: KerberosTime,
     susec: Microseconds,
     error_code: Int32,
@@ -26,11 +26,18 @@ pub struct KrbError {
 
 impl KrbError {
 
+    fn new_empty() -> Self {
+        return Self {
+            pvno: 5,
+            msg_type: 30,
+            ctime: None
+        }
+    }
+
     pub fn parse(raw: &Vec<u8>) -> KerberosResult<KrbError> {
         let mut krb_error_asn1 = KrbErrorAsn1::new_empty();
-        krb_error_asn1.decode(raw);
-        return Err(KerberosErrorKind::NotAvailableData)?;
-        // return Ok(krb_error_asn1.no_asn1_type());
+        krb_error_asn1.decode(raw)?;
+        return Ok(krb_error_asn1.no_asn1_type().unwrap());
     }
 }
 
@@ -84,6 +91,27 @@ impl KrbErrorAsn1 {
             e_data: SeqField::new(),
         }
     }
+
+    fn no_asn1_type(&self) -> KerberosResult<KrbError> {
+        let mut krb_error = KrbError::new_empty();
+
+        let pvno = self.get_pvno().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let pvno_value = pvno.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        krb_error.pvno = *pvno_value as i8;
+
+        let msg_type = self.get_msg_type().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let msg_type_value = msg_type.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        krb_error.msg_type = *msg_type_value as i8;
+
+        /*
+        if let Some(ctime) = self.get_ctime() {
+            krb_error.ctime = ctime.no_asn1_type()?;
+        }*/
+
+
+        return Ok(krb_error);
+    }
+
 }
 
 /*

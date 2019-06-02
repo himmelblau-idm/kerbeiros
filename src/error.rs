@@ -4,6 +4,7 @@ use std::result::Result;
 use ascii::FromAsciiError;
 use failure::*;
 use failure_derive::Fail;
+use asn1;
 
 pub type KerberosResult<T> = Result<T, KerberosError>;
 
@@ -25,7 +26,9 @@ pub enum KerberosErrorKind {
     #[fail(display = "Invalid microseconds value {}. Max is 999999", _0)]
     InvalidMicroseconds(u32),
     #[fail(display = "Not available data")]
-    NotAvailableData
+    NotAvailableData,
+    #[fail (display = "Asn1 error")]
+    Asn1Error
 }
 
 impl KerberosError {
@@ -70,6 +73,14 @@ impl convert::From<FromAsciiError<&str>> for KerberosError {
     fn from(_error: FromAsciiError<&str>) -> Self {
         return KerberosError {
             inner: Context::new(KerberosErrorKind::InvalidAscii)
+        };
+    }
+}
+
+impl convert::From<asn1::Asn1Error> for KerberosError {
+    fn from(_error: asn1::Asn1Error) -> Self {
+        return KerberosError {
+            inner: Context::new(KerberosErrorKind::Asn1Error)
         };
     }
 }
