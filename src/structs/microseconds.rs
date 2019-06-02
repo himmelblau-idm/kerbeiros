@@ -1,6 +1,7 @@
 use asn1::*;
 use super::super::error::*;
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct Microseconds{
     value: u32
 }
