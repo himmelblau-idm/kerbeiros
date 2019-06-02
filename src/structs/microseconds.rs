@@ -41,16 +41,21 @@ pub struct MicrosecondsAsn1 {
 }
 
 impl MicrosecondsAsn1 {
-    pub fn new(value: &Microseconds) -> Self {
+    fn new(value: &Microseconds) -> Self {
         return Self{
             subtype: Integer::new(value.get() as i64)
         };
     }
 
-    pub fn new_empty() -> Self {
+    fn new_empty() -> Self {
         return Self{
             subtype: Integer::new_empty()
         };
+    }
+
+    fn non_asn1_type(&self) -> KerberosResult<Microseconds> {
+        let value = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        return Microseconds::new(*value as u32);
     }
 
 }
@@ -74,7 +79,26 @@ impl Asn1Object for MicrosecondsAsn1 {
     }
 
     fn decode_value(&mut self, raw: &[u8]) -> Result<(), Asn1Error> {
-        return self.subtype.decode_value(raw);
+        let previous_value = self.subtype.value().cloned();
+        self.subtype.decode_value(raw)?;
+        let new_value = self.subtype.value().unwrap().clone();
+
+        if new_value > 999999 || new_value < 0 {
+            match previous_value {
+                Some(val) => {
+                    self.subtype.set_value(val);
+                },
+                None => {
+                    self.subtype.unset_value();
+                }
+            };
+
+            return Err(Asn1ErrorKind::InvalidValue(
+                        format!("{} is not valid, must be between 0 and 999999", new_value)
+                        ))?; 
+        }
+
+        return Ok(());
     }
 
     fn unset_value(&mut self) {
@@ -132,10 +156,36 @@ mod test {
 
     #[test]
     fn test_decode_microseconds() {
-        let mut mic_asn1 = MicrosecondsAsn1::new_default();
+        let mut mic_asn1 = MicrosecondsAsn1::new_empty();
         mic_asn1.decode(&[0x02, 0x03, 0x05, 0x34, 0x2f]).unwrap();
 
-        assert_eq!(&341039, mic_asn1.subtype.value().unwrap());
+        assert_eq!(341039, mic_asn1.non_asn1_type().unwrap().value);
+    }
+
+    #[should_panic (expected = "Invalid value")]
+    #[test]
+    fn test_decode_high_value_of_microseconds() {
+        let mut mic_asn1 = MicrosecondsAsn1::new_empty();
+        mic_asn1.decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f]).unwrap();
+    }
+
+    #[should_panic (expected = "Invalid value")]
+    #[test]
+    fn test_decode_low_value_of_microseconds() {
+        let mut mic_asn1 = MicrosecondsAsn1::new_empty();
+        mic_asn1.decode(&[0x02, 0x04, 0xff, 0x05, 0x34, 0x2f]).unwrap();
+    }
+
+
+    #[test]
+    fn test_decode_not_change_value_after_decode_failure() {
+        let mut mic_asn1 = MicrosecondsAsn1::new_empty();
+        mic_asn1.decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f]).err();
+        assert_eq!(None, mic_asn1.subtype.value());
+
+        mic_asn1.subtype.set_value(1);
+        mic_asn1.decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f]).err();
+        assert_eq!(&1, mic_asn1.subtype.value().unwrap());
     }
 
 

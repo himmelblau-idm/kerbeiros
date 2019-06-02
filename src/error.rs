@@ -23,7 +23,9 @@ pub enum KerberosErrorKind {
     #[fail(display = "Undefined type of principal name: {}", _0)]
     PrincipalNameTypeUndefined(String),
     #[fail(display = "Invalid microseconds value {}. Max is 999999", _0)]
-    InvalidMicroseconds(u32)
+    InvalidMicroseconds(u32),
+    #[fail(display = "Not available data")]
+    NotAvailableData
 }
 
 impl KerberosError {
@@ -63,8 +65,6 @@ impl convert::From<Context<KerberosErrorKind>> for KerberosError {
         return KerberosError { inner };
     }
 }
-
-
 
 impl convert::From<FromAsciiError<&str>> for KerberosError {
     fn from(_error: FromAsciiError<&str>) -> Self {

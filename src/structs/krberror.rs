@@ -1,4 +1,12 @@
 use super::super::error::*;
+use super::kerberostime::*;
+use super::microseconds::*;
+use super::int32::*;
+use super::realm::*;
+use super::principalname::*;
+use super::kerberosstring::*;
+use asn1::*;
+use asn1_derive::*;
 
 pub struct KrbError {
     /*pvno: i8,
@@ -18,13 +26,14 @@ pub struct KrbError {
 
 impl KrbError {
 
-    pub fn parse(_raw: &Vec<u8>) -> KerberosResult<KrbError> {
-        unimplemented!()
+    pub fn parse(raw: &Vec<u8>) -> KerberosResult<KrbError> {
+        let mut krb_error_asn1 = KrbErrorAsn1::new_empty();
+        krb_error_asn1.decode(raw);
+        return Err(KerberosErrorKind::NotAvailableData)?;
+        // return Ok(krb_error_asn1.no_asn1_type());
     }
-
 }
 
-/*
 #[derive(Asn1Sequence)]
 #[seq(application_tag = 30)]
 struct KrbErrorAsn1 {
@@ -56,7 +65,28 @@ struct KrbErrorAsn1 {
     e_data: SeqField<OctetString>
 }
 
+impl KrbErrorAsn1 {
 
+    fn new_empty() -> Self {
+        return Self{
+            pvno: SeqField::new(),
+            msg_type: SeqField::new(),
+            ctime: SeqField::new(),
+            cusec: SeqField::new(),
+            stime: SeqField::new(),
+            susec: SeqField::new(),
+            error_code: SeqField::new(),
+            crealm: SeqField::new(),
+            cname: SeqField::new(),
+            realm: SeqField::new(),
+            sname: SeqField::new(),
+            e_text: SeqField::new(),
+            e_data: SeqField::new(),
+        }
+    }
+}
+
+/*
 #[cfg(test)]
 mod test {
     use super::*;
