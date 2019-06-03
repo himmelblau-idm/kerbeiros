@@ -6,3 +6,4 @@ mod pacrequest;
 pub use padata::*;
 pub use seqofpadata::*;
 pub use pacrequest::*;
+pub use etypeinfo2::*;

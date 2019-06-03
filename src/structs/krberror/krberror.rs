@@ -224,15 +224,22 @@ mod test {
         krb_error.sname.push(KerberosString::from("KINGDOM.HEARTS").unwrap());
         
         let mut method_data = MethodData::new();
-        
-        method_data.push(PaData::Raw(Int32::new(PA_ETYPE_INFO2), vec![0x30, 0x45, 0x30, 0x1d, 
-                    0xa0, 0x03, 0x02, 0x01, 0x12, 
-                    0xa1, 0x16, 0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79, 
-                0x30, 0x05, 
-                    0xa0, 0x03, 0x02, 0x01, 0x17, 
-                0x30, 0x1d, 
-                    0xa0, 0x03, 0x02, 0x01, 0x03, 
-                    0xa1, 0x16, 0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79]));
+
+        let mut entry1 = EtypeInfo2Entry::new(AES256_CTS_HMAC_SHA1_96);
+        entry1.set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
+
+        let entry2 = EtypeInfo2Entry::new(RC4_HMAC);
+
+        let mut entry3 = EtypeInfo2Entry::new(DES_CBC_MD5);
+        entry3.set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
+
+        let mut info2 = EtypeInfo2::new();
+
+        info2.push(entry1);
+        info2.push(entry2);
+        info2.push(entry3);
+
+        method_data.push(PaData::EtypeInfo2(info2));
 
         method_data.push(PaData::Raw(Int32::new(PA_ENC_TIMESTAMP), vec![]));
         method_data.push(PaData::Raw(Int32::new(PA_PK_AS_REQ), vec![]));

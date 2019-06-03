@@ -34,6 +34,10 @@ impl DerefMut for EtypeInfo2 {
 
 impl EtypeInfo2 {
 
+    pub fn new() -> Self {
+        return Self::new_empty();
+    }
+
     fn new_empty() -> Self {
         return Self{ entries: Vec::new() };
     }
@@ -127,12 +131,28 @@ pub struct EtypeInfo2Entry {
 
 impl EtypeInfo2Entry {
 
+    pub fn new(etype: i32) -> Self {
+        return Self {
+            etype: Int32::new(etype),
+            salt: None,
+            s2kparams: None
+        };
+    }
+
     fn new_empty() -> Self {
         return Self {
             etype: Int32::new(0),
             salt: None,
             s2kparams: None
         };
+    }
+
+    pub fn set_salt(&mut self, string: KerberosString) {
+        self.salt = Some(string);
+    }
+
+    pub fn unset_salt(&mut self) {
+        self.salt = None;
     }
 
     fn asn1_type(&self) -> EtypeInfo2EntryAsn1 {

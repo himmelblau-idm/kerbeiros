@@ -1,6 +1,7 @@
 use asn1::*;
 use asn1_derive::*;
 use super::pacrequest::PacRequest;
+use super::etypeinfo2::*;
 use super::super::int32::*;
 use super::super::super::error::*;
 
@@ -26,10 +27,7 @@ pub const PA_PAC_OPTIONS : i32 = 167;
 #[derive(Debug, Clone, PartialEq)]
 pub enum PaData {
     Raw(Int32, Vec<u8>),
-    /*EncTimestamp(EncTimestamp),
-    PkAsReq(PkAsReq),
-    PkAsRep(PkAkRep),
-    EtypeInfo2(EtypeInfo2),*/
+    EtypeInfo2(EtypeInfo2),
     PacRequest(PacRequest)
 }
 
@@ -38,14 +36,16 @@ impl PaData {
     fn get_padata_type(&self) -> Int32 {
         match self {
             PaData::Raw(padata_type,_) => padata_type.clone(),
-            PaData::PacRequest(_) => Int32::new(PA_PAC_REQUEST)
+            PaData::PacRequest(_) => Int32::new(PA_PAC_REQUEST),
+            PaData::EtypeInfo2(_) => Int32::new(PA_ETYPE_INFO2)
         }
     } 
 
     fn get_padata_value_as_bytes(&self) -> Vec<u8> {
         match self {
             PaData::Raw(_, padata_value) => padata_value.clone(),
-            PaData::PacRequest(pac_request) => pac_request.asn1_type().encode().unwrap()
+            PaData::PacRequest(pac_request) => pac_request.asn1_type().encode().unwrap(),
+            PaData::EtypeInfo2(etype_info2) => etype_info2.asn1_type().encode().unwrap()
         }
     }
 
@@ -90,20 +90,28 @@ impl PaDataAsn1 {
         let padata_value_asn1 = self.get_padata_value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         let padata_value = padata_value_asn1.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
 
-        println!("data_type = {}", *padata_type);
+
         let padata = match *padata_type {
             PA_PAC_REQUEST => {
                 match PacRequest::parse(padata_value) {
                     Ok(pac_request) => {
-                        println!("pipa");
                         PaData::PacRequest(pac_request)
                     },
                     Err(_) => {
-                        println!("ea");
                         PaData::Raw(padata_type, padata_value.clone())
                     }
                 }
             },
+            PA_ETYPE_INFO2 => {
+                match EtypeInfo2::parse(padata_value) {
+                    Ok(etype_info2) => {
+                        PaData::EtypeInfo2(etype_info2)
+                    },
+                    Err(_) => {
+                        PaData::Raw(padata_type, padata_value.clone())
+                    }
+                }
+            }
             _ => {
                 PaData::Raw(padata_type, padata_value.clone())
             }
