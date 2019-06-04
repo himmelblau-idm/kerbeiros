@@ -39,12 +39,12 @@ impl AsReq {
 
         as_req.set_default_rtime();
 
-        as_req.push_etype(ETYPE_AES256_CTS_HMAC_SHA1_96);
-        as_req.push_etype(ETYPE_AES128_CTS_HMAC_SHA1_96);
-        as_req.push_etype(ETYPE_ARCFOUR_HMAC_MD5);
-        as_req.push_etype(ETYPE_ARCFOUR_HMAC_MD5_56);
-        as_req.push_etype(ETYPE_ARCFOUR_HMAC_OLD_EXP);
-        as_req.push_etype(ETYPE_DES_CBC_MD5);
+        as_req.push_etype(AES256_CTS_HMAC_SHA1_96);
+        as_req.push_etype(AES128_CTS_HMAC_SHA1_96);
+        as_req.push_etype(RC4_HMAC);
+        as_req.push_etype(RC4_HMAC_EXP);
+        as_req.push_etype(RC4_HMAC_OLD_EXP);
+        as_req.push_etype(DES_CBC_MD5);
 
         as_req.set_address(HostAddress::NetBios(hostname.clone()));
 

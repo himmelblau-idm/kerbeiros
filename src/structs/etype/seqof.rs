@@ -1,6 +1,6 @@
 use asn1::*;
-use super::int32::{Int32, Int32Asn1};
 use std::ops::{Deref, DerefMut};
+use super::etype::*;
 
 pub struct SeqOfEtype {
     etypes: Vec<Etype>
@@ -92,40 +92,31 @@ impl Asn1InstanciableObject for SeqOfEtypeAsn1 {
     }
 }
 
-
-pub static ETYPE_AES256_CTS_HMAC_SHA1_96: i32 = 18;
-pub static ETYPE_AES128_CTS_HMAC_SHA1_96: i32 = 17;
-pub static ETYPE_ARCFOUR_HMAC_MD5: i32 = 23;
-pub static ETYPE_ARCFOUR_HMAC_MD5_56: i32 = 24;
-pub static ETYPE_ARCFOUR_HMAC_OLD_EXP: i32 = -135;
-pub static ETYPE_DES_CBC_MD5: i32 = 3;
-
-pub type Etype = Int32;
-type EtypeAsn1 = Int32Asn1;
-
-
 #[cfg(test)]
 mod test {
     use super::*;
+    use super::super::*;
 
     #[test]
     fn test_encode_sequence_of_etypes() {
         let mut seq_etypes = SeqOfEtype::new();
 
-        seq_etypes.push(Etype::new(ETYPE_AES256_CTS_HMAC_SHA1_96));
-        seq_etypes.push(Etype::new(ETYPE_AES128_CTS_HMAC_SHA1_96));
-        seq_etypes.push(Etype::new(ETYPE_ARCFOUR_HMAC_MD5));
-        seq_etypes.push(Etype::new(ETYPE_ARCFOUR_HMAC_MD5_56));
-        seq_etypes.push(Etype::new(ETYPE_ARCFOUR_HMAC_OLD_EXP));
-        seq_etypes.push(Etype::new(ETYPE_DES_CBC_MD5));
+        seq_etypes.push(Etype::new(AES256_CTS_HMAC_SHA1_96));
+        seq_etypes.push(Etype::new(AES128_CTS_HMAC_SHA1_96));
+        seq_etypes.push(Etype::new(RC4_HMAC));
+        seq_etypes.push(Etype::new(RC4_HMAC_EXP));
+        seq_etypes.push(Etype::new(DES_CBC_MD5));
+        seq_etypes.push(Etype::new(DES_CBC_CRC));
+        seq_etypes.push(Etype::new(RC4_HMAC_OLD_EXP));
 
-        assert_eq!(vec![0x30, 0x13, 
+        assert_eq!(vec![0x30, 0x16, 
                         0x02, 0x01, 0x12, 
                         0x02, 0x01, 0x11, 
                         0x02, 0x01, 0x17, 
-                        0x02, 0x01, 0x18, 
-                        0x02, 0x02, 0xff, 0x79,
-                        0x02, 0x01, 0x03],
+                        0x02, 0x01, 0x18,
+                        0x02, 0x01, 0x03,
+                        0x02, 0x01, 0x01,
+                        0x02, 0x02, 0xff, 0x79,],
                         seq_etypes.asn1_type().encode().unwrap());
     }
 } 

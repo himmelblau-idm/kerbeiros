@@ -22,6 +22,7 @@ pub use ticket::TGT;
 
 pub use kdcoptions::*;
 pub use principalname::*;
+pub use etype::*;
 pub use padata::*;
 
 #[cfg(test)]

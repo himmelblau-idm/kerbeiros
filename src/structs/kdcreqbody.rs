@@ -233,12 +233,12 @@ mod test {
         kdc_req_body.set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         kdc_req_body.set_rtime(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         kdc_req_body.set_nonce(101225910);
-        kdc_req_body.push_etype(ETYPE_AES256_CTS_HMAC_SHA1_96);
-        kdc_req_body.push_etype(ETYPE_AES128_CTS_HMAC_SHA1_96);
-        kdc_req_body.push_etype(ETYPE_ARCFOUR_HMAC_MD5);
-        kdc_req_body.push_etype(ETYPE_ARCFOUR_HMAC_MD5_56);
-        kdc_req_body.push_etype(ETYPE_ARCFOUR_HMAC_OLD_EXP);
-        kdc_req_body.push_etype(ETYPE_DES_CBC_MD5);
+        kdc_req_body.push_etype(AES256_CTS_HMAC_SHA1_96);
+        kdc_req_body.push_etype(AES128_CTS_HMAC_SHA1_96);
+        kdc_req_body.push_etype(RC4_HMAC);
+        kdc_req_body.push_etype(RC4_HMAC_EXP);
+        kdc_req_body.push_etype(RC4_HMAC_OLD_EXP);
+        kdc_req_body.push_etype(DES_CBC_MD5);
         kdc_req_body.set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
 
         let kdc_req_body_asn1 = kdc_req_body.asn1_type();

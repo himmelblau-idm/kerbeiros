@@ -112,7 +112,7 @@ impl Asn1InstanciableObject for EtypeInfo2EntryAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::types::*;
+    use super::super::super::super::etype::*;
 
     #[test]
     fn decode_etypeinfo2entry() {

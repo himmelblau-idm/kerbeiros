@@ -184,6 +184,7 @@ impl KrbErrorAsn1 {
 mod test {
     use super::*;
     use chrono::offset::TimeZone;
+    use super::super::super::etype::*;
 
     #[test]
     fn test_decode_krb_error() {

@@ -4,3 +4,4 @@ pub const RC4_HMAC: i32 = 23;
 pub const RC4_HMAC_EXP: i32 = 24;
 pub const DES_CBC_MD5: i32 = 3;
 pub const DES_CBC_CRC: i32 = 1;
+pub const RC4_HMAC_OLD_EXP: i32 = -135;
