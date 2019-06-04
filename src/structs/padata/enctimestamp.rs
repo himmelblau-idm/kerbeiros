@@ -2,6 +2,9 @@ use asn1::*;
 use asn1_derive::*;
 use super::super::kerberostime::*;
 use super::super::microseconds::*;
+use super::super::super::error::*;
+use std::convert;
+use chrono::prelude::*;
 
 
 struct PaEncTsEnc {
@@ -20,6 +23,13 @@ impl PaEncTsEnc {
 
     fn set_pausec(&mut self, pausec: Microseconds) {
         self.pausec = Some(pausec);
+    }
+
+    fn from_datetime(datetime: DateTime<Utc>) -> KerberosResult<Self> {
+        let mut pa_enc_ts_enc = Self::new(KerberosTime::new(datetime));
+        pa_enc_ts_enc.set_pausec(Microseconds::new(datetime.timestamp_subsec_micros())?);
+        
+        return Ok(pa_enc_ts_enc);
     }
 
     fn asn1_type(&self) -> PaEncTsEncAsn1 {
@@ -63,14 +73,12 @@ impl PaEncTsEncAsn1 {
 
 mod test {
     use super::*;
-    use chrono::prelude::*;
 
     #[test]
     fn encode_timestamp() {
-        let now = Utc.ymd(2019, 6, 4).and_hms_micro(05, 22, 12, 143725); // 2019-06-04 05:22:12.143725
+        let now = Utc.ymd(2019, 6, 4).and_hms_micro(05, 22, 12, 143725);
 
-        let mut pa_enc_ts_enc = PaEncTsEnc::new(KerberosTime::new(now));
-        pa_enc_ts_enc.set_pausec(Microseconds::new(now.timestamp_subsec_micros()).unwrap());
+        let pa_enc_ts_enc = PaEncTsEnc::from_datetime(now).unwrap();
 
         assert_eq!(vec![0x30, 0x1a, 
                             0xa0, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x36, 
