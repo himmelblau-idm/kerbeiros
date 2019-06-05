@@ -76,9 +76,9 @@ mod test {
 
     #[test]
     fn encode_timestamp() {
-        let now = Utc.ymd(2019, 6, 4).and_hms_micro(05, 22, 12, 143725);
+        let datetime = Utc.ymd(2019, 6, 4).and_hms_micro(05, 22, 12, 143725);
 
-        let pa_enc_ts_enc = PaEncTsEnc::from_datetime(now).unwrap();
+        let pa_enc_ts_enc = PaEncTsEnc::from_datetime(datetime).unwrap();
 
         assert_eq!(vec![0x30, 0x1a, 
                             0xa0, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x36, 
