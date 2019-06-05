@@ -70,7 +70,6 @@ impl AsReq {
 
     fn set_username(&mut self, username: &String) -> Result<(), KerberosError> {
         return self.req_body.set_username(username);
-        
     }
 
     fn set_kdc_options(&mut self, options: u32) {
