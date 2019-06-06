@@ -1,7 +1,7 @@
 use asn1::*;
 use std::ops::Deref;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct UInt32(u32);
 
 impl Deref for UInt32 {

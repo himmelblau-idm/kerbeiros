@@ -4,7 +4,7 @@ use super::pacrequest::PacRequest;
 use super::etypeinfo2::*;
 use super::super::int32::*;
 use super::super::super::error::*;
-
+use super::super::encrypteddata::EncryptedData;
 
 pub const PA_TGS_REQ : i32 = 1;
 pub const PA_ENC_TIMESTAMP : i32 = 2;
@@ -28,7 +28,8 @@ pub const PA_PAC_OPTIONS : i32 = 167;
 pub enum PaData {
     Raw(Int32, Vec<u8>),
     EtypeInfo2(EtypeInfo2),
-    PacRequest(PacRequest)
+    PacRequest(PacRequest),
+    EncTimestamp(EncryptedData)
 }
 
 impl PaData {
@@ -37,7 +38,8 @@ impl PaData {
         match self {
             PaData::Raw(padata_type,_) => padata_type.clone(),
             PaData::PacRequest(_) => Int32::new(PA_PAC_REQUEST),
-            PaData::EtypeInfo2(_) => Int32::new(PA_ETYPE_INFO2)
+            PaData::EtypeInfo2(_) => Int32::new(PA_ETYPE_INFO2),
+            PaData::EncTimestamp(_) => Int32::new(PA_ENC_TIMESTAMP)
         }
     } 
 
@@ -45,7 +47,8 @@ impl PaData {
         match self {
             PaData::Raw(_, padata_value) => padata_value.clone(),
             PaData::PacRequest(pac_request) => pac_request.asn1_type().encode().unwrap(),
-            PaData::EtypeInfo2(etype_info2) => etype_info2.asn1_type().encode().unwrap()
+            PaData::EtypeInfo2(etype_info2) => etype_info2.asn1_type().encode().unwrap(),
+            PaData::EncTimestamp(enc_data) => enc_data.asn1_type().encode().unwrap(),
         }
     }
 

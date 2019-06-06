@@ -72,6 +72,10 @@ impl AsReq {
         return self.req_body.set_username(username);
     }
 
+    fn set_password(&mut self, password: &String) {
+        // self.push_padata(PaData::)
+    }
+
     fn set_kdc_options(&mut self, options: u32) {
         self.req_body.set_kdc_options(options);
     }

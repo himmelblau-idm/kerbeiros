@@ -21,13 +21,13 @@ pub fn ntlm_hash(s: &str) -> Vec<u8> {
     return md4(&unicode_bytes);
 }
 
-fn hmac_md5(key: &[u8], data: &[u8]) -> Vec<u8> {
+pub fn hmac_md5(key: &[u8], data: &[u8]) -> Vec<u8> {
     let mut hmacker = Hmac::new(Md5::new(), key);
     hmacker.input(data);
     return hmacker.result().code().to_vec();
 }
 
-fn rc4(key: &[u8], data: &[u8]) -> Vec<u8> {
+pub fn rc4(key: &[u8], data: &[u8]) -> Vec<u8> {
     let mut rc4_cipher = Rc4::new(key);
     let mut result: Vec<u8> = vec![0; data.len()];
     rc4_cipher.process(data, &mut result);
