@@ -12,7 +12,7 @@ use super::kerberosstring::*;
 use super::principalname::*;
 use super::hostaddress::HostAddress;
 use super::encrypteddata::*;
-
+use super::super::crypter::*;
 use super::super::cryptography::*;
 
 pub struct AsReq {
@@ -77,19 +77,11 @@ impl AsReq {
     pub fn set_password(&mut self, password: &String) {
         let ntlm = ntlm_hash(password);
         let timestamp = PaEncTsEnc::from_datetime(Utc::now()).unwrap();
-        let mut timestamp_raw = timestamp.asn1_type().encode().unwrap();
-        let mut plaintext = random_bytes(8);
+        let timestamp_raw = timestamp.asn1_type().encode().unwrap();
+        
+        let encrypted = encrypt_timestamp_rc4_hmac_md5(&ntlm, &timestamp_raw);
 
-        plaintext.append(&mut timestamp_raw);
-
-        let ki = hmac_md5(&ntlm, &[1, 0, 0 ,0]);
-        let mut cksum = hmac_md5(&ki, &plaintext);
-        let ke = hmac_md5(&ki, &cksum);
-        let mut enc = rc4_encrypt(&ke, &plaintext);
-
-        cksum.append(&mut enc);
-
-        let encrypted_data = EncryptedData::new(RC4_HMAC, cksum);
+        let encrypted_data = EncryptedData::new(RC4_HMAC, encrypted);
 
         self.push_padata(PaData::EncTimestamp(encrypted_data));
     }
