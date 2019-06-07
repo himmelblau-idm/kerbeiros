@@ -11,7 +11,9 @@ use super::etype::*;
 use super::kerberosstring::*;
 use super::principalname::*;
 use super::hostaddress::HostAddress;
+use super::encrypteddata::*;
 
+use super::super::cryptography::*;
 
 pub struct AsReq {
     pvno: i8,
@@ -72,8 +74,24 @@ impl AsReq {
         return self.req_body.set_username(username);
     }
 
-    fn set_password(&mut self, password: &String) {
-        // self.push_padata(PaData::)
+    pub fn set_password(&mut self, password: &String) {
+        let ntlm = ntlm_hash(password);
+        let timestamp = PaEncTsEnc::from_datetime(Utc::now()).unwrap();
+        let mut timestamp_raw = timestamp.asn1_type().encode().unwrap();
+        let mut plaintext = random_bytes(8);
+
+        plaintext.append(&mut timestamp_raw);
+
+        let ki = hmac_md5(&ntlm, &[1, 0, 0 ,0]);
+        let mut cksum = hmac_md5(&ki, &plaintext);
+        let ke = hmac_md5(&ki, &cksum);
+        let mut enc = rc4_encrypt(&ke, &plaintext);
+
+        cksum.append(&mut enc);
+
+        let encrypted_data = EncryptedData::new(RC4_HMAC, cksum);
+
+        self.push_padata(PaData::EncTimestamp(encrypted_data));
     }
 
     fn set_kdc_options(&mut self, options: u32) {

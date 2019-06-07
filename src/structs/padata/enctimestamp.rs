@@ -6,39 +6,39 @@ use super::super::super::error::*;
 use chrono::prelude::*;
 
 
-struct PaEncTsEnc {
+pub struct PaEncTsEnc {
     patimestamp: KerberosTime,
     pausec: Option<Microseconds>
 }
 
 impl PaEncTsEnc {
 
-    fn new(patimestamp: KerberosTime) -> Self {
+    pub fn new(patimestamp: KerberosTime) -> Self {
         return Self {
             patimestamp,
             pausec: None
         }
     }
 
-    fn set_pausec(&mut self, pausec: Microseconds) {
+    pub fn set_pausec(&mut self, pausec: Microseconds) {
         self.pausec = Some(pausec);
     }
 
-    fn from_datetime(datetime: DateTime<Utc>) -> KerberosResult<Self> {
+    pub fn from_datetime(datetime: DateTime<Utc>) -> KerberosResult<Self> {
         let mut pa_enc_ts_enc = Self::new(KerberosTime::new(datetime));
         pa_enc_ts_enc.set_pausec(Microseconds::new(datetime.timestamp_subsec_micros())?);
         
         return Ok(pa_enc_ts_enc);
     }
 
-    fn asn1_type(&self) -> PaEncTsEncAsn1 {
+    pub fn asn1_type(&self) -> PaEncTsEncAsn1 {
         return PaEncTsEncAsn1::new(self);
     }
 
 }
 
 #[derive(Asn1Sequence)]
-struct PaEncTsEncAsn1 {
+pub struct PaEncTsEncAsn1 {
     #[seq_comp(context_tag = 0)]
     patimestamp: SeqField<KerberosTimeAsn1>,
     #[seq_comp(context_tag = 1, optional)]
