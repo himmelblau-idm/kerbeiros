@@ -51,7 +51,11 @@ impl KrbError {
         }
     }
 
-    pub fn parse(raw: &Vec<u8>) -> KerberosResult<KrbError> {
+    pub fn get_error_code(&self) -> i32 {
+        return *self.error_code;
+    }
+
+    pub fn parse(raw: &[u8]) -> KerberosResult<KrbError> {
         let mut krb_error_asn1 = KrbErrorAsn1::new_empty();
         krb_error_asn1.decode(raw)?;
         return Ok(krb_error_asn1.no_asn1_type().unwrap());

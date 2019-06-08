@@ -27,8 +27,8 @@ pub enum KerberosErrorKind {
     InvalidMicroseconds(u32),
     #[fail(display = "Not available data")]
     NotAvailableData,
-    #[fail (display = "Asn1 error")]
-    Asn1Error
+    #[fail (display = "Asn1 error: {}", _0)]
+    Asn1Error(asn1::Asn1ErrorKind)
 }
 
 impl KerberosError {
@@ -78,9 +78,9 @@ impl convert::From<FromAsciiError<&str>> for KerberosError {
 }
 
 impl convert::From<asn1::Asn1Error> for KerberosError {
-    fn from(_error: asn1::Asn1Error) -> Self {
+    fn from(error: asn1::Asn1Error) -> Self {
         return KerberosError {
-            inner: Context::new(KerberosErrorKind::Asn1Error)
+            inner: Context::new(KerberosErrorKind::Asn1Error(error.kind().clone()))
         };
     }
 }
