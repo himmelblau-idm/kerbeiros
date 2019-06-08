@@ -1,19 +1,23 @@
 use super::super::constants::*;
+use super::super::structs;
+use super::super::error::*;
+use chrono::{Utc, DateTime, Duration};
+use super::super::crypter::*;
 
 pub enum AsReqCredential {
     Password(String),
     NTLM(Vec<u8>),
 }
 
-pub enum AsReqCiphers {
+pub enum AsReqCipher {
     Rc4HmacMD5(),
 }
 
-impl AsReqCiphers {
+impl AsReqCipher {
 
     fn identifier(&self) -> i32 {
         match self {
-            AsReqCiphers::Rc4HmacMD5() => { return RC4_HMAC;}
+            AsReqCipher::Rc4HmacMD5() => { return RC4_HMAC;}
         };
     }
 
@@ -24,7 +28,7 @@ pub struct AsReq {
     credential: Option<AsReqCredential>,
     hostname: String,
     kdc_options: u32,
-    ciphers: Vec<AsReqCiphers>,
+    ciphers: Vec<AsReqCipher>,
     pac: bool,
 }
 
@@ -42,7 +46,7 @@ impl AsReq {
             ciphers: Vec::new()
         };
 
-        as_req.add_cipher(AsReqCiphers::Rc4HmacMD5());
+        as_req.add_cipher(AsReqCipher::Rc4HmacMD5());
 
         as_req.set_forwardable();
         as_req.set_renewable();
@@ -52,12 +56,16 @@ impl AsReq {
         return as_req;
     }
 
-    pub fn add_cipher(&mut self, cipher: AsReqCiphers) {
+    pub fn add_cipher(&mut self, cipher: AsReqCipher) {
         self.ciphers.push(cipher);
     }
 
     pub fn clear_ciphers(&mut self) {
         self.ciphers.clear();
+    }
+
+    pub fn set_credential(&mut self, credential: AsReqCredential) {
+        self.credential = Some(credential);
     }
 
     pub fn set_forwardable(&mut self) {
@@ -86,6 +94,48 @@ impl AsReq {
 
     pub fn not_include_pac(&mut self) {
         self.pac = false;
+    }
+
+    pub fn build(&self) -> KerberosResult<Vec<u8>> {
+        let mut as_req = structs::AsReq::new(&self.domain, &self.username, &self.hostname)?;
+        as_req.set_kdc_options(self.kdc_options);
+
+        if self.pac {
+            as_req.include_pac();
+        }
+
+        for cipher in self.ciphers.iter() {
+            as_req.push_etype(cipher.identifier());
+        }
+
+        if let Some(credential) = &self.credential {
+            let (etype, encrypted_data) = self.produce_encrypted_timestamp(credential);
+            as_req.set_encrypted_timestamp(etype, encrypted_data);
+        }
+        
+        return Ok(as_req.build());
+    }
+
+    fn produce_encrypted_timestamp(&self, credential: &AsReqCredential) -> (i32, Vec<u8>) {
+        match credential {
+            AsReqCredential::Password(password) => {
+                let ntlm = ntlm_hash(password);
+                return (RC4_HMAC, self.encrypt_timestamp_with_rc4(&ntlm))
+            }
+            AsReqCredential::NTLM(ntlm) => {
+                return (RC4_HMAC, self.encrypt_timestamp_with_rc4(&ntlm));
+            }
+        }
+    }
+
+    fn encrypt_timestamp_with_rc4(&self, ntlm: &Vec<u8>) -> Vec<u8> {
+        let timestamp = self.produce_raw_timestamp();
+        return encrypt_timestamp_rc4_hmac_md5(ntlm, &timestamp);
+    }
+
+    fn produce_raw_timestamp(&self) -> Vec<u8> {
+        let timestamp = structs::PaEncTsEnc::from_datetime(Utc::now()).unwrap();
+        return timestamp.build();
     }
 
 }

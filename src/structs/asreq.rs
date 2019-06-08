@@ -9,8 +9,6 @@ use super::kdcreqbody::{KdcReqBody, KdcReqBodyAsn1};
 use super::kerberosstring::*;
 use super::hostaddress::HostAddress;
 use super::encrypteddata::*;
-use super::super::crypter::*;
-use super::super::cryptography::*;
 use super::super::constants::*;
 
 pub struct AsReq {
@@ -30,29 +28,24 @@ impl AsReq {
             req_body: KdcReqBody::new(Realm::from(domain)?)
         };
 
-        as_req.request_pac();
         as_req.set_username(username)?;
-        as_req.set_kdc_options(FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK);
 
         as_req.set_sname(NT_SRV_INST, KerberosString::from("krbtgt").unwrap());
         as_req.push_sname(KerberosString::from(domain)?).unwrap();
 
         as_req.set_default_rtime();
 
-        as_req.push_etype(AES256_CTS_HMAC_SHA1_96);
-        as_req.push_etype(AES128_CTS_HMAC_SHA1_96);
-        as_req.push_etype(RC4_HMAC);
-        as_req.push_etype(RC4_HMAC_EXP);
-        as_req.push_etype(RC4_HMAC_OLD_EXP);
-        as_req.push_etype(DES_CBC_MD5);
-
         as_req.set_address(HostAddress::NetBios(hostname.clone()));
 
         return Ok(as_req);
     }
 
-    fn request_pac(&mut self) {
+    pub fn include_pac(&mut self) {
         self.push_padata(PaData::PacRequest(PacRequest::new(true)));
+    }
+
+    pub fn set_encrypted_timestamp(&mut self, etype: i32, encrypted: Vec<u8>) {
+        self.push_padata(PaData::EncTimestamp(EncryptedData::new(etype, encrypted)));
     }
 
     fn push_padata(&mut self, padata: PaData) {
@@ -72,22 +65,11 @@ impl AsReq {
         return self.req_body.set_username(username);
     }
 
-    pub fn set_password(&mut self, password: &String) {
-        let ntlm = ntlm_hash(password);
-        let timestamp = PaEncTsEnc::from_datetime(Utc::now()).unwrap();
-        let timestamp_raw = timestamp.asn1_type().encode().unwrap();
-        
-        let encrypted = encrypt_timestamp_rc4_hmac_md5(&ntlm, &timestamp_raw);
+    
 
-        let encrypted_data = EncryptedData::new(RC4_HMAC, encrypted);
-
-        self.push_padata(PaData::EncTimestamp(encrypted_data));
-    }
-
-    fn set_kdc_options(&mut self, options: u32) {
+    pub fn set_kdc_options(&mut self, options: u32) {
         self.req_body.set_kdc_options(options);
     }
-
 
     fn set_sname(&mut self, name_type: i32, name_string: KerberosString){
         self.req_body.set_sname(name_type, name_string);
@@ -113,7 +95,7 @@ impl AsReq {
         self.req_body._set_nonce(nonce);
     }
 
-    fn push_etype(&mut self, etype: i32) {
+    pub fn push_etype(&mut self, etype: i32) {
         self.req_body.push_etype(etype);
     }
 
@@ -185,6 +167,14 @@ mod test {
     #[test]
     fn test_encode_as_req() {
         let mut as_req = AsReq::new(&"KINGDOM.HEARTS".to_string(), &"mickey".to_string(), &"HOLLOWBASTION".to_string()).unwrap();
+        as_req.set_kdc_options(FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK);
+        as_req.include_pac();
+        as_req.push_etype(AES256_CTS_HMAC_SHA1_96);
+        as_req.push_etype(AES128_CTS_HMAC_SHA1_96);
+        as_req.push_etype(RC4_HMAC);
+        as_req.push_etype(RC4_HMAC_EXP);
+        as_req.push_etype(RC4_HMAC_OLD_EXP);
+        as_req.push_etype(DES_CBC_MD5);
         as_req._set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         as_req.set_rtime(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         as_req._set_nonce(101225910);

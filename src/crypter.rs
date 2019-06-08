@@ -1,4 +1,4 @@
-use super::cryptography::*;
+pub use super::cryptography::*;
 
 pub fn encrypt_timestamp_rc4_hmac_md5(key: &[u8], timestamp: &[u8]) -> Vec<u8> {
     let preamble = random_bytes(8);

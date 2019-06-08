@@ -1,6 +1,7 @@
-use super::structs::*;
+use super::messages::*;
 use super::request::*;
 use super::error::*;
+use super::tickets::*;
 
 
 #[derive(Debug)]
@@ -19,9 +20,9 @@ impl KerberosClient {
 
     pub fn request_tgt(&self, username: &String, password: &String) -> KerberosResult<TGT> {
         
-        let mut as_req = AsReq::new(&self.domain, username, &"HOLLOWBASTION".to_string()).unwrap();
-        as_req.set_password(password);
-        let raw_as_req = as_req.build();
+        let mut as_req = AsReq::new(self.domain.clone(), username.clone(), "HOLLOWBASTION".to_string());
+        as_req.set_credential(AsReqCredential::Password(password.clone()));
+        let raw_as_req = as_req.build().unwrap();
 
         let _raw_kdc_err = self._request(&raw_as_req)?;
 
@@ -41,7 +42,7 @@ impl KerberosClient {
                                         0x1b, 0x0e, 0x6b, 0x69, 0x6e, 0x67, 0x64, 0x6f, 0x6d, 
                                             0x2e, 0x68, 0x65, 0x61, 0x72, 0x74, 0x73];
 
-        let _kdc_err = KrbError::parse(&raw_kdc_err).unwrap();
+        //let _kdc_err = KrbError::parse(&raw_kdc_err).unwrap();
 
         unimplemented!();
 

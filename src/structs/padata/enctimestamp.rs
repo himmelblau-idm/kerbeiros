@@ -31,6 +31,10 @@ impl PaEncTsEnc {
         return Ok(pa_enc_ts_enc);
     }
 
+    pub fn build(&self) -> Vec<u8> {
+        return self.asn1_type().encode().unwrap();
+    }
+
     pub fn asn1_type(&self) -> PaEncTsEncAsn1 {
         return PaEncTsEncAsn1::new(self);
     }

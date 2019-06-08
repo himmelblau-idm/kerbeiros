@@ -8,8 +8,10 @@ pub mod client;
 pub mod error;
 pub mod messages;
 pub mod constants;
+pub mod tickets;
 
 pub use error::{KerberosResult, KerberosError, KerberosErrorKind};
 pub use client::KerberosClient;
 pub use messages::*;
 pub use constants::*;
+pub use tickets::*;

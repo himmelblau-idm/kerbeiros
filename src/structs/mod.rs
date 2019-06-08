@@ -11,7 +11,7 @@ mod etype;
 mod kerberosflags;
 mod encrypteddata;
 mod ticket;
-mod asreq;
+pub mod asreq;
 mod kdcreqbody;
 mod kdcoptions;
 mod krberror;
