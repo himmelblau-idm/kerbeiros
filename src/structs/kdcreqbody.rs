@@ -76,7 +76,7 @@ impl KdcReqBody {
         unreachable!()
     }
 
-    pub fn set_till(&mut self, date: DateTime<Utc>) {
+    pub fn _set_till(&mut self, date: DateTime<Utc>) {
         self.till = KerberosTime::new(date);
     }
 
@@ -84,7 +84,7 @@ impl KdcReqBody {
         self.rtime = Some(KerberosTime::new(date));
     }
 
-    pub fn set_nonce(&mut self, nonce: u32) {
+    pub fn _set_nonce(&mut self, nonce: u32) {
         self.nonce = UInt32::new(nonce);
     }
 
@@ -230,9 +230,9 @@ mod test {
         kdc_req_body.set_cname(NT_PRINCIPAL, KerberosString::from("mickey").unwrap());
         kdc_req_body.set_sname(NT_SRV_INST, KerberosString::from("krbtgt").unwrap());
         kdc_req_body.push_sname(KerberosString::from("KINGDOM.HEARTS").unwrap()).unwrap();
-        kdc_req_body.set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
+        kdc_req_body._set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         kdc_req_body.set_rtime(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
-        kdc_req_body.set_nonce(101225910);
+        kdc_req_body._set_nonce(101225910);
         kdc_req_body.push_etype(AES256_CTS_HMAC_SHA1_96);
         kdc_req_body.push_etype(AES128_CTS_HMAC_SHA1_96);
         kdc_req_body.push_etype(RC4_HMAC);

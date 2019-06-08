@@ -14,12 +14,16 @@ pub struct EtypeInfo2Entry {
 
 impl EtypeInfo2Entry {
 
-    pub fn new(etype: i32) -> Self {
+    pub fn _new(etype: i32) -> Self {
         return Self {
             etype: Int32::new(etype),
             salt: None,
             s2kparams: None
         };
+    }
+
+    pub fn _set_salt(&mut self, salt: KerberosString) {
+        self.salt = Some(salt);
     }
 
     fn new_empty() -> Self {
@@ -28,14 +32,6 @@ impl EtypeInfo2Entry {
             salt: None,
             s2kparams: None
         };
-    }
-
-    pub fn set_salt(&mut self, string: KerberosString) {
-        self.salt = Some(string);
-    }
-
-    pub fn unset_salt(&mut self) {
-        self.salt = None;
     }
 
     pub fn asn1_type(&self) -> EtypeInfo2EntryAsn1 {

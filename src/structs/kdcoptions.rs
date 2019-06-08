@@ -14,16 +14,16 @@ mod tests {
         let mut kdc_options = KdcOptions::new();
         kdc_options.set_flags(FORWARDABLE);
 
-        assert!(kdc_options.has_flag(FORWARDABLE)); 
+        assert!(kdc_options._has_flag(FORWARDABLE)); 
     }
 
     #[test]
     fn test_delete_option() {
         let mut kdc_options = KdcOptions::new();
         kdc_options.set_flags(PROXIABLE);
-        kdc_options.del_flags(PROXIABLE);
+        kdc_options._del_flags(PROXIABLE);
 
-        assert!(!kdc_options.has_flag(PROXIABLE)); 
+        assert!(!kdc_options._has_flag(PROXIABLE)); 
     }
 
     #[test]
@@ -31,28 +31,28 @@ mod tests {
         let mut kdc_options = KdcOptions::new();
         kdc_options.set_flags(FORWARDABLE | POSTDATED);
 
-        assert!(kdc_options.has_flag(FORWARDABLE));
-        assert!(kdc_options.has_flag(POSTDATED)); 
+        assert!(kdc_options._has_flag(FORWARDABLE));
+        assert!(kdc_options._has_flag(POSTDATED)); 
     }
 
     #[test]
     fn test_delete_options() {
         let mut kdc_options = KdcOptions::new();
         kdc_options.set_flags(FORWARDABLE | POSTDATED);
-        kdc_options.del_flags(FORWARDABLE | POSTDATED);
+        kdc_options._del_flags(FORWARDABLE | POSTDATED);
 
-        assert!(!kdc_options.has_flag(FORWARDABLE));
-        assert!(!kdc_options.has_flag(POSTDATED)); 
+        assert!(!kdc_options._has_flag(FORWARDABLE));
+        assert!(!kdc_options._has_flag(POSTDATED)); 
     }
 
     #[test]
     fn test_delete_one_options() {
         let mut kdc_options = KdcOptions::new();
         kdc_options.set_flags(FORWARDABLE | POSTDATED);
-        kdc_options.del_flags(FORWARDABLE);
+        kdc_options._del_flags(FORWARDABLE);
 
-        assert!(!kdc_options.has_flag(FORWARDABLE));
-        assert!(kdc_options.has_flag(POSTDATED)); 
+        assert!(!kdc_options._has_flag(FORWARDABLE));
+        assert!(kdc_options._has_flag(POSTDATED)); 
     }
 
     #[test]

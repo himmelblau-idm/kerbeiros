@@ -21,7 +21,7 @@ impl Microseconds {
         return self.value;
     }
 
-    pub fn set(&mut self, x: u32) -> KerberosResult<()> {
+    fn _set(&mut self, x: u32) -> KerberosResult<()> {
         if x > 999999 {
             return Err(KerberosErrorKind::InvalidMicroseconds(x))?;
         }
@@ -135,7 +135,7 @@ mod test {
     fn test_setting_microseconds() {
         let mut mic = Microseconds::new(0).unwrap();
         for i in 0..1000000 {
-            mic.set(i).unwrap();
+            mic._set(i).unwrap();
             assert_eq!(i, mic.get());
         }
     }
@@ -144,7 +144,7 @@ mod test {
     #[test]
     fn test_set_too_high_microseconds() {
         let mut mic = Microseconds::new(0).unwrap();
-        mic.set(1000000).unwrap();
+        mic._set(1000000).unwrap();
     }
 
 

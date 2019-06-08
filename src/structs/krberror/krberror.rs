@@ -226,15 +226,15 @@ mod test {
         
         let mut method_data = MethodData::new();
 
-        let mut entry1 = EtypeInfo2Entry::new(AES256_CTS_HMAC_SHA1_96);
-        entry1.set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
+        let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
+        entry1._set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
 
-        let entry2 = EtypeInfo2Entry::new(RC4_HMAC);
+        let entry2 = EtypeInfo2Entry::_new(RC4_HMAC);
 
-        let mut entry3 = EtypeInfo2Entry::new(DES_CBC_MD5);
-        entry3.set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
+        let mut entry3 = EtypeInfo2Entry::_new(DES_CBC_MD5);
+        entry3._set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
 
-        let mut info2 = EtypeInfo2::new();
+        let mut info2 = EtypeInfo2::_new();
 
         info2.push(entry1);
         info2.push(entry2);

@@ -97,8 +97,8 @@ impl AsReq {
         return self.req_body.push_sname(name_string);
     }
 
-    pub fn set_till(&mut self, date: DateTime<Utc>) {
-        self.req_body.set_till(date);
+    fn _set_till(&mut self, date: DateTime<Utc>) {
+        self.req_body._set_till(date);
     }
 
     pub fn set_default_rtime(&mut self) {
@@ -109,8 +109,8 @@ impl AsReq {
         self.req_body.set_rtime(date);
     }
 
-    pub fn set_nonce(&mut self, nonce: u32) {
-        self.req_body.set_nonce(nonce);
+    fn _set_nonce(&mut self, nonce: u32) {
+        self.req_body._set_nonce(nonce);
     }
 
     fn push_etype(&mut self, etype: i32) {
@@ -185,9 +185,9 @@ mod test {
     #[test]
     fn test_encode_as_req() {
         let mut as_req = AsReq::new(&"KINGDOM.HEARTS".to_string(), &"mickey".to_string(), &"HOLLOWBASTION".to_string()).unwrap();
-        as_req.set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
+        as_req._set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         as_req.set_rtime(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
-        as_req.set_nonce(101225910);
+        as_req._set_nonce(101225910);
 
         assert_eq!(vec![0x6a, 0x81, 0xe3, 0x30, 0x81, 0xe0, 
                         0xa1, 0x03, 0x02, 0x01, 0x05, 

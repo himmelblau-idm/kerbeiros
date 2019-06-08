@@ -17,11 +17,11 @@ impl KerberosFlags {
         self.flags |= flags
     }
 
-    pub fn has_flag(&self, flag: u32) -> bool {
+    pub fn _has_flag(&self, flag: u32) -> bool {
         return (self.flags & flag) != 0;
     }
 
-    pub fn del_flags(&mut self, flags: u32) {
+    pub fn _del_flags(&mut self, flags: u32) {
         self.flags &= !flags;
     }
 
