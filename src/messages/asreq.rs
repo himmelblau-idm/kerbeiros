@@ -1,7 +1,7 @@
 use super::super::constants::*;
 use super::super::structs;
 use super::super::error::*;
-use chrono::{Utc, DateTime, Duration};
+use chrono::Utc;
 use super::super::crypter::*;
 
 pub enum AsReqCredential {
@@ -23,7 +23,7 @@ impl AsReqCipher {
 
 }
 pub struct AsReq {
-    domain: String,
+    realm: String,
     username: String,
     credential: Option<AsReqCredential>,
     hostname: String,
@@ -35,9 +35,9 @@ pub struct AsReq {
 
 impl AsReq {
 
-    pub fn new(domain: String, username: String, hostname: String) -> Self {
+    pub fn new(realm: String, username: String, hostname: String) -> Self {
         let mut as_req = Self {
-            domain,
+            realm,
             username,
             credential: None,
             hostname,
@@ -97,7 +97,7 @@ impl AsReq {
     }
 
     pub fn build(&self) -> KerberosResult<Vec<u8>> {
-        let mut as_req = structs::AsReq::new(&self.domain, &self.username, &self.hostname)?;
+        let mut as_req = structs::AsReq::new(&self.realm, &self.username, &self.hostname)?;
         as_req.set_kdc_options(self.kdc_options);
 
         if self.pac {

@@ -148,7 +148,3 @@ impl<'a> Asn1InstanciableObject for TicketAsn1 {
         return TicketAsn1::new_empty();
     }
 }
-
-pub struct TGT {
-    
-}

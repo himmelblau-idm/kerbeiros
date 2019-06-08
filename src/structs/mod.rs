@@ -18,7 +18,6 @@ mod krberror;
 
 pub use asreq::AsReq;
 pub use krberror::*;
-pub use ticket::TGT;
 
 pub use kdcoptions::*;
 pub use principalname::*;
