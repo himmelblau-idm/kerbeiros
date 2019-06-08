@@ -6,7 +6,7 @@ use super::super::realm::*;
 use super::super::principalname::*;
 use super::super::kerberosstring::*;
 use super::edata::Edata;
-use super::errorcodes::*;
+use super::super::super::constants::errorcodes::*;
 use super::super::padata::*;
 use asn1::*;
 use asn1_derive::*;
@@ -184,7 +184,7 @@ impl KrbErrorAsn1 {
 mod test {
     use super::*;
     use chrono::offset::TimeZone;
-    use super::super::super::etype::*;
+    use super::super::super::super::constants::*;
 
     #[test]
     fn test_decode_krb_error() {

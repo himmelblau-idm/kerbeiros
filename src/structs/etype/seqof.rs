@@ -95,7 +95,7 @@ impl Asn1InstanciableObject for SeqOfEtypeAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::*;
+    use super::super::super::super::constants::etypes::*;
 
     #[test]
     fn test_encode_sequence_of_etypes() {

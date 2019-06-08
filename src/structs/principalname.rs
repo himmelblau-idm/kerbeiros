@@ -4,17 +4,6 @@ use asn1_derive::*;
 use super::int32::{Int32,Int32Asn1};
 use super::super::error::*;
 
-
-pub static NT_UNKNOWN: i32 = 0;
-pub static NT_PRINCIPAL: i32 = 1;
-pub static NT_SRV_INST: i32 = 2;
-pub static NT_SRV_HST: i32 = 3;
-pub static NT_SRV_XHST: i32 = 4;
-pub static NT_UID: i32 = 5;
-pub static NT_X500_PRINCIPAL: i32 = 6;
-pub static NT_SMTP_NAME: i32 = 7;
-pub static NT_ENTERPRISE: i32 = 10;
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct PrincipalName {
     name_type: Int32,
@@ -123,6 +112,7 @@ impl Asn1Tagged for PrincipalNameAsn1 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use super::super::super::constants::principalnametypes::*;
 
     #[test]
     fn test_encode_principal_name(){

@@ -1,24 +1,5 @@
 use super::kerberosflags::{KerberosFlags, KerberosFlagsAsn1};
 
-
-pub static NO_OPTION: u32 = 0x0;
-pub static FORWARDABLE: u32 = 0x40;
-pub static FORWARDED: u32 = 0x20;
-pub static PROXIABLE: u32 = 0x10;
-pub static PROXY: u32 = 0x08;
-pub static ALLOW_POSTDATE: u32 = 0x04;
-pub static POSTDATED: u32 = 0x02;
-pub static RENEWABLE: u32 = 0x8000;
-pub static OPT_HARDWARE_AUTH: u32 = 0x1000;
-pub static CONSTRAINED_DELEGATION: u32 = 0x0200;
-pub static CANONICALIZE: u32 = 0x0100;
-pub static REQUEST_ANONYMOUS: u32 = 0x800000;
-pub static DISABLE_TRANSITED_CHECK: u32 = 0x20000000;
-pub static RENEWABLE_OK: u32 = 0x10000000;
-pub static ENC_TKT_IN_SKEY: u32 = 0x08000000;
-pub static RENEW: u32 = 0x02000000;
-pub static VALIDATE: u32 = 0x01000000;
-
 pub type KdcOptions = KerberosFlags;
 pub type KdcOptionsAsn1 = KerberosFlagsAsn1;
 
@@ -26,6 +7,7 @@ pub type KdcOptionsAsn1 = KerberosFlagsAsn1;
 mod tests {
     use super::*;
     use asn1::*;
+    use super::super::super::constants::kdcoptions::*;
 
     #[test]
     fn test_set_option() {

@@ -117,8 +117,8 @@ impl Asn1InstanciableObject for EtypeInfo2Asn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::super::super::etype::*;
     use super::super::super::super::kerberosstring::*;
+    use super::super::super::super::super::constants::etypes::*;
 
     #[test]
     fn decode_etypeinfo2() {

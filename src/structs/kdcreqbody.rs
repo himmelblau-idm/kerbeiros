@@ -7,6 +7,7 @@ use super::realm::{Realm, RealmAsn1};
 use super::kdcoptions::{KdcOptions, KdcOptionsAsn1};
 use super::principalname::*;
 use super::super::error::*;
+use super::super::constants::principalnametypes::*;
 use super::kerberostime::{KerberosTime, KerberosTimeAsn1};
 use super::hostaddress::{HostAddresses, HostAddressesAsn1, HostAddress};
 use super::encrypteddata::{EncryptedData, EncryptedDataAsn1};
@@ -219,8 +220,7 @@ impl Asn1InstanciableObject for KdcReqBodyAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::kdcoptions::*;
-    use super::super::etype::*;
+    use super::super::super::constants::*;
     use chrono::*;
 
     #[test]

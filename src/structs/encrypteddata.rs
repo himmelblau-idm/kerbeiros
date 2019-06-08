@@ -77,7 +77,7 @@ impl Asn1InstanciableObject for EncryptedDataAsn1 {
 
 mod test {
     use super::*;
-    use super::super::etype::*;
+    use super::super::super::constants::etypes::*;
 
     #[test]
     fn encode_encrypted_data(){

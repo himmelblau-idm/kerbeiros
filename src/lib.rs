@@ -1,12 +1,15 @@
 mod structs;
-mod client;
-mod request;
-mod error;
 mod byteparser;
 mod cryptography;
 mod crypter;
-mod messages;
+
+pub mod request;
+pub mod client;
+pub mod error;
+pub mod messages;
+pub mod constants;
 
 pub use error::{KerberosResult, KerberosError, KerberosErrorKind};
 pub use client::KerberosClient;
-pub use structs::*;
+pub use messages::*;
+pub use constants::*;

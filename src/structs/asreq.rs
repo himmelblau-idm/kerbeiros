@@ -6,14 +6,12 @@ use super::realm::Realm;
 use super::super::error::*;
 use super::padata::*;
 use super::kdcreqbody::{KdcReqBody, KdcReqBodyAsn1};
-use super::kdcoptions::*;
-use super::etype::*;
 use super::kerberosstring::*;
-use super::principalname::*;
 use super::hostaddress::HostAddress;
 use super::encrypteddata::*;
 use super::super::crypter::*;
 use super::super::cryptography::*;
+use super::super::constants::*;
 
 pub struct AsReq {
     pvno: i8,

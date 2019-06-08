@@ -1,0 +1,17 @@
+pub const NO_OPTION: u32 = 0x0;
+pub const FORWARDABLE: u32 = 0x40;
+pub const FORWARDED: u32 = 0x20;
+pub const PROXIABLE: u32 = 0x10;
+pub const PROXY: u32 = 0x08;
+pub const ALLOW_POSTDATE: u32 = 0x04;
+pub const POSTDATED: u32 = 0x02;
+pub const RENEWABLE: u32 = 0x8000;
+pub const OPT_HARDWARE_AUTH: u32 = 0x1000;
+pub const CONSTRAINED_DELEGATION: u32 = 0x0200;
+pub const CANONICALIZE: u32 = 0x0100;
+pub const REQUEST_ANONYMOUS: u32 = 0x800000;
+pub const DISABLE_TRANSITED_CHECK: u32 = 0x20000000;
+pub const RENEWABLE_OK: u32 = 0x10000000;
+pub const ENC_TKT_IN_SKEY: u32 = 0x08000000;
+pub const RENEW: u32 = 0x02000000;
+pub const VALIDATE: u32 = 0x01000000;
