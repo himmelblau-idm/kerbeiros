@@ -21,7 +21,7 @@ impl KerberosClient {
     pub fn request_tgt(&self, username: &String, password: &String) -> KerberosResult<TGT> {
         
         let mut as_req = AsReq::new(self.domain.clone(), username.clone(), "HOLLOWBASTION".to_string());
-        as_req.set_credential(AsReqCredential::Password(password.clone()));
+        as_req.set_password(password.clone());
         let raw_as_req = as_req.build().unwrap();
 
         let raw_kdc_err = self._request(&raw_as_req)?;

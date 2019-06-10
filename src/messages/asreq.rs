@@ -68,6 +68,10 @@ impl AsReq {
         self.credential = Some(credential);
     }
 
+    pub fn set_password(&mut self, password: String) {
+        self.set_credential(AsReqCredential::Password(password));
+    }
+
     pub fn set_forwardable(&mut self) {
         self.kdc_options &= FORWARDABLE;
     }
