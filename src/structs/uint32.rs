@@ -1,5 +1,6 @@
 use asn1::*;
 use std::ops::Deref;
+use super::super::error::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct UInt32(u32);
@@ -39,6 +40,11 @@ impl UInt32Asn1 {
         return UInt32Asn1{
             subtype: Integer::new_empty()
         };
+    }
+
+    pub fn no_asn1_type(&self) -> KerberosResult<UInt32> {
+        let value = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        return Ok(UInt32::new(*value as u32));
     }
 }
 

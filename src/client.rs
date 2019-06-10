@@ -27,7 +27,7 @@ impl KerberosClient {
         let raw_kdc_err = self._request(&raw_as_req)?;
 
         
-        let as_rep = AsRep::parse(&raw_as_rep).unwrap();
+        // let as_rep = AsRep::parse(&raw_as_rep).unwrap();
         
         let kdc_err = KrbError::parse(&raw_kdc_err).unwrap();
 

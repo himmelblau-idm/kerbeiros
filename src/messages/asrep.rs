@@ -1,5 +1,3 @@
-use super::super::structs;
-use super::super::error::*;
 
 struct AsRep {
     client_realm: String,
@@ -16,6 +14,7 @@ impl AsRep {
         };
     }
 
+    /*
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
         let as_rep = structs::AsRep::parse(raw)?;
 
@@ -23,6 +22,6 @@ impl AsRep {
             as_rep.get_crealm(),
             as_rep.get_cname()
         ));
-    }
+    }*/
 
 }
