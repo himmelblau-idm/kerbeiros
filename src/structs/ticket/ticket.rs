@@ -15,7 +15,7 @@ pub struct Ticket {
 
 impl Ticket {
 
-    fn new(tkt_vno: i8, realm: Realm, sname: PrincipalName, enc_part: EncryptedData) -> Self {
+    pub fn new(tkt_vno: i8, realm: Realm, sname: PrincipalName, enc_part: EncryptedData) -> Self {
         return Self {
             tkt_vno,
             realm,
@@ -58,7 +58,7 @@ impl TicketAsn1 {
         };
     }
 
-    fn no_asn1_type(&self) -> KerberosResult<Ticket> {
+    pub fn no_asn1_type(&self) -> KerberosResult<Ticket> {
         let tkt_vno = self.get_tkt_vno().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         let tkt_vno_value = tkt_vno.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
 
@@ -248,7 +248,6 @@ mod test {
         );
 
         assert_eq!(ticket, ticket_asn1.no_asn1_type().unwrap());
-
     }
 
 }
