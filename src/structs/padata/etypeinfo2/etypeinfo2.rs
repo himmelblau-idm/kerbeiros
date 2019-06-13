@@ -138,12 +138,12 @@ mod test {
                         0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79]).unwrap();
 
         let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
-        entry1._set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
+        entry1._set_salt(KerberosString::_from("KINGDOM.HEARTSmickey"));
 
         let entry2 = EtypeInfo2Entry::_new(RC4_HMAC);
 
         let mut entry3 = EtypeInfo2Entry::_new(DES_CBC_MD5);
-        entry3._set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
+        entry3._set_salt(KerberosString::_from("KINGDOM.HEARTSmickey"));
 
         let mut info2 = EtypeInfo2::new_empty();
 

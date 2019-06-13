@@ -1,4 +1,5 @@
 use super::super::structs;
+use super::super::tickets::*;
 use super::super::error::*;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -16,8 +17,6 @@ impl AsRep {
             client_name
         };
     }
-
-    
     
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
         let as_rep = structs::AsRep::parse(raw)?;

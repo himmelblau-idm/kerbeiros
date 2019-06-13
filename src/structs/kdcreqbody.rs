@@ -1,8 +1,7 @@
-use std::result::Result;
 use asn1::*;
 use asn1_derive::*;
 use super::uint32::{UInt32, UInt32Asn1};
-use super::kerberosstring::KerberosString;
+use super::kerberosstring::*;
 use super::realm::{Realm, RealmAsn1};
 use super::kdcoptions::{KdcOptions, KdcOptionsAsn1};
 use super::principalname::*;
@@ -11,8 +10,8 @@ use super::super::constants::principalnametypes::*;
 use super::kerberostime::{KerberosTime, KerberosTimeAsn1};
 use super::hostaddress::{HostAddresses, HostAddressesAsn1, HostAddress};
 use super::encrypteddata::{EncryptedData, EncryptedDataAsn1};
-use super::ticket::{SeqOfTickets, SeqOfTicketsAsn1};
-use super::etype::{SeqOfEtype, SeqOfEtypeAsn1, Etype};
+use super::ticket::*;
+use super::etype::*;
 use rand::Rng;
 
 use chrono::{Duration, Utc, DateTime};
@@ -96,10 +95,9 @@ impl KdcReqBody {
         self.addresses = Some(HostAddresses::new(address));
     }
 
-    pub fn set_username(&mut self, username: &String) -> Result<(), KerberosError> {
-        let kerberos_str = KerberosString::from(username)?;
+    pub fn set_username(&mut self, username: AsciiString) {
+        let kerberos_str = KerberosString::new(username);
         self.set_cname(NT_PRINCIPAL, kerberos_str);
-        return Ok(());
     }
 
     pub fn asn1_type(&self) -> KdcReqBodyAsn1 {
@@ -225,11 +223,11 @@ mod test {
 
     #[test]
     fn test_encode_kdc_req_body() {
-        let mut kdc_req_body = KdcReqBody::new(KerberosString::from("KINGDOM.HEARTS").unwrap());
+        let mut kdc_req_body = KdcReqBody::new(KerberosString::_from("KINGDOM.HEARTS"));
         kdc_req_body.set_kdc_options(FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK);
-        kdc_req_body.set_cname(NT_PRINCIPAL, KerberosString::from("mickey").unwrap());
-        kdc_req_body.set_sname(NT_SRV_INST, KerberosString::from("krbtgt").unwrap());
-        kdc_req_body.push_sname(KerberosString::from("KINGDOM.HEARTS").unwrap()).unwrap();
+        kdc_req_body.set_cname(NT_PRINCIPAL, KerberosString::_from("mickey"));
+        kdc_req_body.set_sname(NT_SRV_INST, KerberosString::_from("krbtgt"));
+        kdc_req_body.push_sname(KerberosString::_from("KINGDOM.HEARTS")).unwrap();
         kdc_req_body._set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         kdc_req_body.set_rtime(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         kdc_req_body._set_nonce(101225910);

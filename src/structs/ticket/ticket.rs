@@ -26,7 +26,15 @@ impl Ticket {
 
     pub fn asn1_type(&self) -> TicketAsn1 {
         return TicketAsn1::new();
-    } 
+    }
+
+    pub fn get_realm_string(&self) -> String {
+        return self.realm.to_string();
+    }
+
+    pub fn get_sname_string(&self) -> String {
+        return self.sname.to_string();
+    }
 }
 
 #[derive(Asn1Sequence)]
@@ -173,8 +181,8 @@ mod test {
         ).unwrap();
         
 
-        let mut principal_name =  PrincipalName::new(NT_SRV_INST, KerberosString::from("krbtgt").unwrap());
-        principal_name.push(KerberosString::from("KINGDOM.HEARTS").unwrap());
+        let mut principal_name =  PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
+        principal_name.push(KerberosString::_from("KINGDOM.HEARTS"));
 
         let mut encrypted_data = EncryptedData::new(Int32::new(AES256_CTS_HMAC_SHA1_96), vec![
             0x4e, 0xc1, 0x75, 0x6d, 0x5e, 0xf6, 0x84, 0x18, 0x5f, 0x33, 0x21, 0x24, 0x54, 0x02, 0x40, 0x79,
@@ -242,7 +250,7 @@ mod test {
         encrypted_data.set_kvno(UInt32::new(2));
 
         let ticket = Ticket::new(5, 
-        Realm::from("KINGDOM.HEARTS").unwrap(),
+        Realm::_from("KINGDOM.HEARTS"),
         principal_name,
         encrypted_data
         );

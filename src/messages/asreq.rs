@@ -3,6 +3,7 @@ use super::super::structs;
 use super::super::error::*;
 use chrono::Utc;
 use super::super::crypter::*;
+use ascii::AsciiString;
 
 pub enum AsReqCredential {
     Password(String),
@@ -23,8 +24,8 @@ impl AsReqCipher {
 
 }
 pub struct AsReq {
-    realm: String,
-    username: String,
+    realm: AsciiString,
+    username: AsciiString,
     credential: Option<AsReqCredential>,
     hostname: String,
     kdc_options: u32,
@@ -35,7 +36,7 @@ pub struct AsReq {
 
 impl AsReq {
 
-    pub fn new(realm: String, username: String, hostname: String) -> Self {
+    pub fn new(realm: AsciiString, username: AsciiString, hostname: String) -> Self {
         let mut as_req = Self {
             realm,
             username,
@@ -101,7 +102,7 @@ impl AsReq {
     }
 
     pub fn build(&self) -> KerberosResult<Vec<u8>> {
-        let mut as_req = structs::AsReq::new(&self.realm, &self.username, &self.hostname)?;
+        let mut as_req = structs::AsReq::new(self.realm.clone(), self.username.clone(), self.hostname.clone());
         as_req.set_kdc_options(self.kdc_options);
 
         if self.pac {

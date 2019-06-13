@@ -1,4 +1,4 @@
-use ascii::AsciiString;
+pub use ascii::AsciiString;
 use asn1::*;
 use std::result::Result;
 use super::super::error::*;
@@ -12,11 +12,11 @@ pub struct KerberosString {
 
 impl KerberosString {
 
-    pub fn from(string: &str) -> KerberosResult<KerberosString> {
-        return Ok(Self::new(AsciiString::from_ascii(string)?));
+    pub fn _from(string: &str) -> KerberosString {
+        return Self::new(AsciiString::from_ascii(string).unwrap());
     }
 
-    fn new(string: AsciiString) -> Self {
+    pub fn new(string: AsciiString) -> Self {
         return Self { string };
     }
 
@@ -100,18 +100,18 @@ mod tests {
     #[should_panic]
     #[test]
     fn test_convert_non_ascii_strings(){
-        KerberosString::from("ñ").unwrap();
+        KerberosString::_from("ñ");
     }
 
     #[test]
     fn test_convert_ascii_strings(){
-        let ascii_string = KerberosString::from("abcd_/").unwrap();
+        let ascii_string = KerberosString::_from("abcd_/");
         assert_eq!("abcd_/", ascii_string.string);
     }
 
     #[test]
     fn test_encode_kerberos_string() {
-        let kerberos_string = KerberosString::from("KINGDOM.HEARTS").unwrap();
+        let kerberos_string = KerberosString::_from("KINGDOM.HEARTS");
 
         assert_eq!(vec![0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 
                         0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53],
@@ -125,13 +125,13 @@ mod tests {
         kerberos_string_asn1.decode(&[0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 
                         0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53]).unwrap();
 
-        assert_eq!(KerberosString::from("KINGDOM.HEARTS").unwrap(), kerberos_string_asn1.no_asn1_type().unwrap());
+        assert_eq!(KerberosString::_from("KINGDOM.HEARTS"), kerberos_string_asn1.no_asn1_type().unwrap());
     }
 
 
     #[test]
     fn test_kerberos_string_to_string() {
-        let ascii_string = KerberosString::from("abcd_/").unwrap();
+        let ascii_string = KerberosString::_from("abcd_/");
         assert_eq!("abcd_/", ascii_string.to_string());
     }
 

@@ -122,7 +122,7 @@ mod test {
 
         let mut entry = EtypeInfo2Entry::new_empty();
         entry.etype = Int32::new(AES256_CTS_HMAC_SHA1_96);
-        entry.salt = Some(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
+        entry.salt = Some(KerberosString::_from("KINGDOM.HEARTSmickey"));
 
         assert_eq!(entry, entry_asn1.no_asn1_type().unwrap());
 

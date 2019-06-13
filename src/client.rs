@@ -2,26 +2,26 @@ use super::messages::*;
 use super::request::*;
 use super::error::*;
 use super::tickets::*;
-
+use ascii::AsciiString;
 
 #[derive(Debug)]
 pub struct KerberosClient {
-    domain: String,
+    domain: AsciiString,
     requester: KerberosRequester
 }
 
 impl KerberosClient {
-    pub fn new(domain: String) -> KerberosClient {
+    pub fn new(domain: AsciiString) -> KerberosClient {
         return KerberosClient { 
             domain,
             requester: KerberosRequester::new(&"10.0.0.1".to_string()).unwrap()
         };
     }
 
-    pub fn request_tgt(&self, username: &String, password: &String) -> KerberosResult<TGT> {
+    pub fn request_tgt(&self, username: AsciiString, password: String) -> KerberosResult<TGT> {
         
-        let mut as_req = AsReq::new(self.domain.clone(), username.clone(), "HOLLOWBASTION".to_string());
-        as_req.set_password(password.clone());
+        let mut as_req = AsReq::new(self.domain.clone(), username, "HOLLOWBASTION".to_string());
+        as_req.set_password(password);
         let raw_as_req = as_req.build().unwrap();
 
         let raw_kdc_err = self._request(&raw_as_req)?;

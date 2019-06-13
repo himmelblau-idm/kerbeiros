@@ -21,24 +21,24 @@ pub struct AsReq {
 
 impl AsReq {
 
-    pub fn new(domain: &String, username: &String, hostname: &String) -> KerberosResult<AsReq> {
+    pub fn new(domain: AsciiString, username: AsciiString, hostname: String) -> AsReq {
         let mut as_req = AsReq{
             pvno: 5,
             msg_type: 10,
             padata: None,
-            req_body: KdcReqBody::new(Realm::from(domain)?)
+            req_body: KdcReqBody::new(Realm::new(domain.clone()))
         };
 
-        as_req.set_username(username)?;
+        as_req.set_username(username);
 
-        as_req.set_sname(NT_SRV_INST, KerberosString::from("krbtgt").unwrap());
-        as_req.push_sname(KerberosString::from(domain)?).unwrap();
+        as_req.set_sname(NT_SRV_INST, KerberosString::new(AsciiString::from_ascii("krbtgt").unwrap()));
+        as_req.push_sname(KerberosString::new(domain)).unwrap();
 
         as_req.set_default_rtime();
 
-        as_req.set_address(HostAddress::NetBios(hostname.clone()));
+        as_req.set_address(HostAddress::NetBios(hostname));
 
-        return Ok(as_req);
+        return as_req;
     }
 
     pub fn include_pac(&mut self) {
@@ -62,7 +62,7 @@ impl AsReq {
         };
     }
 
-    fn set_username(&mut self, username: &String) -> Result<(), KerberosError> {
+    fn set_username(&mut self, username: AsciiString) {
         return self.req_body.set_username(username);
     }
 
@@ -167,7 +167,10 @@ mod test {
 
     #[test]
     fn test_encode_as_req() {
-        let mut as_req = AsReq::new(&"KINGDOM.HEARTS".to_string(), &"mickey".to_string(), &"HOLLOWBASTION".to_string()).unwrap();
+        let mut as_req = AsReq::new(
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(), 
+            AsciiString::from_ascii("mickey").unwrap(), 
+            "HOLLOWBASTION".to_string());
         as_req.set_kdc_options(FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK);
         as_req.include_pac();
         as_req.push_etype(AES256_CTS_HMAC_SHA1_96);

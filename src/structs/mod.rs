@@ -19,12 +19,10 @@ mod krberror;
 
 pub use asreq::AsReq;
 pub use asrep::AsRep;
-pub use krberror::*;
+pub use ticket::Ticket;
+pub use krberror::KrbError;
 
-pub use kdcoptions::*;
-pub use principalname::*;
-pub use etype::*;
-pub use padata::*;
+pub use padata::PaEncTsEnc;
 
 #[cfg(test)]
 mod tests {
