@@ -3,6 +3,7 @@ use asn1::*;
 use asn1_derive::*;
 use super::int32::{Int32,Int32Asn1};
 use super::super::error::*;
+use std::fmt;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PrincipalName {
@@ -38,6 +39,27 @@ impl PrincipalName {
         self.name_string.push(string);
     }
 
+    fn _to_string(&self) -> String {
+        if self.name_string.len() == 0 {
+            return String::new();
+        }
+
+        let mut string = self.name_string[0].to_string();
+
+        for name_string in self.name_string[1..].iter() {
+            string.push_str("/");
+            string.push_str(&name_string.to_string());
+        }
+
+        return string;
+    }
+
+}
+
+impl fmt::Display for PrincipalName {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self._to_string())
+    }
 }
 
 
@@ -168,7 +190,26 @@ mod tests {
 
         assert_eq!(principal_name, 
                    principal_name_asn1.no_asn1_type().unwrap());
-
     }
 
+    #[test]
+    fn test_principal_name_with_multiple_names_to_string() {
+        let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::from("krbtgt").unwrap());
+        principal_name.push(KerberosString::from("KINGDOM.HEARTS").unwrap());
+
+        assert_eq!("krbtgt/KINGDOM.HEARTS", principal_name.to_string())
+    }
+
+    #[test]
+    fn test_principal_name_with_single_name_to_string() {
+        let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::from("mickey").unwrap());
+        assert_eq!("mickey", principal_name.to_string())
+    }
+
+    #[test]
+    fn test_principal_name_with_no_name_to_string() {
+        let principal_name = PrincipalName::new_empty();
+        assert_eq!("", principal_name.to_string())
+    }
+ 
 }

@@ -46,6 +46,12 @@ impl AsRep {
         self.padata = Some(padata);
     }
 
+    pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
+        let mut as_rep_asn1 = AsRepAsn1::new_empty();
+        as_rep_asn1.decode(raw)?;
+        return Ok(as_rep_asn1.no_asn1_type().unwrap());
+    }
+
 }
 
 #[derive(Asn1Sequence)]
@@ -123,11 +129,9 @@ mod test {
 
     #[test]
     fn decode_as_rep() {
-
-        (modulo asn1) -> añadir un error para cosas que pasan solo en la sequencia, no en un campo
-        let mut as_rep_asn1 = AsRepAsn1::new_empty();
-        as_rep_asn1.decode(&[
-            0x6b, 0xcb, 0x30, 0xc9, 
+        
+        let encoded_as_rep = [
+            0x6b, 0x81, 0xcc, 0x30, 0x81, 0xc9, 
             0xa0, 0x03, 0x02, 0x01, 0x05, 
             0xa1, 0x03, 0x02, 0x01, 0x0b, 
             0xa2, 0x2e, 0x30, 0x2c, 
@@ -157,8 +161,9 @@ mod test {
                 0xa1, 0x03, 0x02, 0x01, 0x02, 
                 0xa2, 0x03, 0x04, 0x01, 
                     0x9
-        ]).unwrap();
+        ];
 
+        let as_rep_decoded = AsRep::parse(&encoded_as_rep).unwrap();
 
         let realm = Realm::from("KINGDOM.HEARTS").unwrap();
         let cname = PrincipalName::new(NT_PRINCIPAL, KerberosString::from("mickey").unwrap());
@@ -178,6 +183,14 @@ mod test {
         let mut encrypted_data = EncryptedData::new(Int32::new(AES256_CTS_HMAC_SHA1_96),vec![0x9]);
         encrypted_data.set_kvno(UInt32::new(2));
 
+        let mut padata = SeqOfPaData::new();
+        let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
+        entry1._set_salt(KerberosString::from("KINGDOM.HEARTSmickey").unwrap());
+
+        let mut info2 = EtypeInfo2::_new();
+        info2.push(entry1);
+        padata.push(PaData::EtypeInfo2(info2));
+
         let mut as_rep = AsRep::new(
             realm,
             cname,
@@ -185,8 +198,9 @@ mod test {
             encrypted_data
         );
 
-        assert_eq!(as_rep, as_rep_asn1.no_asn1_type().unwrap());
+        as_rep.set_padata(padata);
 
+        assert_eq!(as_rep, as_rep_decoded);
     }
 
 }

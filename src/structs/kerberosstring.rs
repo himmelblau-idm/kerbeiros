@@ -2,6 +2,7 @@ use ascii::AsciiString;
 use asn1::*;
 use std::result::Result;
 use super::super::error::*;
+use std::fmt;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct KerberosString {
@@ -24,6 +25,13 @@ impl KerberosString {
     }
 
 }
+
+impl fmt::Display for KerberosString {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.string)
+    }
+}
+
 
 pub struct KerberosStringAsn1 {
     tag: Tag,
@@ -118,6 +126,13 @@ mod tests {
                         0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53]).unwrap();
 
         assert_eq!(KerberosString::from("KINGDOM.HEARTS").unwrap(), kerberos_string_asn1.no_asn1_type().unwrap());
+    }
+
+
+    #[test]
+    fn test_kerberos_string_to_string() {
+        let ascii_string = KerberosString::from("abcd_/").unwrap();
+        assert_eq!("abcd_/", ascii_string.to_string());
     }
 
 }
