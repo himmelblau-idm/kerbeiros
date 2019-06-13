@@ -46,6 +46,14 @@ impl AsRep {
         self.padata = Some(padata);
     }
 
+    pub fn get_crealm_string(&self) -> String {
+        return self.crealm.to_string();
+    }
+
+    pub fn get_cname_string(&self) -> String {
+        return self.cname.to_string();
+    }
+
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
         let mut as_rep_asn1 = AsRepAsn1::new_empty();
         as_rep_asn1.decode(raw)?;
