@@ -7,17 +7,20 @@ use ascii::AsciiString;
 pub struct AsRep {
     client_realm: AsciiString,
     client_name: AsciiString,
-    ticket: Ticket
+    ticket: Ticket,
+    enc_part: EncryptedData
 }
 
 
 impl AsRep {
 
-    fn new(client_realm: AsciiString, client_name: AsciiString, ticket: Ticket) -> Self {
+    fn new(client_realm: AsciiString, client_name: AsciiString, 
+        ticket: Ticket, enc_part: EncryptedData) -> Self {
         return Self {
             client_realm,
             client_name,
-            ticket
+            ticket,
+            enc_part
         };
     }
     
@@ -28,7 +31,8 @@ impl AsRep {
         return Ok(Self::new(
             as_rep.get_crealm_ascii_string(),
             as_rep.get_cname_ascii_string(),
-            Ticket::from(as_rep.get_ticket())
+            Ticket::from(as_rep.get_ticket()),
+            EncryptedData::from(as_rep.get_enc_part())
         ));
     }
 
@@ -85,11 +89,11 @@ mod test {
         let as_rep = AsRep::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(), 
             AsciiString::from_ascii("mickey").unwrap(),
-            ticket
+            ticket,
+            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![9])
         );
 
         assert_eq!(as_rep, as_rep_parsed);
-
     }
 
 }

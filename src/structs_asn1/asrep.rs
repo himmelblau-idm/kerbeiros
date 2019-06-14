@@ -58,6 +58,10 @@ impl AsRep {
         return &self.ticket;
     }
 
+    pub fn get_enc_part(&self) -> &EncryptedData {
+        return &self.enc_part;
+    }
+
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
         let mut as_rep_asn1 = AsRepAsn1::new_empty();
         as_rep_asn1.decode(raw)?;
