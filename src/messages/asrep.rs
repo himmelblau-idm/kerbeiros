@@ -1,4 +1,4 @@
-use super::super::structs;
+use super::super::structs_asn1;
 use super::super::tickets::*;
 use super::super::error::*;
 use ascii::AsciiString;
@@ -21,7 +21,7 @@ impl AsRep {
     
     
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
-        let as_rep = structs::AsRep::parse(raw)?;
+        let as_rep = structs_asn1::AsRep::parse(raw)?;
 
         return Ok(Self::new(
             as_rep.get_crealm_ascii_string(),

@@ -1,5 +1,5 @@
 use super::super::constants::*;
-use super::super::structs;
+use super::super::structs_asn1;
 use super::super::error::*;
 use chrono::Utc;
 use super::super::crypter::*;
@@ -102,7 +102,7 @@ impl AsReq {
     }
 
     pub fn build(&self) -> KerberosResult<Vec<u8>> {
-        let mut as_req = structs::AsReq::new(self.realm.clone(), self.username.clone(), self.hostname.clone());
+        let mut as_req = structs_asn1::AsReq::new(self.realm.clone(), self.username.clone(), self.hostname.clone());
         as_req.set_kdc_options(self.kdc_options);
 
         if self.pac {
@@ -139,7 +139,7 @@ impl AsReq {
     }
 
     fn produce_raw_timestamp(&self) -> Vec<u8> {
-        let timestamp = structs::PaEncTsEnc::from_datetime(Utc::now()).unwrap();
+        let timestamp = structs_asn1::PaEncTsEnc::from_datetime(Utc::now()).unwrap();
         return timestamp.build();
     }
 

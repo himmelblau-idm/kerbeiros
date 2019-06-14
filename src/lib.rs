@@ -1,4 +1,4 @@
-mod structs;
+mod structs_asn1;
 mod byteparser;
 mod cryptography;
 mod crypter;

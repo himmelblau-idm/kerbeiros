@@ -1,5 +1,5 @@
 use super::super::error::*;
-use super::super::structs;
+use super::super::structs_asn1;
 
 
 pub struct KrbError {
@@ -20,7 +20,7 @@ impl KrbError {
     }
 
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
-        let krb_error = structs::KrbError::parse(raw)?;
+        let krb_error = structs_asn1::KrbError::parse(raw)?;
 
         return Ok(Self::new(
             krb_error.get_error_code()

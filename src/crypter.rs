@@ -24,7 +24,7 @@ fn _encrypt_timestamp_rc4_hmac_md5(key: &[u8], timestamp: &[u8], preamble: &[u8]
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::structs::PaEncTsEnc;
+    use super::super::structs_asn1::PaEncTsEnc;
     use asn1::*;
     use chrono::prelude::*;
 
