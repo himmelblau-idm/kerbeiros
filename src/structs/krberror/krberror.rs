@@ -4,7 +4,6 @@ use super::super::microseconds::*;
 use super::super::int32::*;
 use super::super::realm::*;
 use super::super::principalname::*;
-use super::super::kerberosstring::*;
 use super::edata::Edata;
 use super::super::super::constants::errorcodes::*;
 use super::super::padata::*;

@@ -46,12 +46,12 @@ impl AsRep {
         self.padata = Some(padata);
     }
 
-    pub fn get_crealm_string(&self) -> String {
-        return self.crealm.to_string();
+    pub fn get_crealm_ascii_string(&self) -> AsciiString {
+        return self.crealm.to_ascii_string();
     }
 
-    pub fn get_cname_string(&self) -> String {
-        return self.cname.to_string();
+    pub fn get_cname_ascii_string(&self) -> AsciiString {
+        return self.cname.to_ascii_string();
     }
 
     pub fn get_ticket(&self) -> &Ticket {
@@ -134,7 +134,6 @@ impl AsRepAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::kerberosstring::*;
     use super::super::int32::*;
     use super::super::uint32::*;
     use super::super::super::constants::*;

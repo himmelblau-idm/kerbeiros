@@ -1,29 +1,31 @@
 use super::super::structs;
 use super::super::tickets::*;
 use super::super::error::*;
+use ascii::AsciiString;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AsRep {
-    client_realm: String,
-    client_name: String
+    client_realm: AsciiString,
+    client_name: AsciiString,
 }
 
 
 impl AsRep {
 
-    fn new(client_realm: String, client_name: String) -> Self {
+    fn new(client_realm: AsciiString, client_name: AsciiString) -> Self {
         return Self {
             client_realm,
-            client_name
+            client_name,
         };
     }
+    
     
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
         let as_rep = structs::AsRep::parse(raw)?;
 
         return Ok(Self::new(
-            as_rep.get_crealm_string(),
-            as_rep.get_cname_string()
+            as_rep.get_crealm_ascii_string(),
+            as_rep.get_cname_ascii_string()
         ));
     }
 
@@ -70,7 +72,10 @@ mod test {
 
         let as_rep_parsed = AsRep::parse(&encoded_as_rep).unwrap();
 
-        let as_rep = AsRep::new("KINGDOM.HEARTS".to_string(),"mickey".to_string());
+        let as_rep = AsRep::new(
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(), 
+            AsciiString::from_ascii("mickey").unwrap()
+        );
 
         assert_eq!(as_rep, as_rep_parsed);
 

@@ -1,8 +1,7 @@
-pub use ascii::AsciiString;
+pub use ascii::*;
 use asn1::*;
 use std::result::Result;
 use super::super::error::*;
-use std::fmt;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct KerberosString {
@@ -20,16 +19,14 @@ impl KerberosString {
         return Self { string };
     }
 
+    pub fn to_ascii_string(&self) -> AsciiString {
+        return self.string.clone();
+    }
+
     pub fn asn1_type(&self) -> KerberosStringAsn1 {
         return KerberosStringAsn1::new(self.string.clone());
     }
 
-}
-
-impl fmt::Display for KerberosString {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.string)
-    }
 }
 
 
@@ -132,7 +129,7 @@ mod tests {
     #[test]
     fn test_kerberos_string_to_string() {
         let ascii_string = KerberosString::_from("abcd_/");
-        assert_eq!("abcd_/", ascii_string.to_string());
+        assert_eq!("abcd_/", ascii_string.to_ascii_string());
     }
 
 }

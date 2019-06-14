@@ -28,12 +28,12 @@ impl Ticket {
         return TicketAsn1::new();
     }
 
-    pub fn get_realm_string(&self) -> String {
-        return self.realm.to_string();
+    pub fn get_realm_string(&self) -> AsciiString {
+        return self.realm.to_ascii_string();
     }
 
-    pub fn get_sname_string(&self) -> String {
-        return self.sname.to_string();
+    pub fn get_sname_string(&self) -> AsciiString {
+        return self.sname.to_ascii_string();
     }
 }
 
@@ -96,7 +96,6 @@ impl Asn1InstanciableObject for TicketAsn1 {
 
 mod test {
     use super::*;
-    use super::super::super::kerberosstring::*;
     use super::super::super::uint32::*;
     use super::super::super::int32::*;
     use super::super::super::super::constants::*;

@@ -1,9 +1,8 @@
-use super::kerberosstring::{KerberosString, KerberosStringAsn1};
+use super::kerberosstring::*;
 use asn1::*;
 use asn1_derive::*;
 use super::int32::{Int32,Int32Asn1};
 use super::super::error::*;
-use std::fmt;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PrincipalName {
@@ -39,27 +38,21 @@ impl PrincipalName {
         self.name_string.push(string);
     }
 
-    fn _to_string(&self) -> String {
+    pub fn to_ascii_string(&self) -> AsciiString {
         if self.name_string.len() == 0 {
-            return String::new();
+            return AsciiString::new();
         }
 
-        let mut string = self.name_string[0].to_string();
+        let mut string = self.name_string[0].to_ascii_string();
 
         for name_string in self.name_string[1..].iter() {
-            string.push_str("/");
-            string.push_str(&name_string.to_string());
+            string.push(AsciiChar::from('/').unwrap());
+            string.push_str(&name_string.to_ascii_string());
         }
 
         return string;
     }
 
-}
-
-impl fmt::Display for PrincipalName {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self._to_string())
-    }
 }
 
 
@@ -197,19 +190,19 @@ mod tests {
         let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
         principal_name.push(KerberosString::_from("KINGDOM.HEARTS"));
 
-        assert_eq!("krbtgt/KINGDOM.HEARTS", principal_name.to_string())
+        assert_eq!("krbtgt/KINGDOM.HEARTS", principal_name.to_ascii_string())
     }
 
     #[test]
     fn test_principal_name_with_single_name_to_string() {
         let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::_from("mickey"));
-        assert_eq!("mickey", principal_name.to_string())
+        assert_eq!("mickey", principal_name.to_ascii_string())
     }
 
     #[test]
     fn test_principal_name_with_no_name_to_string() {
         let principal_name = PrincipalName::new_empty();
-        assert_eq!("", principal_name.to_string())
+        assert_eq!("", principal_name.to_ascii_string())
     }
  
 }
