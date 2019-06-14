@@ -8,7 +8,8 @@ pub struct AsRep {
     client_realm: AsciiString,
     client_name: AsciiString,
     ticket: Ticket,
-    enc_part: EncryptedData
+    enc_part: EncryptedData,
+    enc_salt: Option<Vec<u8>>
 }
 
 
@@ -20,20 +21,31 @@ impl AsRep {
             client_realm,
             client_name,
             ticket,
-            enc_part
+            enc_part,
+            enc_salt: None
         };
+    }
+
+    fn set_salt(&mut self, salt: Vec<u8>) {
+        self.enc_salt = Some(salt);
     }
     
     
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
-        let as_rep = structs_asn1::AsRep::parse(raw)?;
+        let as_rep_asn1 = structs_asn1::AsRep::parse(raw)?;
 
-        return Ok(Self::new(
-            as_rep.get_crealm_ascii_string(),
-            as_rep.get_cname_ascii_string(),
-            Ticket::from(as_rep.get_ticket()),
-            EncryptedData::from(as_rep.get_enc_part())
-        ));
+        let mut as_rep = Self::new(
+            as_rep_asn1.get_crealm_ascii_string(),
+            as_rep_asn1.get_cname_ascii_string(),
+            Ticket::from(as_rep_asn1.get_ticket()),
+            EncryptedData::from(as_rep_asn1.get_enc_part())
+        );
+
+        if let Some(salt) = as_rep_asn1.get_salt() {
+            as_rep.set_salt(salt);
+        }
+
+        return Ok(as_rep);
     }
 
 }
@@ -86,12 +98,14 @@ mod test {
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![9])
         );
 
-        let as_rep = AsRep::new(
+        let mut as_rep = AsRep::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(), 
             AsciiString::from_ascii("mickey").unwrap(),
             ticket,
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![9])
         );
+
+        as_rep.set_salt("KINGDOM.HEARTSmickey".as_bytes().to_vec());
 
         assert_eq!(as_rep, as_rep_parsed);
     }

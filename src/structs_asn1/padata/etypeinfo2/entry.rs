@@ -26,6 +26,13 @@ impl EtypeInfo2Entry {
         self.salt = Some(salt);
     }
 
+    pub fn get_salt_bytes(&self) -> Option<Vec<u8>> {
+        if let Some(salt) = &self.salt {
+            return Some(salt.to_bytes());
+        }
+        return None;
+    }
+
     fn new_empty() -> Self {
         return Self {
             etype: Int32::new(0),

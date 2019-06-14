@@ -62,6 +62,21 @@ impl AsRep {
         return &self.enc_part;
     }
 
+    pub fn get_salt(&self) -> Option<Vec<u8>> {
+        if let Some(padata) = &self.padata {
+            for entry_data in padata.iter() {
+                if let PaData::EtypeInfo2(etype_info2) = entry_data {
+                    for info2_entry in etype_info2.iter() {
+                        return info2_entry.get_salt_bytes();
+                    }
+                }
+            }
+        }
+        
+        return None;
+    }
+
+
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
         let mut as_rep_asn1 = AsRepAsn1::new_empty();
         as_rep_asn1.decode(raw)?;

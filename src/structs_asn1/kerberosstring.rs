@@ -23,6 +23,10 @@ impl KerberosString {
         return self.string.clone();
     }
 
+    pub fn to_bytes(&self) -> Vec<u8> {
+        return self.string.as_bytes().to_vec();
+    }
+
     pub fn asn1_type(&self) -> KerberosStringAsn1 {
         return KerberosStringAsn1::new(self.string.clone());
     }
