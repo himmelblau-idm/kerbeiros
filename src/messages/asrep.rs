@@ -7,15 +7,17 @@ use ascii::AsciiString;
 pub struct AsRep {
     client_realm: AsciiString,
     client_name: AsciiString,
+    ticket: Ticket
 }
 
 
 impl AsRep {
 
-    fn new(client_realm: AsciiString, client_name: AsciiString) -> Self {
+    fn new(client_realm: AsciiString, client_name: AsciiString, ticket: Ticket) -> Self {
         return Self {
             client_realm,
             client_name,
+            ticket
         };
     }
     
@@ -25,7 +27,8 @@ impl AsRep {
 
         return Ok(Self::new(
             as_rep.get_crealm_ascii_string(),
-            as_rep.get_cname_ascii_string()
+            as_rep.get_cname_ascii_string(),
+            Ticket::from(as_rep.get_ticket())
         ));
     }
 
@@ -34,6 +37,7 @@ impl AsRep {
 #[cfg(test)]
 mod test {
     use super::*;
+    use super::super::super::constants::*;
 
     #[test]
     fn test_parse_as_rep() {
@@ -72,9 +76,16 @@ mod test {
 
         let as_rep_parsed = AsRep::parse(&encoded_as_rep).unwrap();
 
+        let ticket = Ticket::new(
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("krbtgt/KINGDOM.HEARTS").unwrap(),
+            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![9])
+        );
+
         let as_rep = AsRep::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(), 
-            AsciiString::from_ascii("mickey").unwrap()
+            AsciiString::from_ascii("mickey").unwrap(),
+            ticket
         );
 
         assert_eq!(as_rep, as_rep_parsed);

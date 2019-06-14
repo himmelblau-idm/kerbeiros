@@ -1,5 +1,5 @@
 use ascii::AsciiString;
-use super::structs::*;
+pub use super::structs::EncryptedData;
 use super::structs_asn1;
 use std::convert::From;
 
@@ -14,7 +14,7 @@ pub struct Ticket {
 
 impl Ticket {
 
-    fn new(realm: AsciiString, sname: AsciiString, enc_part: EncryptedData) -> Self {
+    pub fn new(realm: AsciiString, sname: AsciiString, enc_part: EncryptedData) -> Self {
         return Self {
             realm,
             sname,
