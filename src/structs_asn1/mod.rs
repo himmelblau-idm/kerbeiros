@@ -1,30 +1,41 @@
 mod int32;
+pub use int32::Int32;
+
 mod uint32;
 mod microseconds;
+
 mod kerberosstring;
+pub use kerberosstring::KerberosString;
+
 mod realm;
+pub use realm::Realm;
+
 mod principalname;
+pub use principalname::PrincipalName;
+
 mod kerberostime;
 mod hostaddress;
+
 mod padata;
-mod etype;
-mod kerberosflags;
-mod encrypteddata;
-mod ticket;
-pub mod asreq;
-pub mod asrep;
-mod kdcreqbody;
-mod kdcoptions;
-mod krberror;
-
-pub use asreq::AsReq;
-pub use asrep::AsRep;
-pub use ticket::Ticket;
-pub use krberror::KrbError;
-
 pub use padata::PaEncTsEnc;
 
-#[cfg(test)]
-mod tests {
+mod etype;
+mod kerberosflags;
 
-}
+mod encrypteddata;
+pub use encrypteddata::EncryptedData;
+
+mod ticket;
+pub use ticket::Ticket;
+
+pub mod asreq;
+pub use asreq::AsReq;
+
+pub mod asrep;
+pub use asrep::AsRep;
+
+mod kdcreqbody;
+mod kdcoptions;
+
+mod krberror;
+pub use krberror::KrbError;

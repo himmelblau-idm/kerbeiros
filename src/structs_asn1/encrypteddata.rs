@@ -24,7 +24,15 @@ impl EncryptedData {
 
     pub fn set_kvno(&mut self, kvno: UInt32) {
         self.kvno = Some(kvno);
-    } 
+    }
+
+    pub fn get_etype_int32(&self) -> i32 {
+        return *self.etype;
+    }
+
+    pub fn get_cipher(&self) -> &Vec<u8> {
+        return &self.cipher;
+    }
 
     pub fn asn1_type(&self) -> EncryptedDataAsn1 {
         return EncryptedDataAsn1::new(self);

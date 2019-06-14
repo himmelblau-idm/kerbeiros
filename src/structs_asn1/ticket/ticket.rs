@@ -24,17 +24,22 @@ impl Ticket {
         };
     }
 
+    pub fn get_realm_ascii_string(&self) -> AsciiString {
+        return self.realm.to_ascii_string();
+    }
+
+    pub fn get_sname_ascii_string(&self) -> AsciiString {
+        return self.sname.to_ascii_string();
+    }
+
+    pub fn get_encrypted_data(&self) -> &EncryptedData {
+        return &self.enc_part;
+    }
+
     pub fn asn1_type(&self) -> TicketAsn1 {
         return TicketAsn1::new();
     }
 
-    pub fn get_realm_string(&self) -> AsciiString {
-        return self.realm.to_ascii_string();
-    }
-
-    pub fn get_sname_string(&self) -> AsciiString {
-        return self.sname.to_ascii_string();
-    }
 }
 
 #[derive(Asn1Sequence)]
