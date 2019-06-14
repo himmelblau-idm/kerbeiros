@@ -3,10 +3,12 @@ use md4::{Md4, Digest};
 use crypto::hmac::Hmac;
 use crypto::mac::Mac;
 use crypto::md5::Md5;
+use crypto::sha1::Sha1;
 use crypto::rc4::Rc4;
+use crypto::pbkdf2::pbkdf2;
 use crypto::symmetriccipher::SynchronousStreamCipher;
 use rand::RngCore;
-
+use num::Integer;
 
 fn md4(bytes: &[u8]) -> Vec<u8> {
     return Md4::digest(&bytes).to_vec();
@@ -41,6 +43,85 @@ pub fn random_bytes(size: usize) -> Vec<u8> {
     rng.fill_bytes(&mut bytes);
     
     return bytes;
+}
+
+pub fn generate_aes_128_key(key: &str, salt: &[u8]) -> Vec<u8> {
+    let iteration_count = 0x1000;
+    let mut hmacker = Hmac::new(Sha1::new(), key.as_bytes());
+    let mut result : Vec<u8> = vec![0; 16];
+    pbkdf2(&mut hmacker, salt, iteration_count, &mut result);
+
+    return result;
+}
+
+fn n_fold(v: &[u8], nbytes: usize) -> Vec<u8> {
+    let least_common_multiple = nbytes.lcm(&v.len());
+    let mut big_v: Vec<u8> = Vec::new();
+
+    for i in 0..(least_common_multiple / v.len()) {
+        let mut v_rotate = rotate_rigth_n_bits(v, 13 * i);
+        big_v.append(&mut v_rotate);
+    }
+
+    println!("big_v = {:?}", big_v);
+
+    let mut nbytes_chunks: Vec<Vec<u8>> = Vec::new();
+
+    let mut i = 0;
+    while i < big_v.len() {
+        nbytes_chunks.push(big_v[i..i+nbytes].to_vec());
+        i += nbytes;
+    }
+
+    let mut result = nbytes_chunks[0].clone();
+    let chunck_len = result.len();
+
+    error al sumar los chunks...
+
+    for chunk in nbytes_chunks[1..].iter() {
+        let mut tmp_add: Vec<u16> = vec![0; chunck_len];
+
+        for j in 0..chunck_len {
+            tmp_add[j] = result[j] as u16 + chunk[j] as u16;
+        }
+        println!("A");
+        while tmp_add.iter().any(|&x| x > 0xff) {
+            let mut aux_vector: Vec<u16> = vec![0; chunck_len];
+
+            let index = (((i as i32 - chunck_len as i32 + 1) % v.len() as i32) + v.len() as i32) as usize % v.len();
+
+            for i in 0..tmp_add.len() {
+                aux_vector[i] = (tmp_add[index] >> 8) + (tmp_add[i] & 0xff)
+            }
+            tmp_add = aux_vector;
+            println!("tmp_add = {:?}", tmp_add);
+        }
+
+        for i in 0..chunck_len {
+            result[i] = tmp_add[i] as u8;
+        }
+    }
+
+    return result;
+}
+
+fn rotate_rigth_n_bits(v: &[u8], nbits: usize) -> Vec<u8> {
+    let nbytes = nbits / 8  % v.len();
+    let nbits_remain = nbits % 8;
+
+    let mut v_rotate : Vec<u8> = Vec::with_capacity(v.len());
+
+    for i in 0..v.len() {
+        let index_a = (((i as i32 - nbytes as i32) % v.len() as i32) + v.len() as i32) as usize % v.len();
+        let index_b = (((i as i32 - nbytes as i32 - 1) % v.len() as i32) + v.len() as i32) as usize % v.len() ;
+
+        v_rotate.push(
+            ((((v[index_a] as u16) >> nbits_remain)) as u8) | 
+            (((v[index_b] as u16) << (8 - nbits_remain)) as u8)
+        );
+    }
+
+    return v_rotate;
 }
 
 
@@ -126,6 +207,22 @@ mod test {
         assert_eq!(vec![0x95, 0x86, 0x99, 0xc4, 0x95, 0x97, 0x7f, 0x32, 0xc3, 0x4b], rc4_encrypt(&[0xf9, 0x9c, 0xd9, 0x33, 0xf7, 0x5e, 0xd5, 0x7d, 0x0c, 0xec, 0x03, 0x1d, 0x2a, 0x18, 0xd7, 0xbc], &[0x71, 0x77, 0x65, 0x72, 0x74, 0x79, 0x75, 0x69, 0x6f, 0x70]));
         assert_eq!(vec![0xb4, 0x4e, 0xbe, 0x53, 0x87, 0xc0, 0x61, 0xa3], rc4_encrypt(&[0x5b, 0xd2, 0xae, 0x8f, 0xee, 0x7c, 0xf9, 0xce, 0x22, 0x58, 0x9c, 0x3f, 0xab, 0xc1, 0x84, 0xcf], &[0x61, 0x73, 0x64, 0x66, 0x67, 0x68, 0x6a, 0x6b]));
         assert_eq!(vec![0xbc, 0xfb, 0xcd, 0x79, 0xdc, 0xea, 0x73, 0xb3, 0x3d], rc4_encrypt(&[0xef, 0x6a, 0x67, 0xfc, 0xa3, 0xca, 0x20, 0x5f, 0x3c, 0x30, 0xfc, 0x1a, 0x04, 0x5a, 0xe5, 0x4b], &[0x7a, 0x78, 0x63, 0x76, 0x62, 0x6e, 0x6d, 0x2c, 0x2e]));
+    }
+
+    #[test]
+    fn test_generate_aes_128_key() {
+        assert_eq!(vec![
+            0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45,
+            0x9a, 0x1c, 0x39, 0xbf, 0x83, 0x23, 0x56, 0x09],
+            generate_aes_128_key("Minnie1234", "KINGDOM.HEARTSmickey".as_bytes()));
+    }
+
+
+    #[test]
+    fn test_n_fold() {
+        assert_eq!(vec![0xbe, 0x07, 0x26, 0x31, 0x27, 0x6b, 0x19, 0x55],
+            n_fold("012345".as_bytes(), 8)
+        );
     }
 
 }
