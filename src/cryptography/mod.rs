@@ -7,8 +7,14 @@ use crypto::sha1::Sha1;
 use crypto::rc4::Rc4;
 use crypto::pbkdf2::pbkdf2;
 use crypto::symmetriccipher::SynchronousStreamCipher;
+use crypto::aes;
+use crypto::blockmodes;
+use crypto::buffer::{RefReadBuffer, RefWriteBuffer};
 use rand::RngCore;
 use num::Integer;
+
+const AES_BLOCKSIZE: usize = 16;
+const AES_128_SEEDSIZE: usize = 16;
 
 fn md4(bytes: &[u8]) -> Vec<u8> {
     return Md4::digest(&bytes).to_vec();
@@ -48,10 +54,19 @@ pub fn random_bytes(size: usize) -> Vec<u8> {
 pub fn generate_aes_128_key(key: &str, salt: &[u8]) -> Vec<u8> {
     let iteration_count = 0x1000;
     let mut hmacker = Hmac::new(Sha1::new(), key.as_bytes());
-    let mut result : Vec<u8> = vec![0; 16];
-    pbkdf2(&mut hmacker, salt, iteration_count, &mut result);
+    let mut seed : Vec<u8> = vec![0; AES_128_SEEDSIZE];
+    pbkdf2(&mut hmacker, salt, iteration_count, &mut seed);
 
-    return result;
+    let plaintext = n_fold("kerberos".as_bytes(), AES_BLOCKSIZE);
+
+    let mut encryptor = aes::cbc_encryptor(aes::KeySize::KeySize128, &seed, 
+        &vec![0; AES_BLOCKSIZE], blockmodes::NoPadding);
+
+    let mut ciphertext: Vec<u8> = vec![0; AES_128_SEEDSIZE];
+    encryptor.encrypt(&mut RefReadBuffer::new(&plaintext),
+                         &mut RefWriteBuffer::new(&mut ciphertext), true).unwrap();
+
+    return ciphertext;
 }
 
 fn n_fold(v: &[u8], nbytes: usize) -> Vec<u8> {
@@ -62,8 +77,6 @@ fn n_fold(v: &[u8], nbytes: usize) -> Vec<u8> {
         let mut v_rotate = rotate_rigth_n_bits(v, 13 * i);
         big_v.append(&mut v_rotate);
     }
-
-    println!("big_v = {:?}", big_v);
 
     let mut nbytes_chunks: Vec<Vec<u8>> = Vec::new();
 
@@ -76,30 +89,27 @@ fn n_fold(v: &[u8], nbytes: usize) -> Vec<u8> {
     let mut result = nbytes_chunks[0].clone();
     let chunck_len = result.len();
 
-    error al sumar los chunks...
-
     for chunk in nbytes_chunks[1..].iter() {
         let mut tmp_add: Vec<u16> = vec![0; chunck_len];
 
         for j in 0..chunck_len {
             tmp_add[j] = result[j] as u16 + chunk[j] as u16;
         }
-        println!("A");
+
         while tmp_add.iter().any(|&x| x > 0xff) {
             let mut aux_vector: Vec<u16> = vec![0; chunck_len];
 
-            let index = (((i as i32 - chunck_len as i32 + 1) % v.len() as i32) + v.len() as i32) as usize % v.len();
-
             for i in 0..tmp_add.len() {
+                let index = (((i as i32 - chunck_len as i32 + 1) % tmp_add.len() as i32) + tmp_add.len() as i32) as usize % tmp_add.len();
                 aux_vector[i] = (tmp_add[index] >> 8) + (tmp_add[i] & 0xff)
             }
             tmp_add = aux_vector;
-            println!("tmp_add = {:?}", tmp_add);
         }
 
         for i in 0..chunck_len {
             result[i] = tmp_add[i] as u8;
         }
+
     }
 
     return result;
@@ -222,6 +232,61 @@ mod test {
     fn test_n_fold() {
         assert_eq!(vec![0xbe, 0x07, 0x26, 0x31, 0x27, 0x6b, 0x19, 0x55],
             n_fold("012345".as_bytes(), 8)
+        );
+
+        assert_eq!(vec![0x78, 0xa0, 0x7b, 0x6c, 0xaf, 0x85, 0xfa],
+            n_fold("password".as_bytes(), 7)
+        );
+
+        assert_eq!(vec![0xbb, 0x6e, 0xd3, 0x08, 0x70, 0xb7, 0xf0, 0xe0],
+            n_fold("Rough Consensus, and Running Code".as_bytes(), 8)
+        );
+
+        assert_eq!(vec![0x59, 0xe4, 0xa8, 0xca, 0x7c, 0x03, 0x85, 0xc3,
+                        0xc3, 0x7b, 0x3f, 0x6d, 0x20, 0x00, 0x24, 0x7c, 
+                        0xb6, 0xe6, 0xbd, 0x5b, 0x3e],
+            n_fold("password".as_bytes(), 21)
+        );
+
+        assert_eq!(vec![0xdb, 0x3b, 0x0d, 0x8f, 0x0b, 0x06, 0x1e, 0x60,
+                        0x32, 0x82, 0xb3, 0x08, 0xa5, 0x08, 0x41, 0x22, 
+                        0x9a, 0xd7, 0x98, 0xfa, 0xb9, 0x54, 0x0c, 0x1b],
+            n_fold("MASSACHVSETTS INSTITVTE OF TECHNOLOGY".as_bytes(), 24)
+        );
+        
+        assert_eq!(vec![0x51, 0x8a, 0x54, 0xa2, 0x15, 0xa8, 0x45, 0x2a,
+                        0x51, 0x8a, 0x54, 0xa2, 0x15, 0xa8, 0x45, 0x2a, 
+                        0x51, 0x8a, 0x54, 0xa2, 0x15],
+            n_fold("Q".as_bytes(), 21)
+        );
+        
+
+        assert_eq!(vec![0xfb, 0x25, 0xd5, 0x31, 0xae, 0x89, 0x74, 0x49, 
+                        0x9f, 0x52, 0xfd, 0x92, 0xea, 0x98, 0x57, 0xc4, 
+                        0xba, 0x24, 0xcf, 0x29, 0x7e],
+            n_fold("ba".as_bytes(), 21)
+        );
+
+        assert_eq!(vec![0x6b, 0x65, 0x72, 0x62, 0x65, 0x72, 0x6f, 0x73],
+            n_fold("kerberos".as_bytes(), 8)
+        );
+
+        assert_eq!(vec![0x6b, 0x65, 0x72, 0x62, 0x65, 0x72, 0x6f, 0x73, 
+                        0x7b, 0x9b, 0x5b, 0x2b, 0x93, 0x13, 0x2b, 0x93],
+            n_fold("kerberos".as_bytes(), 16)
+        );
+
+        assert_eq!(vec![0x83, 0x72, 0xc2, 0x36, 0x34, 0x4e, 0x5f, 0x15, 
+                        0x50, 0xcd, 0x07, 0x47, 0xe1, 0x5d, 0x62, 0xca, 
+                        0x7a, 0x5a, 0x3b, 0xce, 0xa4],
+            n_fold("kerberos".as_bytes(), 21)
+        );
+
+        assert_eq!(vec![0x6b, 0x65, 0x72, 0x62, 0x65, 0x72, 0x6f, 0x73, 
+                        0x7b, 0x9b, 0x5b, 0x2b, 0x93, 0x13, 0x2b, 0x93,
+                        0x5c, 0x9b, 0xdc, 0xda, 0xd9, 0x5c, 0x98, 0x99, 
+                        0xc4, 0xca, 0xe4, 0xde, 0xe6, 0xd6, 0xca, 0xe4],
+            n_fold("kerberos".as_bytes(), 32)
         );
     }
 
