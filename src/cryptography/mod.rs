@@ -13,8 +13,7 @@ use crypto::buffer::{RefReadBuffer, RefWriteBuffer};
 use rand::RngCore;
 use num::Integer;
 
-const AES_BLOCKSIZE: usize = 16;
-const AES_128_SEEDSIZE: usize = 16;
+
 
 fn md4(bytes: &[u8]) -> Vec<u8> {
     return Md4::digest(&bytes).to_vec();
@@ -51,22 +50,65 @@ pub fn random_bytes(size: usize) -> Vec<u8> {
     return bytes;
 }
 
+const AES_BLOCKSIZE: usize = 16;
+const AES_128_SEEDSIZE: usize = 16;
+const AES_256_SEEDSIZE: usize = 32;
+
+pub enum AesSizes {
+    Aes128,
+    Aes256
+}
+
+impl AesSizes {
+    fn seed_size(&self) -> usize {
+        match &self {
+            AesSizes::Aes128 => {return AES_128_SEEDSIZE},
+            AesSizes::Aes256 => {return AES_256_SEEDSIZE}
+        }
+    }
+
+    fn block_size(&self) -> usize {
+        return AES_BLOCKSIZE;
+    }
+
+    fn key_size(&self) -> aes::KeySize {
+        match &self {
+            AesSizes::Aes128 => {return aes::KeySize::KeySize128},
+            AesSizes::Aes256 => {return aes::KeySize::KeySize256}
+        }
+    }
+
+}
+
 pub fn generate_aes_128_key(key: &str, salt: &[u8]) -> Vec<u8> {
+    return generate_aes_key(key, salt, AesSizes::Aes128);
+}
+
+pub fn generate_aes_256_key(key: &str, salt: &[u8]) -> Vec<u8> {
+    return generate_aes_key(key, salt, AesSizes::Aes256);
+}
+
+pub fn generate_aes_key(key: &str, salt: &[u8], aes_sizes: AesSizes) -> Vec<u8> {
     let iteration_count = 0x1000;
     let mut hmacker = Hmac::new(Sha1::new(), key.as_bytes());
-    let mut seed : Vec<u8> = vec![0; AES_128_SEEDSIZE];
+    let mut seed : Vec<u8> = vec![0; aes_sizes.seed_size()];
     pbkdf2(&mut hmacker, salt, iteration_count, &mut seed);
 
-    let plaintext = n_fold("kerberos".as_bytes(), AES_BLOCKSIZE);
+    let mut plaintext = n_fold("kerberos".as_bytes(), aes_sizes.block_size());
+    let mut result : Vec<u8> = Vec::new();
 
-    let mut encryptor = aes::cbc_encryptor(aes::KeySize::KeySize128, &seed, 
-        &vec![0; AES_BLOCKSIZE], blockmodes::NoPadding);
+    while result.len() < aes_sizes.seed_size() {
+        let mut encryptor = aes::cbc_encryptor(aes_sizes.key_size(), &seed, 
+            &vec![0; aes_sizes.block_size()], blockmodes::NoPadding);
 
-    let mut ciphertext: Vec<u8> = vec![0; AES_128_SEEDSIZE];
-    encryptor.encrypt(&mut RefReadBuffer::new(&plaintext),
-                         &mut RefWriteBuffer::new(&mut ciphertext), true).unwrap();
-
-    return ciphertext;
+        let mut ciphertext: Vec<u8> = vec![0; aes_sizes.block_size()];
+        encryptor.encrypt(&mut RefReadBuffer::new(&plaintext),
+                            &mut RefWriteBuffer::new(&mut ciphertext), true).unwrap();
+        
+        plaintext = ciphertext.clone();
+        result.append(&mut ciphertext);
+    }
+    return result;
 }
 
 fn n_fold(v: &[u8], nbytes: usize) -> Vec<u8> {
@@ -225,6 +267,15 @@ mod test {
             0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45,
             0x9a, 0x1c, 0x39, 0xbf, 0x83, 0x23, 0x56, 0x09],
             generate_aes_128_key("Minnie1234", "KINGDOM.HEARTSmickey".as_bytes()));
+    }
+
+    #[test]
+    fn test_generate_aes_256_key() {
+        assert_eq!(vec![0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 
+                        0x26, 0xa5, 0x69, 0xf8, 0xb7, 0xc3, 0x67, 0x15, 
+                        0xc8, 0xda, 0xef, 0x10, 0x9f, 0xa3, 0xd8, 0xb2, 
+                        0xe1, 0x46, 0x16, 0xaa, 0xca, 0xb5, 0x49, 0xfd],
+            generate_aes_256_key("Minnie1234", "KINGDOM.HEARTSmickey".as_bytes()));
     }
 
 
