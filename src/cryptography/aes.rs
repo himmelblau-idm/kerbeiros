@@ -7,6 +7,8 @@ use num::Integer;
 use crypto::hmac::Hmac;
 
 use super::hmac_sha1;
+use super::super::error::*;
+
 
 const AES_BLOCKSIZE: usize = 16;
 const AES_MACSIZE: usize = 12;
@@ -55,29 +57,111 @@ fn generate_aes_key(passphrase: &[u8], salt: &[u8], aes_sizes: &AesSizes) -> Vec
     return dk(&key, "kerberos".as_bytes(), aes_sizes);
 }
 
-pub fn aes_256_decrypt(key: &[u8], ciphertext: &[u8]) -> Vec<u8> {
-    return aes_decrypt(key, ciphertext, &AesSizes::Aes256);
+pub fn aes_256_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
+    return aes_hmac_sh1_decrypt(key, ciphertext, &AesSizes::Aes256);
 }
 
-fn aes_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+fn aes_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
     let ki = dk(key, &[0x0, 0x0, 0x0, 0x3, 0x55], aes_sizes);
     let ke = dk(key, &[0x0, 0x0, 0x0, 0x3, 0xaa], aes_sizes);
+
+    if ciphertext.len() < aes_sizes.block_size() + aes_sizes.mac_size() {
+        return Err(KerberosErrorKind::DecryptionError("Ciphertext too short".to_string()))?;
+    }
 
     let ciphertext_end_index = ciphertext.len() - aes_sizes.mac_size();
     let pure_ciphertext = &ciphertext[0..ciphertext_end_index];
     let mac = &ciphertext[ciphertext_end_index..];
 
-    println!("ki = {:?}", ki);
-    println!("ke = {:?}", ke);
-    println!("ciphertext = {:?}", pure_ciphertext);
-    println!("mac = {:?}", mac);
-
-    let plaintext = decrypt_with_aes_cbc(&ke, &pure_ciphertext, aes_sizes);
+    let plaintext = basic_decrypt(&ke, &pure_ciphertext, aes_sizes)?;
 
     let calculated_mac = hmac_sha1(&ki, &plaintext);
 
-    return plaintext;
+    if calculated_mac[..aes_sizes.mac_size()] != mac[..] {
+        return Err(KerberosErrorKind::DecryptionError("Hmac integrity failure".to_string()))?;
+    }
+
+    return Ok(plaintext);
 }
+
+
+fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
+    let mut decryptor = aes::ecb_decryptor(aes_sizes.key_size(), key, blockmodes::NoPadding);
+
+    if ciphertext.len() == aes_sizes.block_size() {
+        let mut plaintext: Vec<u8> = vec![0; ciphertext.len()];
+        decryptor.decrypt(&mut RefReadBuffer::new(ciphertext),
+                        &mut RefWriteBuffer::new(&mut plaintext), true).unwrap();
+        
+        return Ok(plaintext);
+    }
+
+    let mut blocks: Vec<Vec<u8>> = Vec::new();
+
+    let mut i = 0;
+    while i < ciphertext.len() {
+        let mut j = i + aes_sizes.block_size();
+        if j >= ciphertext.len() {
+            j = ciphertext.len() - 1;
+        }
+
+        blocks.push(ciphertext[i..j].to_vec());
+        i += aes_sizes.block_size();
+    }
+
+    let mut previous_block = vec![0; aes_sizes.block_size()];
+    let mut plaintext: Vec<u8> = Vec::new();
+
+    let second_last_index = blocks.len() - 2;
+
+    for block in blocks[0..second_last_index].iter() {
+        let mut block_plaintext: Vec<u8> = vec![0; aes_sizes.block_size()];
+        decryptor.decrypt(&mut RefReadBuffer::new(block),
+                        &mut RefWriteBuffer::new(&mut block_plaintext), true).unwrap();
+        
+        plaintext.append(&mut xorbytes(&block_plaintext, &previous_block));
+
+        previous_block = block.clone();
+    }
+
+    let mut second_last_block_plaintext: Vec<u8> = vec![0; aes_sizes.block_size()];
+        decryptor.decrypt(&mut RefReadBuffer::new(&blocks[second_last_index]),
+                        &mut RefWriteBuffer::new(&mut second_last_block_plaintext), true).unwrap();
+
+    let last_block_length =  blocks[blocks.len() - 1].len();
+
+    let mut last_plaintext = xorbytes(
+        &second_last_block_plaintext[0..last_block_length], 
+        &blocks[blocks.len() - 1]
+    );
+
+    let mut omitted = second_last_block_plaintext[last_block_length..].to_vec();
+
+    let mut last_block = blocks[blocks.len() - 1].to_vec();
+
+    last_block.append(&mut omitted);
+
+    let mut last_block_plaintext: Vec<u8> = vec![0; aes_sizes.block_size()];
+        decryptor.decrypt(&mut RefReadBuffer::new(&last_block),
+                        &mut RefWriteBuffer::new(&mut last_block_plaintext), true).unwrap();
+
+    plaintext.append(&mut xorbytes(&last_block_plaintext, &previous_block));
+    plaintext.append(&mut last_plaintext);
+    
+    return Ok(plaintext);
+}
+
+
+fn xorbytes(v1: &[u8], v2: &[u8]) -> Vec<u8> {
+    let mut v_xored = Vec::with_capacity(v1.len());
+
+    for i in 0..v1.len() {
+        v_xored.push(v1[i] ^ v2[i])
+    }
+
+    return v_xored;
+}
+
 
 fn dk(key: &[u8], constant: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
     let mut plaintext = n_fold(constant, aes_sizes.block_size());
@@ -96,17 +180,6 @@ fn pbkdf2_sha1(key: &[u8], salt: &[u8], seed_size: usize) -> Vec<u8> {
     let mut seed : Vec<u8> = vec![0; seed_size];
     pbkdf2(&mut hmacker, salt, iteration_count, &mut seed);
     return seed;
-}
-
-fn decrypt_with_aes_cbc(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
-    let mut decryptor = aes::cbc_decryptor(aes_sizes.key_size(), key, 
-        &vec![0; aes_sizes.block_size()], blockmodes::NoPadding);
-
-    let mut plaintext: Vec<u8> = vec![0; ciphertext.len()];
-    decryptor.decrypt(&mut RefReadBuffer::new(ciphertext),
-                        &mut RefWriteBuffer::new(&mut plaintext), true).unwrap();
-    
-    return plaintext;
 }
  
 fn encrypt_with_aes_cbc(plaintext: &[u8], seed: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
@@ -330,7 +403,7 @@ mod test {
     }
 
     #[test]
-    fn test_aes_256_decrypt() {
+    fn test_aes_256_hmac_sh1_decrypt() {
         let key = [
             0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 
             0x26, 0xa5, 0x69, 0xf8, 0xb7, 0xc3, 0x67, 0x15, 
@@ -404,7 +477,7 @@ mod test {
             0x04, 0x1f, 0x00, 0x00, 0x00
         ];
 
-        assert_eq!(plaintext, aes_256_decrypt(&key, &ciphertext));
+        assert_eq!(plaintext, aes_256_hmac_sh1_decrypt(&key, &ciphertext).unwrap());
     }
 
 }

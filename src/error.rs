@@ -30,7 +30,9 @@ pub enum KerberosErrorKind {
     #[fail (display = "Asn1 error: {}", _0)]
     Asn1Error(asn1::Asn1ErrorKind),
     #[fail (display = "Cipher algorithm with etype = {} is not supported", _0)]
-    UnsupportedCipherAlgorithm(i32)
+    UnsupportedCipherAlgorithm(i32),
+    #[fail (display = "Decryption error: {}", _0)]
+    DecryptionError(String)
 }
 
 impl KerberosError {
