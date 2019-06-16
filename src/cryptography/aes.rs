@@ -6,6 +6,8 @@ use crypto::sha1::Sha1;
 use num::Integer;
 use crypto::hmac::Hmac;
 
+use super::hmac_sha1;
+
 const AES_BLOCKSIZE: usize = 16;
 const AES_MACSIZE: usize = 12;
 const AES_128_SEEDSIZE: usize = 16;
@@ -40,17 +42,17 @@ impl AesSizes {
     }
 }
 
-pub fn generate_aes_128_key(key: &[u8], salt: &[u8]) -> Vec<u8> {
-    return generate_aes_key(key, salt, &AesSizes::Aes128);
+pub fn generate_aes_128_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
+    return generate_aes_key(passphrase, salt, &AesSizes::Aes128);
 }
 
-pub fn generate_aes_256_key(key: &[u8], salt: &[u8]) -> Vec<u8> {
-    return generate_aes_key(key, salt, &AesSizes::Aes256);
+pub fn generate_aes_256_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
+    return generate_aes_key(passphrase, salt, &AesSizes::Aes256);
 }
 
-fn generate_aes_key(key: &[u8], salt: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
-    let seed = pbkdf2_sha1(key, salt, aes_sizes.seed_size());
-    return n_fold_and_encrypt_aes_cbc(&seed, "kerberos".as_bytes(), aes_sizes);
+fn generate_aes_key(passphrase: &[u8], salt: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+    let key = pbkdf2_sha1(passphrase, salt, aes_sizes.seed_size());
+    return dk(&key, "kerberos".as_bytes(), aes_sizes);
 }
 
 pub fn aes_256_decrypt(key: &[u8], ciphertext: &[u8]) -> Vec<u8> {
@@ -58,19 +60,26 @@ pub fn aes_256_decrypt(key: &[u8], ciphertext: &[u8]) -> Vec<u8> {
 }
 
 fn aes_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
-    let ki = n_fold_and_encrypt_aes_cbc(key, &[0x0, 0x0, 0x0, 0x3, 0x55], aes_sizes);
-    let ke = n_fold_and_encrypt_aes_cbc(key, &[0x0, 0x0, 0x0, 0x3, 0xaa], aes_sizes);
+    let ki = dk(key, &[0x0, 0x0, 0x0, 0x3, 0x55], aes_sizes);
+    let ke = dk(key, &[0x0, 0x0, 0x0, 0x3, 0xaa], aes_sizes);
 
     let ciphertext_end_index = ciphertext.len() - aes_sizes.mac_size();
     let pure_ciphertext = &ciphertext[0..ciphertext_end_index];
     let mac = &ciphertext[ciphertext_end_index..];
 
+    println!("ki = {:?}", ki);
+    println!("ke = {:?}", ke);
+    println!("ciphertext = {:?}", pure_ciphertext);
+    println!("mac = {:?}", mac);
+
     let plaintext = decrypt_with_aes_cbc(&ke, &pure_ciphertext, aes_sizes);
 
-    return Vec::new();
+    let calculated_mac = hmac_sha1(&ki, &plaintext);
+
+    return plaintext;
 }
 
-fn n_fold_and_encrypt_aes_cbc(key: &[u8], constant: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+fn dk(key: &[u8], constant: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
     let mut plaintext = n_fold(constant, aes_sizes.block_size());
     let mut result : Vec<u8> = Vec::new();
 
@@ -91,10 +100,10 @@ fn pbkdf2_sha1(key: &[u8], salt: &[u8], seed_size: usize) -> Vec<u8> {
 
 fn decrypt_with_aes_cbc(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
     let mut decryptor = aes::cbc_decryptor(aes_sizes.key_size(), key, 
-        &ciphertext[0..aes_sizes.block_size()], blockmodes::NoPadding);
+        &vec![0; aes_sizes.block_size()], blockmodes::NoPadding);
 
     let mut plaintext: Vec<u8> = vec![0; ciphertext.len()];
-    decryptor.decrypt(&mut RefReadBuffer::new(&ciphertext[aes_sizes.block_size()..]),
+    decryptor.decrypt(&mut RefReadBuffer::new(ciphertext),
                         &mut RefWriteBuffer::new(&mut plaintext), true).unwrap();
     
     return plaintext;
@@ -321,7 +330,6 @@ mod test {
     }
 
     #[test]
-
     fn test_aes_256_decrypt() {
         let key = [
             0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 
