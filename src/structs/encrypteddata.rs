@@ -15,6 +15,10 @@ impl EncryptedData {
             cipher
         };
     }
+
+    pub fn get_etype(&self) -> &i32 {
+        return &self.etype;
+    }
 }
 
 impl From<&structs_asn1::EncryptedData> for EncryptedData {

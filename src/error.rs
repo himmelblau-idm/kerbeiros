@@ -28,7 +28,9 @@ pub enum KerberosErrorKind {
     #[fail(display = "Not available data")]
     NotAvailableData,
     #[fail (display = "Asn1 error: {}", _0)]
-    Asn1Error(asn1::Asn1ErrorKind)
+    Asn1Error(asn1::Asn1ErrorKind),
+    #[fail (display = "Cipher algorithm with etype = {} is not supported", _0)]
+    UnsupportedCipherAlgorithm(i32)
 }
 
 impl KerberosError {

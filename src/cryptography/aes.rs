@@ -45,12 +45,15 @@ pub fn generate_aes_256_key(key: &[u8], salt: &[u8]) -> Vec<u8> {
 
 fn generate_aes_key(key: &[u8], salt: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
     let seed = pbkdf2_sha1(key, salt, aes_sizes.seed_size());
+    return n_fold_and_encrypt_aes_cbc(&seed, "kerberos".as_bytes(), aes_sizes);
+}
 
-    let mut plaintext = n_fold("kerberos".as_bytes(), aes_sizes.block_size());
+fn n_fold_and_encrypt_aes_cbc(key: &[u8], constant: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+    let mut plaintext = n_fold(constant, aes_sizes.block_size());
     let mut result : Vec<u8> = Vec::new();
 
     while result.len() < aes_sizes.seed_size() {
-        plaintext = encrypt_with_aes_cbc(&plaintext, &seed, &aes_sizes);
+        plaintext = encrypt_with_aes_cbc(&plaintext, key, aes_sizes);
         result.append(&mut plaintext.clone());
     }
     return result;

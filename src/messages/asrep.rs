@@ -2,6 +2,8 @@ use super::super::structs_asn1;
 use super::super::tickets::*;
 use super::super::error::*;
 use ascii::AsciiString;
+use super::super::constants::*;
+use super::super::cryptography::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AsRep {
@@ -9,7 +11,7 @@ pub struct AsRep {
     client_name: AsciiString,
     ticket: Ticket,
     enc_part: EncryptedData,
-    enc_salt: Option<Vec<u8>>
+    encryption_salt: Vec<u8>
 }
 
 
@@ -22,12 +24,12 @@ impl AsRep {
             client_name,
             ticket,
             enc_part,
-            enc_salt: None
+            encryption_salt: Vec::new()
         };
     }
 
     fn set_salt(&mut self, salt: Vec<u8>) {
-        self.enc_salt = Some(salt);
+        self.encryption_salt = salt;
     }
     
     
@@ -46,6 +48,27 @@ impl AsRep {
         }
 
         return Ok(as_rep);
+    }
+
+    fn decrypt_enc_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
+        match *self.enc_part.get_etype() {
+            AES256_CTS_HMAC_SHA1_96 => {
+                let key = generate_aes_256_key(password.as_bytes(), &self.encryption_salt);
+            },
+            AES128_CTS_HMAC_SHA1_96 => {
+                let _key = generate_aes_128_key(password.as_bytes(), &self.encryption_salt);
+                unimplemented!()
+            },
+            RC4_HMAC => {
+                let _key = ntlm_hash(password);
+                unimplemented!()
+            }
+            etype => {
+                return Err(KerberosErrorKind::UnsupportedCipherAlgorithm(etype))?;
+            }
+        }
+
+        return Ok(());
     }
 
 }
