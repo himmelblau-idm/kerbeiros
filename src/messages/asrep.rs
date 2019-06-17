@@ -50,10 +50,11 @@ impl AsRep {
         return Ok(as_rep);
     }
 
-    fn decrypt_enc_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
+    pub fn decrypt_enc_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
         match *self.enc_part.get_etype() {
             AES256_CTS_HMAC_SHA1_96 => {
                 let key = generate_aes_256_key(password.as_bytes(), &self.encryption_salt);
+                let plaintext = aes_256_hmac_sh1_decrypt(&key, self.enc_part.get_cipher())?;
             },
             AES128_CTS_HMAC_SHA1_96 => {
                 let _key = generate_aes_128_key(password.as_bytes(), &self.encryption_salt);

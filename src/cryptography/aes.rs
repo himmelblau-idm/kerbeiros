@@ -60,7 +60,7 @@ pub fn decrypt_aes_ecb(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> V
 
 
 pub fn encrypt_aes_cbc(key: &[u8], plaintext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
-    let mut encryptor = aes::cbc_encryptor(aes_sizes.key_size(), &key, 
+    let mut encryptor = aes::cbc_encryptor(aes_sizes.key_size(), key, 
             &vec![0; aes_sizes.block_size()], blockmodes::NoPadding);
 
     let mut ciphertext: Vec<u8> = vec![0; aes_sizes.block_size()];

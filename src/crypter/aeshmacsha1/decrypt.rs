@@ -31,7 +31,6 @@ fn aes_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> 
 
 
 fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
-
     if ciphertext.len() == aes_sizes.block_size() {
         let plaintext = decrypt_aes_ecb(key, ciphertext, aes_sizes);
         return Ok(plaintext);
@@ -85,6 +84,24 @@ fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Kerbero
     return Ok(plaintext);
 }
 
+/*
+fn divide_in_n_bytes_blocks(v: &[u8], nbytes: usize) -> Vec<Vec<u8>> {
+    let mut blocks: Vec<Vec<u8>> = Vec::new();
+
+    let mut i = 0;
+    while i < v.len() {
+        let mut j = i + nbytes;
+        if j > v.len() {
+            j = v.len();
+        }
+
+        blocks.push(v[i..j].to_vec());
+        i += nbytes;
+    }
+
+    return blocks;
+}
+*/
 
 
 #[cfg(test)]

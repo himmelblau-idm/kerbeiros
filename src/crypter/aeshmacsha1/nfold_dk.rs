@@ -4,17 +4,18 @@ use num::Integer;
 pub fn dk(key: &[u8], constant: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
     let mut plaintext = n_fold(constant, aes_sizes.block_size());
     let mut result : Vec<u8> = Vec::new();
-
+    
     while result.len() < aes_sizes.seed_size() {
-        plaintext = encrypt_aes_cbc(&plaintext, key, aes_sizes);
+        plaintext = encrypt_aes_cbc(key, &plaintext, aes_sizes);
         result.append(&mut plaintext.clone());
     }
+
     return result;
 }
 
 pub fn n_fold(v: &[u8], nbytes: usize) -> Vec<u8> {
     let data_13_series = generate_13_bits_rotations_serie(v, nbytes);
-    let nbytes_chunks = divide_in_n_bytes_chunks(&data_13_series, nbytes);
+    let nbytes_chunks = divide_in_exact_n_bytes_chunks(&data_13_series, nbytes);
     return add_chunks_with_1s_complement_addition(&nbytes_chunks);
 }
 
@@ -49,7 +50,7 @@ fn rotate_rigth_n_bits(v: &[u8], nbits: usize) -> Vec<u8> {
     return v_rotate;
 }
 
-fn divide_in_n_bytes_chunks(v: &[u8], nbytes: usize) -> Vec<Vec<u8>> {
+fn divide_in_exact_n_bytes_chunks(v: &[u8], nbytes: usize) -> Vec<Vec<u8>> {
     let mut nbytes_chunks: Vec<Vec<u8>> = Vec::new();
 
     let mut i = 0;
