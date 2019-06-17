@@ -38,18 +38,11 @@ fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Kerbero
 
     let blocks = divide_in_n_bytes_blocks(&ciphertext, aes_sizes.block_size());
 
-    let mut previous_block = vec![0; aes_sizes.block_size()];
-    let mut plaintext: Vec<u8> = Vec::new();
-
     let second_last_index = blocks.len() - 2;
 
-    for block in blocks[0..second_last_index].iter() {
-        let mut block_plaintext = decrypt_aes_ecb(key, block, aes_sizes);
-        block_plaintext = xorbytes(&block_plaintext, &previous_block);
-
-        plaintext.append(&mut block_plaintext);
-        previous_block = block.clone();
-    }
+    let mut (plaintext, previous_block) = encrypt_several_blocks_xor_aes_ecb(
+        key, &blocks[0..second_last_index], aes_sizes
+    );
 
     let second_last_block_plaintext =  decrypt_aes_ecb(key, &blocks[second_last_index], aes_sizes);
 
@@ -89,6 +82,21 @@ fn divide_in_n_bytes_blocks(v: &[u8], nbytes: usize) -> Vec<Vec<u8>> {
     }
 
     return blocks;
+}
+
+fn encrypt_several_blocks_xor_aes_ecb(key: &[u8], blocks: &[Vec<u8>], aes_sizes: &AesSizes) -> (Vec<u8>, Vec<u8>) {
+    let mut plaintext: Vec<u8> = Vec::new();
+    let mut previous_block = vec![0; aes_sizes.block_size()];
+
+    for block in blocks.iter() {
+        let mut block_plaintext = decrypt_aes_ecb(key, block, aes_sizes);
+        block_plaintext = xorbytes(&block_plaintext, &previous_block);
+
+        plaintext.append(&mut block_plaintext);
+        previous_block = block.clone();
+    }
+
+    return (plaintext, previous_block);
 }
 
 
