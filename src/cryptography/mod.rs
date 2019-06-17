@@ -40,6 +40,16 @@ pub fn random_bytes(size: usize) -> Vec<u8> {
     return bytes;
 }
 
+pub fn xorbytes(v1: &[u8], v2: &[u8]) -> Vec<u8> {
+    let mut v_xored = Vec::with_capacity(v1.len());
+
+    for i in 0..v1.len() {
+        v_xored.push(v1[i] ^ v2[i])
+    }
+
+    return v_xored;
+}
+
 
 #[cfg(test)]
 mod test {

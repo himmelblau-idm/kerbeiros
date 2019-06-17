@@ -3,7 +3,7 @@ use super::super::tickets::*;
 use super::super::error::*;
 use ascii::AsciiString;
 use super::super::constants::*;
-use super::super::cryptography::*;
+use super::super::crypter::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AsRep {
