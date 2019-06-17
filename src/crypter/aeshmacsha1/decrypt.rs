@@ -40,27 +40,14 @@ fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Kerbero
 
     let second_last_index = blocks.len() - 2;
 
-    let mut (plaintext, previous_block) = encrypt_several_blocks_xor_aes_ecb(
+    let (mut plaintext, previous_block) = decrypt_several_blocks_xor_aes_ecb(
         key, &blocks[0..second_last_index], aes_sizes
     );
 
-    let second_last_block_plaintext =  decrypt_aes_ecb(key, &blocks[second_last_index], aes_sizes);
-
-    let last_block_length =  blocks[blocks.len() - 1].len();
-    let mut last_block = blocks[blocks.len() - 1].to_vec();
-
-    let mut last_plaintext = xorbytes(
-        &second_last_block_plaintext[0..last_block_length], 
-        &last_block
+    let mut last_plaintext = decrypt_last_two_blocks(
+        key, &blocks[second_last_index..], &previous_block, aes_sizes
     );
-
-    let mut omitted = second_last_block_plaintext[last_block_length..].to_vec();    
-
-    last_block.append(&mut omitted);
-
-    let last_block_plaintext = decrypt_aes_ecb(key, &last_block, aes_sizes);
-
-    plaintext.append(&mut xorbytes(&last_block_plaintext, &previous_block));
+    
     plaintext.append(&mut last_plaintext);
     
     return Ok(plaintext);
@@ -84,7 +71,7 @@ fn divide_in_n_bytes_blocks(v: &[u8], nbytes: usize) -> Vec<Vec<u8>> {
     return blocks;
 }
 
-fn encrypt_several_blocks_xor_aes_ecb(key: &[u8], blocks: &[Vec<u8>], aes_sizes: &AesSizes) -> (Vec<u8>, Vec<u8>) {
+fn decrypt_several_blocks_xor_aes_ecb(key: &[u8], blocks: &[Vec<u8>], aes_sizes: &AesSizes) -> (Vec<u8>, Vec<u8>) {
     let mut plaintext: Vec<u8> = Vec::new();
     let mut previous_block = vec![0; aes_sizes.block_size()];
 
@@ -97,6 +84,30 @@ fn encrypt_several_blocks_xor_aes_ecb(key: &[u8], blocks: &[Vec<u8>], aes_sizes:
     }
 
     return (plaintext, previous_block);
+}
+
+fn decrypt_last_two_blocks(key: &[u8], blocks: &[Vec<u8>], previous_block: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+    let second_last_block_plaintext =  decrypt_aes_ecb(key, &blocks[0], aes_sizes);
+
+    let last_block_length =  blocks[1].len();
+    let mut last_block = blocks[1].to_vec();
+
+    let mut last_plaintext = xorbytes(
+        &second_last_block_plaintext[0..last_block_length], 
+        &last_block
+    );
+
+    let mut omitted = second_last_block_plaintext[last_block_length..].to_vec();    
+
+    last_block.append(&mut omitted);
+
+    let last_block_plaintext = decrypt_aes_ecb(key, &last_block, aes_sizes);
+
+    let mut plaintext = Vec::new();
+    plaintext.append(&mut xorbytes(&last_block_plaintext, &previous_block));
+    plaintext.append(&mut last_plaintext);
+
+    return plaintext;
 }
 
 
