@@ -81,18 +81,14 @@ fn aes_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> 
         return Err(KerberosErrorKind::DecryptionError("Hmac integrity failure".to_string()))?;
     }
 
-    return Ok(plaintext);
+    return Ok(plaintext[aes_sizes.block_size()..].to_vec());
 }
 
 
 fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
-    let mut decryptor = aes::ecb_decryptor(aes_sizes.key_size(), key, blockmodes::NoPadding);
 
     if ciphertext.len() == aes_sizes.block_size() {
-        let mut plaintext: Vec<u8> = vec![0; ciphertext.len()];
-        decryptor.decrypt(&mut RefReadBuffer::new(ciphertext),
-                        &mut RefWriteBuffer::new(&mut plaintext), true).unwrap();
-        
+        let plaintext = aes_cbc_decrypt(key, ciphertext, aes_sizes);
         return Ok(plaintext);
     }
 
@@ -101,8 +97,8 @@ fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Kerbero
     let mut i = 0;
     while i < ciphertext.len() {
         let mut j = i + aes_sizes.block_size();
-        if j >= ciphertext.len() {
-            j = ciphertext.len() - 1;
+        if j > ciphertext.len() {
+            j = ciphertext.len();
         }
 
         blocks.push(ciphertext[i..j].to_vec());
@@ -115,40 +111,42 @@ fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Kerbero
     let second_last_index = blocks.len() - 2;
 
     for block in blocks[0..second_last_index].iter() {
-        let mut block_plaintext: Vec<u8> = vec![0; aes_sizes.block_size()];
-        decryptor.decrypt(&mut RefReadBuffer::new(block),
-                        &mut RefWriteBuffer::new(&mut block_plaintext), true).unwrap();
-        
-        plaintext.append(&mut xorbytes(&block_plaintext, &previous_block));
+        let mut block_plaintext = aes_cbc_decrypt(key, block, aes_sizes);
+        block_plaintext = xorbytes(&block_plaintext, &previous_block);
 
+        plaintext.append(&mut block_plaintext);
         previous_block = block.clone();
     }
 
-    let mut second_last_block_plaintext: Vec<u8> = vec![0; aes_sizes.block_size()];
-        decryptor.decrypt(&mut RefReadBuffer::new(&blocks[second_last_index]),
-                        &mut RefWriteBuffer::new(&mut second_last_block_plaintext), true).unwrap();
+    let second_last_block_plaintext =  aes_cbc_decrypt(key, &blocks[second_last_index], aes_sizes);
 
     let last_block_length =  blocks[blocks.len() - 1].len();
+    let mut last_block = blocks[blocks.len() - 1].to_vec();
 
     let mut last_plaintext = xorbytes(
         &second_last_block_plaintext[0..last_block_length], 
-        &blocks[blocks.len() - 1]
+        &last_block
     );
 
-    let mut omitted = second_last_block_plaintext[last_block_length..].to_vec();
-
-    let mut last_block = blocks[blocks.len() - 1].to_vec();
+    let mut omitted = second_last_block_plaintext[last_block_length..].to_vec();    
 
     last_block.append(&mut omitted);
 
-    let mut last_block_plaintext: Vec<u8> = vec![0; aes_sizes.block_size()];
-        decryptor.decrypt(&mut RefReadBuffer::new(&last_block),
-                        &mut RefWriteBuffer::new(&mut last_block_plaintext), true).unwrap();
+    let last_block_plaintext = aes_cbc_decrypt(key, &last_block, aes_sizes);
 
     plaintext.append(&mut xorbytes(&last_block_plaintext, &previous_block));
     plaintext.append(&mut last_plaintext);
     
     return Ok(plaintext);
+}
+
+fn aes_cbc_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+    let mut decryptor = aes::ecb_decryptor(aes_sizes.key_size(), key, blockmodes::NoPadding);
+    let mut plaintext: Vec<u8> = vec![0; ciphertext.len()];
+        decryptor.decrypt(&mut RefReadBuffer::new(ciphertext),
+                        &mut RefWriteBuffer::new(&mut plaintext), true).unwrap();
+    
+    return plaintext;
 }
 
 
