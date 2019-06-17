@@ -36,18 +36,7 @@ fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Kerbero
         return Ok(plaintext);
     }
 
-    let mut blocks: Vec<Vec<u8>> = Vec::new();
-
-    let mut i = 0;
-    while i < ciphertext.len() {
-        let mut j = i + aes_sizes.block_size();
-        if j > ciphertext.len() {
-            j = ciphertext.len();
-        }
-
-        blocks.push(ciphertext[i..j].to_vec());
-        i += aes_sizes.block_size();
-    }
+    let blocks = divide_in_n_bytes_blocks(&ciphertext, aes_sizes.block_size());
 
     let mut previous_block = vec![0; aes_sizes.block_size()];
     let mut plaintext: Vec<u8> = Vec::new();
@@ -84,7 +73,7 @@ fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Kerbero
     return Ok(plaintext);
 }
 
-/*
+
 fn divide_in_n_bytes_blocks(v: &[u8], nbytes: usize) -> Vec<Vec<u8>> {
     let mut blocks: Vec<Vec<u8>> = Vec::new();
 
@@ -101,7 +90,6 @@ fn divide_in_n_bytes_blocks(v: &[u8], nbytes: usize) -> Vec<Vec<u8>> {
 
     return blocks;
 }
-*/
 
 
 #[cfg(test)]
