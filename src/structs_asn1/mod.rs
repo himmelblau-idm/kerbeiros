@@ -25,6 +25,8 @@ mod kerberosflags;
 mod encrypteddata;
 pub use encrypteddata::EncryptedData;
 
+mod encryptionkey;
+
 mod ticket;
 pub use ticket::Ticket;
 

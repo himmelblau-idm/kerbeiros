@@ -55,6 +55,7 @@ impl AsRep {
             AES256_CTS_HMAC_SHA1_96 => {
                 let key = generate_aes_256_key(password.as_bytes(), &self.encryption_salt);
                 let plaintext = aes_256_hmac_sh1_decrypt(&key, self.enc_part.get_cipher())?;
+                // decodear plaintext en una estructura de los datos encriptados...
             },
             AES128_CTS_HMAC_SHA1_96 => {
                 let _key = generate_aes_128_key(password.as_bytes(), &self.encryption_salt);
@@ -77,7 +78,6 @@ impl AsRep {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::super::constants::*;
 
     #[test]
     fn test_parse_as_rep() {
