@@ -30,11 +30,15 @@ mod encryptionkey;
 mod ticket;
 pub use ticket::Ticket;
 
+mod ticketflags;
+
 pub mod asreq;
 pub use asreq::AsReq;
 
 pub mod asrep;
 pub use asrep::AsRep;
+
+mod encasreppart;
 
 mod lastreq;
 

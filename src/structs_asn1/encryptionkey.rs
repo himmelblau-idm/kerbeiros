@@ -1,10 +1,11 @@
 use asn1::*;
 use asn1_derive::*;
-use super::int32::*;
+pub use super::int32::*;
+pub use asn1::OctetString;
 use super::super::error::*;
 
 #[derive(Debug, PartialEq, Clone)]
-struct EncryptionKey {
+pub struct EncryptionKey {
     keytype: Int32,
     keyvalue: Vec<u8>
 }
@@ -22,7 +23,7 @@ impl EncryptionKey {
 
 
 #[derive(Asn1Sequence)]
-struct EncryptionKeyAsn1 {
+pub struct EncryptionKeyAsn1 {
     #[seq_comp(context_tag = 0)]
     keytype: SeqField<Int32Asn1>,
     #[seq_comp(context_tag = 1)]
@@ -52,6 +53,12 @@ impl EncryptionKeyAsn1 {
         return Ok(encryption_key);
     }
 
+}
+
+impl Asn1InstanciableObject for EncryptionKeyAsn1 {
+    fn new_default() -> Self {
+        return Self::new_empty();
+    }
 }
 
 

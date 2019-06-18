@@ -4,7 +4,7 @@ use super::super::super::error::*;
 use std::ops::{Deref, DerefMut};
 
 #[derive(Debug, Clone, PartialEq)]
-struct LastReq {
+pub struct LastReq {
     entries: Vec<LastReqEntry>
 }
 
@@ -28,7 +28,7 @@ impl DerefMut for LastReq {
     }
 }
 
-struct LastReqAsn1 {
+pub struct LastReqAsn1 {
     subtype: SequenceOf<LastReqEntryAsn1>
 }
 
@@ -70,6 +70,11 @@ impl Asn1Object for LastReqAsn1 {
     }
 }
 
+impl Asn1InstanciableObject for LastReqAsn1 {
+    fn new_default() -> Self {
+        return Self::new_empty();
+    }
+}
 
 #[cfg(test)]
 mod test {
