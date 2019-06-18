@@ -36,6 +36,8 @@ pub use asreq::AsReq;
 pub mod asrep;
 pub use asrep::AsRep;
 
+mod lastreq;
+
 mod kdcreqbody;
 mod kdcoptions;
 

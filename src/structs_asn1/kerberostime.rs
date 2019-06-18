@@ -1,4 +1,4 @@
-use chrono::prelude::*;
+pub use chrono::prelude::*;
 use asn1::*;
 use std::ops::Deref;
 use super::super::error::*;

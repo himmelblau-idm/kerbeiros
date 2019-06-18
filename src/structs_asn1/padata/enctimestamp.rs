@@ -3,7 +3,6 @@ use asn1_derive::*;
 use super::super::kerberostime::*;
 use super::super::microseconds::*;
 use super::super::super::error::*;
-use chrono::prelude::*;
 
 
 pub struct PaEncTsEnc {
