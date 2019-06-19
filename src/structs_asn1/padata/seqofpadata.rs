@@ -4,6 +4,7 @@ use super::padata::*;
 use super::super::super::error::*;
 
 pub type MethodData = SeqOfPaData;
+pub type MethodDataAsn1 = SeqOfPaDataAsn1;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct SeqOfPaData {

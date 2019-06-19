@@ -8,6 +8,7 @@ use super::ticketflags::*;
 use super::realm::*;
 use super::principalname::*;
 use super::hostaddress::*;
+use super::padata::*;
 use super::super::error::*;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -23,7 +24,8 @@ struct EncASRepPart {
     renew_till: Option<KerberosTime>,
     srealm: Realm,
     sname: PrincipalName,
-    caddr: Option<HostAddresses>
+    caddr: Option<HostAddresses>,
+    encrypted_pa_data: Option<MethodData>
 }
 
 impl EncASRepPart {
@@ -45,7 +47,8 @@ impl EncASRepPart {
             renew_till: None,
             srealm,
             sname,
-            caddr: None
+            caddr: None,
+            encrypted_pa_data: None
         };
     }
 
@@ -63,6 +66,10 @@ impl EncASRepPart {
 
     fn set_caddr(&mut self, caddr: HostAddresses) {
         self.caddr = Some(caddr);
+    }
+
+    fn set_encrypted_pa_data(&mut self, encrypted_pa_data: MethodData) {
+        self.encrypted_pa_data = Some(encrypted_pa_data);
     }
 
 }
@@ -94,7 +101,8 @@ struct EncASRepPartAsn1 {
     sname: SeqField<PrincipalNameAsn1>,
     #[seq_comp(context_tag = 11, optional)]
     caddr: SeqField<HostAddressesAsn1>,
-
+    #[seq_comp(context_tag = 12, optional)]
+    encrypted_pa_data: SeqField<MethodDataAsn1>
 }
 
 impl EncASRepPartAsn1 {
@@ -114,6 +122,7 @@ impl EncASRepPartAsn1 {
             srealm: SeqField::new(),
             sname: SeqField::new(),
             caddr: SeqField::new(),
+            encrypted_pa_data: SeqField::new()
         };
     }
 
@@ -151,6 +160,10 @@ impl EncASRepPartAsn1 {
 
         if let Some(caddr) = self.get_caddr() {
             enc_as_rep_part.set_caddr(caddr.no_asn1_type()?);
+        }
+
+        if let Some(encrypted_pa_data) = self.get_encrypted_pa_data() {
+            enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_data.no_asn1_type()?);
         }
         
         return Ok(enc_as_rep_part);
@@ -234,13 +247,18 @@ mod test {
         let mut sname =  PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
         sname.push(KerberosString::_from("KINGDOM.HEARTS"));
 
+        let mut encrypted_pa_datas = MethodData::new();
+        encrypted_pa_datas.push(
+            PaData::Raw(Int32::new(PA_SUPPORTED_ENCTYPES), vec![0x1f, 0x0, 0x0, 0x0])
+        );
+
         let mut enc_as_rep_part = EncASRepPart::new(
             encryption_key,
             last_req,
             UInt32::new(104645460),
             ticket_flags,
             kerb_time.clone(),
-            kerb_time.clone(),
+            KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(16, 00, 31)),
             Realm::_from("KINGDOM.HEARTS"),
             sname
         );
@@ -249,13 +267,18 @@ mod test {
             KerberosTime::new(Utc.ymd(2037, 9, 14).and_hms(02, 48, 05))
         );
 
-        enc_as_rep_part.set_starttime(kerb_time.clone());
-        enc_as_rep_part.set_renew_till(kerb_time);
+        enc_as_rep_part.set_starttime(kerb_time);
+        enc_as_rep_part.set_renew_till(
+            KerberosTime::new(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31))
+        );
         enc_as_rep_part.set_caddr(
             HostAddresses::new(
                 HostAddress::NetBios("HOLLOWBASTION".to_string())
             )
         );
+        enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_datas);
+
+
 
         assert_eq!(enc_as_rep_part, enc_as_rep_part_asn1.no_asn1_type().unwrap());
 
