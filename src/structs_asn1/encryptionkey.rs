@@ -12,7 +12,7 @@ pub struct EncryptionKey {
 
 impl EncryptionKey {
 
-    fn new(keytype: Int32, keyvalue: Vec<u8>) -> Self {
+    pub fn new(keytype: Int32, keyvalue: Vec<u8>) -> Self {
         return Self {
             keytype,
             keyvalue
@@ -40,7 +40,7 @@ impl EncryptionKeyAsn1 {
         }
     }
 
-    fn no_asn1_type(&self) -> KerberosResult<EncryptionKey> {
+    pub fn no_asn1_type(&self) -> KerberosResult<EncryptionKey> {
         let keytype = self.get_keytype().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         let keyvalue = self.get_keyvalue().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         let keyvalue_value = keyvalue.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;

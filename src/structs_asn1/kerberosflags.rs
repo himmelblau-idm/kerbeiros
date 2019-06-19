@@ -1,6 +1,8 @@
 use asn1::*;
 use super::super::byteparser;
+use super::super::error::*;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct KerberosFlags {
     flags: u32
 }
@@ -49,6 +51,18 @@ impl KerberosFlagsAsn1 {
         return Self{
             subtype: BitSring::new_empty()
         };
+    }
+
+    pub fn no_asn1_type(&self) -> KerberosResult<KerberosFlags> {
+        let value = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let mut flags = KerberosFlags::new();
+        let bytes = value.get_bytes();
+        let mut array_bytes = [0; 4];
+        let array_bytes_len = array_bytes.len();
+        array_bytes.copy_from_slice(&bytes[..array_bytes_len]);
+        flags.set_flags(byteparser::le_bytes_to_u32(&array_bytes));
+
+        return Ok(flags);
     }
  
 }

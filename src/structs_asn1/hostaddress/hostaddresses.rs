@@ -1,12 +1,21 @@
 use asn1::*;
 use super::hostaddress::*;
+use super::super::super::error::*;
+use std::ops::{Deref, DerefMut};
 
-
+#[derive(Debug, PartialEq, Clone)]
 pub struct HostAddresses {
     addresses: Vec<HostAddress>
 }
 
 impl HostAddresses {
+
+    fn new_empty() -> Self {
+        return Self {
+            addresses: Vec::new()
+        };
+    }
+
     pub fn new(address: HostAddress) -> HostAddresses {
         return HostAddresses{
             addresses: vec![address]
@@ -17,6 +26,19 @@ impl HostAddresses {
         return HostAddressesAsn1::new(self);
     }
 
+}
+
+impl Deref for HostAddresses {
+    type Target = Vec<HostAddress>;
+    fn deref(&self) -> &Vec<HostAddress> {
+        &self.addresses
+    }
+}
+
+impl DerefMut for HostAddresses {
+    fn deref_mut(&mut self) -> &mut Vec<HostAddress> {
+        &mut self.addresses
+    }
 }
 
 pub struct HostAddressesAsn1 {
@@ -44,6 +66,15 @@ impl HostAddressesAsn1 {
         }
 
         return seq_of_host_addresses;
+    }
+
+    pub fn no_asn1_type(&self) -> KerberosResult<HostAddresses> {
+        let mut host_addresses = HostAddresses::new_empty();
+        for host_address_asn1 in self.subtype.iter() {
+            host_addresses.push(host_address_asn1.no_asn1_type()?);
+        }
+
+        return Ok(host_addresses);
     }
 }
 
@@ -96,5 +127,21 @@ mod tests {
                         0xa1, 0x12, 0x04, 0x10, 0x48, 0x4f, 0x4c, 0x4c, 0x4f, 0x57, 
                         0x42, 0x41, 0x53, 0x54, 0x49, 0x4f, 0x4e, 0x20, 0x20, 0x20],
                    addresses.asn1_type().encode().unwrap());
+    }
+
+    #[test]
+    fn test_decode_netbios_host_addresses() {
+        let mut host_addresses_asn1 = HostAddressesAsn1::new_empty();
+
+        host_addresses_asn1.decode(&[
+            0x30, 0x1b, 
+            0x30, 0x19, 0xa0, 0x03, 0x02, 0x01, 0x14, 
+            0xa1, 0x12, 0x04, 0x10, 0x48, 0x4f, 0x4c, 0x4c, 0x4f, 0x57, 
+            0x42, 0x41, 0x53, 0x54, 0x49, 0x4f, 0x4e, 0x20, 0x20, 0x20]
+        ).unwrap();
+
+        let netbios_address = HostAddress::NetBios("HOLLOWBASTION".to_string());
+        let addresses = HostAddresses::new(netbios_address);
+        assert_eq!(addresses, host_addresses_asn1.no_asn1_type().unwrap());
     }
 }

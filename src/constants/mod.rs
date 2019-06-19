@@ -1,11 +1,17 @@
 pub mod errorcodes;
-pub mod kdcoptions;
-pub mod padatatypes;
-pub mod principalnametypes;
-pub mod etypes;
-
 pub use errorcodes::*;
+
+pub mod kdcoptions;
 pub use kdcoptions::*;
+
+pub mod padatatypes;
 pub use padatatypes::*;
+
+pub mod principalnametypes;
 pub use principalnametypes::*;
+
+pub mod etypes;
 pub use etypes::*;
+
+pub mod hostaddress;
+pub use hostaddress::*;

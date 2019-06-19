@@ -10,7 +10,7 @@ pub struct LastReq {
 
 impl LastReq {
 
-    fn new_empty() -> Self {
+    pub fn new_empty() -> Self {
         return Self{ entries: Vec::new() };
     }
 }
