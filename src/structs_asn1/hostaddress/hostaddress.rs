@@ -79,10 +79,16 @@ impl HostAddressAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<HostAddress> {
-        let addr_type_asn1 = self.get_addr_type().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let addr_type_asn1 = self.get_addr_type().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("HostAddress::addr_type".to_string())
+        )?;
         let addr_type = addr_type_asn1.no_asn1_type()?;
-        let address_asn1 = self.get_address().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let address = address_asn1.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let address_asn1 = self.get_address().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("HostAddress::address".to_string())
+        )?;
+        let address = address_asn1.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("HostAddress::address".to_string())
+        )?;
 
         let host_address = match *addr_type {
             NETBIOS_ADDRESS => {

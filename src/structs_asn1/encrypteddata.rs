@@ -74,9 +74,15 @@ impl EncryptedDataAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<EncryptedData> {
-        let etype = self.get_etype().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let cipher = self.get_cipher().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let cipher_value = cipher.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let etype = self.get_etype().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncryptedData::etype".to_string())
+        )?;
+        let cipher = self.get_cipher().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncryptedData::cipher".to_string())
+        )?;
+        let cipher_value = cipher.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncryptedData::cipher".to_string())
+        )?;
 
         let mut enc_data = EncryptedData::new(etype.no_asn1_type()?, cipher_value.clone());
 

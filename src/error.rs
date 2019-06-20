@@ -25,8 +25,8 @@ pub enum KerberosErrorKind {
     PrincipalNameTypeUndefined(String),
     #[fail(display = "Invalid microseconds value {}. Max is 999999", _0)]
     InvalidMicroseconds(u32),
-    #[fail(display = "Not available data")]
-    NotAvailableData,
+    #[fail(display = "Not available data {}", _0)]
+    NotAvailableData(String),
     #[fail (display = "Asn1 error: {}", _0)]
     Asn1Error(asn1::Asn1ErrorKind),
     #[fail (display = "Cipher algorithm with etype = {} is not supported", _0)]

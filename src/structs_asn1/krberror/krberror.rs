@@ -116,12 +116,20 @@ impl KrbErrorAsn1 {
     fn no_asn1_type(&self) -> KerberosResult<KrbError> {
         let mut krb_error = KrbError::new_empty();
 
-        let pvno = self.get_pvno().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let pvno_value = pvno.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let pvno = self.get_pvno().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::pvno".to_string())
+        )?;
+        let pvno_value = pvno.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::pvno".to_string())
+        )?;
         krb_error.pvno = *pvno_value as i8;
 
-        let msg_type = self.get_msg_type().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let msg_type_value = msg_type.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let msg_type = self.get_msg_type().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::msg_type".to_string())
+        )?;
+        let msg_type_value = msg_type.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::msg_type".to_string())
+        )?;
         krb_error.msg_type = *msg_type_value as i8;
 
         
@@ -133,13 +141,19 @@ impl KrbErrorAsn1 {
             krb_error.cusec = Some(cusec.no_asn1_type()?);
         }
 
-        let stime = self.get_stime().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let stime = self.get_stime().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::stime".to_string())
+        )?;
         krb_error.stime = stime.no_asn1_type()?;
 
-        let susec = self.get_susec().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let susec = self.get_susec().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::susec".to_string())
+        )?;
         krb_error.susec = susec.no_asn1_type()?;
 
-        let error_code = self.get_error_code().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let error_code = self.get_error_code().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::error_code".to_string())
+        )?;
         krb_error.error_code = error_code.no_asn1_type()?;
 
         if let Some(crealm) = self.get_crealm() {
@@ -150,10 +164,14 @@ impl KrbErrorAsn1 {
             krb_error.cname = Some(cname.no_asn1_type()?);
         }
 
-        let realm = self.get_realm().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let realm = self.get_realm().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::realm".to_string())
+        )?;
         krb_error.realm = realm.no_asn1_type()?;
 
-        let sname = self.get_sname().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let sname = self.get_sname().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::sname".to_string())
+        )?;
         krb_error.sname = sname.no_asn1_type()?;
 
         if let Some(e_text) = self.get_e_text() {
@@ -161,7 +179,9 @@ impl KrbErrorAsn1 {
         }
 
         if let Some(e_data) = self.get_e_data() {
-            let e_data_value = e_data.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+            let e_data_value = e_data.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KrbError::e_data".to_string())
+        )?;
             
             if *krb_error.error_code == KDC_ERR_PREAUTH_REQUIRED {
                 match MethodData::parse(e_data_value) {

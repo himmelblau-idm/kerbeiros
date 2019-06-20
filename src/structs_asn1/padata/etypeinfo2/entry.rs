@@ -87,7 +87,9 @@ impl EtypeInfo2EntryAsn1 {
     pub fn no_asn1_type(&self) -> KerberosResult<EtypeInfo2Entry> {
         let mut entry = EtypeInfo2Entry::new_empty();
 
-        let etype_asn1 = self.get_etype().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let etype_asn1 = self.get_etype().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EtypeInfo2Entry::etype".to_string())
+        )?;
         entry.etype = etype_asn1.no_asn1_type()?;
 
         if let Some(salt_asn1) = self.get_salt() {
@@ -95,7 +97,9 @@ impl EtypeInfo2EntryAsn1 {
         }
         
         if let Some(s2kparams_asn1) = self.get_s2kparams() {
-            let s2kparams = s2kparams_asn1.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+            let s2kparams = s2kparams_asn1.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EtypeInfo2Entry::s2kparams".to_string())
+        )?;
             entry.s2kparams = Some(s2kparams.clone());
         }
 

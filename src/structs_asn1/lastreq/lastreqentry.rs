@@ -40,8 +40,12 @@ impl LastReqEntryAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<LastReqEntry> {
-        let lr_type = self.get_lr_type().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let lr_value = self.get_lr_value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let lr_type = self.get_lr_type().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("LastReqEntry::lr_type".to_string())
+        )?;
+        let lr_value = self.get_lr_value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("LastReqEntry::lr_value".to_string())
+        )?;
 
         let last_req_entry = LastReqEntry::new(
             lr_type.no_asn1_type()?, 

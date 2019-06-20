@@ -55,7 +55,9 @@ impl KerberosStringAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosString> {
-        let ascii_string = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let ascii_string = self.subtype.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KerberosString".to_string())
+        )?;
         return Ok(KerberosString::new(ascii_string.clone()));
     }
 

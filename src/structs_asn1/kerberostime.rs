@@ -48,7 +48,9 @@ impl KerberosTimeAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosTime> {
-        let time = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let time = self.subtype.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KerberosTime".to_string())
+        )?;
         return Ok(KerberosTime::new(time.clone()));
     }
 

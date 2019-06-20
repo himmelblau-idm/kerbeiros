@@ -72,12 +72,22 @@ impl TicketAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<Ticket> {
-        let tkt_vno = self.get_tkt_vno().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let tkt_vno_value = tkt_vno.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let tkt_vno = self.get_tkt_vno().ok_or_else(||
+            KerberosErrorKind::NotAvailableData("Ticket::tkt_vno".to_string())
+        )?;
+        let tkt_vno_value = tkt_vno.value().ok_or_else(||
+            KerberosErrorKind::NotAvailableData("Ticket::tkt_vno".to_string())
+        )?;
 
-        let realm = self.get_realm().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let sname = self.get_sname().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let enc_part = self.get_enc_part().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let realm = self.get_realm().ok_or_else(||
+            KerberosErrorKind::NotAvailableData("Ticket::realm".to_string())
+        )?;
+        let sname = self.get_sname().ok_or_else(||
+            KerberosErrorKind::NotAvailableData("Ticket::sname".to_string())
+        )?;
+        let enc_part = self.get_enc_part().ok_or_else(||
+            KerberosErrorKind::NotAvailableData("Ticket::enc_part".to_string())
+        )?;
 
         return Ok(Ticket::new(
             *tkt_vno_value as i8, 

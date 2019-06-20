@@ -98,10 +98,14 @@ impl PrincipalNameAsn1 {
     pub fn no_asn1_type(&self) -> KerberosResult<PrincipalName> {
         let mut principal_name = PrincipalName::new_empty();
 
-        let name_type = self.get_name_type().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let name_type = self.get_name_type().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("PrincipalName::name_type".to_string())
+        )?;
         principal_name.name_type = name_type.no_asn1_type()?;
 
-        let name_string = self.get_name_string().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let name_string = self.get_name_string().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("PrincipalName::name_string".to_string())
+        )?;
 
         for kerb_string in name_string.iter() {
             principal_name.name_string.push(kerb_string.no_asn1_type()?);

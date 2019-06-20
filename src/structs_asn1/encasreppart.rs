@@ -127,14 +127,30 @@ impl EncASRepPartAsn1 {
     }
 
     fn no_asn1_type(&self) -> KerberosResult<EncASRepPart> {
-        let key = self.get_key().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let last_req = self.get_last_req().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let nonce = self.get_nonce().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let flags = self.get_flags().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let authtime = self.get_authtime().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let endtime = self.get_endtime().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let srealm = self.get_srealm().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let sname = self.get_sname().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let key = self.get_key().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncASRepPart::key".to_string())
+        )?;
+        let last_req = self.get_last_req().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncASRepPart::last_req".to_string())
+        )?;
+        let nonce = self.get_nonce().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncASRepPart::nonce".to_string())
+        )?;
+        let flags = self.get_flags().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncASRepPart::flags".to_string())
+        )?;
+        let authtime = self.get_authtime().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncASRepPart::authtime".to_string())
+        )?;
+        let endtime = self.get_endtime().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncASRepPart::endtime".to_string())
+        )?;
+        let srealm = self.get_srealm().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncASRepPart::srealm".to_string())
+        )?;
+        let sname = self.get_sname().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncASRepPart::sname".to_string())
+        )?;
 
         let mut enc_as_rep_part = EncASRepPart::new(
             key.no_asn1_type()?,

@@ -41,10 +41,16 @@ impl EncryptionKeyAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<EncryptionKey> {
-        let keytype = self.get_keytype().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let keyvalue = self.get_keyvalue().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-        let keyvalue_value = keyvalue.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
-
+        let keytype = self.get_keytype().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncryptionKey::keytype".to_string())
+        )?;
+        let keyvalue = self.get_keyvalue().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncryptionKey::keyvalue".to_string())
+        )?;
+        let keyvalue_value = keyvalue.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("EncryptionKey::keyvalue".to_string())
+        )?;
+        
         let encryption_key = EncryptionKey::new(
             keytype.no_asn1_type()?, 
             keyvalue_value.clone()

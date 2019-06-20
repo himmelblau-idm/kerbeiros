@@ -60,7 +60,9 @@ impl KerberosFlagsAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosFlags> {
-        let value = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let value = self.subtype.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("KerberosFlags".to_string())
+        )?;
         let mut flags = KerberosFlags::new_empty();
         
         let mut bytes = value.get_bytes().clone();

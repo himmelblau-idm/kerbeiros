@@ -43,7 +43,9 @@ impl Int32Asn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<Int32> {
-        let value = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
+        let value = self.subtype.value().ok_or_else(|| 
+            KerberosErrorKind::NotAvailableData("Int32".to_string())
+        )?;
         return Ok(Int32::new(*value as i32));
     }
 
