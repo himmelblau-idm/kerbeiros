@@ -15,3 +15,9 @@ pub use etypes::*;
 
 pub mod hostaddress;
 pub use hostaddress::*;
+
+pub mod ticketflags;
+pub use ticketflags::*;
+
+pub mod apoptions;
+pub use apoptions::*;

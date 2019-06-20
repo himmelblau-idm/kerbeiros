@@ -1,0 +1,14 @@
+pub const RESERVED: u32 = 0x80;
+pub const FORWARDABLE: u32 = 0x40;
+pub const FORWARDED: u32 = 0x20;
+pub const PROXIABLE: u32 = 0x10;
+pub const PROXY: u32 = 0x08;
+pub const MAY_POSTDATE: u32 = 0x04;
+pub const POSTDATE: u32 = 0x02;
+pub const INVALID: u32 = 0x01;
+pub const RENEWABLE: u32 = 0x8000;
+pub const INITIAL: u32 = 0x4000;
+pub const PRE_AUTHENT: u32 = 0x2000;
+pub const HW_AUTHENT: u32 = 0x1000;
+pub const TRANSITED_POLICY_CHECKED: u32 = 0x0800;
+pub const OK_AS_DELEGATE: u32 = 0x0400;

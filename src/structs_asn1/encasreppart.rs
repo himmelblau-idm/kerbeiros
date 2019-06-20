@@ -239,8 +239,13 @@ mod test {
             KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
         ));
 
-        let mut ticket_flags = TicketFlags::new();
-        ticket_flags.set_flags(1088421888);
+        let mut ticket_flags = TicketFlags::new_empty();
+        ticket_flags.set_flags(
+            ticketflags::INITIAL 
+            | ticketflags::FORWARDABLE 
+            | ticketflags::PRE_AUTHENT 
+            | ticketflags::RENEWABLE
+        );
 
         let kerb_time = KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
 
