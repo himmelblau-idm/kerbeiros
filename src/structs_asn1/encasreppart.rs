@@ -12,7 +12,7 @@ use super::padata::*;
 use super::super::error::*;
 
 #[derive(Debug, PartialEq, Clone)]
-struct EncASRepPart {
+pub struct EncAsRepPart {
     key: EncryptionKey,
     last_req: LastReq,
     nonce: UInt32,
@@ -28,7 +28,7 @@ struct EncASRepPart {
     encrypted_pa_data: Option<MethodData>
 }
 
-impl EncASRepPart {
+impl EncAsRepPart {
 
 
     fn new(
@@ -72,11 +72,16 @@ impl EncASRepPart {
         self.encrypted_pa_data = Some(encrypted_pa_data);
     }
 
+    pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
+        let mut enc_as_rep_part_asn1 = EncAsRepPartAsn1::new_empty();
+        enc_as_rep_part_asn1.decode(raw)?;
+        return Ok(enc_as_rep_part_asn1.no_asn1_type().unwrap());
+    }
 }
 
 #[derive(Asn1Sequence)]
 #[seq(application_tag = 25)]
-struct EncASRepPartAsn1 {
+struct EncAsRepPartAsn1 {
     #[seq_comp(context_tag = 0)]
     key: SeqField<EncryptionKeyAsn1>,
     #[seq_comp(context_tag = 1)]
@@ -105,7 +110,7 @@ struct EncASRepPartAsn1 {
     encrypted_pa_data: SeqField<MethodDataAsn1>
 }
 
-impl EncASRepPartAsn1 {
+impl EncAsRepPartAsn1 {
 
 
     fn new_empty() -> Self {
@@ -126,33 +131,33 @@ impl EncASRepPartAsn1 {
         };
     }
 
-    fn no_asn1_type(&self) -> KerberosResult<EncASRepPart> {
+    fn no_asn1_type(&self) -> KerberosResult<EncAsRepPart> {
         let key = self.get_key().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncASRepPart::key".to_string())
+            KerberosErrorKind::NotAvailableData("EncAsRepPart::key".to_string())
         )?;
         let last_req = self.get_last_req().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncASRepPart::last_req".to_string())
+            KerberosErrorKind::NotAvailableData("EncAsRepPart::last_req".to_string())
         )?;
         let nonce = self.get_nonce().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncASRepPart::nonce".to_string())
+            KerberosErrorKind::NotAvailableData("EncAsRepPart::nonce".to_string())
         )?;
         let flags = self.get_flags().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncASRepPart::flags".to_string())
+            KerberosErrorKind::NotAvailableData("EncAsRepPart::flags".to_string())
         )?;
         let authtime = self.get_authtime().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncASRepPart::authtime".to_string())
+            KerberosErrorKind::NotAvailableData("EncAsRepPart::authtime".to_string())
         )?;
         let endtime = self.get_endtime().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncASRepPart::endtime".to_string())
+            KerberosErrorKind::NotAvailableData("EncAsRepPart::endtime".to_string())
         )?;
         let srealm = self.get_srealm().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncASRepPart::srealm".to_string())
+            KerberosErrorKind::NotAvailableData("EncAsRepPart::srealm".to_string())
         )?;
         let sname = self.get_sname().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncASRepPart::sname".to_string())
+            KerberosErrorKind::NotAvailableData("EncAsRepPart::sname".to_string())
         )?;
 
-        let mut enc_as_rep_part = EncASRepPart::new(
+        let mut enc_as_rep_part = EncAsRepPart::new(
             key.no_asn1_type()?,
             last_req.no_asn1_type()?,
             nonce.no_asn1_type()?,
@@ -236,7 +241,7 @@ mod test {
             0x04, 0x1f, 0x00, 0x00, 0x00
         ];
 
-        let mut enc_as_rep_part_asn1 = EncASRepPartAsn1::new_empty();
+        let mut enc_as_rep_part_asn1 = EncAsRepPartAsn1::new_empty();
         enc_as_rep_part_asn1.decode(&raw).unwrap();
 
 
@@ -273,7 +278,7 @@ mod test {
             PaData::Raw(Int32::new(PA_SUPPORTED_ENCTYPES), vec![0x1f, 0x0, 0x0, 0x0])
         );
 
-        let mut enc_as_rep_part = EncASRepPart::new(
+        let mut enc_as_rep_part = EncAsRepPart::new(
             encryption_key,
             last_req,
             UInt32::new(104645460),

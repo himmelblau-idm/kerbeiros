@@ -6,11 +6,17 @@ use super::super::constants::*;
 use super::super::crypter::*;
 
 #[derive(Debug, Clone, PartialEq)]
+enum AsRepEncPart{
+    EncryptedData(EncryptedData),
+    EncAsRepPart(EncAsRepPart)
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct AsRep {
     client_realm: AsciiString,
     client_name: AsciiString,
     ticket: Ticket,
-    enc_part: EncryptedData,
+    enc_part: AsRepEncPart,
     encryption_salt: Vec<u8>
 }
 
@@ -18,7 +24,7 @@ pub struct AsRep {
 impl AsRep {
 
     fn new(client_realm: AsciiString, client_name: AsciiString, 
-        ticket: Ticket, enc_part: EncryptedData) -> Self {
+        ticket: Ticket, enc_part: AsRepEncPart) -> Self {
         return Self {
             client_realm,
             client_name,
@@ -40,7 +46,7 @@ impl AsRep {
             as_rep_asn1.get_crealm_ascii_string(),
             as_rep_asn1.get_cname_ascii_string(),
             Ticket::from(as_rep_asn1.get_ticket()),
-            EncryptedData::from(as_rep_asn1.get_enc_part())
+            AsRepEncPart::EncryptedData(EncryptedData::from(as_rep_asn1.get_enc_part()))
         );
 
         if let Some(salt) = as_rep_asn1.get_salt() {
@@ -50,12 +56,25 @@ impl AsRep {
         return Ok(as_rep);
     }
 
-    pub fn decrypt_enc_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
-        match *self.enc_part.get_etype() {
+    pub fn decrypt_encrypted_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
+        match self.enc_part {
+            AsRepEncPart::EncryptedData(enc_data) => {
+                return self._decrypt_enc_part_with_password(enc_data, password);
+            }
+            AsRepEncPart::EncAsRepPart(_) => {
+                return Ok(());
+            }
+        }
+    }
+
+    fn _decrypt_enc_part_with_password(&mut self, enc_part: EncryptedData, password: &str) -> KerberosResult<()> {
+        match *enc_part.get_etype() {
             AES256_CTS_HMAC_SHA1_96 => {
                 let key = generate_aes_256_key(password.as_bytes(), &self.encryption_salt);
-                let plaintext = aes_256_hmac_sh1_decrypt(&key, self.enc_part.get_cipher())?;
-                // decodear plaintext en una estructura de los datos encriptados...
+                let plaintext = aes_256_hmac_sh1_decrypt(&key, enc_part.get_cipher())?;
+                self.enc_part = AsRepEncPart::EncAsRepPart(
+                    EncAsRepPart::from(structs_asn1::EncAsRepPart::parse(&plaintext)?)
+                );
             },
             AES128_CTS_HMAC_SHA1_96 => {
                 let _key = generate_aes_128_key(password.as_bytes(), &self.encryption_salt);
@@ -126,7 +145,7 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(), 
             AsciiString::from_ascii("mickey").unwrap(),
             ticket,
-            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![9])
+            AsRepEncPart::EncryptedData(EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![9]))
         );
 
         as_rep.set_salt("KINGDOM.HEARTSmickey".as_bytes().to_vec());

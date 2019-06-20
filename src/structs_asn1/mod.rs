@@ -39,6 +39,7 @@ pub mod asrep;
 pub use asrep::AsRep;
 
 mod encasreppart;
+pub use encasreppart::EncAsRepPart;
 
 mod lastreq;
 
