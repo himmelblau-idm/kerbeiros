@@ -62,14 +62,26 @@ impl KerberosFlagsAsn1 {
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosFlags> {
         let value = self.subtype.value().ok_or_else(|| KerberosErrorKind::NotAvailableData)?;
         let mut flags = KerberosFlags::new_empty();
-        let bytes = value.get_bytes();
+        
+        let mut bytes = value.get_bytes().clone();
+
+        let mut i = bytes.len();
+        while i < 4 {
+            bytes.push(0);
+            i += 1;
+        }
+
         let mut array_bytes = [0; 4];
         let array_bytes_len = array_bytes.len();
         array_bytes.copy_from_slice(&bytes[..array_bytes_len]);
+        
+        
         flags.set_flags(byteparser::le_bytes_to_u32(&array_bytes));
 
         return Ok(flags);
     }
+
+    
  
 }
 
@@ -155,6 +167,23 @@ mod tests {
             kdc_flags.no_asn1_type().unwrap()
         );
 
+    }
+
+     #[test]
+    fn test_decode_short_kerberos_flags() {
+        let mut kdc_flags = KerberosFlagsAsn1::new_empty();
+        kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x2, 0x0, 0x40]).unwrap();
+        assert_eq!(
+            KerberosFlags::new(0x40), 
+            kdc_flags.no_asn1_type().unwrap()
+        );
+
+        let mut kdc_flags = KerberosFlagsAsn1::new_empty();
+        kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x3, 0x0, 0x28,0x14]).unwrap();
+        assert_eq!(
+            KerberosFlags::new(0x1428),
+            kdc_flags.no_asn1_type().unwrap()
+        );
     }
 
 }
