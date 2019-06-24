@@ -9,3 +9,6 @@ pub use encryptionkey::*;
 
 mod lastreq;
 pub use lastreq::*;
+
+mod principalname;
+pub use principalname::*;

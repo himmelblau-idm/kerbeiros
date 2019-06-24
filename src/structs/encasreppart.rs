@@ -15,6 +15,7 @@ pub struct EncAsRepPart {
     endtime: DateTime<Utc>,
     renew_till: Option<DateTime<Utc>>,
     realm: AsciiString,
+    sname: PrincipalName,
 
 }
 

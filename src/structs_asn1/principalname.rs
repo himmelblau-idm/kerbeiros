@@ -30,6 +30,14 @@ impl PrincipalName {
         };
     }
 
+    pub fn get_name_type_i32(&self) -> &i32 {
+        return &self.name_type;
+    }
+
+    pub fn get_name_string(&self) -> &Vec<KerberosString> {
+        return &self.name_string;
+    }
+
     pub fn asn1_type(&self) -> PrincipalNameAsn1 {
         return PrincipalNameAsn1::new(&self);
     }
