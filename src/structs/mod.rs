@@ -5,3 +5,7 @@ mod encasreppart;
 pub use encasreppart::*;
 
 mod encryptionkey;
+pub use encryptionkey::*;
+
+mod lastreq;
+pub use lastreq::*;

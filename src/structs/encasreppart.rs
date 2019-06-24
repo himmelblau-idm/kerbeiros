@@ -1,9 +1,12 @@
 use crate::structs_asn1;
 use chrono::prelude::*;
 use ascii::*;
+use crate::structs::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct EncAsRepPart {
+    key: EncryptionKey,
+    last_req: LastReq,
     nonce: u32,
     key_expiration: Option<DateTime<Utc>>,
     flags: u32,
@@ -15,7 +18,7 @@ pub struct EncAsRepPart {
 
 }
 
-
+/*
 #[cfg(test)]
 mod test {
     use super::*;
@@ -83,10 +86,8 @@ mod test {
         );
         enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_datas);
 
-
-
-
     }
 
 
 }
+*/

@@ -22,6 +22,10 @@ impl KerberosTime {
     pub fn asn1_type(&self) -> KerberosTimeAsn1 {
         return KerberosTimeAsn1::new(self);
     }
+
+    pub fn to_datetime(&self) -> DateTime<Utc> {
+        return self.0.clone();
+    }
 }
 
 pub struct KerberosTimeAsn1 {
