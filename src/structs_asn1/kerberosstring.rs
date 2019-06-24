@@ -3,36 +3,8 @@ use asn1::*;
 use std::result::Result;
 use super::super::error::*;
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct KerberosString {
-    string: AsciiString
-}
 
-
-impl KerberosString {
-
-    pub fn _from(string: &str) -> KerberosString {
-        return Self::new(AsciiString::from_ascii(string).unwrap());
-    }
-
-    pub fn new(string: AsciiString) -> Self {
-        return Self { string };
-    }
-
-    pub fn to_ascii_string(&self) -> AsciiString {
-        return self.string.clone();
-    }
-
-    pub fn to_bytes(&self) -> Vec<u8> {
-        return self.string.as_bytes().to_vec();
-    }
-
-    pub fn asn1_type(&self) -> KerberosStringAsn1 {
-        return KerberosStringAsn1::new(self.string.clone());
-    }
-
-}
-
+pub type KerberosString = AsciiString;
 
 pub struct KerberosStringAsn1 {
     tag: Tag,
@@ -40,7 +12,7 @@ pub struct KerberosStringAsn1 {
 }
 
 impl KerberosStringAsn1 {
-    fn new(value: AsciiString) -> KerberosStringAsn1 {
+    pub fn new(value: AsciiString) -> KerberosStringAsn1 {
         return KerberosStringAsn1 {
             tag: KerberosStringAsn1::type_tag(),
             subtype: IA5String::new(value),
@@ -58,7 +30,7 @@ impl KerberosStringAsn1 {
         let ascii_string = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KerberosString".to_string())
         )?;
-        return Ok(KerberosString::new(ascii_string.clone()));
+        return Ok(ascii_string.clone());
     }
 
 }
@@ -103,22 +75,22 @@ mod tests {
     #[should_panic]
     #[test]
     fn test_convert_non_ascii_strings(){
-        KerberosString::_from("ñ");
+        KerberosString::from_ascii("ñ").unwrap();
     }
 
     #[test]
     fn test_convert_ascii_strings(){
-        let ascii_string = KerberosString::_from("abcd_/");
-        assert_eq!("abcd_/", ascii_string.string);
+        let ascii_string = KerberosString::from_ascii("abcd_/").unwrap();
+        assert_eq!("abcd_/", ascii_string);
     }
 
     #[test]
     fn test_encode_kerberos_string() {
-        let kerberos_string = KerberosString::_from("KINGDOM.HEARTS");
+        let kerberos_string = KerberosString::from_ascii("KINGDOM.HEARTS").unwrap();
 
         assert_eq!(vec![0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 
                         0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53],
-                   kerberos_string.asn1_type().encode().unwrap());
+                   KerberosStringAsn1::new(kerberos_string).encode().unwrap());
     }
 
     #[test]
@@ -128,13 +100,13 @@ mod tests {
         kerberos_string_asn1.decode(&[0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 
                         0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53]).unwrap();
 
-        assert_eq!(KerberosString::_from("KINGDOM.HEARTS"), kerberos_string_asn1.no_asn1_type().unwrap());
+        assert_eq!(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap(), kerberos_string_asn1.no_asn1_type().unwrap());
     }
 
 
     #[test]
     fn test_kerberos_string_to_string() {
-        let ascii_string = KerberosString::_from("abcd_/");
+        let ascii_string = KerberosString::from_ascii("abcd_/").unwrap();
         assert_eq!("abcd_/", ascii_string.to_ascii_string());
     }
 

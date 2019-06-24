@@ -270,8 +270,8 @@ mod test {
 
         let kerb_time = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
 
-        let mut sname =  PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
-        sname.push(KerberosString::_from("KINGDOM.HEARTS"));
+        let mut sname =  PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
         let mut encrypted_pa_datas = MethodData::new();
         encrypted_pa_datas.push(
@@ -285,7 +285,7 @@ mod test {
             ticket_flags,
             kerb_time.clone(),
             Utc.ymd(2019, 4, 18).and_hms(16, 00, 31),
-            Realm::_from("KINGDOM.HEARTS"),
+            Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
             sname
         );
 

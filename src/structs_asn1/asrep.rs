@@ -211,17 +211,17 @@ mod test {
 
         let as_rep_decoded = AsRep::parse(&encoded_as_rep).unwrap();
 
-        let realm = Realm::_from("KINGDOM.HEARTS");
-        let cname = PrincipalName::new(NT_PRINCIPAL, KerberosString::_from("mickey"));
+        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let cname = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
 
-        let mut sname_ticket =  PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
-        sname_ticket.push(KerberosString::_from("KINGDOM.HEARTS"));
+        let mut sname_ticket =  PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        sname_ticket.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
         let mut encrypted_data_ticket = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
         encrypted_data_ticket.set_kvno(2);
 
         let ticket = Ticket::new(5, 
-        Realm::_from("KINGDOM.HEARTS"),
+        Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
         sname_ticket,
         encrypted_data_ticket
         );
@@ -231,7 +231,7 @@ mod test {
 
         let mut padata = SeqOfPaData::new();
         let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
-        entry1._set_salt(KerberosString::_from("KINGDOM.HEARTSmickey"));
+        entry1._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
         let mut info2 = EtypeInfo2::_new();
         info2.push(entry1);

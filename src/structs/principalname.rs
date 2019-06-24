@@ -45,9 +45,9 @@ mod test {
     fn convert_from_principal_name() {
         let mut sname_asn1 =  structs_asn1::PrincipalName::new(
             NT_SRV_INST, 
-            structs_asn1::KerberosString::_from("krbtgt")
+            structs_asn1::KerberosString::from_ascii("krbtgt").unwrap()
         );
-        sname_asn1.push(structs_asn1::KerberosString::_from("KINGDOM.HEARTS"));
+        sname_asn1.push(structs_asn1::KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
         let sname = PrincipalName::new(
             NT_SRV_INST, 

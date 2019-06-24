@@ -45,13 +45,13 @@ mod test {
         let enc_data_asn1 = structs_asn1::EncryptedData::new(5, vec![1,2,3,4]);
         let mut sname = structs_asn1::PrincipalName::new(
                 NT_SRV_INST, 
-                structs_asn1::KerberosString::new(AsciiString::from_ascii("krbtgt").unwrap())
+                AsciiString::from_ascii("krbtgt").unwrap()
                 );
-        sname.push(structs_asn1::KerberosString::new(AsciiString::from_ascii("KINGDOM.HEARTS").unwrap()));
+        sname.push(AsciiString::from_ascii("KINGDOM.HEARTS").unwrap());
         
         let ticket_asn1 = structs_asn1::Ticket::new(
             5,
-            structs_asn1::Realm::new(AsciiString::from_ascii("KINGDOM.HEARTS").unwrap()),
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             sname, 
             enc_data_asn1
         );

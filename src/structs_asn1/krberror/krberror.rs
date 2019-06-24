@@ -44,8 +44,8 @@ impl KrbError {
             error_code: 0,
             crealm: None,
             cname: None,
-            realm: Realm::new(AsciiString::from_ascii("").unwrap()),
-            sname: PrincipalName::new(0, Realm::new(AsciiString::from_ascii("").unwrap())),
+            realm: Realm::from_ascii("").unwrap(),
+            sname: PrincipalName::new(0, Realm::from_ascii("").unwrap()),
             e_text: None,
             e_data: None
         }
@@ -244,19 +244,19 @@ mod test {
         krb_error.stime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
         krb_error.susec = Microseconds::new(341039).unwrap();
         krb_error.error_code = KDC_ERR_PREAUTH_REQUIRED;
-        krb_error.realm = Realm::_from("KINGDOM.HEARTS");
-        krb_error.sname = PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
-        krb_error.sname.push(KerberosString::_from("KINGDOM.HEARTS"));
+        krb_error.realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        krb_error.sname = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        krb_error.sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
         
         let mut method_data = MethodData::new();
 
         let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
-        entry1._set_salt(KerberosString::_from("KINGDOM.HEARTSmickey"));
+        entry1._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
         let entry2 = EtypeInfo2Entry::_new(RC4_HMAC);
 
         let mut entry3 = EtypeInfo2Entry::_new(DES_CBC_MD5);
-        entry3._set_salt(KerberosString::_from("KINGDOM.HEARTSmickey"));
+        entry3._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
         let mut info2 = EtypeInfo2::_new();
 

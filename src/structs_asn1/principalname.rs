@@ -97,7 +97,7 @@ impl PrincipalNameAsn1 {
         let mut seq_of_kerberos_strings: SequenceOf<KerberosStringAsn1> = SequenceOf::new();
 
         for kerb_string in principal_name.name_string.iter() {
-            seq_of_kerberos_strings.push(kerb_string.asn1_type());
+            seq_of_kerberos_strings.push(KerberosStringAsn1::new(kerb_string.clone()));
         }
 
         return seq_of_kerberos_strings;
@@ -143,7 +143,7 @@ mod tests {
 
     #[test]
     fn test_encode_principal_name(){
-        let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::_from("mickey"));
+        let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
         let principal_name_asn1 = principal_name.asn1_type();
 
         assert_eq!(
@@ -156,8 +156,8 @@ mod tests {
 
     #[test]
     fn test_encode_many_principal_name_strings(){
-        let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
-        principal_name.push(KerberosString::_from("KINGDOM.HEARTS"));
+        let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
         let principal_name_asn1 = principal_name.asn1_type();
 
         assert_eq!(
@@ -177,7 +177,7 @@ mod tests {
         principal_name_asn1.decode(&[0x30 ,0x11 ,0xa0 ,0x03 ,0x02 ,0x01 ,0x01 ,
             0xa1 ,0x0a ,0x30 ,0x08 ,0x1b ,0x06 ,0x6d ,0x69 ,0x63 ,0x6b ,0x65 ,0x79]).unwrap();
 
-        assert_eq!(PrincipalName::new(NT_PRINCIPAL, KerberosString::_from("mickey")), 
+        assert_eq!(PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap()), 
                    principal_name_asn1.no_asn1_type().unwrap());
     }
 
@@ -190,8 +190,8 @@ mod tests {
             0x1a, 0x30, 0x18, 0x1b, 0x06, 0x6b, 0x72, 0x62, 0x74, 0x67, 0x74, 
             0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53]).unwrap();
 
-        let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
-        principal_name.push(KerberosString::_from("KINGDOM.HEARTS"));
+        let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
         assert_eq!(principal_name, 
                    principal_name_asn1.no_asn1_type().unwrap());
@@ -199,15 +199,15 @@ mod tests {
 
     #[test]
     fn test_principal_name_with_multiple_names_to_string() {
-        let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
-        principal_name.push(KerberosString::_from("KINGDOM.HEARTS"));
+        let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
         assert_eq!("krbtgt/KINGDOM.HEARTS", principal_name.to_ascii_string())
     }
 
     #[test]
     fn test_principal_name_with_single_name_to_string() {
-        let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::_from("mickey"));
+        let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
         assert_eq!("mickey", principal_name.to_ascii_string())
     }
 

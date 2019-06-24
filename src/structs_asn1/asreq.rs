@@ -26,13 +26,13 @@ impl AsReq {
             pvno: 5,
             msg_type: 10,
             padata: None,
-            req_body: KdcReqBody::new(Realm::new(domain.clone()))
+            req_body: KdcReqBody::new(domain.clone())
         };
 
         as_req.set_username(username);
 
-        as_req.set_sname(NT_SRV_INST, KerberosString::new(AsciiString::from_ascii("krbtgt").unwrap()));
-        as_req.push_sname(KerberosString::new(domain)).unwrap();
+        as_req.set_sname(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        as_req.push_sname(domain).unwrap();
 
         as_req.set_default_rtime();
 

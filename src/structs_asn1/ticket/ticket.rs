@@ -195,8 +195,8 @@ mod test {
         ).unwrap();
         
 
-        let mut principal_name =  PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
-        principal_name.push(KerberosString::_from("KINGDOM.HEARTS"));
+        let mut principal_name =  PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
         let mut encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![
             0x4e, 0xc1, 0x75, 0x6d, 0x5e, 0xf6, 0x84, 0x18, 0x5f, 0x33, 0x21, 0x24, 0x54, 0x02, 0x40, 0x79,
@@ -264,7 +264,7 @@ mod test {
         encrypted_data.set_kvno(2);
 
         let ticket = Ticket::new(5, 
-        Realm::_from("KINGDOM.HEARTS"),
+        Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
         principal_name,
         encrypted_data
         );

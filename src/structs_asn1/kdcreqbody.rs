@@ -96,7 +96,7 @@ impl KdcReqBody {
     }
 
     pub fn set_username(&mut self, username: AsciiString) {
-        let kerberos_str = KerberosString::new(username);
+        let kerberos_str = username;
         self.set_cname(NT_PRINCIPAL, kerberos_str);
     }
 
@@ -166,7 +166,7 @@ impl KdcReqBodyAsn1 {
             self.set_cname(cname.asn1_type());
         }
 
-        self.set_realm(kdc_body.realm.asn1_type());
+        self.set_realm(RealmAsn1::new(kdc_body.realm.clone()));
         
         if let Some(sname) = &kdc_body.sname {
             self.set_sname(sname.asn1_type());
@@ -223,11 +223,11 @@ mod test {
 
     #[test]
     fn test_encode_kdc_req_body() {
-        let mut kdc_req_body = KdcReqBody::new(KerberosString::_from("KINGDOM.HEARTS"));
+        let mut kdc_req_body = KdcReqBody::new(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
         kdc_req_body.set_kdc_options(FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK);
-        kdc_req_body.set_cname(NT_PRINCIPAL, KerberosString::_from("mickey"));
-        kdc_req_body.set_sname(NT_SRV_INST, KerberosString::_from("krbtgt"));
-        kdc_req_body.push_sname(KerberosString::_from("KINGDOM.HEARTS")).unwrap();
+        kdc_req_body.set_cname(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
+        kdc_req_body.set_sname(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        kdc_req_body.push_sname(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap()).unwrap();
         kdc_req_body._set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         kdc_req_body.set_rtime(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         kdc_req_body._set_nonce(101225910);

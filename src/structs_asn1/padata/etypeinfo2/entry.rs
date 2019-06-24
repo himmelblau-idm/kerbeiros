@@ -28,7 +28,7 @@ impl EtypeInfo2Entry {
 
     pub fn get_salt_bytes(&self) -> Option<Vec<u8>> {
         if let Some(salt) = &self.salt {
-            return Some(salt.to_bytes());
+            return Some(salt.as_bytes().to_vec());
         }
         return None;
     }
@@ -66,7 +66,7 @@ impl EtypeInfo2EntryAsn1 {
         entry_asn1.set_etype(Int32Asn1::new(entry.etype));
         
         if let Some(salt) = &entry.salt {
-            entry_asn1.set_salt(salt.asn1_type());
+            entry_asn1.set_salt(KerberosStringAsn1::new(salt.clone()));
         }
 
         if let Some(s2kparams) = &entry.s2kparams {
@@ -133,7 +133,7 @@ mod test {
 
         let mut entry = EtypeInfo2Entry::new_empty();
         entry.etype = AES256_CTS_HMAC_SHA1_96;
-        entry.salt = Some(KerberosString::_from("KINGDOM.HEARTSmickey"));
+        entry.salt = Some(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
         assert_eq!(entry, entry_asn1.no_asn1_type().unwrap());
 
