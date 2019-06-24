@@ -281,7 +281,7 @@ mod test {
         let mut enc_as_rep_part = EncAsRepPart::new(
             encryption_key,
             last_req,
-            UInt32::new(104645460),
+            104645460,
             ticket_flags,
             kerb_time.clone(),
             KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(16, 00, 31)),

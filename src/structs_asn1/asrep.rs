@@ -218,7 +218,7 @@ mod test {
         sname_ticket.push(KerberosString::_from("KINGDOM.HEARTS"));
 
         let mut encrypted_data_ticket = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
-        encrypted_data_ticket.set_kvno(UInt32::new(2));
+        encrypted_data_ticket.set_kvno(2);
 
         let ticket = Ticket::new(5, 
         Realm::_from("KINGDOM.HEARTS"),
@@ -227,7 +227,7 @@ mod test {
         );
 
         let mut encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
-        encrypted_data.set_kvno(UInt32::new(2));
+        encrypted_data.set_kvno(2);
 
         let mut padata = SeqOfPaData::new();
         let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);

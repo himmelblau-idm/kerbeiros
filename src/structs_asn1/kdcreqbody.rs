@@ -42,7 +42,7 @@ impl KdcReqBody {
             from: None,
             till: KerberosTime::new(Utc::now().checked_add_signed(Duration::weeks(20 * 52)).unwrap()),
             rtime: None,
-            nonce: UInt32::new(rand::thread_rng().gen::<u32>()),
+            nonce: rand::thread_rng().gen::<u32>(),
             etypes: SeqOfEtype::new(),
             addresses: None,
             enc_authorization_data: None,
@@ -84,7 +84,7 @@ impl KdcReqBody {
     }
 
     pub fn _set_nonce(&mut self, nonce: u32) {
-        self.nonce = UInt32::new(nonce);
+        self.nonce = nonce;
     }
 
     pub fn push_etype(&mut self, etype: i32) {
@@ -182,7 +182,7 @@ impl KdcReqBodyAsn1 {
             self.set_rtime(rtime.asn1_type());
         }
 
-        self.set_nonce(kdc_body.nonce.asn1_type());
+        self.set_nonce(UInt32Asn1::new(kdc_body.nonce));
         self.set_etype(kdc_body.etypes.asn1_type());
 
         if let Some(addresses) = &kdc_body.addresses {

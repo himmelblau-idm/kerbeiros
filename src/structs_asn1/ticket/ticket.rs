@@ -261,7 +261,7 @@ mod test {
             0xaa, 0xca, 0x5b, 0xd1, 0xb5, 0xcb, 0xf4, 0x46, 0xfc]
         );
 
-        encrypted_data.set_kvno(UInt32::new(2));
+        encrypted_data.set_kvno(2);
 
         let ticket = Ticket::new(5, 
         Realm::_from("KINGDOM.HEARTS"),

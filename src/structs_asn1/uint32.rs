@@ -2,26 +2,7 @@ use asn1::*;
 use std::ops::Deref;
 use super::super::error::*;
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct UInt32(u32);
-
-impl Deref for UInt32 {
-    type Target = u32;
-    fn deref(&self) -> &u32 {
-        &self.0
-    }
-}
-
-impl UInt32 {
-
-    pub fn new(x: u32) -> UInt32 {
-        return UInt32(x);
-    }
-
-    pub fn asn1_type(&self) -> UInt32Asn1 {
-        return UInt32Asn1::new(self);
-    }
-}
+pub type UInt32 = u32;
 
 
 
@@ -30,9 +11,9 @@ pub struct UInt32Asn1 {
 }
 
 impl UInt32Asn1 {
-    pub fn new(value: &UInt32) -> UInt32Asn1 {
+    pub fn new(value: UInt32) -> UInt32Asn1 {
         return UInt32Asn1{
-            subtype: Integer::new(*value.deref() as i64)
+            subtype: Integer::new(value as i64)
         };
     }
 
@@ -46,7 +27,7 @@ impl UInt32Asn1 {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("UInt32Asn1".to_string())
         )?;
-        return Ok(UInt32::new(*value as u32));
+        return Ok(*value as u32);
     }
 }
 
@@ -92,7 +73,7 @@ mod test {
     #[test]
     fn test_encode_uint32() {
         assert_eq!(vec![0x02, 0x04, 0x06, 0x08, 0x95, 0xb6],
-            UInt32(101225910).asn1_type().encode().unwrap()
+            UInt32Asn1::new(101225910).encode().unwrap()
         );
     }
 

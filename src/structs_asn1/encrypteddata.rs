@@ -59,7 +59,7 @@ impl EncryptedDataAsn1 {
         enc_data_asn1.set_cipher(OctetString::new(enc_data.cipher.clone()));
 
         if let Some(kvno) = &enc_data.kvno {
-            enc_data_asn1.set_kvno(kvno.asn1_type());
+            enc_data_asn1.set_kvno(UInt32Asn1::new(*kvno));
         }
 
         return enc_data_asn1;
