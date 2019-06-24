@@ -14,7 +14,7 @@ impl PrincipalName {
     
     pub fn new (name_type: i32, string: KerberosString) -> PrincipalName {
         let mut principal_name = PrincipalName{
-            name_type: Int32::new(name_type),
+            name_type: name_type,
             name_string: Vec::new()
         };
 
@@ -25,7 +25,7 @@ impl PrincipalName {
 
     fn new_empty() -> Self {
         return Self {
-            name_type: Int32::new(0),
+            name_type: 0,
             name_string: Vec::new()
         };
     }
@@ -89,7 +89,7 @@ impl PrincipalNameAsn1 {
     }
 
     fn _set_asn1_values(&mut self, principal_name: &PrincipalName) {
-        self.set_name_type(principal_name.name_type.asn1_type());
+        self.set_name_type(Int32Asn1::new(principal_name.name_type));
         self.set_name_string(self._seq_of_kerberos_strings(principal_name));
     }
 

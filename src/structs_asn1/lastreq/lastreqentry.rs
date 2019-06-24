@@ -20,7 +20,7 @@ impl LastReqEntry {
     }
 
     pub fn get_lr_type_i32(&self) -> i32 {
-        return *self.lr_type;
+        return self.lr_type;
     }
 
     pub fn get_lr_value_datetime(&self) -> DateTime<Utc> {
@@ -92,7 +92,7 @@ mod test {
 
 
         let last_req_entry = LastReqEntry::new(
-            Int32::new(0),
+            0,
             KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
         );
 

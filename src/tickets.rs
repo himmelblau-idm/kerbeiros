@@ -42,7 +42,7 @@ mod test {
 
     #[test]
     fn test_from_ticket_asn1() {
-        let enc_data_asn1 = structs_asn1::EncryptedData::new(structs_asn1::Int32::new(5), vec![1,2,3,4]);
+        let enc_data_asn1 = structs_asn1::EncryptedData::new(5, vec![1,2,3,4]);
         let mut sname = structs_asn1::PrincipalName::new(
                 NT_SRV_INST, 
                 structs_asn1::KerberosString::new(AsciiString::from_ascii("krbtgt").unwrap())

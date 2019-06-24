@@ -28,7 +28,7 @@ impl EncryptedData {
 impl From<&structs_asn1::EncryptedData> for EncryptedData {
     fn from(enc_data: &structs_asn1::EncryptedData) -> Self {
         return Self::new(
-            enc_data.get_etype_int32(),
+            enc_data.get_etype(),
             enc_data.get_cipher().clone()
         );
     }
@@ -41,7 +41,7 @@ mod test {
 
     #[test]
     fn test_from_encrypted_data_asn1() {
-        let enc_data_asn1 = structs_asn1::EncryptedData::new(structs_asn1::Int32::new(5), vec![1,2,3,4]);
+        let enc_data_asn1 = structs_asn1::EncryptedData::new(5, vec![1,2,3,4]);
         let enc_data = EncryptedData::new(5, vec![1,2,3,4]);
 
         assert_eq!(enc_data, EncryptedData::from(&enc_data_asn1));

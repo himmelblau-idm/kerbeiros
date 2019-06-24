@@ -79,6 +79,7 @@ impl Asn1InstanciableObject for EncryptionKeyAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::constants::*;
 
     #[test]
     fn test_decode_encryption_key (){
@@ -95,7 +96,7 @@ mod test {
         encryption_key_asn1.decode(&raw).unwrap();
 
         let encryption_key = EncryptionKey::new(
-            Int32::new(0x12),
+            AES256_CTS_HMAC_SHA1_96,
             vec![0x63, 0x7b, 0x4d,
             0x21, 0x38, 0x22, 0x5a, 0x3a, 0x0a, 0xd7, 0x93,
             0x5a, 0xf3, 0x31, 0x22, 0x68, 0x50, 0xeb, 0x53,

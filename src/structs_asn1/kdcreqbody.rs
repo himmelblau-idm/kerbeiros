@@ -88,7 +88,7 @@ impl KdcReqBody {
     }
 
     pub fn push_etype(&mut self, etype: i32) {
-        self.etypes.push(Etype::new(etype));
+        self.etypes.push(etype);
     }
 
     pub fn set_address(&mut self, address: HostAddress) {

@@ -46,7 +46,7 @@ impl AsReq {
     }
 
     pub fn set_encrypted_timestamp(&mut self, etype: i32, encrypted: Vec<u8>) {
-        self.push_padata(PaData::EncTimestamp(EncryptedData::new(Int32::new(etype), encrypted)));
+        self.push_padata(PaData::EncTimestamp(EncryptedData::new(etype, encrypted)));
     }
 
     fn push_padata(&mut self, padata: PaData) {

@@ -79,7 +79,7 @@ mod test {
     #[test]
     fn test_convert_from_last_req_entry() {
         let last_req_entry_asn1 = structs_asn1::LastReqEntry::new(
-            structs_asn1::Int32::new(0),
+            0,
             structs_asn1::KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
         );
 
@@ -97,7 +97,7 @@ mod test {
         let mut last_req_asn1 = structs_asn1::LastReq::new_empty();
 
         last_req_asn1.push(structs_asn1::LastReqEntry::new(
-            structs_asn1::Int32::new(0),
+            0,
             structs_asn1::KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
         ));
 

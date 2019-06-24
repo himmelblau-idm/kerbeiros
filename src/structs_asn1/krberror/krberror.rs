@@ -41,7 +41,7 @@ impl KrbError {
             cusec: None,
             stime: KerberosTime::new(Utc::now()),
             susec: Microseconds::new(0).unwrap(),
-            error_code: Int32::new(0),
+            error_code: 0,
             crealm: None,
             cname: None,
             realm: Realm::new(AsciiString::from_ascii("").unwrap()),
@@ -52,7 +52,7 @@ impl KrbError {
     }
 
     pub fn get_error_code(&self) -> i32 {
-        return *self.error_code;
+        return self.error_code;
     }
 
     pub fn parse(raw: &[u8]) -> KerberosResult<KrbError> {
@@ -183,7 +183,7 @@ impl KrbErrorAsn1 {
             KerberosErrorKind::NotAvailableData("KrbError::e_data".to_string())
         )?;
             
-            if *krb_error.error_code == KDC_ERR_PREAUTH_REQUIRED {
+            if krb_error.error_code == KDC_ERR_PREAUTH_REQUIRED {
                 match MethodData::parse(e_data_value) {
                     Ok(method_data) => {
                         krb_error.e_data = Some(Edata::MethodData(method_data));
@@ -243,7 +243,7 @@ mod test {
 
         krb_error.stime = KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
         krb_error.susec = Microseconds::new(341039).unwrap();
-        krb_error.error_code = Int32::new(25);
+        krb_error.error_code = KDC_ERR_PREAUTH_REQUIRED;
         krb_error.realm = Realm::_from("KINGDOM.HEARTS");
         krb_error.sname = PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
         krb_error.sname.push(KerberosString::_from("KINGDOM.HEARTS"));
@@ -266,9 +266,9 @@ mod test {
 
         method_data.push(PaData::EtypeInfo2(info2));
 
-        method_data.push(PaData::Raw(Int32::new(PA_ENC_TIMESTAMP), vec![]));
-        method_data.push(PaData::Raw(Int32::new(PA_PK_AS_REQ), vec![]));
-        method_data.push(PaData::Raw(Int32::new(PA_PK_AS_REP_OLD), vec![]));
+        method_data.push(PaData::Raw(PA_ENC_TIMESTAMP, vec![]));
+        method_data.push(PaData::Raw(PA_PK_AS_REQ, vec![]));
+        method_data.push(PaData::Raw(PA_PK_AS_REP_OLD, vec![]));
 
         krb_error.e_data = Some(Edata::MethodData(method_data));
 

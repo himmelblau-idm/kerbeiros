@@ -26,8 +26,8 @@ impl EncryptedData {
         self.kvno = Some(kvno);
     }
 
-    pub fn get_etype_int32(&self) -> i32 {
-        return *self.etype;
+    pub fn get_etype(&self) -> i32 {
+        return self.etype;
     }
 
     pub fn get_cipher(&self) -> &Vec<u8> {
@@ -55,7 +55,7 @@ impl EncryptedDataAsn1 {
     fn new(enc_data: &EncryptedData) -> EncryptedDataAsn1 {
         let mut enc_data_asn1 = Self::new_empty();
 
-        enc_data_asn1.set_etype(enc_data.etype.asn1_type());
+        enc_data_asn1.set_etype(Int32Asn1::new(enc_data.etype));
         enc_data_asn1.set_cipher(OctetString::new(enc_data.cipher.clone()));
 
         if let Some(kvno) = &enc_data.kvno {
@@ -115,7 +115,7 @@ mod test {
 
     #[test]
     fn encode_encrypted_data(){
-        let enc_data = EncryptedData::new(Int32::new(AES256_CTS_HMAC_SHA1_96), vec![
+        let enc_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![
             0x64, 0x67, 0x3f, 0x70, 0x45, 
             0x50, 0x57, 0xa5, 0x16, 0x16, 0xf6, 0xa9, 0x0b, 0x8c, 
             0x04, 0xe6, 0xa9, 0x5d, 0x8e, 0x1d, 0x95, 0xdf, 0x98, 
@@ -149,7 +149,7 @@ mod test {
             0x6a, 0x4e, 0xf1, 0xf0, 0x25, 0xf9, 0x9e, 0x13, 0xa5, 
             0x94, 0xa2, 0x39, 0x80, 0x7f, 0xdf]).unwrap();
 
-        let enc_data = EncryptedData::new(Int32::new(AES256_CTS_HMAC_SHA1_96), vec![
+        let enc_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![
             0x64, 0x67, 0x3f, 0x70, 0x45, 
             0x50, 0x57, 0xa5, 0x16, 0x16, 0xf6, 0xa9, 0x0b, 0x8c, 
             0x04, 0xe6, 0xa9, 0x5d, 0x8e, 0x1d, 0x95, 0xdf, 0x98, 

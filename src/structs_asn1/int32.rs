@@ -1,28 +1,7 @@
 use asn1::*;
-use std::ops::Deref;
 use super::super::error::*;
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct Int32(i32);
-
-impl Deref for Int32 {
-    type Target = i32;
-    fn deref(&self) -> &i32 {
-        &self.0
-    }
-}
-
-impl Int32 {
-
-    pub fn new(x: i32) -> Int32 {
-        return Int32(x);
-    }
-
-    pub fn asn1_type(&self) -> Int32Asn1 {
-        return Int32Asn1::new(self.clone());
-    }
-}
-
+pub type Int32 = i32;
 
 
 pub struct Int32Asn1 {
@@ -32,7 +11,7 @@ pub struct Int32Asn1 {
 impl Int32Asn1 {
     pub fn new(value: Int32) -> Int32Asn1 {
         return Int32Asn1{
-            subtype: Integer::new(*value.deref() as i64)
+            subtype: Integer::new(value as i64)
         };
     }
 
@@ -46,7 +25,7 @@ impl Int32Asn1 {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("Int32".to_string())
         )?;
-        return Ok(Int32::new(*value as i32));
+        return Ok(*value as Int32);
     }
 
 }
@@ -113,11 +92,11 @@ mod test {
     #[test]
     fn test_encode_int32() {
         assert_eq!(vec![0x02, 0x02, 0xff, 0x79],
-            Int32(-135).asn1_type().encode().unwrap()
+            Int32Asn1::new(-135).encode().unwrap()
         );
 
         assert_eq!(vec![0x02, 0x01, 0x03],
-            Int32(3).asn1_type().encode().unwrap()
+            Int32Asn1::new(3).encode().unwrap()
         );
     }
 
@@ -127,10 +106,10 @@ mod test {
 
         int32_asn1.decode(&[0x02, 0x02, 0xff, 0x79]).unwrap();
 
-        assert_eq!(Int32(-135), int32_asn1.no_asn1_type().unwrap());
+        assert_eq!(-135, int32_asn1.no_asn1_type().unwrap());
 
         int32_asn1.decode(&[0x02, 0x01, 0x03]).unwrap();
-        assert_eq!(Int32(3), int32_asn1.no_asn1_type().unwrap());
+        assert_eq!(3, int32_asn1.no_asn1_type().unwrap());
     }
 
     #[should_panic (expected = "Invalid value")]

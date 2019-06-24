@@ -37,7 +37,7 @@ mod test {
     #[test]
     fn test_convert_from_asn1_encryption_key() {
         let encryption_key_asn1 = structs_asn1::EncryptionKey::new(
-            structs_asn1::Int32::new(AES256_CTS_HMAC_SHA1_96),
+            AES256_CTS_HMAC_SHA1_96,
             vec![0x63, 0x7b, 0x4d,
             0x21, 0x38, 0x22, 0x5a, 0x3a, 0x0a, 0xd7, 0x93,
             0x5a, 0xf3, 0x31, 0x22, 0x68, 0x50, 0xeb, 0x53,

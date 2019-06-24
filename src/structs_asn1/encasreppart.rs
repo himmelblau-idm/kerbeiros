@@ -246,7 +246,7 @@ mod test {
 
 
         let encryption_key = EncryptionKey::new(
-            Int32::new(AES256_CTS_HMAC_SHA1_96),
+            AES256_CTS_HMAC_SHA1_96,
             vec![0x63, 0x7b, 0x4d,
             0x21, 0x38, 0x22, 0x5a, 0x3a, 0x0a, 0xd7, 0x93,
             0x5a, 0xf3, 0x31, 0x22, 0x68, 0x50, 0xeb, 0x53,
@@ -256,7 +256,7 @@ mod test {
 
         let mut last_req = LastReq::new_empty();
         last_req.push(LastReqEntry::new(
-            Int32::new(0),
+            0,
             KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
         ));
 
@@ -275,7 +275,7 @@ mod test {
 
         let mut encrypted_pa_datas = MethodData::new();
         encrypted_pa_datas.push(
-            PaData::Raw(Int32::new(PA_SUPPORTED_ENCTYPES), vec![0x1f, 0x0, 0x0, 0x0])
+            PaData::Raw(PA_SUPPORTED_ENCTYPES, vec![0x1f, 0x0, 0x0, 0x0])
         );
 
         let mut enc_as_rep_part = EncAsRepPart::new(

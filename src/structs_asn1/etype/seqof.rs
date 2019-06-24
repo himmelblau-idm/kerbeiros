@@ -55,7 +55,7 @@ impl SeqOfEtypeAsn1 {
 
     fn _set_asn1_values(&mut self, seq_of_etype: &SeqOfEtype) {
         for etype in seq_of_etype.iter() {
-            self.subtype.push(etype.asn1_type());
+            self.subtype.push(EtypeAsn1::new(*etype));
         }
     }
 }
@@ -101,13 +101,13 @@ mod test {
     fn test_encode_sequence_of_etypes() {
         let mut seq_etypes = SeqOfEtype::new();
 
-        seq_etypes.push(Etype::new(AES256_CTS_HMAC_SHA1_96));
-        seq_etypes.push(Etype::new(AES128_CTS_HMAC_SHA1_96));
-        seq_etypes.push(Etype::new(RC4_HMAC));
-        seq_etypes.push(Etype::new(RC4_HMAC_EXP));
-        seq_etypes.push(Etype::new(DES_CBC_MD5));
-        seq_etypes.push(Etype::new(DES_CBC_CRC));
-        seq_etypes.push(Etype::new(RC4_HMAC_OLD_EXP));
+        seq_etypes.push(AES256_CTS_HMAC_SHA1_96);
+        seq_etypes.push(AES128_CTS_HMAC_SHA1_96);
+        seq_etypes.push(RC4_HMAC);
+        seq_etypes.push(RC4_HMAC_EXP);
+        seq_etypes.push(DES_CBC_MD5);
+        seq_etypes.push(DES_CBC_CRC);
+        seq_etypes.push(RC4_HMAC_OLD_EXP);
 
         assert_eq!(vec![0x30, 0x16, 
                         0x02, 0x01, 0x12, 

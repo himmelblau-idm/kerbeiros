@@ -16,7 +16,7 @@ impl EtypeInfo2Entry {
 
     pub fn _new(etype: i32) -> Self {
         return Self {
-            etype: Int32::new(etype),
+            etype: etype,
             salt: None,
             s2kparams: None
         };
@@ -35,7 +35,7 @@ impl EtypeInfo2Entry {
 
     fn new_empty() -> Self {
         return Self {
-            etype: Int32::new(0),
+            etype: 0,
             salt: None,
             s2kparams: None
         };
@@ -63,7 +63,7 @@ impl EtypeInfo2EntryAsn1 {
     fn new(entry: &EtypeInfo2Entry) -> Self {
         let mut entry_asn1 = Self::new_empty();
 
-        entry_asn1.set_etype(entry.etype.asn1_type());
+        entry_asn1.set_etype(Int32Asn1::new(entry.etype));
         
         if let Some(salt) = &entry.salt {
             entry_asn1.set_salt(salt.asn1_type());
@@ -132,7 +132,7 @@ mod test {
                             0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79]).unwrap();
 
         let mut entry = EtypeInfo2Entry::new_empty();
-        entry.etype = Int32::new(AES256_CTS_HMAC_SHA1_96);
+        entry.etype = AES256_CTS_HMAC_SHA1_96;
         entry.salt = Some(KerberosString::_from("KINGDOM.HEARTSmickey"));
 
         assert_eq!(entry, entry_asn1.no_asn1_type().unwrap());

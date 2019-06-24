@@ -96,7 +96,7 @@ mod test {
         let mut last_req = LastReq::new_empty();
 
         last_req.push(LastReqEntry::new(
-            Int32::new(0),
+            0,
             KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
         ));
 

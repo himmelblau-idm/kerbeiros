@@ -217,7 +217,7 @@ mod test {
         let mut sname_ticket =  PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
         sname_ticket.push(KerberosString::_from("KINGDOM.HEARTS"));
 
-        let mut encrypted_data_ticket = EncryptedData::new(Int32::new(AES256_CTS_HMAC_SHA1_96),vec![0x9]);
+        let mut encrypted_data_ticket = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
         encrypted_data_ticket.set_kvno(UInt32::new(2));
 
         let ticket = Ticket::new(5, 
@@ -226,7 +226,7 @@ mod test {
         encrypted_data_ticket
         );
 
-        let mut encrypted_data = EncryptedData::new(Int32::new(AES256_CTS_HMAC_SHA1_96),vec![0x9]);
+        let mut encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
         encrypted_data.set_kvno(UInt32::new(2));
 
         let mut padata = SeqOfPaData::new();

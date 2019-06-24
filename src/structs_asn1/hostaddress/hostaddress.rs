@@ -42,7 +42,7 @@ impl HostAddress {
     pub fn into_i32(&self) -> i32 {
         match self {
             HostAddress::NetBios(_) => NETBIOS_ADDRESS,
-            HostAddress::Raw(kind,_) => **kind
+            HostAddress::Raw(kind,_) => *kind
         }
     }
 
@@ -65,7 +65,7 @@ impl HostAddressAsn1 {
     fn new(host_address: &HostAddress) -> HostAddressAsn1 {
         let mut host_address_asn1 = Self::new_empty();
 
-        host_address_asn1.set_addr_type(Int32::new(host_address.into_i32()).asn1_type());
+        host_address_asn1.set_addr_type(Int32Asn1::new(host_address.into_i32()));
         host_address_asn1.set_address(OctetString::new(host_address.bytes_value()));
     
         return host_address_asn1;
@@ -90,7 +90,7 @@ impl HostAddressAsn1 {
             KerberosErrorKind::NotAvailableData("HostAddress::address".to_string())
         )?;
 
-        let host_address = match *addr_type {
+        let host_address = match addr_type {
             NETBIOS_ADDRESS => {
                 let addr_name = String::from_utf8_lossy(address).to_string().trim_end().to_string();
                 HostAddress::NetBios(addr_name)

@@ -20,10 +20,10 @@ impl PaData {
 
     fn get_padata_type(&self) -> Int32 {
         match self {
-            PaData::Raw(padata_type,_) => padata_type.clone(),
-            PaData::PacRequest(_) => Int32::new(PA_PAC_REQUEST),
-            PaData::EtypeInfo2(_) => Int32::new(PA_ETYPE_INFO2),
-            PaData::EncTimestamp(_) => Int32::new(PA_ENC_TIMESTAMP)
+            PaData::Raw(padata_type,_) => *padata_type,
+            PaData::PacRequest(_) => PA_PAC_REQUEST,
+            PaData::EtypeInfo2(_) => PA_ETYPE_INFO2,
+            PaData::EncTimestamp(_) => PA_ENC_TIMESTAMP
         }
     } 
 
@@ -67,7 +67,7 @@ impl PaDataAsn1 {
     }
 
     fn _set_asn1_values(&mut self, pa_data: &PaData) {
-        self.set_padata_type(pa_data.get_padata_type().asn1_type());
+        self.set_padata_type(Int32Asn1::new(pa_data.get_padata_type()));
         self.set_padata_value(OctetString::new(pa_data.get_padata_value_as_bytes()));
     }
 
@@ -84,7 +84,7 @@ impl PaDataAsn1 {
         )?;
 
 
-        let padata = match *padata_type {
+        let padata = match padata_type {
             PA_PAC_REQUEST => {
                 match PacRequest::parse(padata_value) {
                     Ok(pac_request) => {
