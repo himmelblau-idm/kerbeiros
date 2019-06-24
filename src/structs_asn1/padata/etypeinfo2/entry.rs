@@ -26,11 +26,11 @@ impl EtypeInfo2Entry {
         self.salt = Some(salt);
     }
 
-    pub fn get_salt_bytes(&self) -> Option<Vec<u8>> {
+    pub fn get_salt_bytes(&self) -> Vec<u8> {
         if let Some(salt) = &self.salt {
-            return Some(salt.as_bytes().to_vec());
+            return salt.as_bytes().to_vec();
         }
-        return None;
+        return Vec::new();
     }
 
     fn new_empty() -> Self {

@@ -46,12 +46,16 @@ impl AsRep {
         self.padata = Some(padata);
     }
 
-    pub fn get_crealm_ascii_string(&self) -> AsciiString {
-        return self.crealm.to_ascii_string();
+    pub fn get_padata(&self) -> &Option<SeqOfPaData> {
+        return &self.padata;
     }
 
-    pub fn get_cname_ascii_string(&self) -> AsciiString {
-        return self.cname.to_ascii_string();
+    pub fn get_crealm(&self) -> &Realm {
+        return &self.crealm;
+    }
+
+    pub fn get_cname(&self) -> &PrincipalName {
+        return &self.cname;
     }
 
     pub fn get_ticket(&self) -> &Ticket {
@@ -62,7 +66,7 @@ impl AsRep {
         return &self.enc_part;
     }
 
-    pub fn get_salt(&self) -> Option<Vec<u8>> {
+    pub fn get_salt(&self) -> Vec<u8> {
         if let Some(padata) = &self.padata {
             for entry_data in padata.iter() {
                 if let PaData::EtypeInfo2(etype_info2) = entry_data {
@@ -73,7 +77,7 @@ impl AsRep {
             }
         }
         
-        return None;
+        return Vec::new();
     }
 
 
@@ -169,8 +173,6 @@ impl AsRepAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::int32::*;
-    use super::super::uint32::*;
     use super::super::super::constants::*;
 
     #[test]

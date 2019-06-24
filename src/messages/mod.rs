@@ -1,7 +1,8 @@
 mod asreq;
-mod krberror;
-mod asrep;
-
 pub use asreq::*;
-pub use krberror::*;
+
+mod asrep;
 pub use asrep::*;
+
+use crate::structs_asn1;
+pub type KrbError = structs_asn1::KrbError;

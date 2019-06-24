@@ -111,8 +111,6 @@ impl Asn1InstanciableObject for TicketAsn1 {
 
 mod test {
     use super::*;
-    use super::super::super::uint32::*;
-    use super::super::super::int32::*;
     use super::super::super::super::constants::*;
 
     #[test]
