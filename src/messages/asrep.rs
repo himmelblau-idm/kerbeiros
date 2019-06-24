@@ -4,6 +4,7 @@ use super::super::error::*;
 use ascii::AsciiString;
 use super::super::constants::*;
 use super::super::crypter::*;
+use crate::structs::EncAsRepPart;
 
 #[derive(Debug, Clone, PartialEq)]
 enum AsRepEncPart{
@@ -57,9 +58,9 @@ impl AsRep {
     }
 
     pub fn decrypt_encrypted_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
-        match self.enc_part {
+        match self.enc_part.clone() {
             AsRepEncPart::EncryptedData(enc_data) => {
-                return self._decrypt_enc_part_with_password(enc_data, password);
+                return self._decrypt_enc_part_with_password(&enc_data, password);
             }
             AsRepEncPart::EncAsRepPart(_) => {
                 return Ok(());
@@ -67,14 +68,14 @@ impl AsRep {
         }
     }
 
-    fn _decrypt_enc_part_with_password(&mut self, enc_part: EncryptedData, password: &str) -> KerberosResult<()> {
+    fn _decrypt_enc_part_with_password(&mut self, enc_part: &EncryptedData, password: &str) -> KerberosResult<()> {
         match *enc_part.get_etype() {
             AES256_CTS_HMAC_SHA1_96 => {
                 let key = generate_aes_256_key(password.as_bytes(), &self.encryption_salt);
                 let plaintext = aes_256_hmac_sh1_decrypt(&key, enc_part.get_cipher())?;
-                self.enc_part = AsRepEncPart::EncAsRepPart(
+                /*self.enc_part = AsRepEncPart::EncAsRepPart(
                     EncAsRepPart::from(structs_asn1::EncAsRepPart::parse(&plaintext)?)
-                );
+                );*/
             },
             AES128_CTS_HMAC_SHA1_96 => {
                 let _key = generate_aes_128_key(password.as_bytes(), &self.encryption_salt);

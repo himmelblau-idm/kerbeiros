@@ -2,6 +2,8 @@ mod int32;
 pub use int32::Int32;
 
 mod uint32;
+pub use uint32::UInt32;
+
 mod microseconds;
 
 mod kerberosstring;
@@ -14,10 +16,13 @@ mod principalname;
 pub use principalname::PrincipalName;
 
 mod kerberostime;
+pub use kerberostime::KerberosTime;
+
 mod hostaddress;
+pub use hostaddress::{HostAddress, HostAddresses};
 
 mod padata;
-pub use padata::PaEncTsEnc;
+pub use padata::{PaEncTsEnc, PaData, MethodData};
 
 mod etype;
 mod kerberosflags;
@@ -26,11 +31,13 @@ mod encrypteddata;
 pub use encrypteddata::EncryptedData;
 
 mod encryptionkey;
+pub use encryptionkey::EncryptionKey;
 
 mod ticket;
 pub use ticket::Ticket;
 
 mod ticketflags;
+pub use ticketflags::TicketFlags;
 
 pub mod asreq;
 pub use asreq::AsReq;
@@ -42,6 +49,7 @@ mod encasreppart;
 pub use encasreppart::EncAsRepPart;
 
 mod lastreq;
+pub use lastreq::{LastReq,LastReqEntry};
 
 mod kdcreqbody;
 mod kdcoptions;

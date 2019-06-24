@@ -31,7 +31,7 @@ pub struct EncAsRepPart {
 impl EncAsRepPart {
 
 
-    fn new(
+    pub fn new(
         key: EncryptionKey, last_req: LastReq, nonce: UInt32, flags: TicketFlags,
         authtime: KerberosTime, endtime: KerberosTime, srealm: Realm, sname: PrincipalName    
     ) -> Self {
@@ -52,23 +52,23 @@ impl EncAsRepPart {
         };
     }
 
-    fn set_key_expiration(&mut self, key_expiration: KerberosTime) {
+    pub fn set_key_expiration(&mut self, key_expiration: KerberosTime) {
         self.key_expiration = Some(key_expiration);
     }
 
-    fn set_starttime(&mut self, starttime: KerberosTime) {
+    pub fn set_starttime(&mut self, starttime: KerberosTime) {
         self.starttime = Some(starttime);
     }
 
-    fn set_renew_till(&mut self, renew_till: KerberosTime) {
+    pub fn set_renew_till(&mut self, renew_till: KerberosTime) {
         self.renew_till = Some(renew_till);
     }
 
-    fn set_caddr(&mut self, caddr: HostAddresses) {
+    pub fn set_caddr(&mut self, caddr: HostAddresses) {
         self.caddr = Some(caddr);
     }
 
-    fn set_encrypted_pa_data(&mut self, encrypted_pa_data: MethodData) {
+    pub fn set_encrypted_pa_data(&mut self, encrypted_pa_data: MethodData) {
         self.encrypted_pa_data = Some(encrypted_pa_data);
     }
 
@@ -246,7 +246,7 @@ mod test {
 
 
         let encryption_key = EncryptionKey::new(
-            Int32::new(0x12),
+            Int32::new(AES256_CTS_HMAC_SHA1_96),
             vec![0x63, 0x7b, 0x4d,
             0x21, 0x38, 0x22, 0x5a, 0x3a, 0x0a, 0xd7, 0x93,
             0x5a, 0xf3, 0x31, 0x22, 0x68, 0x50, 0xeb, 0x53,
