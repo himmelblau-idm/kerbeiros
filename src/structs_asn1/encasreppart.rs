@@ -257,7 +257,7 @@ mod test {
         let mut last_req = LastReq::new_empty();
         last_req.push(LastReqEntry::new(
             0,
-            KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
+            Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)
         ));
 
         let mut ticket_flags = TicketFlags::new_empty();
@@ -268,7 +268,7 @@ mod test {
             | ticketflags::RENEWABLE
         );
 
-        let kerb_time = KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
+        let kerb_time = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
 
         let mut sname =  PrincipalName::new(NT_SRV_INST, KerberosString::_from("krbtgt"));
         sname.push(KerberosString::_from("KINGDOM.HEARTS"));
@@ -284,18 +284,18 @@ mod test {
             104645460,
             ticket_flags,
             kerb_time.clone(),
-            KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(16, 00, 31)),
+            Utc.ymd(2019, 4, 18).and_hms(16, 00, 31),
             Realm::_from("KINGDOM.HEARTS"),
             sname
         );
 
         enc_as_rep_part.set_key_expiration(
-            KerberosTime::new(Utc.ymd(2037, 9, 14).and_hms(02, 48, 05))
+            Utc.ymd(2037, 9, 14).and_hms(02, 48, 05)
         );
 
         enc_as_rep_part.set_starttime(kerb_time);
         enc_as_rep_part.set_renew_till(
-            KerberosTime::new(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31))
+            Utc.ymd(2019, 4, 25).and_hms(06, 00, 31)
         );
         enc_as_rep_part.set_caddr(
             HostAddresses::new(

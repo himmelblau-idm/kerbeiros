@@ -24,7 +24,7 @@ impl PaEncTsEnc {
     }
 
     pub fn from_datetime(datetime: DateTime<Utc>) -> KerberosResult<Self> {
-        let mut pa_enc_ts_enc = Self::new(KerberosTime::new(datetime));
+        let mut pa_enc_ts_enc = Self::new(datetime);
         pa_enc_ts_enc.set_pausec(Microseconds::new(datetime.timestamp_subsec_micros())?);
         
         return Ok(pa_enc_ts_enc);
@@ -53,7 +53,7 @@ impl PaEncTsEncAsn1 {
     fn new(pa_enc_ts_enc: &PaEncTsEnc) -> Self {
         let mut pa_enc_ts_enc_asn1 = Self::new_empty();
 
-        pa_enc_ts_enc_asn1.set_patimestamp(pa_enc_ts_enc.patimestamp.asn1_type());
+        pa_enc_ts_enc_asn1.set_patimestamp(KerberosTimeAsn1::new(pa_enc_ts_enc.patimestamp.clone()));
 
         if let Some(pausec) = &pa_enc_ts_enc.pausec {
             pa_enc_ts_enc_asn1.set_pausec(pausec.asn1_type());

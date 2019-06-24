@@ -1,32 +1,9 @@
 pub use chrono::prelude::*;
 use asn1::*;
-use std::ops::Deref;
 use super::super::error::*;
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct KerberosTime(DateTime<Utc>);
 
-impl Deref for KerberosTime {
-    type Target = DateTime<Utc>;
-    fn deref(&self) -> &DateTime<Utc> {
-        &self.0
-    }
-}
-
-impl KerberosTime {
-
-    pub fn new(x: DateTime<Utc>) -> KerberosTime {
-        return KerberosTime(x);
-    }
-
-    pub fn asn1_type(&self) -> KerberosTimeAsn1 {
-        return KerberosTimeAsn1::new(self);
-    }
-
-    pub fn to_datetime(&self) -> DateTime<Utc> {
-        return self.0.clone();
-    }
-}
+pub type KerberosTime = DateTime<Utc>;
 
 pub struct KerberosTimeAsn1 {
     subtype: GeneralizedTime
@@ -34,8 +11,8 @@ pub struct KerberosTimeAsn1 {
 
 impl KerberosTimeAsn1 {
 
-    pub fn new(date: &KerberosTime) -> KerberosTimeAsn1 {
-        let mut generalized_time = GeneralizedTime::new(*date.deref());
+    pub fn new(date: KerberosTime) -> KerberosTimeAsn1 {
+        let mut generalized_time = GeneralizedTime::new(date);
         generalized_time.set_format(TimeFormat::YYYYmmddHHMMSSZ);
 
         return KerberosTimeAsn1{
@@ -55,7 +32,7 @@ impl KerberosTimeAsn1 {
         let time = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KerberosTime".to_string())
         )?;
-        return Ok(KerberosTime::new(time.clone()));
+        return Ok(time.clone());
     }
 
 }
@@ -100,7 +77,7 @@ mod tests {
     #[test]
     fn test_encode_kerberos_time() {
         assert_eq!(vec![0x18 ,0x0f ,0x32 ,0x30 ,0x33 ,0x37 ,0x30 ,0x39 ,0x31 ,0x33 ,0x30 ,0x32 ,0x34 ,0x38 ,0x30 ,0x35 ,0x5a],
-        KerberosTime::new(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5)).asn1_type().encode().unwrap());
+        KerberosTimeAsn1::new(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5)).encode().unwrap());
     }
 
     #[test]
@@ -111,7 +88,7 @@ mod tests {
             &[0x18 ,0x0f ,0x32 ,0x30 ,0x33 ,0x37 ,0x30 ,0x39 ,0x31 ,0x33 ,0x30 ,0x32 ,0x34 ,0x38 ,0x30 ,0x35 ,0x5a]
         ).unwrap();
 
-        assert_eq!(KerberosTime::new(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5)),
+        assert_eq!(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5),
         kerberos_time_asn1.no_asn1_type().unwrap());
     }
 }

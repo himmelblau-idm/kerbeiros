@@ -40,7 +40,7 @@ impl KdcReqBody {
             realm: domain,
             sname: None,
             from: None,
-            till: KerberosTime::new(Utc::now().checked_add_signed(Duration::weeks(20 * 52)).unwrap()),
+            till: Utc::now().checked_add_signed(Duration::weeks(20 * 52)).unwrap(),
             rtime: None,
             nonce: rand::thread_rng().gen::<u32>(),
             etypes: SeqOfEtype::new(),
@@ -76,11 +76,11 @@ impl KdcReqBody {
     }
 
     pub fn _set_till(&mut self, date: DateTime<Utc>) {
-        self.till = KerberosTime::new(date);
+        self.till = date;
     }
 
     pub fn set_rtime(&mut self, date: DateTime<Utc>) {
-        self.rtime = Some(KerberosTime::new(date));
+        self.rtime = Some(date);
     }
 
     pub fn _set_nonce(&mut self, nonce: u32) {
@@ -173,13 +173,13 @@ impl KdcReqBodyAsn1 {
         }
         
         if let Some(from) = &kdc_body.from {
-            self.set_from(from.asn1_type());
+            self.set_from(KerberosTimeAsn1::new(from.clone()));
         }
         
-        self.set_till(kdc_body.till.asn1_type());
+        self.set_till(KerberosTimeAsn1::new(kdc_body.till.clone()));
 
         if let Some(rtime) = &kdc_body.rtime {
-            self.set_rtime(rtime.asn1_type());
+            self.set_rtime(KerberosTimeAsn1::new(rtime.clone()));
         }
 
         self.set_nonce(UInt32Asn1::new(kdc_body.nonce));

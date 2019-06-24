@@ -97,7 +97,7 @@ mod test {
 
         last_req.push(LastReqEntry::new(
             0,
-            KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
+            Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)
         ));
 
         assert_eq!(last_req, last_req_asn1.no_asn1_type().unwrap());

@@ -23,8 +23,8 @@ impl LastReqEntry {
         return self.lr_type;
     }
 
-    pub fn get_lr_value_datetime(&self) -> DateTime<Utc> {
-        return self.lr_value.to_datetime();
+    pub fn get_lr_value(&self) -> &DateTime<Utc> {
+        return &self.lr_value;
     }
 
 }
@@ -93,7 +93,7 @@ mod test {
 
         let last_req_entry = LastReqEntry::new(
             0,
-            KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
+            Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)
         );
 
         assert_eq!(last_req_entry, last_req_entry_asn1.no_asn1_type().unwrap());

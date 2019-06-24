@@ -67,7 +67,7 @@ impl From<&structs_asn1::LastReqEntry> for LastReqEntry {
     fn from(last_req_entry_asn1: &structs_asn1::LastReqEntry) -> Self {
         return Self::new(
             last_req_entry_asn1.get_lr_type_i32(),
-            last_req_entry_asn1.get_lr_value_datetime()
+            last_req_entry_asn1.get_lr_value().clone()
         );
     }
 }
@@ -80,7 +80,7 @@ mod test {
     fn test_convert_from_last_req_entry() {
         let last_req_entry_asn1 = structs_asn1::LastReqEntry::new(
             0,
-            structs_asn1::KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
+            Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)
         );
 
         let last_req_entry = LastReqEntry::new(
@@ -98,7 +98,7 @@ mod test {
 
         last_req_asn1.push(structs_asn1::LastReqEntry::new(
             0,
-            structs_asn1::KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31))
+            Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)
         ));
 
         let mut last_req = LastReq::new_empty();

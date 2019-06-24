@@ -39,7 +39,7 @@ impl KrbError {
             msg_type: 30,
             ctime: None,
             cusec: None,
-            stime: KerberosTime::new(Utc::now()),
+            stime: Utc::now(),
             susec: Microseconds::new(0).unwrap(),
             error_code: 0,
             crealm: None,
@@ -241,7 +241,7 @@ mod test {
 
         let mut krb_error = KrbError::new_empty();
 
-        krb_error.stime = KerberosTime::new(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
+        krb_error.stime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
         krb_error.susec = Microseconds::new(341039).unwrap();
         krb_error.error_code = KDC_ERR_PREAUTH_REQUIRED;
         krb_error.realm = Realm::_from("KINGDOM.HEARTS");
