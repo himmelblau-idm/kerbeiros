@@ -11,7 +11,6 @@ pub fn generate_aes_256_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
 
 fn generate_aes_key(passphrase: &[u8], salt: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
     let key = pbkdf2_sha1(passphrase, salt, aes_sizes.seed_size());
-    println!("key = {:?}", key);
     return dk(&key, "kerberos".as_bytes(), aes_sizes);
 }
 

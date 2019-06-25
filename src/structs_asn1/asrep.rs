@@ -22,7 +22,7 @@ pub struct AsRep {
 
 impl AsRep {
 
-    fn new(crealm: Realm, cname: PrincipalName, ticket: Ticket, enc_part: EncryptedData) -> Self {
+    pub fn new(crealm: Realm, cname: PrincipalName, ticket: Ticket, enc_part: EncryptedData) -> Self {
         return Self {
             pvno: 5,
             msg_type: 11,
@@ -42,7 +42,7 @@ impl AsRep {
         self.msg_type = msg_type;
     }
 
-    fn set_padata(&mut self, padata: SeqOfPaData) {
+    pub fn set_padata(&mut self, padata: SeqOfPaData) {
         self.padata = Some(padata);
     }
 
