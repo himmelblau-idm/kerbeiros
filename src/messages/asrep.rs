@@ -5,82 +5,40 @@ use crate::crypter::*;
 use crate::structs_asn1;
 use std::convert::From;
 
-#[derive(Debug, Clone, PartialEq)]
-enum AsRepEncPart{
-    EncryptedData(EncryptedData),
-    EncAsRepPart(EncAsRepPart)
-}
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AsRep {
-    pvno: i8,
-    msg_type: i8,
-    padata: Option<SeqOfPaData>,
-    crealm: Realm,
-    cname: PrincipalName,
-    ticket: Ticket,
-    enc_part: AsRepEncPart,
-    encryption_salt: Vec<u8>
+    data: structs_asn1::AsRep,
+    decrypted_part: Option<EncAsRepPart>
 }
 
 
 impl AsRep {
 
-    fn new(
-        crealm: Realm, cname: PrincipalName, ticket: Ticket, 
-        enc_part: AsRepEncPart
-    ) -> Self {
-        return Self {
-            pvno: 5,
-            msg_type: 11,
-            padata: None,
-            crealm,
-            cname,
-            ticket,
-            enc_part,
-            encryption_salt: Vec::new()
+    fn new(data: structs_asn1::AsRep) -> Self {
+        let as_rep = Self {
+            data,
+            decrypted_part: None
         };
-    }
 
-    fn set_salt(&mut self, salt: Vec<u8>) {
-        self.encryption_salt = salt;
+        return as_rep;
     }
     
-    fn set_padata(&mut self, padata: SeqOfPaData) {
-        self.padata = Some(padata);
-    }
-    
-    
+
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
         let as_rep_asn1 = structs_asn1::AsRep::parse(raw)?;
-        return Ok(Self::from(&as_rep_asn1));
+        return Ok(Self::from(as_rep_asn1));
     }
 
     pub fn decrypt_encrypted_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
-        match self.enc_part.clone() {
-            AsRepEncPart::EncryptedData(enc_data) => {
-                return self._decrypt_enc_part_with_password(&enc_data, password);
-            }
-            AsRepEncPart::EncAsRepPart(_) => {
-                return Ok(());
-            }
-        }
-    }
-
-    fn _decrypt_enc_part_with_password(&mut self, enc_part: &EncryptedData, password: &str) -> KerberosResult<()> {
-        match enc_part.get_etype() {
+        match self.data.get_enc_part_etype() {
             AES256_CTS_HMAC_SHA1_96 => {
-                println!("{:?}", password);
-                println!("{:?}", &self.encryption_salt);
-                let key = generate_aes_256_key(password.as_bytes(), &self.encryption_salt);
-                println!("{:?}", key);
-                let plaintext = aes_256_hmac_sh1_decrypt(&key, enc_part.get_cipher())?;
-                self.enc_part = AsRepEncPart::EncAsRepPart(
-                    EncAsRepPart::from(structs_asn1::EncAsRepPart::parse(&plaintext)?)
-                );
+                let key = generate_aes_256_key(password.as_bytes(), &self.data.get_encryption_salt());
+                let plaintext = aes_256_hmac_sh1_decrypt(&key, self.data.get_enc_part_cipher())?;
+                self.decrypted_part = Some(EncAsRepPart::parse(&plaintext)?);
             },
             AES128_CTS_HMAC_SHA1_96 => {
-                let _key = generate_aes_128_key(password.as_bytes(), &self.encryption_salt);
+                let _key = generate_aes_128_key(password.as_bytes(), &self.data.get_encryption_salt());
                 unimplemented!()
             },
             RC4_HMAC => {
@@ -97,22 +55,11 @@ impl AsRep {
 
 }
 
-impl From<&structs_asn1::AsRep> for AsRep {
-    fn from(as_rep_asn1: &structs_asn1::AsRep) -> Self {
-        let mut as_rep = Self::new(
-            as_rep_asn1.get_crealm().clone(),
-            as_rep_asn1.get_cname().clone(),
-            as_rep_asn1.get_ticket().clone(),
-            AsRepEncPart::EncryptedData(as_rep_asn1.get_enc_part().clone())
+impl From<structs_asn1::AsRep> for AsRep {
+    fn from(as_rep_asn1: structs_asn1::AsRep) -> Self {
+        return Self::new(
+            as_rep_asn1
         );
-
-        as_rep.set_salt(as_rep_asn1.get_salt());
-
-        if let Some(padata) = as_rep_asn1.get_padata() {
-            as_rep.set_padata(padata.clone());
-        }
-
-        return as_rep;
     }
 }
 
@@ -122,7 +69,7 @@ mod test {
     use chrono::prelude::*;
 
     #[test]
-    fn test_decode_and_decrypt_enc_part_AES256() {
+    fn test_decode_and_decrypt_enc_part_aes256() {
 
         let ticket = Ticket::new(5, 
             Realm::from_ascii("fake").unwrap(),
@@ -171,7 +118,7 @@ mod test {
 
         as_rep_asn1.set_padata(padata);
 
-        let mut as_rep = AsRep::from(&as_rep_asn1);
+        let mut as_rep = AsRep::from(as_rep_asn1);
 
 
 
@@ -237,14 +184,7 @@ mod test {
 
         as_rep.decrypt_encrypted_data_with_password("Minnie1234").unwrap();
 
-        match as_rep.enc_part {
-            AsRepEncPart::EncryptedData(_) => {
-                unreachable!()
-            }
-            AsRepEncPart::EncAsRepPart(enc_data_decrypted) => {
-                assert_eq!(enc_as_rep_part, enc_data_decrypted);
-            }
-        }
+        assert_eq!(enc_as_rep_part, as_rep.decrypted_part.unwrap());
 
     }
 

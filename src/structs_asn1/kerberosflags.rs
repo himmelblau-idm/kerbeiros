@@ -15,7 +15,7 @@ impl KerberosFlags {
         };
     }
 
-    pub fn new(flags: u32) -> KerberosFlags {
+    fn _new(flags: u32) -> KerberosFlags {
         return KerberosFlags{
             flags
         };
@@ -144,28 +144,28 @@ mod tests {
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x40,0x0,0x0,0x0]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x40), 
+            KerberosFlags::_new(0x40), 
             kdc_flags.no_asn1_type().unwrap()
         );
 
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0,0x0,0x0,0x1]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x01000000),
+            KerberosFlags::_new(0x01000000),
             kdc_flags.no_asn1_type().unwrap()
         ); 
 
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0, 0x80,0x0,0x2]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x02008000),
+            KerberosFlags::_new(0x02008000),
             kdc_flags.no_asn1_type().unwrap()
         );
 
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x28,0x14,0x48,0x12]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x12481428),
+            KerberosFlags::_new(0x12481428),
             kdc_flags.no_asn1_type().unwrap()
         );
 
@@ -176,14 +176,14 @@ mod tests {
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x2, 0x0, 0x40]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x40), 
+            KerberosFlags::_new(0x40), 
             kdc_flags.no_asn1_type().unwrap()
         );
 
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x3, 0x0, 0x28,0x14]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x1428),
+            KerberosFlags::_new(0x1428),
             kdc_flags.no_asn1_type().unwrap()
         );
     }

@@ -2,14 +2,12 @@ use std::result::Result;
 use chrono::{Utc, DateTime, Duration};
 use asn1::*;
 use asn1_derive::*;
-use super::realm::Realm;
 use super::super::error::*;
 use super::padata::*;
 use super::kdcreqbody::{KdcReqBody, KdcReqBodyAsn1};
 use super::kerberosstring::*;
 use super::hostaddress::HostAddress;
 use super::encrypteddata::*;
-use super::int32::*;
 use super::super::constants::*;
 
 pub struct AsReq {

@@ -19,14 +19,6 @@ impl LastReqEntry {
         };
     }
 
-    pub fn get_lr_type_i32(&self) -> i32 {
-        return self.lr_type;
-    }
-
-    pub fn get_lr_value(&self) -> &DateTime<Utc> {
-        return &self.lr_value;
-    }
-
 }
 
 

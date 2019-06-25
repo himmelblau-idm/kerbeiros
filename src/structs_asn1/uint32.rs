@@ -1,5 +1,4 @@
 use asn1::*;
-use std::ops::Deref;
 use super::super::error::*;
 
 pub type UInt32 = u32;

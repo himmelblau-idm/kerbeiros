@@ -19,14 +19,6 @@ impl EncryptionKey {
         };
     }
 
-    pub fn get_keytype(&self) -> &i32 {
-        return &self.keytype;
-    } 
-
-    pub fn get_keyvalue(&self) -> &Vec<u8> {
-        return &self.keyvalue;
-    }
-
 }
 
 
