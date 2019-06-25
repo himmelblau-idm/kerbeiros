@@ -21,6 +21,14 @@ impl DerefMut for SeqOfTickets {
 
 impl SeqOfTickets {
 
+    pub fn new() -> Self {
+        return Self::new_empty();
+    }
+
+    fn new_empty() -> Self {
+        return Self{ tickets: Vec::new() };
+    }
+
     pub fn asn1_type(&self) -> SeqOfTicketsAsn1 {
         return SeqOfTicketsAsn1::new(self);
     }

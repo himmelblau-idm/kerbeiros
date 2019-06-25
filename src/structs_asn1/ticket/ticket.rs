@@ -37,7 +37,7 @@ impl Ticket {
     }
 
     pub fn asn1_type(&self) -> TicketAsn1 {
-        return TicketAsn1::new();
+        return TicketAsn1::new(self);
     }
 
 }
@@ -58,8 +58,15 @@ pub struct TicketAsn1 {
 
 impl TicketAsn1 {
 
-    fn new() -> TicketAsn1 {
-        return Self::new_empty();
+    fn new(ticket: &Ticket) -> TicketAsn1 {
+        let mut ticket_asn1 = Self::new_empty();
+
+        ticket_asn1.set_tkt_vno(Integer::new(ticket.tkt_vno as i64));
+        ticket_asn1.set_realm(RealmAsn1::new(ticket.realm.clone()));
+        ticket_asn1.set_sname(ticket.sname.asn1_type());
+        ticket_asn1.set_enc_part(ticket.enc_part.asn1_type());
+
+        return ticket_asn1;
     }
 
     fn new_empty() -> TicketAsn1 {
@@ -115,7 +122,7 @@ mod test {
 
     #[test]
     fn decode_ticket() {
-        let mut ticket_asn1 = TicketAsn1::new();
+        let mut ticket_asn1 = TicketAsn1::new_empty();
 
         ticket_asn1.decode(&[
             0x61, 0x82, 0x04, 0x13, 0x30, 0x82, 0x04, 0x0f,

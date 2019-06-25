@@ -54,5 +54,7 @@ pub use lastreq::{LastReq,LastReqEntry};
 mod kdcreqbody;
 mod kdcoptions;
 
+mod krbcred;
+
 mod krberror;
 pub use krberror::KrbError;
