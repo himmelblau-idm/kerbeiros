@@ -1,15 +1,15 @@
 use asn1::*;
 use asn1_derive::*;
-use super::encryptionkey::*;
-use super::kerberostime::*;
-use super::realm::*;
-use super::principalname::*;
-use super::ticketflags::*;
-use super::hostaddress::*;
+use super::super::encryptionkey::*;
+use super::super::kerberostime::*;
+use super::super::realm::*;
+use super::super::principalname::*;
+use super::super::ticketflags::*;
+use super::super::hostaddress::*;
 use crate::error::*;
 
 #[derive(Debug, PartialEq, Clone)]
-struct KrbCredInfo {
+pub struct KrbCredInfo {
     key: EncryptionKey,
     prealm: Option<Realm>,
     pname: Option<PrincipalName>,
@@ -89,7 +89,7 @@ impl KrbCredInfo {
 
 
 #[derive(Asn1Sequence)]
-struct KrbCredInfoAsn1 {
+pub struct KrbCredInfoAsn1 {
     #[seq_comp(context_tag = 0)]
     key: SeqField<EncryptionKeyAsn1>,
     

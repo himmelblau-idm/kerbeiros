@@ -60,5 +60,7 @@ mod enckrbcredpart;
 
 mod krbcredinfo;
 
+mod seqof;
+
 mod krberror;
 pub use krberror::KrbError;

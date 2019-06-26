@@ -75,7 +75,7 @@ impl SeqOfPaDataAsn1 {
     pub fn no_asn1_type(&self) -> KerberosResult<SeqOfPaData> {
         let mut seq_of_padata = SeqOfPaData::new_empty();
         for padata_asn1 in self.subtype.iter() {
-            seq_of_padata.padatas.push(padata_asn1.no_asn1_type()?);
+            seq_of_padata.push(padata_asn1.no_asn1_type()?);
         }
 
         return Ok(seq_of_padata);
