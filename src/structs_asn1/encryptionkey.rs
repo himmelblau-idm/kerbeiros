@@ -19,6 +19,10 @@ impl EncryptionKey {
         };
     }
 
+    pub fn asn1_type(&self) -> EncryptionKeyAsn1 {
+        return EncryptionKeyAsn1::new(self);
+    }
+
 }
 
 
@@ -32,6 +36,13 @@ pub struct EncryptionKeyAsn1 {
 
 
 impl EncryptionKeyAsn1 {
+
+    fn new(encryption_key: &EncryptionKey) -> Self {
+        let mut  encryption_key_asn1 = Self::new_empty();
+        encryption_key_asn1.set_keytype(Int32Asn1::new(encryption_key.keytype));
+        encryption_key_asn1.set_keyvalue(OctetString::new(encryption_key.keyvalue.clone()));
+        return encryption_key_asn1;
+    }
 
     fn new_empty() -> Self {
         return Self {

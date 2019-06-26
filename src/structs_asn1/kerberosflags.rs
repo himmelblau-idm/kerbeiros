@@ -15,7 +15,7 @@ impl KerberosFlags {
         };
     }
 
-    fn _new(flags: u32) -> KerberosFlags {
+    pub fn _new(flags: u32) -> KerberosFlags {
         return KerberosFlags{
             flags
         };

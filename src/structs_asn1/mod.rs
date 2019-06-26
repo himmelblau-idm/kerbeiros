@@ -56,5 +56,9 @@ mod kdcoptions;
 
 mod krbcred;
 
+mod enckrbcredpart;
+
+mod krbcredinfo;
+
 mod krberror;
 pub use krberror::KrbError;
