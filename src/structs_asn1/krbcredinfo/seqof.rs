@@ -23,11 +23,7 @@ impl DerefMut for SeqOfKrbCredInfo {
 
 impl SeqOfKrbCredInfo {
 
-    pub fn new() -> Self {
-        return Self::new_empty();
-    }
-
-    fn new_empty() -> Self {
+    pub fn new_empty() -> Self {
         return Self{ entries: Vec::new() };
     }
 
