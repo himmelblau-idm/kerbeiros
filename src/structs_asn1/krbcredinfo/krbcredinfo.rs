@@ -1,11 +1,11 @@
 use asn1::*;
 use asn1_derive::*;
-use super::super::encryptionkey::*;
-use super::super::kerberostime::*;
-use super::super::realm::*;
-use super::super::principalname::*;
-use super::super::ticketflags::*;
-use super::super::hostaddress::*;
+pub use super::super::encryptionkey::*;
+pub use super::super::kerberostime::*;
+pub use super::super::realm::*;
+pub use super::super::principalname::*;
+pub use super::super::ticketflags::*;
+pub use super::super::hostaddress::*;
 use crate::error::*;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -25,7 +25,7 @@ pub struct KrbCredInfo {
 
 impl KrbCredInfo {
 
-    fn new(key: EncryptionKey) -> Self {
+    pub fn new(key: EncryptionKey) -> Self {
         return Self {
             key,
             prealm: None,
@@ -41,47 +41,47 @@ impl KrbCredInfo {
         };
     }
 
-    fn set_prealm(&mut self, prealm: Realm) {
+    pub fn set_prealm(&mut self, prealm: Realm) {
         self.prealm = Some(prealm);
     }
 
-    fn set_pname(&mut self, pname: PrincipalName) {
+    pub fn set_pname(&mut self, pname: PrincipalName) {
         self.pname = Some(pname);
     }
 
-    fn set_flags(&mut self, flags: TicketFlags) {
+    pub fn set_flags(&mut self, flags: TicketFlags) {
         self.flags = Some(flags);
     }
 
-    fn set_authtime(&mut self, authtime: KerberosTime) {
+    pub fn set_authtime(&mut self, authtime: KerberosTime) {
         self.authtime = Some(authtime);
     }
 
-    fn set_starttime(&mut self, starttime: KerberosTime) {
+    pub fn set_starttime(&mut self, starttime: KerberosTime) {
         self.starttime = Some(starttime);
     }
 
-    fn set_endtime(&mut self, endtime: KerberosTime) {
+    pub fn set_endtime(&mut self, endtime: KerberosTime) {
         self.endtime = Some(endtime);
     }
 
-    fn set_renew_till(&mut self, renew_till: KerberosTime) {
+    pub fn set_renew_till(&mut self, renew_till: KerberosTime) {
         self.renew_till = Some(renew_till);
     }
 
-    fn set_srealm(&mut self, srealm: Realm) {
+    pub fn set_srealm(&mut self, srealm: Realm) {
         self.srealm = Some(srealm);
     }
 
-    fn set_sname(&mut self, sname: PrincipalName) {
+    pub fn set_sname(&mut self, sname: PrincipalName) {
         self.sname = Some(sname);
     }
 
-    fn set_caddr(&mut self, caddr: HostAddresses) {
+    pub fn set_caddr(&mut self, caddr: HostAddresses) {
         self.caddr = Some(caddr);
     }
 
-    fn asn1_type(&self) -> KrbCredInfoAsn1 {
+    pub fn asn1_type(&self) -> KrbCredInfoAsn1 {
         return KrbCredInfoAsn1::new(self);
     }
 
@@ -188,7 +188,7 @@ impl KrbCredInfoAsn1 {
         return krb_cred_info_asn1;
     }
 
-    fn no_asn1_type(&self) -> KerberosResult<KrbCredInfo> {
+    pub fn no_asn1_type(&self) -> KerberosResult<KrbCredInfo> {
         let key = self.get_key().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KrbCredInfo::key".to_string())
         )?;
@@ -241,6 +241,12 @@ impl KrbCredInfoAsn1 {
 
     }
 
+}
+
+impl Asn1InstanciableObject for KrbCredInfoAsn1 {
+    fn new_default() -> Self {
+        return Self::new_empty();
+    }
 }
 
 #[cfg(test)]
