@@ -3,35 +3,45 @@ use crate::messages::*;
 use ascii::AsciiString;
 use crate::error::*;
 use crate::tickets::*;
+use std::net::IpAddr;
+use dns_lookup;
 
 #[derive(Debug)]
 pub struct KerberosClient {
-    domain: AsciiString,
-    requester: KerberosRequester
+    realm: AsciiString,
+    kdc_address: IpAddr
 }
 
 impl KerberosClient {
-    pub fn new(domain: AsciiString) -> KerberosClient {
-        return KerberosClient { 
-            domain,
-            requester: KerberosRequester::new(&"10.0.0.1".to_string()).unwrap()
+    pub fn new(realm: AsciiString) -> KerberosResult<KerberosClient> {
+        let ips = dns_lookup::lookup_host(&realm.to_string()).map_err(|_|
+            KerberosErrorKind::NameResolutionError(realm.to_string())
+        )?;
+
+        return Ok(Self::new_witk_kdc_address(realm, ips[0]));
+    }
+
+    fn new_witk_kdc_address(realm: AsciiString, kdc_address: IpAddr) -> Self {
+        return Self {
+            realm,
+            kdc_address
         };
     }
 
     pub fn request_tgt(&self, username: AsciiString, password: String) -> KerberosResult<TGT> {
-        
-        let mut as_req = AsReq::new(self.domain.clone(), username, "HOLLOWBASTION".to_string());
+
+        let mut as_req = AsReq::new(self.realm.clone(), username, "HOLLOWBASTION".to_string());
         as_req.set_password(password);
         let raw_as_req = as_req.build().unwrap();
 
-        let raw_kdc_err = self._request(&raw_as_req)?;
+        //let raw_kdc_err = self._request(&raw_as_req)?;
 
         
         // let as_rep = AsRep::parse(&raw_as_rep).unwrap();
         
-        let kdc_err = KrbError::parse(&raw_kdc_err).unwrap();
+        // let kdc_err = KrbError::parse(&raw_kdc_err).unwrap();
 
-        println!("error_code = {}", kdc_err.get_error_code());
+        // println!("error_code = {}", kdc_err.get_error_code());
 
         unimplemented!();
 
@@ -59,10 +69,6 @@ impl KerberosClient {
                 return Ok(as_rep.get_TGT());
             }
         }*/
-    }
-
-    fn _request(&self, raw_request: &Vec<u8>) -> KerberosResult<Vec<u8>> {
-        return self.requester.request(raw_request);
     }
 
 }

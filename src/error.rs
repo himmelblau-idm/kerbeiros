@@ -32,7 +32,9 @@ pub enum KerberosErrorKind {
     #[fail (display = "Cipher algorithm with etype = {} is not supported", _0)]
     UnsupportedCipherAlgorithm(i32),
     #[fail (display = "Decryption error: {}", _0)]
-    DecryptionError(String)
+    DecryptionError(String),
+    #[fail (display = "Error resolving name: {}", _0)]
+    NameResolutionError(String)
 }
 
 impl KerberosError {
