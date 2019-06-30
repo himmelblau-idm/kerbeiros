@@ -5,6 +5,7 @@ use ascii::FromAsciiError;
 use failure::*;
 use failure_derive::Fail;
 use asn1;
+use crate::messages::KrbError;
 
 pub type KerberosResult<T> = Result<T, KerberosError>;
 
@@ -13,7 +14,7 @@ pub struct KerberosError {
     inner: Context<KerberosErrorKind>
 }
 
-#[derive(Clone, Eq, PartialEq, Debug, Fail)]
+#[derive(Clone, PartialEq, Debug, Fail)]
 pub enum KerberosErrorKind {
     #[fail(display = "Invalid KDC hostname")]
     InvalidKDC,
@@ -34,7 +35,9 @@ pub enum KerberosErrorKind {
     #[fail (display = "Decryption error: {}", _0)]
     DecryptionError(String),
     #[fail (display = "Error resolving name: {}", _0)]
-    NameResolutionError(String)
+    NameResolutionError(String),
+    #[fail (display = "Received KRB-ERROR response")]
+    KrbErrorReceived(KrbError)
 }
 
 impl KerberosError {

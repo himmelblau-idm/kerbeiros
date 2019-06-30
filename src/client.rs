@@ -1,15 +1,18 @@
-use crate::request::*;
-use crate::messages::*;
-use ascii::AsciiString;
-use crate::error::*;
-use crate::tickets::*;
 use std::net::IpAddr;
 use dns_lookup;
+use ascii::AsciiString;
+use crate::request::*;
+use crate::messages::*;
+use crate::error::*;
+use crate::tickets::*;
+use crate::sysutils;
+use crate::constants::*;
 
 #[derive(Debug)]
 pub struct KerberosClient {
     realm: AsciiString,
-    kdc_address: IpAddr
+    kdc_address: IpAddr,
+    hostname: String
 }
 
 impl KerberosClient {
@@ -24,7 +27,8 @@ impl KerberosClient {
     fn new_witk_kdc_address(realm: AsciiString, kdc_address: IpAddr) -> Self {
         return Self {
             realm,
-            kdc_address
+            kdc_address,
+            hostname: sysutils::get_hostname()
         };
     }
 
@@ -32,45 +36,28 @@ impl KerberosClient {
 
         let requester = KerberosRequester::new(self.kdc_address.clone());
 
-        let mut as_req = AsReq::new(self.realm.clone(), username, "HOLLOWBASTION".to_string());
+        let mut as_req = AsReq::new(self.realm.clone(), username, self.hostname.clone());
+        let raw_as_req = as_req.build().unwrap();
+        let raw_response = requester.request_and_response(&raw_as_req)?;
+
+        let krb_error = KrbError::parse(&raw_response)?; manexar o caso no que se devolva AS-REP
+
+        if krb_error.get_error_code() != KDC_ERR_PREAUTH_REQUIRED {
+            return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
+        }
+
         as_req.set_password(password);
         let raw_as_req = as_req.build().unwrap();
+        let raw_response = requester.request_and_response(&raw_as_req)?;
 
-        //let raw_kdc_err = self._request(&raw_as_req)?;
+        let as_rep = AsRep::parse(&raw_response)?; manexar o caso no que se devolva KRB-ERROR
 
-        
-        // let as_rep = AsRep::parse(&raw_as_rep).unwrap();
-        
-        // let kdc_err = KrbError::parse(&raw_kdc_err).unwrap();
 
-        // println!("error_code = {}", kdc_err.get_error_code());
+        seguramente este ben crear que se encargue de manexar a request do TGT, KerberosRequester
+
 
         unimplemented!();
 
-        /*
-        match KdcErr::parse(&raw_kdc_err) {
-            Ok(kdc_err) => {
-
-                if kdc_err.error_code == KDC_ERR_PREAUTH_REQUIRED {
-                    let as_req = AsReq::new(&self.domain, username);
-                    as_req.set_password(password);
-                    let raw_as_req = as_req.build();
-
-                    let raw_as_rep = self.send(&raw_as_req);
-
-                    let as_rep = AsRep::parse(&raw_as_rep, password)?;
-
-                    return Ok(as_rep.get_TGT());
-                }else {
-                    return Err("Kerberos error");
-                }
-
-            },
-            Err(_) => {
-                let as_rep = AsRep::parse(&raw_kdc_err, password)?;
-                return Ok(as_rep.get_TGT());
-            }
-        }*/
     }
 
 }
