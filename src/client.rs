@@ -30,6 +30,8 @@ impl KerberosClient {
 
     pub fn request_tgt(&self, username: AsciiString, password: String) -> KerberosResult<TGT> {
 
+        let requester = KerberosRequester::new(self.kdc_address.clone());
+
         let mut as_req = AsReq::new(self.realm.clone(), username, "HOLLOWBASTION".to_string());
         as_req.set_password(password);
         let raw_as_req = as_req.build().unwrap();
