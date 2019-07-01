@@ -37,7 +37,7 @@ pub enum KerberosErrorKind {
     #[fail (display = "Error resolving name: {}", _0)]
     NameResolutionError(String),
     #[fail (display = "Received KRB-ERROR response")]
-    KrbErrorReceived(KrbError)
+    KrbErrorResponse(KrbError)
 }
 
 impl KerberosError {

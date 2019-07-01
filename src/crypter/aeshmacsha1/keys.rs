@@ -1,15 +1,9 @@
-use super::super::super::cryptography::*;
+use super::super::cryptography::*;
 use super::nfold_dk::*;
 
-pub fn generate_aes_128_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
-    return generate_aes_key(passphrase, salt, &AesSizes::Aes128);
-}
 
-pub fn generate_aes_256_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
-    return generate_aes_key(passphrase, salt, &AesSizes::Aes256);
-}
 
-fn generate_aes_key(passphrase: &[u8], salt: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+pub fn generate_aes_key(passphrase: &[u8], salt: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
     let key = pbkdf2_sha1(passphrase, salt, aes_sizes.seed_size());
     return dk(&key, "kerberos".as_bytes(), aes_sizes);
 }
@@ -18,6 +12,14 @@ fn generate_aes_key(passphrase: &[u8], salt: &[u8], aes_sizes: &AesSizes) -> Vec
 #[cfg(test)]
 mod test {
     use super::*;
+
+    fn generate_aes_128_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
+        return generate_aes_key(passphrase, salt, &AesSizes::Aes128);
+    }
+
+    fn generate_aes_256_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
+        return generate_aes_key(passphrase, salt, &AesSizes::Aes256);
+    }
 
     #[test]
     fn test_generate_aes_128_key() {

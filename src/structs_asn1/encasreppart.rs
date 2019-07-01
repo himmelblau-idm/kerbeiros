@@ -12,7 +12,7 @@ use super::padata::*;
 use super::super::error::*;
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct EncAsRepPart {
+pub struct EncKdcRepPart {
     key: EncryptionKey,
     last_req: LastReq,
     nonce: UInt32,
@@ -28,14 +28,14 @@ pub struct EncAsRepPart {
     encrypted_pa_data: Option<MethodData>
 }
 
-impl EncAsRepPart {
+impl EncKdcRepPart {
 
 
     pub fn new(
         key: EncryptionKey, last_req: LastReq, nonce: UInt32, flags: TicketFlags,
         authtime: KerberosTime, endtime: KerberosTime, srealm: Realm, sname: PrincipalName    
     ) -> Self {
-        return Self {
+        return EncKdcRepPart {
             key,
             last_req,
             nonce,
@@ -131,33 +131,33 @@ impl EncAsRepPartAsn1 {
         };
     }
 
-    fn no_asn1_type(&self) -> KerberosResult<EncAsRepPart> {
+    fn no_asn1_type(&self) -> KerberosResult<EncKdcRepPart> {
         let key = self.get_key().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncAsRepPart::key".to_string())
+            KerberosErrorKind::NotAvailableData("EncKdcRepPart::key".to_string())
         )?;
         let last_req = self.get_last_req().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncAsRepPart::last_req".to_string())
+            KerberosErrorKind::NotAvailableData("EncKdcRepPart::last_req".to_string())
         )?;
         let nonce = self.get_nonce().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncAsRepPart::nonce".to_string())
+            KerberosErrorKind::NotAvailableData("EncKdcRepPart::nonce".to_string())
         )?;
         let flags = self.get_flags().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncAsRepPart::flags".to_string())
+            KerberosErrorKind::NotAvailableData("EncKdcRepPart::flags".to_string())
         )?;
         let authtime = self.get_authtime().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncAsRepPart::authtime".to_string())
+            KerberosErrorKind::NotAvailableData("EncKdcRepPart::authtime".to_string())
         )?;
         let endtime = self.get_endtime().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncAsRepPart::endtime".to_string())
+            KerberosErrorKind::NotAvailableData("EncKdcRepPart::endtime".to_string())
         )?;
         let srealm = self.get_srealm().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncAsRepPart::srealm".to_string())
+            KerberosErrorKind::NotAvailableData("EncKdcRepPart::srealm".to_string())
         )?;
         let sname = self.get_sname().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncAsRepPart::sname".to_string())
+            KerberosErrorKind::NotAvailableData("EncKdcRepPart::sname".to_string())
         )?;
 
-        let mut enc_as_rep_part = EncAsRepPart::new(
+        let mut enc_as_rep_part = EncKdcRepPart::new(
             key.no_asn1_type()?,
             last_req.no_asn1_type()?,
             nonce.no_asn1_type()?,
@@ -278,7 +278,7 @@ mod test {
             PaData::Raw(PA_SUPPORTED_ENCTYPES, vec![0x1f, 0x0, 0x0, 0x0])
         );
 
-        let mut enc_as_rep_part = EncAsRepPart::new(
+        let mut enc_as_rep_part = EncKdcRepPart::new(
             encryption_key,
             last_req,
             104645460,

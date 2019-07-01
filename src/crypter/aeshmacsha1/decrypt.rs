@@ -1,12 +1,9 @@
-use super::super::super::cryptography::*;
+use super::super::cryptography::*;
 use super::super::super::error::*;
 use super::nfold_dk::*;
 
-pub fn aes_256_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
-    return aes_hmac_sh1_decrypt(key, ciphertext, &AesSizes::Aes256);
-}
 
-fn aes_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
+pub fn aes_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
     let ki = dk(key, &[0x0, 0x0, 0x0, 0x3, 0x55], aes_sizes);
     let ke = dk(key, &[0x0, 0x0, 0x0, 0x3, 0xaa], aes_sizes);
 
@@ -114,6 +111,10 @@ fn decrypt_last_two_blocks(key: &[u8], blocks: &[Vec<u8>], previous_block: &[u8]
 #[cfg(test)]
 mod test {
     use super::*;
+
+    fn aes_256_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
+        return aes_hmac_sh1_decrypt(key, ciphertext, &AesSizes::Aes256);
+    }
 
     #[test]
     fn test_aes_256_hmac_sh1_decrypt() {

@@ -4,9 +4,9 @@ use ascii::AsciiString;
 use crate::request::*;
 use crate::messages::*;
 use crate::error::*;
-use crate::tickets::*;
 use crate::sysutils;
 use crate::constants::*;
+use crate::credential::*;
 
 #[derive(Debug)]
 pub struct KerberosClient {
@@ -32,33 +32,60 @@ impl KerberosClient {
         };
     }
 
-    pub fn request_tgt(&self, username: AsciiString, password: String) -> KerberosResult<TGT> {
+    pub fn request_tgt(&self, username: AsciiString, password: String) -> KerberosResult<Credential> {
+        return KerberosTGTRequest::new(
+            self.realm.clone(), 
+            self.kdc_address.clone(), 
+            self.hostname.clone(), 
+            username,
+            password
+        ).request_tgt();
+    }
 
-        let requester = KerberosRequester::new(self.kdc_address.clone());
+}
 
-        let mut as_req = AsReq::new(self.realm.clone(), username, self.hostname.clone());
-        let raw_as_req = as_req.build().unwrap();
-        let raw_response = requester.request_and_response(&raw_as_req)?;
 
-        let krb_error = KrbError::parse(&raw_response)?; manexar o caso no que se devolva AS-REP
+struct KerberosTGTRequest {
+    requester: KerberosRequester,
+    as_req: AsReq,
+    password: String
+}
+
+impl KerberosTGTRequest {
+
+    fn new(
+        realm: AsciiString, kdc_address: IpAddr, hostname: String,
+        username: AsciiString, password: String
+        ) -> Self {
+        return Self {
+            requester: KerberosRequester::new(kdc_address),
+            as_req: AsReq::new(realm, username, hostname),
+            password
+        };
+    }
+
+    fn request_tgt(&self) -> KerberosResult<Credential> {
+        let raw_response = self.as_request_and_response()?;
+
+        let krb_error = KrbError::parse(&raw_response);
 
         if krb_error.get_error_code() != KDC_ERR_PREAUTH_REQUIRED {
             return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
         }
 
-        as_req.set_password(password);
-        let raw_as_req = as_req.build().unwrap();
-        let raw_response = requester.request_and_response(&raw_as_req)?;
+        self.as_req.set_password(self.password.clone());
+        let raw_response = self.as_request_and_response()?;
 
-        let as_rep = AsRep::parse(&raw_response)?; manexar o caso no que se devolva KRB-ERROR
+        let as_rep = AsRep::parse(&raw_response);
 
-
-        seguramente este ben crear que se encargue de manexar a request do TGT, KerberosRequester
-
+        as_rep.decrypt_encrypted_data_with_password(self.password);
 
         unimplemented!();
+    }
 
+    fn as_request_and_response(&self) -> KerberosResult<Vec<u8>> {
+        let raw_as_req = self.as_req.build().unwrap();
+        return self.requester.request_and_response(&raw_as_req);
     }
 
 }
-

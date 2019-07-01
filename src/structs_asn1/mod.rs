@@ -46,7 +46,7 @@ pub mod asrep;
 pub use asrep::AsRep;
 
 mod encasreppart;
-pub use encasreppart::EncAsRepPart;
+pub use encasreppart::EncKdcRepPart;
 
 mod lastreq;
 pub use lastreq::{LastReq,LastReqEntry};

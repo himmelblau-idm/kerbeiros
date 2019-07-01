@@ -1,6 +1,5 @@
 use crate::structs_asn1::*;
 use crate::error::*;
-use crate::constants::*;
 use crate::crypter::*;
 use crate::structs_asn1;
 use std::convert::From;
@@ -9,7 +8,7 @@ use std::convert::From;
 #[derive(Debug, Clone, PartialEq)]
 pub struct AsRep {
     data: structs_asn1::AsRep,
-    decrypted_part: Option<EncAsRepPart>
+    decrypted_part: Option<EncKdcRepPart>
 }
 
 
@@ -31,26 +30,17 @@ impl AsRep {
     }
 
     pub fn decrypt_encrypted_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
-        match self.data.get_enc_part_etype() {
-            AES256_CTS_HMAC_SHA1_96 => {
-                let key = generate_aes_256_key(password.as_bytes(), &self.data.get_encryption_salt());
-                let plaintext = aes_256_hmac_sh1_decrypt(&key, self.data.get_enc_part_cipher())?;
-                self.decrypted_part = Some(EncAsRepPart::parse(&plaintext)?);
-            },
-            AES128_CTS_HMAC_SHA1_96 => {
-                let _key = generate_aes_128_key(password.as_bytes(), &self.data.get_encryption_salt());
-                unimplemented!()
-            },
-            RC4_HMAC => {
-                let _key = ntlm_hash(password);
-                unimplemented!()
-            }
-            etype => {
-                return Err(KerberosErrorKind::UnsupportedCipherAlgorithm(etype))?;
-            }
-        }
+        let crypter = new_kerberos_crypter(self.data.get_enc_part_etype())?;
+        let plaintext = crypter.decrypt(
+            password.as_bytes(), 
+            &self.data.get_encryption_salt(), 
+            self.data.get_enc_part_cipher()
+        )?;
+        self.decrypted_part =  Some(EncKdcRepPart::parse(&plaintext)?);
 
         return Ok(());
+
+        habria que borrar esta clase y pasar de struct_asn1::AsRep a Credential directamente...
     }
 
 }
@@ -67,6 +57,7 @@ impl From<structs_asn1::AsRep> for AsRep {
 mod test {
     use super::*;
     use chrono::prelude::*;
+    use crate::constants::*;
 
     #[test]
     fn test_decode_and_decrypt_enc_part_aes256() {
@@ -156,7 +147,7 @@ mod test {
             PaData::Raw(PA_SUPPORTED_ENCTYPES, vec![0x1f, 0x0, 0x0, 0x0])
         );
 
-        let mut enc_as_rep_part = EncAsRepPart::new(
+        let mut enc_as_rep_part = EncKdcRepPart::new(
             encryption_key,
             last_req,
             104645460,

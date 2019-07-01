@@ -1,4 +1,4 @@
-use super::byteparser;
+use super::super::byteparser;
 use md4::{Md4, Digest};
 use crypto::rc4::Rc4;
 use crypto::symmetriccipher::SynchronousStreamCipher;

@@ -1,4 +1,4 @@
-use super::super::super::cryptography::*;
+use super::super::cryptography::*;
 use num::Integer;
 
 pub fn dk(key: &[u8], constant: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
