@@ -122,20 +122,20 @@ impl AsReq {
     }
 
     fn produce_encrypted_timestamp(&self, credential: &AsReqCredential) -> (i32, Vec<u8>) {
+        let timestamp = self.produce_raw_timestamp();
         match credential {
             AsReqCredential::Password(password) => {
-                let ntlm = ntlm_hash(password);
-                return (RC4_HMAC, self.encrypt_timestamp_with_rc4(&ntlm))
+                return (
+                        RC4_HMAC, 
+                        RC4Crypter::new().generate_key_from_password_and_decrypt(
+                            password, "".as_bytes(), &timestamp
+                        ).unwrap()
+                    )
             }
             AsReqCredential::NTLM(ntlm) => {
-                return (RC4_HMAC, self.encrypt_timestamp_with_rc4(&ntlm));
+                return (RC4_HMAC, RC4Crypter::new().encrypt(ntlm, &timestamp).unwrap());
             }
         }
-    }
-
-    fn encrypt_timestamp_with_rc4(&self, ntlm: &Vec<u8>) -> Vec<u8> {
-        let timestamp = self.produce_raw_timestamp();
-        return RC4Crypter::new().encrypt(ntlm, &timestamp).unwrap();
     }
 
     fn produce_raw_timestamp(&self) -> Vec<u8> {
