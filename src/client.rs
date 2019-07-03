@@ -65,6 +65,7 @@ impl KerberosTGTRequest {
     }
 
     fn request_tgt(&self) -> KerberosResult<Credential> {
+        /*
         let raw_response = self.as_request_and_response()?;
 
         let krb_error = KrbError::parse(&raw_response);
@@ -79,7 +80,7 @@ impl KerberosTGTRequest {
         let as_rep = AsRep::parse(&raw_response);
 
         as_rep.decrypt_encrypted_data_with_password(self.password);
-
+        */
         unimplemented!();
     }
 
