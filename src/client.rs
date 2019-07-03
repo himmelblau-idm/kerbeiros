@@ -65,11 +65,19 @@ impl KerberosTGTRequest {
     }
 
     fn request_tgt(&self) -> KerberosResult<Credential> {
-        /*
         let raw_response = self.as_request_and_response()?;
 
-        let krb_error = KrbError::parse(&raw_response);
+        match self.parse_as_request_response(&raw_response)? {
+            AsReqResponse::KrbError(krb_error) => {
+                return self.process_1st_krb_error(krb_error);
+            },
+            AsReqResponse::AsRep(as_rep) => {
+                return self.extract_credential_from_as_rep(as_rep);
+            }
+        }
+    }
 
+    fn process_1st_krb_error(&self, krb_error: KrbError) -> KerberosResult<Credential> {
         if krb_error.get_error_code() != KDC_ERR_PREAUTH_REQUIRED {
             return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
         }
@@ -77,11 +85,32 @@ impl KerberosTGTRequest {
         self.as_req.set_password(self.password.clone());
         let raw_response = self.as_request_and_response()?;
 
-        let as_rep = AsRep::parse(&raw_response);
+        match self.parse_as_request_response(&raw_response)? {
+            AsReqResponse::KrbError(krb_error) => {
+                return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
+            },
+            AsReqResponse::AsRep(as_rep) => {
+                return self.extract_credential_from_as_rep(as_rep);
+            }
+        }
+    }
 
-        as_rep.decrypt_encrypted_data_with_password(self.password);
-        */
-        unimplemented!();
+    fn extract_credential_from_as_rep(&self, as_rep: AsRep) -> KerberosResult<Credential> {
+        as_rep.decrypt_encrypted_data_with_password(&self.password);
+
+        obtener credenciales de aqui....
+    }
+
+    fn parse_as_request_response(&self, raw_response: &[u8]) -> KerberosResult<AsReqResponse> {
+        match KrbError::parse(raw_response) {
+            Ok(krb_error) => {
+                return Ok(AsReqResponse::KrbError(krb_error));
+            },
+            Err(err) => {
+                let as_rep = AsRep::parse(raw_response)?;
+                return Ok(AsReqResponse::AsRep(as_rep));
+            }
+        }
     }
 
     fn as_request_and_response(&self) -> KerberosResult<Vec<u8>> {
@@ -90,3 +119,8 @@ impl KerberosTGTRequest {
     }
 
 }
+
+enum AsReqResponse {
+    KrbError(KrbError),
+    AsRep(AsRep)
+} 
