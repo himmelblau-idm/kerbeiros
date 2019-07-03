@@ -17,14 +17,23 @@ impl AESCrypter {
 }
 
 impl KerberosCrypter for AESCrypter {
-    fn decrypt(&self, password: &[u8], salt: &[u8], ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
-        let key = generate_aes_key(password, salt, &self.aes_sizes);
+
+    fn generate_key(&self, key: &[u8], salt: &[u8]) -> Vec<u8> {
+        return generate_aes_key(key, salt, &self.aes_sizes);
+    }
+
+    fn generate_key_from_password(&self, password: &str, salt: &[u8]) -> Vec<u8> {
+        return self.generate_key(password.as_bytes(), salt);
+    }
+
+    fn decrypt(&self, key: &[u8], ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
         return aes_hmac_sh1_decrypt(&key, ciphertext, &self.aes_sizes);
     }
 
-    fn encrypt(&self, password: &[u8], salt: &[u8], plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
+    fn encrypt(&self, password: &[u8], plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
         unimplemented!();
     }
+
 }
 
 
@@ -102,8 +111,8 @@ mod test {
         
         assert_eq!(
             plaintext,
-            AESCrypter::new(AesSizes::Aes256).decrypt(
-                "Minnie1234".as_bytes(), 
+            AESCrypter::new(AesSizes::Aes256).generate_key_from_password_and_decrypt(
+                "Minnie1234", 
                 "KINGDOM.HEARTSmickey".as_bytes(), 
                 &ciphertext
             ).unwrap()

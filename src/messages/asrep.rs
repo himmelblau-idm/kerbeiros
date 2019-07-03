@@ -31,8 +31,8 @@ impl AsRep {
 
     pub fn decrypt_encrypted_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
         let crypter = new_kerberos_crypter(self.data.get_enc_part_etype())?;
-        let plaintext = crypter.decrypt(
-            password.as_bytes(), 
+        let plaintext = crypter.generate_key_from_password_and_decrypt(
+            password, 
             &self.data.get_encryption_salt(), 
             self.data.get_enc_part_cipher()
         )?;
@@ -40,7 +40,7 @@ impl AsRep {
 
         return Ok(());
 
-        habria que borrar esta clase y pasar de struct_asn1::AsRep a Credential directamente...
+        // habria que borrar esta clase y pasar de struct_asn1::AsRep a Credential directamente...
     }
 
 }

@@ -11,11 +11,11 @@ mod hmac;
 pub use hmac::*;
 
 
-fn md4(bytes: &[u8]) -> Vec<u8> {
+pub fn md4(bytes: &[u8]) -> Vec<u8> {
     return Md4::digest(&bytes).to_vec();
 }
 
-fn string_unicode_bytes(s: &str) -> Vec<u8> {
+pub fn string_unicode_bytes(s: &str) -> Vec<u8> {
     let s_utf16: Vec<u16> = s.encode_utf16().collect();
     return byteparser::u16_array_to_le_bytes(&s_utf16);
 }

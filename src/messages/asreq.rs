@@ -135,7 +135,7 @@ impl AsReq {
 
     fn encrypt_timestamp_with_rc4(&self, ntlm: &Vec<u8>) -> Vec<u8> {
         let timestamp = self.produce_raw_timestamp();
-        return encrypt_timestamp_rc4_hmac_md5(ntlm, &timestamp);
+        return RC4Crypter::new().encrypt(ntlm, &timestamp).unwrap();
     }
 
     fn produce_raw_timestamp(&self) -> Vec<u8> {
