@@ -8,6 +8,8 @@ mod rc4;
 pub use rc4::*;
 
 
+use crate::constants::etypes::*;
+
 pub fn new_kerberos_crypter(etype: i32) -> KerberosResult<Box<KerberosCrypter>> {
 
     match etype {
@@ -21,7 +23,7 @@ pub fn new_kerberos_crypter(etype: i32) -> KerberosResult<Box<KerberosCrypter>> 
             return Ok(Box::new(RC4Crypter::new()));
         }
         _ => {
-            return Err(KerberosErrorKind::UnsupportedCipherAlgorithm(etype))?;
+            return Err(KerberosCryptographyErrorKind::UnsupportedCipherAlgorithm(etype))?;
         }
     }
 

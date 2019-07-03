@@ -30,14 +30,20 @@ pub enum KerberosErrorKind {
     NotAvailableData(String),
     #[fail (display = "Asn1 error: {}", _0)]
     Asn1Error(asn1::Asn1ErrorKind),
-    #[fail (display = "Cipher algorithm with etype = {} is not supported", _0)]
-    UnsupportedCipherAlgorithm(i32),
-    #[fail (display = "Decryption error: {}", _0)]
-    DecryptionError(String),
+    #[fail (display = "Cryptography error: {}", _0)]
+    CryptographyError(Box<KerberosCryptographyErrorKind>),
     #[fail (display = "Error resolving name: {}", _0)]
     NameResolutionError(String),
     #[fail (display = "Received KRB-ERROR response")]
     KrbErrorResponse(KrbError)
+}
+
+#[derive(Clone, PartialEq, Debug, Fail)]
+pub enum KerberosCryptographyErrorKind {
+    #[fail (display = "Cipher algorithm with etype = {} is not supported", _0)]
+    UnsupportedCipherAlgorithm(i32),
+    #[fail (display = "Decryption error: {}", _0)]
+    DecryptionError(String),
 }
 
 impl KerberosError {
@@ -77,6 +83,17 @@ impl convert::From<Context<KerberosErrorKind>> for KerberosError {
         return KerberosError { inner };
     }
 }
+
+impl convert::From<KerberosCryptographyErrorKind> for KerberosError {
+    fn from(kind: KerberosCryptographyErrorKind) -> KerberosError {
+        return KerberosError {
+            inner: Context::new(
+                KerberosErrorKind::CryptographyError(Box::new(kind))
+            )
+        };
+    }
+}
+
 
 impl convert::From<FromAsciiError<&str>> for KerberosError {
     fn from(_error: FromAsciiError<&str>) -> Self {

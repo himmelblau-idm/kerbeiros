@@ -22,7 +22,7 @@ impl RC4Crypter {
 
 impl KerberosCrypter for RC4Crypter {
 
-    fn generate_key(&self, key: &[u8], salt: &[u8]) -> Vec<u8> {
+    fn generate_key(&self, key: &[u8], _salt: &[u8]) -> Vec<u8> {
         return md4(key);
     }
 
