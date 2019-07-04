@@ -100,7 +100,16 @@ impl KerberosTGTRequest {
     }
 
     fn extract_credential_from_as_rep(&self, as_rep: AsRep) -> KerberosResult<Credential> {
-        return CredentialTransformer::from_kdc_rep_to_credential(&self.password, &as_rep);
+        match CredentialTransformer::from_kdc_rep_to_credential(&self.password, &as_rep) {
+            Ok(credential) => {
+                return Ok(credential);
+            },
+            Err(error) => {
+                return Err(
+                    KerberosErrorKind::ParseKdcRepError(as_rep, Box::new(error.kind().clone()))
+                )?;
+            }
+        }
     }
 
     fn parse_as_request_response(&self, raw_response: &[u8]) -> KerberosResult<AsReqResponse> {

@@ -5,7 +5,7 @@ use ascii::FromAsciiError;
 use failure::*;
 use failure_derive::Fail;
 use asn1;
-use crate::messages::KrbError;
+use crate::messages::*;
 
 pub type KerberosResult<T> = Result<T, KerberosError>;
 
@@ -35,7 +35,9 @@ pub enum KerberosErrorKind {
     #[fail (display = "Error resolving name: {}", _0)]
     NameResolutionError(String),
     #[fail (display = "Received KRB-ERROR response")]
-    KrbErrorResponse(KrbError)
+    KrbErrorResponse(KrbError),
+    #[fail (display = "Error parsing KdcRep: {}", _1)]
+    ParseKdcRepError(KdcRep, Box<KerberosErrorKind>)
 }
 
 #[derive(Clone, PartialEq, Debug, Fail)]
