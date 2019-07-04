@@ -43,7 +43,7 @@ pub mod asreq;
 pub use asreq::AsReq;
 
 pub mod asrep;
-pub use asrep::AsRep;
+pub use asrep::KdcRep;
 
 mod encasreppart;
 pub use encasreppart::EncKdcRepPart;

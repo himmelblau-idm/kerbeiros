@@ -1,5 +1,6 @@
-use super::structs_asn1::*;
+use crate::structs_asn1::*;
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct Credential {
     crealm: Realm,
     cname: PrincipalName,
@@ -10,7 +11,7 @@ pub struct Credential {
 
 impl Credential {
 
-    fn new(
+    pub fn new(
         crealm: Realm, cname: PrincipalName, 
         ticket: Ticket, client_part: EncKdcRepPart 
     ) -> Self {

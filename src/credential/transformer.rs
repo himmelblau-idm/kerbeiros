@@ -1,56 +1,33 @@
-use crate::structs_asn1::*;
+use crate::messages::KdcRep;
+use super::credential::*;
 use crate::error::*;
 use crate::crypter::*;
-use crate::structs_asn1;
-use std::convert::From;
+use crate::structs_asn1::*;
 
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct AsRep {
-    data: structs_asn1::AsRep,
-    decrypted_part: Option<EncKdcRepPart>
+pub struct CredentialTransformer {
 }
 
 
-impl AsRep {
+impl CredentialTransformer {
 
-    fn new(data: structs_asn1::AsRep) -> Self {
-        let as_rep = Self {
-            data,
-            decrypted_part: None
-        };
-
-        return as_rep;
-    }
-    
-
-    pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
-        let as_rep_asn1 = structs_asn1::AsRep::parse(raw)?;
-        return Ok(Self::from(as_rep_asn1));
-    }
-
-    pub fn decrypt_encrypted_data_with_password(&mut self, password: &str) -> KerberosResult<()> {
-        let crypter = new_kerberos_crypter(self.data.get_enc_part_etype())?;
+    pub fn from_kdc_rep_to_credential(password: &str, kdc_rep: &KdcRep) -> KerberosResult<Credential> {
+        let crypter = new_kerberos_crypter(kdc_rep.get_enc_part_etype())?;
         let plaintext = crypter.generate_key_from_password_and_decrypt(
             password, 
-            &self.data.get_encryption_salt(), 
-            self.data.get_enc_part_cipher()
+            &kdc_rep.get_encryption_salt(), 
+            kdc_rep.get_enc_part_cipher()
         )?;
-        self.decrypted_part =  Some(EncKdcRepPart::parse(&plaintext)?);
 
-        return Ok(());
+        let enc_kdc_rep_part = EncKdcRepPart::parse(&plaintext)?;
 
-        // habria que borrar esta clase y pasar de struct_asn1::AsRep a Credential directamente...
+        return Ok(Credential::new(
+            kdc_rep.get_crealm().clone(),
+            kdc_rep.get_cname().clone(),
+            kdc_rep.get_ticket().clone(),
+            enc_kdc_rep_part
+        ));
     }
 
-}
-
-impl From<structs_asn1::AsRep> for AsRep {
-    fn from(as_rep_asn1: structs_asn1::AsRep) -> Self {
-        return Self::new(
-            as_rep_asn1
-        );
-    }
 }
 
 #[cfg(test)]
@@ -100,19 +77,14 @@ mod test {
         info2.push(entry1);
         padata.push(PaData::EtypeInfo2(info2));
 
-        let mut as_rep_asn1 = structs_asn1::AsRep::new(
+        let mut as_rep = KdcRep::new(
             Realm::from_ascii("fake").unwrap(),
             PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("fake").unwrap()),
-            ticket,
+            ticket.clone(),
             encrypted_data
         );
 
-        as_rep_asn1.set_padata(padata);
-
-        let mut as_rep = AsRep::from(as_rep_asn1);
-
-
-
+        as_rep.set_padata(padata);
 
         let encryption_key = EncryptionKey::new(
             AES256_CTS_HMAC_SHA1_96,
@@ -173,9 +145,17 @@ mod test {
         );
         enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_datas);
 
-        as_rep.decrypt_encrypted_data_with_password("Minnie1234").unwrap();
+        let credential = Credential::new(
+            Realm::from_ascii("fake").unwrap(),
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("fake").unwrap()),
+            ticket,
+            enc_as_rep_part
+        );
 
-        assert_eq!(enc_as_rep_part, as_rep.decrypted_part.unwrap());
+        assert_eq!(
+            credential, 
+            CredentialTransformer::from_kdc_rep_to_credential("Minnie1234", &as_rep).unwrap()
+        );
 
     }
 

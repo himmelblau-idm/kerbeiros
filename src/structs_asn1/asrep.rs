@@ -9,7 +9,7 @@ use super::encrypteddata::*;
 use super::super::error::*;
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct AsRep {
+pub struct KdcRep {
     pvno: i8,
     msg_type: i8,
     padata: Option<SeqOfPaData>,
@@ -20,10 +20,10 @@ pub struct AsRep {
 }
 
 
-impl AsRep {
+impl KdcRep {
 
     pub fn new(crealm: Realm, cname: PrincipalName, ticket: Ticket, enc_part: EncryptedData) -> Self {
-        return Self {
+        return KdcRep {
             pvno: 5,
             msg_type: 11,
             padata: None,
@@ -126,7 +126,7 @@ impl AsRepAsn1 {
         };
     }
 
-    fn no_asn1_type(&self) -> KerberosResult<AsRep> {
+    fn no_asn1_type(&self) -> KerberosResult<KdcRep> {
         let pvno = self.get_pvno().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("AsRep::pvno".to_string())
         )?;
@@ -154,7 +154,7 @@ impl AsRepAsn1 {
             KerberosErrorKind::NotAvailableData("AsRep::enc_part".to_string())
         )?;
         
-        let mut as_rep = AsRep::new(
+        let mut as_rep = KdcRep::new(
             crealm.no_asn1_type()?,
             cname.no_asn1_type()?,
             ticket.no_asn1_type()?,
@@ -215,7 +215,7 @@ mod test {
                     0x9
         ];
 
-        let as_rep_decoded = AsRep::parse(&encoded_as_rep).unwrap();
+        let as_rep_decoded = KdcRep::parse(&encoded_as_rep).unwrap();
 
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
         let cname = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
@@ -243,7 +243,7 @@ mod test {
         info2.push(entry1);
         padata.push(PaData::EtypeInfo2(info2));
 
-        let mut as_rep = AsRep::new(
+        let mut as_rep = KdcRep::new(
             realm,
             cname,
             ticket,

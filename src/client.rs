@@ -64,7 +64,7 @@ impl KerberosTGTRequest {
         };
     }
 
-    fn request_tgt(&self) -> KerberosResult<Credential> {
+    fn request_tgt(&mut self) -> KerberosResult<Credential> {
         let raw_response = self.as_request_and_response()?;
 
         match self.parse_as_request_response(&raw_response)? {
@@ -77,11 +77,15 @@ impl KerberosTGTRequest {
         }
     }
 
-    fn process_1st_krb_error(&self, krb_error: KrbError) -> KerberosResult<Credential> {
+    fn process_1st_krb_error(&mut self, krb_error: KrbError) -> KerberosResult<Credential> {
         if krb_error.get_error_code() != KDC_ERR_PREAUTH_REQUIRED {
             return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
         }
 
+        return self.request_2nd_as_req();
+    }
+
+    fn request_2nd_as_req(&mut self) -> KerberosResult<Credential> {
         self.as_req.set_password(self.password.clone());
         let raw_response = self.as_request_and_response()?;
 
@@ -96,9 +100,7 @@ impl KerberosTGTRequest {
     }
 
     fn extract_credential_from_as_rep(&self, as_rep: AsRep) -> KerberosResult<Credential> {
-        as_rep.decrypt_encrypted_data_with_password(&self.password);
-
-        obtener credenciales de aqui....
+        return CredentialTransformer::from_kdc_rep_to_credential(&self.password, &as_rep);
     }
 
     fn parse_as_request_response(&self, raw_response: &[u8]) -> KerberosResult<AsReqResponse> {
@@ -106,7 +108,7 @@ impl KerberosTGTRequest {
             Ok(krb_error) => {
                 return Ok(AsReqResponse::KrbError(krb_error));
             },
-            Err(err) => {
+            Err(_) => {
                 let as_rep = AsRep::parse(raw_response)?;
                 return Ok(AsReqResponse::AsRep(as_rep));
             }
