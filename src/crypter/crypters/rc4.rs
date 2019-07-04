@@ -18,6 +18,14 @@ impl RC4Crypter {
         self.preamble = Some(preamble.to_vec());
     }
 
+    fn _get_preamble(&self) -> Vec<u8> {
+        if let Some(self_preamble) = &self.preamble {
+            return self_preamble.clone(); 
+        }else {
+            return random_bytes(8);
+        }
+    }
+
 }
 
 impl KerberosCrypter for RC4Crypter {
@@ -36,13 +44,7 @@ impl KerberosCrypter for RC4Crypter {
     }
 
     fn encrypt(&self, key: &[u8], plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
-        let preamble: Vec<u8>;
-        if let Some(self_preamble) = &self.preamble {
-            preamble = self_preamble.clone(); 
-        }else {
-            preamble = random_bytes(8);
-        }
-
+        let preamble = self._get_preamble();
         return Ok(encrypt_rc4_hmac_md5(key, plaintext, &preamble));
     }
     
