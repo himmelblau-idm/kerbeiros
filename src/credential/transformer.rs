@@ -3,6 +3,7 @@ use super::credential::*;
 use crate::error::*;
 use crate::crypter::*;
 use crate::structs_asn1::*;
+use crate::constants::*;
 
 pub struct CredentialTransformer {
 }
@@ -14,7 +15,8 @@ impl CredentialTransformer {
         let crypter = new_kerberos_crypter(kdc_rep.get_enc_part_etype())?;
         let plaintext = crypter.generate_key_from_password_and_decrypt(
             password, 
-            &kdc_rep.get_encryption_salt(), 
+            &kdc_rep.get_encryption_salt(),
+            KEY_USAGE_AP_REP_ENC_PART, 
             kdc_rep.get_enc_part_cipher()
         )?;
 

@@ -30,7 +30,6 @@ impl KerberosCrypter for AESCrypter {
         return aes_hmac_sh1_decrypt(&key, ciphertext, &self.aes_sizes);
     }
 
-    falta por implementart el encrypt...
     fn encrypt(&self, password: &[u8], key_usage: i32, plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
         unimplemented!();
     }

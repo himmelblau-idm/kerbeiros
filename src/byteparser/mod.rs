@@ -9,6 +9,10 @@ pub fn u32_to_be_bytes(u: u32) -> [u8;4] {
     ];
 }
 
+pub fn i32_to_le_bytes(x: i32) -> [u8;4] {
+    return u32_to_le_bytes(x as u32);
+}
+
 pub fn u32_to_le_bytes(u: u32) -> [u8;4] {
     return [
         u as u8,

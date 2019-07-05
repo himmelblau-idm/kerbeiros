@@ -128,12 +128,12 @@ impl AsReq {
                 return (
                         RC4_HMAC, 
                         RC4Crypter::new().generate_key_from_password_and_decrypt(
-                            password, "".as_bytes(), &timestamp
+                            password, "".as_bytes(), KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp
                         ).unwrap()
                     )
             }
             AsReqCredential::NTLM(ntlm) => {
-                return (RC4_HMAC, RC4Crypter::new().encrypt(ntlm, &timestamp).unwrap());
+                return (RC4_HMAC, RC4Crypter::new().encrypt(ntlm, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap());
             }
         }
     }
