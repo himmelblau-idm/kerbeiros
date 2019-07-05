@@ -1,11 +1,19 @@
 use super::super::cryptography::*;
 use super::super::super::error::*;
 use super::nfold_dk::*;
+use crate::byteparser;
 
+pub fn aes_hmac_sh1_decrypt(key: &[u8], key_usage: i32, ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
+    let key_usage_bytes = byteparser::i32_to_be_bytes(key_usage);
 
-pub fn aes_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
-    let ki = dk(key, &[0x0, 0x0, 0x0, 0x3, 0x55], aes_sizes);
-    let ke = dk(key, &[0x0, 0x0, 0x0, 0x3, 0xaa], aes_sizes);
+    let mut ki_seed = key_usage_bytes.to_vec();
+    ki_seed.push(0x55);
+
+    let mut ke_seed = key_usage_bytes.to_vec();
+    ke_seed.push(0xaa);
+    
+    let ki = dk(key, &ki_seed, aes_sizes);
+    let ke = dk(key, &ke_seed, aes_sizes);
 
     if ciphertext.len() < aes_sizes.block_size() + aes_sizes.mac_size() {
         return Err(KerberosCryptographyErrorKind::DecryptionError("Ciphertext too short".to_string()))?;
@@ -113,7 +121,7 @@ mod test {
     use super::*;
 
     fn aes_256_hmac_sh1_decrypt(key: &[u8], ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
-        return aes_hmac_sh1_decrypt(key, ciphertext, &AesSizes::Aes256);
+        return aes_hmac_sh1_decrypt(key, 3, ciphertext, &AesSizes::Aes256);
     }
 
     #[test]
