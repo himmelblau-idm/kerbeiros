@@ -42,7 +42,7 @@ impl KerberosCrypter for RC4Crypter {
     fn decrypt(&self, key: &[u8], key_usage: i32, ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
         let real_key_usage;
         if key_usage == 3 {
-            real_key_usage = 8;
+            real_key_usage = 8; // RFC 4757 rules
         }
         else {
             real_key_usage = key_usage;
@@ -54,7 +54,7 @@ impl KerberosCrypter for RC4Crypter {
         let preamble = self._get_preamble();
         let real_key_usage;
         if key_usage == 3 {
-            real_key_usage = 8;
+            real_key_usage = 8; // RFC 4757 rules
         }
         else {
             real_key_usage = key_usage;
