@@ -16,7 +16,7 @@ impl CredentialTransformer {
         let plaintext = crypter.generate_key_from_password_and_decrypt(
             password, 
             &kdc_rep.get_encryption_salt(),
-            KEY_USAGE_AP_REP_ENC_PART, 
+            KEY_USAGE_AS_REP_ENC_PART, 
             kdc_rep.get_enc_part_cipher()
         )?;
 
