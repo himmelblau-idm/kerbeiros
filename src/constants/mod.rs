@@ -21,3 +21,6 @@ pub use ticketflags::*;
 
 pub mod apoptions;
 pub use apoptions::*;
+
+pub mod keyusages;
+pub use keyusages::*;

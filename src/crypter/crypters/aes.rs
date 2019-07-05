@@ -26,11 +26,12 @@ impl KerberosCrypter for AESCrypter {
         return self.generate_key(password.as_bytes(), salt);
     }
 
-    fn decrypt(&self, key: &[u8], ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
+    fn decrypt(&self, key: &[u8], key_usage: i32, ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
         return aes_hmac_sh1_decrypt(&key, ciphertext, &self.aes_sizes);
     }
 
-    fn encrypt(&self, password: &[u8], plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
+    falta por implementart el encrypt...
+    fn encrypt(&self, password: &[u8], key_usage: i32, plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
         unimplemented!();
     }
 
@@ -40,6 +41,7 @@ impl KerberosCrypter for AESCrypter {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::constants::*;
 
     #[test]
     fn test_aes_256_hmac_sh1_decrypt() {
@@ -113,7 +115,8 @@ mod test {
             plaintext,
             AESCrypter::new(AesSizes::Aes256).generate_key_from_password_and_decrypt(
                 "Minnie1234", 
-                "KINGDOM.HEARTSmickey".as_bytes(), 
+                "KINGDOM.HEARTSmickey".as_bytes(),
+                KEY_USAGE_AS_REP_ENC_PART,
                 &ciphertext
             ).unwrap()
         );

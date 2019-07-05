@@ -39,11 +39,11 @@ impl KerberosCrypter for RC4Crypter {
         return self.generate_key(&raw_key, salt);
     }
 
-    fn decrypt(&self, key: &[u8], ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
+    fn decrypt(&self, key: &[u8], key_usage: i32, ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
         return decrypt_rc4_hmac_md5(key, ciphertext);
     }
 
-    fn encrypt(&self, key: &[u8], plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
+    fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
         let preamble = self._get_preamble();
         return Ok(encrypt_rc4_hmac_md5(key, plaintext, &preamble));
     }
@@ -57,6 +57,7 @@ mod test {
     use crate::structs_asn1::PaEncTsEnc;
     use asn1::*;
     use chrono::prelude::*;
+    use crate::constants::*;
 
     #[test]
     fn test_encrypt_timestamp_rc4_hmac_md5() {
@@ -80,6 +81,7 @@ mod test {
             rc4_crypter.generate_key_from_password_and_encrypt(
                 "test",
                 &Vec::new(),
+                KEY_USAGE_PA_ENC_TIMESTAMP,
                 &timestamp_raw
             ).unwrap()
         );
@@ -107,6 +109,7 @@ mod test {
             rc4_crypter.generate_key_from_password_and_decrypt(
                 "test",
                 &Vec::new(),
+                KEY_USAGE_PA_ENC_TIMESTAMP,
                 &ciphertext
             ).unwrap()
         );
