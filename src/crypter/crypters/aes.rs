@@ -1,17 +1,31 @@
 use super::cryptertrait::*;
 use super::super::aeshmacsha1::*;
-pub use super::super::cryptography::AesSizes;
+pub use super::super::cryptography::*;
 
 pub struct AESCrypter {
-    aes_sizes: AesSizes
+    aes_sizes: AesSizes,
+    preamble: Option<Vec<u8>>
 }
 
 impl AESCrypter {
 
     pub fn new(aes_sizes: AesSizes) -> Self {
         return Self{
-            aes_sizes
+            aes_sizes,
+            preamble: None
         };
+    }
+
+    fn _set_preamble(&mut self, preamble: &[u8;16]) {
+        self.preamble = Some(preamble.to_vec());
+    }
+
+    fn _get_preamble(&self) -> Vec<u8> {
+        if let Some(self_preamble) = &self.preamble {
+            return self_preamble.clone(); 
+        }else {
+            return random_bytes(self.aes_sizes.block_size());
+        }
     }
 
 }
@@ -27,11 +41,12 @@ impl KerberosCrypter for AESCrypter {
     }
 
     fn decrypt(&self, key: &[u8], key_usage: i32, ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
-        return aes_hmac_sh1_decrypt(&key, key_usage, ciphertext, &self.aes_sizes);
+        return aes_hmac_sh1_decrypt(key, key_usage, ciphertext, &self.aes_sizes);
     }
 
-    fn encrypt(&self, password: &[u8], key_usage: i32, plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
-        unimplemented!();
+    fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
+        let preamble = self._get_preamble();
+        return Ok(aes_hmac_sha1_encrypt(key, key_usage, plaintext, &preamble, &self.aes_sizes));
     }
 
 }
@@ -40,11 +55,11 @@ impl KerberosCrypter for AESCrypter {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
 
     #[test]
     fn test_aes_256_hmac_sh1_encrypt() {
-        let aes256_crypter = AESCrypter::new(AesSizes::Aes256);
+        let mut aes256_crypter = AESCrypter::new(AesSizes::Aes256);
+        aes256_crypter._set_preamble(&[0; 16]);
 
         assert_eq!(
             vec![0x29, 0x73, 0x7f, 0x3d, 0xb6, 0xbc, 0xdf, 0xe9, 0x99, 0x0f, 0xb2, 0x13, 0x6d, 0x3e, 0xfe, 0x6f, 0x21, 0x00, 0xe6, 0xc4, 0xac, 0x75, 0x82, 0x42, 0x99, 0xd8, 0xd3, 0x70, 0x2f, 0x5a, 0x2e, 0x31, 0xc7, 0xa3, 0x36, 0x74, 0x7d, 0xfd, 0x73, 0x4a, 0x1e, 0xa0, 0x16, 0x5e, 0xbb, 0x27, 0xc0, 0xd7, 0xce, 0x9b, 0x5a, 0xec, 0x7a], 
@@ -183,7 +198,8 @@ mod test {
 
     #[test]
     fn test_aes_128_hmac_sh1_encrypt() {
-        let aes128_crypter = AESCrypter::new(AesSizes::Aes128);
+        let mut aes128_crypter = AESCrypter::new(AesSizes::Aes128);
+        aes128_crypter._set_preamble(&[0; 16]);
 
        assert_eq!(
             vec![0xde, 0xd4, 0xd3, 0xbf, 0xd7, 0x88, 0xa4, 0xb5, 0xec, 0x6b, 0x0d, 0x9c, 0x8f, 0x24, 0x00, 0xea, 0x04, 0x47, 0x94, 0xa5, 0xea, 0x27, 0xec, 0xd0, 0x3f, 0x8c, 0xf4, 0x2b, 0x58, 0x00, 0x8c, 0xcd, 0x27, 0xf4, 0x27, 0x78, 0x19, 0xa2, 0x6b, 0x27, 0xd9], 

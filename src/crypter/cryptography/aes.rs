@@ -63,7 +63,7 @@ pub fn encrypt_aes_cbc(key: &[u8], plaintext: &[u8], aes_sizes: &AesSizes) -> Ve
     let mut encryptor = aes::cbc_encryptor(aes_sizes.key_size(), key, 
             &vec![0; aes_sizes.block_size()], blockmodes::NoPadding);
 
-    let mut ciphertext: Vec<u8> = vec![0; aes_sizes.block_size()];
+    let mut ciphertext: Vec<u8> = vec![0; plaintext.len()];
     encryptor.encrypt(&mut RefReadBuffer::new(plaintext),
                         &mut RefWriteBuffer::new(&mut ciphertext), true).unwrap();
     

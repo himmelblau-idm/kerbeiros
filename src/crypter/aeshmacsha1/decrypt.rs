@@ -3,6 +3,64 @@ use super::super::super::error::*;
 use super::nfold_dk::*;
 use crate::byteparser;
 
+pub fn aes_hmac_sha1_encrypt(key: &[u8], key_usage: i32, plaintext: &[u8], preamble: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+    let key_usage_bytes = byteparser::i32_to_be_bytes(key_usage);
+
+    let mut ki_seed = key_usage_bytes.to_vec();
+    ki_seed.push(0x55);
+
+    let mut ke_seed = key_usage_bytes.to_vec();
+    ke_seed.push(0xaa);
+    
+    let ki = dk(key, &ki_seed, aes_sizes);
+    let ke = dk(key, &ke_seed, aes_sizes);
+    
+    let mut basic_plaintext = preamble.to_vec();
+    basic_plaintext.append(&mut plaintext.to_vec());
+
+    let mut hmac = hmac_sha1(&ki, &basic_plaintext);
+
+    let mut ciphertext =  basic_encrypt(&ke, &basic_plaintext, aes_sizes);
+    ciphertext.append(&mut hmac[..aes_sizes.mac_size()].to_vec());
+
+    return ciphertext;
+}
+
+fn basic_encrypt(key: &[u8], plaintext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+    let block_size = aes_sizes.block_size();
+    let pad_length = (block_size - (plaintext.len() % block_size)) % block_size;
+    
+    let mut padded_plaintext = plaintext.to_vec();
+    padded_plaintext.append(&mut vec![0; pad_length]);
+    
+    let ciphertext = encrypt_aes_cbc(key, &padded_plaintext, aes_sizes); 
+
+    if ciphertext.len() <= block_size {
+        return ciphertext;
+    }
+
+    let mut swapped_ciphertext = Vec::with_capacity(ciphertext.len());
+    let mut end_no_lasts_blocks_index = 0;
+    if ciphertext.len() > (block_size * 2) {
+        end_no_lasts_blocks_index = ciphertext.len() - (block_size * 2);
+        let mut no_lasts_blocks = (ciphertext[..end_no_lasts_blocks_index]).to_vec();
+        swapped_ciphertext.append(&mut no_lasts_blocks);
+    }
+
+    let real_last_block_length = block_size - pad_length;
+
+    let second_last_block = ciphertext[end_no_lasts_blocks_index..(end_no_lasts_blocks_index + block_size)].to_vec();
+    let mut last_block = ciphertext[(end_no_lasts_blocks_index + block_size)..].to_vec();
+
+    let mut second_last_block_real_portion = second_last_block[..real_last_block_length].to_vec();
+
+    swapped_ciphertext.append(&mut last_block);
+    swapped_ciphertext.append(&mut second_last_block_real_portion);
+
+
+    return swapped_ciphertext;
+}
+
 pub fn aes_hmac_sh1_decrypt(key: &[u8], key_usage: i32, ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
     let key_usage_bytes = byteparser::i32_to_be_bytes(key_usage);
 
