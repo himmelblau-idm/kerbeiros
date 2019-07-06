@@ -37,7 +37,9 @@ pub enum KerberosErrorKind {
     #[fail (display = "Received KRB-ERROR response")]
     KrbErrorResponse(KrbError),
     #[fail (display = "Error parsing KdcRep: {}", _1)]
-    ParseKdcRepError(KdcRep, Box<KerberosErrorKind>)
+    ParseKdcRepError(KdcRep, Box<KerberosErrorKind>),
+    #[fail (display = "None cipher algorithm supported was specified")]
+    NoProvidedSupportedCipherAlgorithm
 }
 
 #[derive(Clone, PartialEq, Debug, Fail)]

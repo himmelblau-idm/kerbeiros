@@ -50,7 +50,7 @@ impl KerberosCrypter for RC4Crypter {
         return decrypt_rc4_hmac_md5(key, real_key_usage, ciphertext);
     }
 
-    fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> KerberosResult<Vec<u8>> {
+    fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8> {
         let preamble = self._get_preamble();
         let real_key_usage;
         if key_usage == 3 {
@@ -60,7 +60,7 @@ impl KerberosCrypter for RC4Crypter {
             real_key_usage = key_usage;
         }
 
-        return Ok(encrypt_rc4_hmac_md5(key, real_key_usage, plaintext, &preamble));
+        return encrypt_rc4_hmac_md5(key, real_key_usage, plaintext, &preamble);
     }
     
 }
@@ -82,7 +82,7 @@ mod test {
                 &Vec::new(),
                 1,
                 &[0x5a, 0x67, 0x65, 0x59, 0x30, 0x5a, 0x49, 0x65, 0x41, 0x64, 0x56, 0x75, 0x72, 0x54, 0x4b, 0x39, 0x62, 0x73, 0x35, 0x6b, 0x62, 0x47]
-            ).unwrap()
+            )
         );
 
         assert_eq!(
@@ -92,7 +92,7 @@ mod test {
                 &Vec::new(),
                 2,
                 &[0x44, 0x4c, 0x5a, 0x4c, 0x53, 0x30, 0x35, 0x47, 0x61, 0x63, 0x4c, 0x4e, 0x39, 0x54, 0x6f, 0x7a, 0x42, 0x47]
-            ).unwrap()
+            )
         );
 
         
@@ -103,7 +103,7 @@ mod test {
                 &Vec::new(),
                 3,
                 &[0x4c, 0x48, 0x59, 0x62, 0x31, 0x42, 0x77, 0x6a, 0x53, 0x50, 0x79, 0x54, 0x59, 0x6e, 0x5a, 0x43, 0x78, 0x4f, 0x65, 0x6e, 0x63]
-            ).unwrap()
+            )
         );
 
         assert_eq!(
@@ -113,7 +113,7 @@ mod test {
                 &Vec::new(),
                 4,
                 &[0x6d, 0x55, 0x77, 0x47, 0x4f, 0x49, 0x61, 0x59, 0x69, 0x79, 0x31, 0x52, 0x44, 0x66, 0x75]
-            ).unwrap()
+            )
         );
 
         assert_eq!(
@@ -123,7 +123,7 @@ mod test {
                 &Vec::new(),
                 5,
                 &[0x74, 0x57, 0x34, 0x41, 0x68, 0x36, 0x73, 0x7a, 0x6f, 0x79, 0x39, 0x32, 0x68, 0x68, 0x70, 0x59]
-            ).unwrap()
+            )
         );
 
         assert_eq!(
@@ -133,7 +133,7 @@ mod test {
                 &Vec::new(),
                 6,
                 &[0x69, 0x5a, 0x7a, 0x79, 0x72, 0x76, 0x74, 0x44, 0x72, 0x36, 0x77, 0x6f, 0x78, 0x49, 0x68, 0x41, 0x73, 0x48, 0x4b, 0x59, 0x53, 0x42, 0x63, 0x46, 0x6b, 0x6e, 0x59, 0x78, 0x41, 0x53]
-            ).unwrap()
+            )
         );
     }
 

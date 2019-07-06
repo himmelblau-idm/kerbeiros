@@ -7,29 +7,19 @@ use ascii::AsciiString;
 
 pub enum AsReqCredential {
     Password(String),
-    NTLM(Vec<u8>),
+    NTLM([u8; RC4_KEY_SIZE]),
+    AES128Key([u8; AES128_KEY_SIZE]),
+    AES256Key([u8; AES256_KEY_SIZE])
 }
 
-pub enum AsReqCipher {
-    Rc4HmacMD5(),
-}
 
-impl AsReqCipher {
-
-    fn identifier(&self) -> i32 {
-        match self {
-            AsReqCipher::Rc4HmacMD5() => { return RC4_HMAC;}
-        };
-    }
-
-}
 pub struct AsReq {
     realm: AsciiString,
     username: AsciiString,
-    credential: Option<AsReqCredential>,
+    user_key: Option<AsReqCredential>,
     hostname: String,
     kdc_options: u32,
-    ciphers: Vec<AsReqCipher>,
+    etypes: Vec<i32>,
     pac: bool,
 }
 
@@ -37,60 +27,33 @@ pub struct AsReq {
 impl AsReq {
 
     pub fn new(realm: AsciiString, username: AsciiString, hostname: String) -> Self {
-        let mut as_req = Self {
+        let as_req = Self {
             realm,
             username,
-            credential: None,
+            user_key: None,
             hostname,
-            kdc_options: 0,
+            kdc_options: FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK,
             pac: true,
-            ciphers: Vec::new()
+            etypes: vec![RC4_HMAC, AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96]
         };
-
-        as_req.add_cipher(AsReqCipher::Rc4HmacMD5());
-
-        as_req.set_forwardable();
-        as_req.set_renewable();
-        as_req.set_canonicalize();
-        as_req.set_renewable_ok();
 
         return as_req;
     }
 
-    pub fn add_cipher(&mut self, cipher: AsReqCipher) {
-        self.ciphers.push(cipher);
+    pub fn set_etypes(&mut self, etypes: Vec<i32>) {
+        self.etypes = etypes;
     }
 
-    pub fn clear_ciphers(&mut self) {
-        self.ciphers.clear();
+    pub fn set_kdc_options(&mut self, kdc_options: u32) {
+        self.kdc_options = kdc_options;
     }
 
-    pub fn set_credential(&mut self, credential: AsReqCredential) {
-        self.credential = Some(credential);
+    pub fn set_user_key(&mut self, user_key: AsReqCredential) {
+        self.user_key = Some(user_key);
     }
 
     pub fn set_password(&mut self, password: String) {
-        self.set_credential(AsReqCredential::Password(password));
-    }
-
-    pub fn set_forwardable(&mut self) {
-        self.kdc_options &= FORWARDABLE;
-    }
-
-    pub fn set_renewable(&mut self) {
-        self.kdc_options &= RENEWABLE;
-    }
-
-    pub fn set_canonicalize(&mut self) {
-        self.kdc_options &= CANONICALIZE;
-    }
-
-    pub fn set_renewable_ok(&mut self) {
-        self.kdc_options &= RENEWABLE_OK;
-    }
-
-    pub fn clear_options(&mut self) {
-        self.kdc_options = 0;
+        self.set_user_key(AsReqCredential::Password(password));
     }
 
     pub fn include_pac(&mut self) {
@@ -109,33 +72,90 @@ impl AsReq {
             as_req.include_pac();
         }
 
-        for cipher in self.ciphers.iter() {
-            as_req.push_etype(cipher.identifier());
+        for etype in self.etypes.iter() {
+            as_req.push_etype(*etype);
         }
 
-        if let Some(credential) = &self.credential {
-            let (etype, encrypted_data) = self.produce_encrypted_timestamp(credential);
+        if let Some(user_key) = &self.user_key {
+            let (etype, encrypted_data) = self.produce_encrypted_timestamp(user_key)?;
             as_req.set_encrypted_timestamp(etype, encrypted_data);
         }
         
         return Ok(as_req.build());
     }
 
-    fn produce_encrypted_timestamp(&self, credential: &AsReqCredential) -> (i32, Vec<u8>) {
+    fn produce_encrypted_timestamp(&self, user_key: &AsReqCredential) -> KerberosResult<(i32, Vec<u8>)> {
         let timestamp = self.produce_raw_timestamp();
-        match credential {
+        match user_key {
             AsReqCredential::Password(password) => {
-                return (
-                        RC4_HMAC, 
-                        RC4Crypter::new().generate_key_from_password_and_encrypt(
-                            password, "".as_bytes(), KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp
-                        ).unwrap()
-                    )
+                return self.encrypt_timestamp_with_best_cipher_and_password(password, &timestamp);
             }
             AsReqCredential::NTLM(ntlm) => {
-                return (RC4_HMAC, RC4Crypter::new().encrypt(ntlm, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap());
+                return self.encrypt_timestamp_with_cipher_and_key(RC4_HMAC, ntlm, &timestamp);
+            },
+            AsReqCredential::AES128Key(key_128) => {
+                return self.encrypt_timestamp_with_cipher_and_key(AES128_CTS_HMAC_SHA1_96, key_128, &timestamp); 
+            },
+            AsReqCredential::AES256Key(key_256) => {
+                return self.encrypt_timestamp_with_cipher_and_key(AES256_CTS_HMAC_SHA1_96, key_256, &timestamp);
             }
         }
+    }
+
+    
+
+    fn encrypt_timestamp_with_best_cipher_and_password(&self, 
+        password: &str, timestamp: &[u8]    
+    ) -> KerberosResult<(i32, Vec<u8>)> {
+        if self.etypes.contains(&AES256_CTS_HMAC_SHA1_96) {
+            return self.encrypt_timestamp_with_cipher_and_password(
+                AES256_CTS_HMAC_SHA1_96, 
+                password,
+                &self.calculate_aes_salt(), 
+                timestamp
+            );
+        }
+        else if self.etypes.contains(&AES128_CTS_HMAC_SHA1_96) {
+            return self.encrypt_timestamp_with_cipher_and_password(
+                AES128_CTS_HMAC_SHA1_96, 
+                password,
+                &self.calculate_aes_salt(),
+                timestamp
+            );
+        }
+        else if self.etypes.contains(&RC4_HMAC) {
+            return self.encrypt_timestamp_with_cipher_and_password(
+                RC4_HMAC, 
+                password,
+                "".as_bytes(),
+                timestamp
+            );
+        }
+
+        return Err(KerberosErrorKind::NoProvidedSupportedCipherAlgorithm)?;
+    }
+
+    fn encrypt_timestamp_with_cipher_and_key(&self, 
+        etype: i32, key: &[u8], timestamp: &[u8]
+    ) -> KerberosResult<(i32, Vec<u8>)> {
+        let crypter = new_kerberos_crypter(etype)?;
+        return Ok((etype, crypter.encrypt(key, KEY_USAGE_AS_REQ_TIMESTAMP, timestamp))); 
+    }
+
+    fn encrypt_timestamp_with_cipher_and_password(&self, 
+        etype: i32, password: &str, salt: &[u8], timestamp: &[u8]
+    ) -> KerberosResult<(i32, Vec<u8>)> {
+        let crypter = new_kerberos_crypter(etype)?;
+        return Ok((etype, crypter.generate_key_from_password_and_encrypt(
+                                password,
+                                salt, 
+                                KEY_USAGE_AS_REQ_TIMESTAMP, 
+                                timestamp)
+        )); 
+    }
+
+    fn calculate_aes_salt(&self) -> Vec<u8> {
+        dominio.upper() + host si el nombre de cliente acaba en $ + clientname.lower()
     }
 
     fn produce_raw_timestamp(&self) -> Vec<u8> {
@@ -144,3 +164,6 @@ impl AsReq {
     }
 
 }
+
+hacer tests....
+
