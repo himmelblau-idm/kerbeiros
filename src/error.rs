@@ -39,7 +39,9 @@ pub enum KerberosErrorKind {
     #[fail (display = "Error parsing KdcRep: {}", _1)]
     ParseKdcRepError(KdcRep, Box<KerberosErrorKind>),
     #[fail (display = "None cipher algorithm supported was specified")]
-    NoProvidedSupportedCipherAlgorithm
+    NoProvidedSupportedCipherAlgorithm,
+    #[fail (display = "Key provided cannot be used without specify cipher algorithm with etype {}", _0)]
+    UnusableCipherKey(i32),
 }
 
 #[derive(Clone, PartialEq, Debug, Fail)]
