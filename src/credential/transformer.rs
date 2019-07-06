@@ -36,7 +36,6 @@ impl CredentialTransformer {
 mod test {
     use super::*;
     use chrono::prelude::*;
-    use crate::constants::*;
 
     #[test]
     fn test_decode_and_decrypt_enc_part_aes256() {

@@ -4,8 +4,7 @@ mod crypter;
 mod sysutils;
 
 
-pub mod tickets;
-pub mod request;
+pub mod requester;
 
 pub mod client;
 pub use client::KerberosClient;

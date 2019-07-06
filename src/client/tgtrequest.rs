@@ -1,70 +1,31 @@
 use std::net::IpAddr;
-use dns_lookup;
 use ascii::AsciiString;
-use crate::request::*;
+use crate::requester::*;
 use crate::messages::*;
 use crate::error::*;
-use crate::sysutils;
 use crate::constants::*;
 use crate::credential::*;
 
-#[derive(Debug)]
-pub struct KerberosClient {
-    realm: AsciiString,
-    kdc_address: IpAddr,
-    hostname: String
-}
-
-impl KerberosClient {
-    pub fn new(realm: AsciiString) -> KerberosResult<KerberosClient> {
-        let ips = dns_lookup::lookup_host(&realm.to_string()).map_err(|_|
-            KerberosErrorKind::NameResolutionError(realm.to_string())
-        )?;
-
-        return Ok(Self::new_witk_kdc_address(realm, ips[0]));
-    }
-
-    fn new_witk_kdc_address(realm: AsciiString, kdc_address: IpAddr) -> Self {
-        return Self {
-            realm,
-            kdc_address,
-            hostname: sysutils::get_hostname()
-        };
-    }
-
-    pub fn request_tgt(&self, username: AsciiString, password: String) -> KerberosResult<Credential> {
-        return KerberosTGTRequest::new(
-            self.realm.clone(), 
-            self.kdc_address.clone(), 
-            self.hostname.clone(), 
-            username,
-            password
-        ).request_tgt();
-    }
-
-}
-
-
-struct KerberosTGTRequest {
-    requester: KerberosRequester,
+pub struct TGTRequest {
+    requester: Box<KerberosRequester>,
     as_req: AsReq,
     password: String
 }
 
-impl KerberosTGTRequest {
+impl TGTRequest {
 
-    fn new(
+    pub fn new(
         realm: AsciiString, kdc_address: IpAddr, hostname: String,
         username: AsciiString, password: String
         ) -> Self {
         return Self {
-            requester: KerberosRequester::new(kdc_address),
+            requester: new_requester(kdc_address),
             as_req: AsReq::new(realm, username, hostname),
             password
         };
     }
 
-    fn request_tgt(&mut self) -> KerberosResult<Credential> {
+    pub fn request_tgt(&mut self) -> KerberosResult<Credential> {
         let raw_response = self.as_request_and_response()?;
 
         match self.parse_as_request_response(&raw_response)? {
