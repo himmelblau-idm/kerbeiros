@@ -48,13 +48,13 @@ impl<'a> AsReqTimestampCrypter<'a> {
                 return self.encrypt_timestamp_with_best_cipher_and_password(password);
             }
             AsReqCredential::NTLM(ntlm) => {
-                return self.encrypt_timestamp_with_cipher_if_set(RC4_HMAC, ntlm);
+                return self.encrypt_timestamp_with_cipher_and_key(RC4_HMAC, ntlm);
             },
             AsReqCredential::AES128Key(key_128) => {
-                return self.encrypt_timestamp_with_cipher_if_set(AES128_CTS_HMAC_SHA1_96, key_128); 
+                return self.encrypt_timestamp_with_cipher_and_key(AES128_CTS_HMAC_SHA1_96, key_128); 
             },
             AsReqCredential::AES256Key(key_256) => {
-                return self.encrypt_timestamp_with_cipher_if_set(AES256_CTS_HMAC_SHA1_96, key_256);
+                return self.encrypt_timestamp_with_cipher_and_key(AES256_CTS_HMAC_SHA1_96, key_256);
             }
         }
     }
@@ -80,13 +80,6 @@ impl<'a> AsReqTimestampCrypter<'a> {
         }
 
         return self.encrypt_timestamp_with_cipher_and_password(etype, password, &salt);
-    }
-
-    fn encrypt_timestamp_with_cipher_if_set(&self, etype: i32, key: &[u8]) -> KerberosResult<(i32, Vec<u8>)> {
-        if !self.etypes.contains(&etype) {
-            return Err(KerberosErrorKind::UnusableCipherKey(etype))?;
-        }
-        return self.encrypt_timestamp_with_cipher_and_key(etype, key);
     }
 
     fn encrypt_timestamp_with_cipher_and_key(&self, etype: i32, key: &[u8]) -> KerberosResult<(i32, Vec<u8>)> {
@@ -185,44 +178,47 @@ mod test {
         new_kerberos_crypter(AES256_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
     
-    #[should_panic(expected="Key provided cannot be used without specify cipher algorithm with etype 23")]
     #[test]
-    fn error_using_ntlm_without_specify_rc4() {
+    fn produce_encrypted_timestamp_with_ntlm_without_specify_any_cipher() {
         let etypes = vec![];
         let key = [
             0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31,
             0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0, 0x89, 0xc0
         ];
 
-        AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &AsReqCredential::NTLM(key.clone()),
             &etypes
         ).unwrap();
+
+        assert_eq!(RC4_HMAC, result_etype);
+        new_kerberos_crypter(RC4_HMAC).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
 
-    #[should_panic(expected="Key provided cannot be used without specify cipher algorithm with etype 17")]
     #[test]
-    fn error_using_aes128_key_without_specify_aes128() {
+    fn produce_encrypted_timestamp_with_aes128_key_without_specify_any_cipher() {
         let etypes = vec![];
         let key = [
             0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45,
             0x9a, 0x1c, 0x39, 0xbf, 0x83, 0x23, 0x56, 0x09
         ];
 
-        AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &AsReqCredential::AES128Key(key.clone()),
             &etypes
         ).unwrap();
 
+        assert_eq!(AES128_CTS_HMAC_SHA1_96, result_etype);
+        new_kerberos_crypter(AES128_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
 
-    #[should_panic(expected="Key provided cannot be used without specify cipher algorithm with etype 18")]
+
     #[test]
-    fn error_using_aes256_key_without_specify_aes256() {
+    fn produce_encrypted_timestamp_with_aes256_key_without_specify_any_cipher() {
         let etypes = vec![];
         let key = [
             0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 
@@ -231,12 +227,15 @@ mod test {
             0xe1, 0x46, 0x16, 0xaa, 0xca, 0xb5, 0x49, 0xfd
         ];
 
-        AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &AsReqCredential::AES256Key(key.clone()),
             &etypes
         ).unwrap();
+
+        assert_eq!(AES256_CTS_HMAC_SHA1_96, result_etype);
+        new_kerberos_crypter(AES256_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
 
     #[should_panic(expected="None cipher algorithm supported was specified")]
