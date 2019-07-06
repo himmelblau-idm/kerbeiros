@@ -5,9 +5,10 @@ mod sysutils;
 
 
 pub mod requester;
+pub use requester::*;
 
 pub mod client;
-pub use client::KerberosClient;
+pub use client::*;
 
 pub mod error;
 pub use error::{KerberosResult, KerberosError, KerberosErrorKind};

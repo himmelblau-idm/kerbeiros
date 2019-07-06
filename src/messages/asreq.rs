@@ -127,7 +127,7 @@ impl AsReq {
             AsReqCredential::Password(password) => {
                 return (
                         RC4_HMAC, 
-                        RC4Crypter::new().generate_key_from_password_and_decrypt(
+                        RC4Crypter::new().generate_key_from_password_and_encrypt(
                             password, "".as_bytes(), KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp
                         ).unwrap()
                     )

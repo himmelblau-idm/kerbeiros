@@ -1,6 +1,6 @@
 use std::net::IpAddr;
 use dns_lookup;
-use ascii::AsciiString;
+pub use ascii::AsciiString;
 use crate::error::*;
 use crate::sysutils;
 use crate::credential::*;
@@ -23,7 +23,7 @@ impl KerberosClient {
         return Ok(Self::new_witk_kdc_address(realm, ips[0]));
     }
 
-    fn new_witk_kdc_address(realm: AsciiString, kdc_address: IpAddr) -> Self {
+    pub fn new_witk_kdc_address(realm: AsciiString, kdc_address: IpAddr) -> Self {
         return Self {
             realm,
             kdc_address,
