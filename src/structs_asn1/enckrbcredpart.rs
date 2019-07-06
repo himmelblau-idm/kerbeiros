@@ -8,7 +8,7 @@ use super::microseconds::*;
 use crate::error::*;
 
 #[derive(Debug, Clone, PartialEq)]
-struct EncKrbCredPart {
+pub struct EncKrbCredPart {
     ticket_info: SeqOfKrbCredInfo,
     nonce: Option<UInt32>,
     timestamp: Option<KerberosTime>,
@@ -20,7 +20,7 @@ struct EncKrbCredPart {
 
 impl EncKrbCredPart {
 
-    fn new(ticket_info: SeqOfKrbCredInfo) -> Self {
+    pub fn new(ticket_info: SeqOfKrbCredInfo) -> Self {
         return Self {
             ticket_info,
             nonce: None,
@@ -31,7 +31,7 @@ impl EncKrbCredPart {
         };
     }
 
-    fn set_nonce(&mut self, nonce: UInt32) {
+    pub fn set_nonce(&mut self, nonce: UInt32) {
         self.nonce = Some(nonce);
     }
 
@@ -53,6 +53,10 @@ impl EncKrbCredPart {
 
     pub fn asn1_type(&self) -> EncKrbCredPartAsn1 {
         return EncKrbCredPartAsn1::new(self);
+    }
+
+    pub fn build(&self) -> Vec<u8> {
+        return self.asn1_type().encode().unwrap();
     }
 
 }

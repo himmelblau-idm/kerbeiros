@@ -39,7 +39,9 @@ pub enum KerberosErrorKind {
     #[fail (display = "Error parsing KdcRep: {}", _1)]
     ParseKdcRepError(KdcRep, Box<KerberosErrorKind>),
     #[fail (display = "None cipher algorithm supported was specified")]
-    NoProvidedSupportedCipherAlgorithm
+    NoProvidedSupportedCipherAlgorithm,
+    #[fail (display = "Error in i/o operation")]
+    IOError
 }
 
 #[derive(Clone, PartialEq, Debug, Fail)]

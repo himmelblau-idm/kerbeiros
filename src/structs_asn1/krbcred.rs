@@ -4,7 +4,7 @@ use super::ticket::*;
 use super::encrypteddata::*;
 
 
-struct KrbCred {
+pub struct KrbCred {
     pvno: i8,
     msg_type: i8,
     tickets: SeqOfTickets,
@@ -13,7 +13,7 @@ struct KrbCred {
 
 impl KrbCred {
 
-    fn new(tickets: SeqOfTickets, enc_part: EncryptedData) -> Self {
+    pub fn new(tickets: SeqOfTickets, enc_part: EncryptedData) -> Self {
         return Self {
             pvno: 5,
             msg_type: 22,
@@ -24,6 +24,10 @@ impl KrbCred {
 
     fn asn1_type(&self) -> KrbCredAsn1 {
         return KrbCredAsn1::new(self);
+    }
+
+    pub fn build(&self) -> Vec<u8> {
+        return self.asn1_type().encode().unwrap();
     }
 
 }
@@ -89,7 +93,7 @@ mod test {
             encrypted_data
         );
 
-        let mut seq_of_tickets = SeqOfTickets::new();
+        let mut seq_of_tickets = SeqOfTickets::new_empty();
         seq_of_tickets.push(ticket);
 
 

@@ -70,13 +70,14 @@ impl AsReq {
             as_req.include_pac();
         }
 
-        for etype in self.etypes.iter() {
-            as_req.push_etype(*etype);
-        }
-
         if let Some(user_key) = &self.user_key {
             let (etype, encrypted_data) = self.produce_encrypted_timestamp(user_key)?;
             as_req.set_encrypted_timestamp(etype, encrypted_data);
+            as_req.push_etype(etype);
+        } else {
+            for etype in self.etypes.iter() {
+                as_req.push_etype(*etype);
+            }
         }
 
         return Ok(as_req);
@@ -94,3 +95,87 @@ impl AsReq {
 }
 
 
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn as_req_with_supported_rc4_and_aes_by_default() {
+        let as_req = AsReq::new(
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("Mickey").unwrap(),
+            "hostname".to_string()
+        );
+
+        let as_req_struct = as_req.create_as_req_struct().unwrap();
+
+        assert_eq!(vec![RC4_HMAC, AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96], **as_req_struct._get_etypes());
+    }
+
+    #[test]
+    fn as_req_with_only_supported_rc4_when_ntlm_is_provided() {
+        let key = [
+            0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31,
+            0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0, 0x89, 0xc0
+        ];
+
+        let mut as_req = AsReq::new(
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("Mickey").unwrap(),
+            "hostname".to_string()
+        );
+
+        as_req.set_user_key(AsReqCredential::NTLM(key));
+
+        let as_req_struct = as_req.create_as_req_struct().unwrap();
+
+        assert_eq!(vec![RC4_HMAC], **as_req_struct._get_etypes());
+    }
+
+
+    #[test]
+    fn as_req_with_only_supported_aes128_when_aes128_key_is_provided() {
+        let key = [
+            0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31,
+            0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0, 0x89, 0xc0
+        ];
+
+        let mut as_req = AsReq::new(
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("Mickey").unwrap(),
+            "hostname".to_string()
+        );
+
+        as_req.set_user_key(AsReqCredential::AES128Key(key));
+
+        let as_req_struct = as_req.create_as_req_struct().unwrap();
+
+        assert_eq!(vec![AES128_CTS_HMAC_SHA1_96], **as_req_struct._get_etypes());
+
+    }
+
+
+    #[test]
+    fn as_req_with_only_supported_aes256_when_aes256_key_is_provided() {
+        let key = [
+            0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31,
+            0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0, 0x89, 0xc0,
+            0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31,
+            0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0, 0x89, 0xc0
+        ];
+
+        let mut as_req = AsReq::new(
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("Mickey").unwrap(),
+            "hostname".to_string()
+        );
+
+        as_req.set_user_key(AsReqCredential::AES256Key(key));
+
+        let as_req_struct = as_req.create_as_req_struct().unwrap();
+
+        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96], **as_req_struct._get_etypes());
+
+    }
+
+}

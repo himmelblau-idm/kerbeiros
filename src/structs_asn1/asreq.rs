@@ -4,7 +4,7 @@ use asn1::*;
 use asn1_derive::*;
 use super::super::error::*;
 use super::padata::*;
-use super::kdcreqbody::{KdcReqBody, KdcReqBodyAsn1};
+use super::kdcreqbody::*;
 use super::kerberosstring::*;
 use super::hostaddress::HostAddress;
 use super::encrypteddata::*;
@@ -96,6 +96,10 @@ impl AsReq {
 
     pub fn push_etype(&mut self, etype: i32) {
         self.req_body.push_etype(etype);
+    }
+
+    pub fn _get_etypes(&self) -> &SeqOfEtype {
+        return self.req_body._get_etypes();
     }
 
     fn set_address(&mut self, address: HostAddress) {

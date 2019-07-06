@@ -2,6 +2,7 @@ use asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::etype::*;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct SeqOfEtype {
     etypes: Vec<Etype>
 }

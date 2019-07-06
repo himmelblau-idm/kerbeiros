@@ -34,7 +34,7 @@ mod encryptionkey;
 pub use encryptionkey::EncryptionKey;
 
 mod ticket;
-pub use ticket::Ticket;
+pub use ticket::{Ticket,SeqOfTickets};
 
 mod ticketflags;
 pub use ticketflags::TicketFlags;
@@ -45,8 +45,8 @@ pub use asreq::AsReq;
 pub mod asrep;
 pub use asrep::KdcRep;
 
-mod encasreppart;
-pub use encasreppart::EncKdcRepPart;
+mod enckdcreppart;
+pub use enckdcreppart::EncKdcRepPart;
 
 mod lastreq;
 pub use lastreq::{LastReq,LastReqEntry};
@@ -55,10 +55,13 @@ mod kdcreqbody;
 mod kdcoptions;
 
 mod krbcred;
+pub use krbcred::KrbCred;
 
 mod enckrbcredpart;
+pub use enckrbcredpart::EncKrbCredPart;
 
 mod krbcredinfo;
+pub use krbcredinfo::{KrbCredInfo,SeqOfKrbCredInfo};
 
 mod krberror;
 pub use krberror::KrbError;

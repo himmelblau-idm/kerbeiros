@@ -11,7 +11,7 @@ use super::kerberostime::{KerberosTime, KerberosTimeAsn1};
 use super::hostaddress::{HostAddresses, HostAddressesAsn1, HostAddress};
 use super::encrypteddata::{EncryptedData, EncryptedDataAsn1};
 use super::ticket::*;
-use super::etype::*;
+pub use super::etype::*;
 use rand::Rng;
 
 use chrono::{Duration, Utc, DateTime};
@@ -89,6 +89,10 @@ impl KdcReqBody {
 
     pub fn push_etype(&mut self, etype: i32) {
         self.etypes.push(etype);
+    }
+
+    pub fn _get_etypes(&self) -> &SeqOfEtype {
+        return &self.etypes;
     }
 
     pub fn set_address(&mut self, address: HostAddress) {
