@@ -4,7 +4,6 @@ use std::io::{Write, Read};
 use std::io;
 use std::time::Duration;
 use std::result::Result;
-use crate::byteparser;
 use crate::error::*;
 use failure::ResultExt;
 
@@ -32,7 +31,7 @@ impl TCPRequester {
 
         let mut len_data_bytes = [0 as u8; 4];
         tcp_stream.read_exact(&mut len_data_bytes)?;
-        let data_length = byteparser::be_bytes_to_u32(&len_data_bytes);
+        let data_length = u32::from_be_bytes(len_data_bytes);
 
         let mut raw_response: Vec<u8> = Vec::with_capacity(data_length as usize);
         tcp_stream.read_exact(&mut raw_response)?;
@@ -42,7 +41,7 @@ impl TCPRequester {
 
     fn _set_size_header_to_request(raw_request: &[u8]) -> Vec<u8> {
         let request_length = raw_request.len() as u32;
-        let mut raw_sized_request: Vec<u8> = byteparser::u32_to_be_bytes(request_length).to_vec();
+        let mut raw_sized_request: Vec<u8> = request_length.to_be_bytes().to_vec();
         raw_sized_request.append(&mut raw_request.to_vec());
 
         return raw_sized_request;

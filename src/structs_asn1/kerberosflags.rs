@@ -1,6 +1,5 @@
 use asn1::*;
-use super::super::byteparser;
-use super::super::error::*;
+use crate::error::*;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct KerberosFlags {
@@ -78,7 +77,7 @@ impl KerberosFlagsAsn1 {
         array_bytes.copy_from_slice(&bytes[..array_bytes_len]);
         
         
-        flags.set_flags(byteparser::le_bytes_to_u32(&array_bytes));
+        flags.set_flags(u32::from_le_bytes(array_bytes));
 
         return Ok(flags);
     }
