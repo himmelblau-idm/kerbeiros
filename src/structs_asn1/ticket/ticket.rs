@@ -15,13 +15,17 @@ pub struct Ticket {
 
 impl Ticket {
 
-    pub fn new(tkt_vno: i8, realm: Realm, sname: PrincipalName, enc_part: EncryptedData) -> Self {
+    pub fn new(realm: Realm, sname: PrincipalName, enc_part: EncryptedData) -> Self {
         return Self {
-            tkt_vno,
+            tkt_vno: 5,
             realm,
             sname,
             enc_part,
         };
+    }
+
+    pub fn set_tkt_vno(&mut self, tkt_vno: i8) {
+        self.tkt_vno = tkt_vno;
     }
 
     pub fn get_realm_ascii_string(&self) -> AsciiString {
@@ -96,12 +100,15 @@ impl TicketAsn1 {
             KerberosErrorKind::NotAvailableData("Ticket::enc_part".to_string())
         )?;
 
-        return Ok(Ticket::new(
-            *tkt_vno_value as i8, 
+        let mut ticket = Ticket::new(
             realm.no_asn1_type()?,
             sname.no_asn1_type()?,
             enc_part.no_asn1_type()?
-        ));
+        );
+        ticket.set_tkt_vno(*tkt_vno_value as i8);
+
+
+        return Ok(ticket);
 
     }
 
@@ -268,10 +275,10 @@ mod test {
 
         encrypted_data.set_kvno(2);
 
-        let ticket = Ticket::new(5, 
-        Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
-        principal_name,
-        encrypted_data
+        let ticket = Ticket::new(
+            Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
+            principal_name,
+            encrypted_data
         );
 
         assert_eq!(ticket, ticket_asn1.no_asn1_type().unwrap());

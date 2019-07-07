@@ -139,7 +139,6 @@ mod test {
         enc_as_rep_part.set_caddr(caddr);
 
         let ticket = Ticket::new(
-            5, 
             srealm.clone(), 
             sname.clone(), 
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0])

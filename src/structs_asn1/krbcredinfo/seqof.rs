@@ -23,6 +23,14 @@ impl DerefMut for SeqOfKrbCredInfo {
 
 impl SeqOfKrbCredInfo {
 
+
+    pub fn new(mut items: Vec<KrbCredInfo>) -> Self {
+        let mut seq_of = Self::new_empty();
+        seq_of.append(&mut items);
+        return seq_of;
+    }
+
+
     pub fn new_empty() -> Self {
         return Self{ entries: Vec::new() };
     }

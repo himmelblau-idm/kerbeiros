@@ -3,7 +3,7 @@ use asn1_derive::*;
 use super::ticket::*;
 use super::encrypteddata::*;
 
-
+#[derive(Debug,PartialEq,Clone)]
 pub struct KrbCred {
     pvno: i8,
     msg_type: i8,
@@ -87,7 +87,7 @@ mod test {
         let mut principal_name =  PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
-        let ticket = Ticket::new(5, 
+        let ticket = Ticket::new(
             Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
             principal_name,
             encrypted_data

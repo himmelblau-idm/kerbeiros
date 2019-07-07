@@ -226,10 +226,10 @@ mod test {
         let mut encrypted_data_ticket = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
         encrypted_data_ticket.set_kvno(2);
 
-        let ticket = Ticket::new(5, 
-        Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
-        sname_ticket,
-        encrypted_data_ticket
+        let ticket = Ticket::new(
+            Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
+            sname_ticket,
+            encrypted_data_ticket
         );
 
         let mut encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);

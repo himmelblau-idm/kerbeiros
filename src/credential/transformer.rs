@@ -40,7 +40,7 @@ mod test {
     #[test]
     fn test_decode_and_decrypt_enc_part_aes256() {
 
-        let ticket = Ticket::new(5, 
+        let ticket = Ticket::new(
             Realm::from_ascii("fake").unwrap(),
             PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("fake").unwrap()),
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9])

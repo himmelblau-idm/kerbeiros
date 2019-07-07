@@ -2,6 +2,7 @@ use asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::ticket::*;
 
+#[derive(Debug,PartialEq,Clone)]
 pub struct SeqOfTickets {
     tickets: Vec<Ticket>
 }
@@ -20,6 +21,13 @@ impl DerefMut for SeqOfTickets {
 }
 
 impl SeqOfTickets {
+
+    pub fn new(mut items: Vec<Ticket>) -> Self {
+        let mut seq_of = Self::new_empty();
+        seq_of.append(&mut items);
+        return seq_of;
+    }
+
 
     pub fn new_empty() -> Self {
         return Self{ tickets: Vec::new() };
