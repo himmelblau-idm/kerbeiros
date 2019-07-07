@@ -45,7 +45,7 @@ pub struct KerberosFlagsAsn1 {
 
 impl KerberosFlagsAsn1 {
     fn new(flags: u32) -> KerberosFlagsAsn1 {
-        let flags_bytes: Vec<u8> = flags.to_le_bytes().to_vec();
+        let flags_bytes: Vec<u8> = flags.to_be_bytes().to_vec();
 
         return KerberosFlagsAsn1{
             subtype: BitSring::new(flags_bytes, 0)
@@ -77,7 +77,7 @@ impl KerberosFlagsAsn1 {
         array_bytes.copy_from_slice(&bytes[..array_bytes_len]);
         
         
-        flags.set_flags(u32::from_le_bytes(array_bytes));
+        flags.set_flags(u32::from_be_bytes(array_bytes));
 
         return Ok(flags);
     }
@@ -125,16 +125,16 @@ mod tests {
 
     #[test]
     fn test_convert_flags_to_bit_string() {
-        let kdc_flags = KerberosFlagsAsn1::new(0x40);
+        let kdc_flags = KerberosFlagsAsn1::new(0x40000000);
         assert_eq!(vec![BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x40,0x0,0x0,0x0], kdc_flags.encode().unwrap());
 
-        let kdc_flags = KerberosFlagsAsn1::new(0x01000000);
+        let kdc_flags = KerberosFlagsAsn1::new(0x01);
         assert_eq!(vec![BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0,0x0,0x0,0x1], kdc_flags.encode().unwrap()); 
 
-        let kdc_flags = KerberosFlagsAsn1::new(0x02008000);
+        let kdc_flags = KerberosFlagsAsn1::new(0x0000800002);
         assert_eq!(vec![BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0, 0x80,0x0,0x2], kdc_flags.encode().unwrap()); 
 
-        let kdc_flags = KerberosFlagsAsn1::new(0x12481428);
+        let kdc_flags = KerberosFlagsAsn1::new(0x0028144812);
         assert_eq!(vec![BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x28,0x14,0x48,0x12], kdc_flags.encode().unwrap()); 
     }
 
@@ -143,46 +143,46 @@ mod tests {
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x40,0x0,0x0,0x0]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x40), 
+            KerberosFlags::new(0x40000000), 
             kdc_flags.no_asn1_type().unwrap()
         );
 
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0,0x0,0x0,0x1]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x01000000),
+            KerberosFlags::new(0x01),
             kdc_flags.no_asn1_type().unwrap()
         ); 
 
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0, 0x80,0x0,0x2]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x02008000),
+            KerberosFlags::new(0x0000800002),
             kdc_flags.no_asn1_type().unwrap()
         );
 
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x28,0x14,0x48,0x12]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x12481428),
+            KerberosFlags::new(0x0028144812),
             kdc_flags.no_asn1_type().unwrap()
         );
 
     }
 
-     #[test]
+    #[test]
     fn test_decode_short_kerberos_flags() {
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x2, 0x0, 0x40]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x40), 
+            KerberosFlags::new(0x40000000), 
             kdc_flags.no_asn1_type().unwrap()
         );
 
         let mut kdc_flags = KerberosFlagsAsn1::new_empty();
-        kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x3, 0x0, 0x28,0x14]).unwrap();
+        kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x3, 0x0, 0x28, 0x14]).unwrap();
         assert_eq!(
-            KerberosFlags::new(0x1428),
+            KerberosFlags::new(0x28140000),
             kdc_flags.no_asn1_type().unwrap()
         );
     }
