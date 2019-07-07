@@ -46,7 +46,7 @@ pub struct KerberosFlagsAsn1 {
 
 impl KerberosFlagsAsn1 {
     fn new(flags: u32) -> KerberosFlagsAsn1 {
-        let flags_bytes: Vec<u8> = byteparser::u32_to_le_bytes(flags).to_vec();
+        let flags_bytes: Vec<u8> = flags.to_le_bytes().to_vec();
 
         return KerberosFlagsAsn1{
             subtype: BitSring::new(flags_bytes, 0)

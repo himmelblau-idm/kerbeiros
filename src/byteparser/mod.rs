@@ -8,15 +8,6 @@ pub fn u32_to_be_bytes(u: u32) -> [u8;4] {
     ];
 }
 
-pub fn u32_to_le_bytes(u: u32) -> [u8;4] {
-    return [
-        u as u8,
-        (u >> 8) as u8,
-        (u >> 16) as u8,
-        (u >> 24) as u8
-    ];
-}
-
 pub fn le_bytes_to_u32(b: &[u8;4]) -> u32 {
     let mut x =  b[3] as u32;
     x <<= 8;
@@ -56,18 +47,6 @@ pub fn u16_array_to_le_bytes(u16_array: &[u16]) -> Vec<u8> {
 #[cfg(test)]
 mod tests{
     use super::*;
-
-    #[test]
-    fn test_u32_to_le_bytes() {
-        assert_eq!([0x00, 0x00, 0x00, 0x00], u32_to_le_bytes(0));
-        assert_eq!([0xff, 0xff, 0xff, 0xff], u32_to_le_bytes(0xffffffff));
-        assert_eq!([0x12, 0x34, 0x56, 0x78], u32_to_le_bytes(0x78563412));
-        assert_eq!([0x78, 0x56, 0x34, 0x12], u32_to_le_bytes(0x12345678));
-        assert_eq!([0x01, 0x00, 0x00, 0x00], u32_to_le_bytes(0x1));
-        assert_eq!([0x00, 0x01, 0x00, 0x00], u32_to_le_bytes(0x100));
-        assert_eq!([0x00, 0x00, 0x01, 0x00], u32_to_le_bytes(0x10000));
-        assert_eq!([0x00, 0x00, 0x00, 0x01], u32_to_le_bytes(0x1000000));
-    }
 
     #[test]
     fn test_u32_to_be_bytes() {
