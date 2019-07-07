@@ -1,19 +1,9 @@
 use super::super::cryptography::*;
 use super::super::super::error::*;
 use super::nfold_dk::*;
-use crate::byteparser;
 
 pub fn aes_hmac_sha1_encrypt(key: &[u8], key_usage: i32, plaintext: &[u8], preamble: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
-    let key_usage_bytes = byteparser::i32_to_be_bytes(key_usage);
-
-    let mut ki_seed = key_usage_bytes.to_vec();
-    ki_seed.push(0x55);
-
-    let mut ke_seed = key_usage_bytes.to_vec();
-    ke_seed.push(0xaa);
-    
-    let ki = dk(key, &ki_seed, aes_sizes);
-    let ke = dk(key, &ke_seed, aes_sizes);
+    let (ki, ke) = generate_ki_ke(key, key_usage, aes_sizes);
     
     let mut basic_plaintext = preamble.to_vec();
     basic_plaintext.append(&mut plaintext.to_vec());
@@ -62,16 +52,7 @@ fn basic_encrypt(key: &[u8], plaintext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> 
 }
 
 pub fn aes_hmac_sh1_decrypt(key: &[u8], key_usage: i32, ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
-    let key_usage_bytes = byteparser::i32_to_be_bytes(key_usage);
-
-    let mut ki_seed = key_usage_bytes.to_vec();
-    ki_seed.push(0x55);
-
-    let mut ke_seed = key_usage_bytes.to_vec();
-    ke_seed.push(0xaa);
-    
-    let ki = dk(key, &ki_seed, aes_sizes);
-    let ke = dk(key, &ke_seed, aes_sizes);
+    let (ki, ke) = generate_ki_ke(key, key_usage, aes_sizes);
 
     if ciphertext.len() < aes_sizes.block_size() + aes_sizes.mac_size() {
         return Err(KerberosCryptographyErrorKind::DecryptionError("Ciphertext too short".to_string()))?;
@@ -114,6 +95,21 @@ fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Kerbero
     plaintext.append(&mut last_plaintext);
     
     return Ok(plaintext);
+}
+
+fn generate_ki_ke(key: &[u8], key_usage: i32, aes_sizes: &AesSizes) -> (Vec<u8>, Vec<u8>) {
+    let key_usage_bytes = key_usage.to_be_bytes();
+
+    let mut ki_seed = key_usage_bytes.to_vec();
+    ki_seed.push(0x55);
+
+    let mut ke_seed = key_usage_bytes.to_vec();
+    ke_seed.push(0xaa);
+    
+    let ki = dk(key, &ki_seed, aes_sizes);
+    let ke = dk(key, &ke_seed, aes_sizes);
+
+    return (ki, ke);
 }
 
 
