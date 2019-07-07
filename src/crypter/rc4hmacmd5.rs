@@ -1,6 +1,5 @@
 pub use super::cryptography::*;
 use crate::error::*;
-use crate::byteparser;
 
 pub fn encrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, timestamp: &[u8], preamble: &[u8]) -> Vec<u8> {
 
@@ -8,7 +7,7 @@ pub fn encrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, timestamp: &[u8], preamb
     plaintext.append(&mut preamble.to_vec());
     plaintext.append(&mut timestamp.to_vec());
 
-    let ki = hmac_md5(key, & byteparser::i32_to_le_bytes(key_usage));
+    let ki = hmac_md5(key, & key_usage.to_le_bytes());
     let mut cksum = hmac_md5(&ki, &plaintext);
     let ke = hmac_md5(&ki, &cksum);
 
@@ -27,7 +26,7 @@ pub fn decrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, ciphertext: &[u8]) -> Ke
 
     let cksum = &ciphertext[0..16];
     let basic_ciphertext = &ciphertext[16..];
-    let ki = hmac_md5(key, & byteparser::i32_to_le_bytes(key_usage));
+    let ki = hmac_md5(key, &  key_usage.to_le_bytes());
     let ke = hmac_md5(&ki, &cksum);
     let plaintext = rc4_decrypt(&ke, &basic_ciphertext);
 
