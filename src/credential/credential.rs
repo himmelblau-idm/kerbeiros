@@ -73,10 +73,8 @@ mod test {
         let starttime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
         let endtime = Utc.ymd(2019, 4, 18).and_hms(16, 00, 31);
         let renew_till = Utc.ymd(2019, 4, 25).and_hms(06, 00, 31);
-        let key_expiration = Utc.ymd(2037, 9, 14).and_hms(02, 48, 05);
 
         let caddr = HostAddresses::new(HostAddress::NetBios("HOLLOWBASTION".to_string()));
-        let nonce = 104645460;
         let ticket_flags = TicketFlags::new(
             ticketflags::INITIAL 
             | ticketflags::FORWARDABLE 
@@ -84,55 +82,77 @@ mod test {
             | ticketflags::RENEWABLE
         );
 
-        let mut last_req = LastReq::new_empty();
-        last_req.push(LastReqEntry::new(0, Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)));
+        let credential = create_credential(
+            encryption_key.clone(), realm.clone(), pname.clone(), ticket_flags.clone(), 
+            auth_time.clone(), starttime.clone(), endtime.clone(), renew_till.clone(), 
+            realm.clone(), sname.clone(), caddr.clone()
+        );
 
-        let mut encrypted_pa_datas = MethodData::new();
-        encrypted_pa_datas.push(PaData::Raw(PA_SUPPORTED_ENCTYPES, vec![0x1f, 0x0, 0x0, 0x0]));
+        let krb_cred_info = create_krb_cred_info(
+            encryption_key.clone(), realm.clone(), pname.clone(), ticket_flags.clone(), 
+            auth_time.clone(), starttime.clone(), endtime.clone(), renew_till.clone(), 
+            realm.clone(), sname.clone(), caddr.clone()
+        );
 
+        assert_eq!(krb_cred_info, credential.to_krb_info());
+    }
+
+
+    fn create_krb_cred_info(
+        encryption_key: EncryptionKey, prealm: Realm, pname: PrincipalName, ticket_flags: TicketFlags,
+        authtime: KerberosTime, starttime: KerberosTime, endtime: KerberosTime, renew_till: KerberosTime,
+        srealm: Realm, sname: PrincipalName, caddr: HostAddresses
+    ) -> KrbCredInfo {
+        let mut krb_cred_info = KrbCredInfo::new(encryption_key);
+        krb_cred_info.set_prealm(prealm);
+        krb_cred_info.set_pname(pname);
+        krb_cred_info.set_flags(ticket_flags);
+        krb_cred_info.set_authtime(authtime);
+        krb_cred_info.set_starttime(starttime);
+        krb_cred_info.set_endtime(endtime);
+        krb_cred_info.set_renew_till(renew_till);
+        krb_cred_info.set_srealm(srealm);
+        krb_cred_info.set_sname(sname);
+        krb_cred_info.set_caddr(caddr);
+
+        return krb_cred_info;
+    }
+
+    fn create_credential(
+        encryption_key: EncryptionKey, prealm: Realm, pname: PrincipalName, ticket_flags: TicketFlags,
+        authtime: KerberosTime, starttime: KerberosTime, endtime: KerberosTime, renew_till: KerberosTime,
+        srealm: Realm, sname: PrincipalName, caddr: HostAddresses
+    ) -> Credential {
+        let nonce = 0;
         let mut enc_as_rep_part = EncKdcRepPart::new(
-            encryption_key.clone(),
-            last_req,
+            encryption_key,
+            LastReq::new_empty(),
             nonce,
-            ticket_flags.clone(),
-            auth_time.clone(),
-            endtime.clone(),
-            realm.clone(),
+            ticket_flags,
+            authtime,
+            endtime,
+            srealm.clone(),
             sname.clone()
         );
-        enc_as_rep_part.set_key_expiration(key_expiration.clone());
-        enc_as_rep_part.set_starttime(starttime.clone());
-        enc_as_rep_part.set_renew_till(renew_till.clone());
-        enc_as_rep_part.set_caddr(caddr.clone());
-        enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_datas);
+        enc_as_rep_part.set_starttime(starttime);
+        enc_as_rep_part.set_renew_till(renew_till);
+        enc_as_rep_part.set_caddr(caddr);
 
         let ticket = Ticket::new(
             5, 
-            realm.clone(), 
+            srealm.clone(), 
             sname.clone(), 
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0])
         );
 
         let credential = Credential::new(
-            realm.clone(),
+            prealm.clone(),
             pname.clone(),
             ticket, 
             enc_as_rep_part
         );
 
-        let mut krb_cred_info = KrbCredInfo::new(encryption_key.clone());
-        krb_cred_info.set_prealm(realm.clone());
-        krb_cred_info.set_pname(pname.clone());
-        krb_cred_info.set_flags(ticket_flags.clone());
-        krb_cred_info.set_authtime(auth_time.clone());
-        krb_cred_info.set_starttime(starttime.clone());
-        krb_cred_info.set_endtime(endtime.clone());
-        krb_cred_info.set_renew_till(renew_till.clone());
-        krb_cred_info.set_srealm(realm.clone());
-        krb_cred_info.set_sname(sname.clone());
-        krb_cred_info.set_caddr(caddr.clone());
-
-        assert_eq!(krb_cred_info, credential.to_krb_info());
+        return credential;
     }
 
 }

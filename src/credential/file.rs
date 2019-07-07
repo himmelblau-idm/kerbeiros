@@ -53,4 +53,15 @@ impl CredentialFileConverter {
 
 }
 
-// hacer test de convertir credencial en krb-cred
+#[cfg(test)]
+mod test {
+
+    #[test]
+    fn convert_credential_to_krb_cred() {
+
+        
+
+
+    }
+
+}
