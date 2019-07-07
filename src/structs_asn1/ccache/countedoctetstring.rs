@@ -1,0 +1,43 @@
+
+
+pub struct CountedOctetString {
+    data: Vec<u8>
+}
+
+
+impl CountedOctetString {
+
+    pub fn new(data: Vec<u8>) -> Self {
+        return CountedOctetString{
+            data
+        }
+    }
+
+
+    pub fn to_bytes(&self) -> Vec<u8> {
+        let data_len = self.data.len() as u32;
+        let mut bytes = data_len.to_be_bytes().to_vec();
+        bytes.append(&mut self.data.clone());
+        return bytes;
+    }
+
+}
+
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn counted_octet_string_to_bytes() {
+        assert_eq!(
+            vec![
+                0x00, 0x00, 0x00, 0x0e, 
+                0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53
+            ],
+            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()).to_bytes()
+        );
+    }
+
+}

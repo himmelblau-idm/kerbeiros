@@ -1,8 +1,7 @@
 use super::deltatime::*;
 
 pub enum Header {
-    DeltaTime(DeltaTime),
-    Raw(u16, Vec<u8>)
+    DeltaTime(DeltaTime)
 }
 
 impl Header {
@@ -11,9 +10,6 @@ impl Header {
         match &self {
             Header::DeltaTime(delta_time) => {
                 return Self::to_bytes_raw(0x1, delta_time.to_bytes());
-            },
-            Header::Raw(kind, raw) => {
-                return Self::to_bytes_raw(*kind, raw.clone());
             }
         }
     }
