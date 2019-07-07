@@ -124,7 +124,7 @@ impl EncKrbCredPartAsn1 {
             KerberosErrorKind::NotAvailableData("EncKrbCredPart::ticket_info".to_string())
         )?;
 
-        let mut enc_krb_cred_part = EncKrbCredPart::new(ticket_info.no_asn1_type()?);
+        let mut enc_krb_cred_part = EncKrbCredPart::new(ticket_info._no_asn1_type()?);
 
         if let Some(nonce) = self.get_nonce() {
             enc_krb_cred_part._set_nonce(nonce.no_asn1_type()?);

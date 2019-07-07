@@ -271,7 +271,7 @@ mod test {
         seq_of_krb_cred_info_asn1.decode(&raw).unwrap();
 
 
-        assert_eq!(seq_of_krb_cred_info, seq_of_krb_cred_info_asn1.no_asn1_type().unwrap());
+        assert_eq!(seq_of_krb_cred_info, seq_of_krb_cred_info_asn1._no_asn1_type().unwrap());
     }
 
 }
