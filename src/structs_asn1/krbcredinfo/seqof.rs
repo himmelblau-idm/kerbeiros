@@ -173,7 +173,7 @@ mod test {
 
         krb_cred_info.set_prealm(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
         krb_cred_info.set_pname(pname);
-        krb_cred_info.set_flags(TicketFlags::_new(
+        krb_cred_info.set_flags(TicketFlags::new(
             FORWARDABLE | RENEWABLE | INITIAL | PRE_AUTHENT
         ));
 
@@ -251,7 +251,7 @@ mod test {
 
         krb_cred_info.set_prealm(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
         krb_cred_info.set_pname(pname);
-        krb_cred_info.set_flags(TicketFlags::_new(
+        krb_cred_info.set_flags(TicketFlags::new(
             FORWARDABLE | RENEWABLE | INITIAL | PRE_AUTHENT
         ));
 

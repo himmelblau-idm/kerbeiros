@@ -1,6 +1,6 @@
 pub use chrono::prelude::*;
 use asn1::*;
-use super::super::error::*;
+use crate::error::*;
 
 
 pub type KerberosTime = DateTime<Utc>;

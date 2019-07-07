@@ -9,7 +9,7 @@ use super::realm::*;
 use super::principalname::*;
 use super::hostaddress::*;
 use super::padata::*;
-use super::super::error::*;
+use crate::error::*;
 use super::krbcredinfo::*;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -227,7 +227,7 @@ impl EncAsRepPartAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::super::constants::*;
+    use crate::constants::*;
 
     #[test]
     fn decode_enc_as_rep_part() {

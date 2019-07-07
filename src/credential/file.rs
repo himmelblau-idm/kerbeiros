@@ -53,4 +53,4 @@ impl CredentialFileConverter {
 
 }
 
-hacer test de convertir credencial en krb-cred
+// hacer test de convertir credencial en krb-cred
