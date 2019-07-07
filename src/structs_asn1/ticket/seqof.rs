@@ -22,7 +22,7 @@ impl DerefMut for SeqOfTickets {
 
 impl SeqOfTickets {
 
-    pub fn new(mut items: Vec<Ticket>) -> Self {
+    pub fn _new(mut items: Vec<Ticket>) -> Self {
         let mut seq_of = Self::new_empty();
         seq_of.append(&mut items);
         return seq_of;

@@ -31,23 +31,23 @@ impl EncKrbCredPart {
         };
     }
 
-    pub fn set_nonce(&mut self, nonce: UInt32) {
+    pub fn _set_nonce(&mut self, nonce: UInt32) {
         self.nonce = Some(nonce);
     }
 
-    fn set_timestamp(&mut self, timestamp: KerberosTime) {
+    fn _set_timestamp(&mut self, timestamp: KerberosTime) {
         self.timestamp = Some(timestamp);
     }
 
-    fn set_usec(&mut self, usec: Microseconds) {
+    fn _set_usec(&mut self, usec: Microseconds) {
         self.usec = Some(usec);
     }
 
-    fn set_s_address(&mut self, s_address: HostAddress) {
+    fn _set_s_address(&mut self, s_address: HostAddress) {
         self.s_address = Some(s_address);
     }
 
-    fn set_r_address(&mut self, r_address: HostAddress) {
+    fn _set_r_address(&mut self, r_address: HostAddress) {
         self.r_address = Some(r_address);
     }
 
@@ -119,7 +119,7 @@ impl EncKrbCredPartAsn1 {
         };
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<EncKrbCredPart> {
+    pub fn _no_asn1_type(&self) -> KerberosResult<EncKrbCredPart> {
         let ticket_info = self.get_ticket_info().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("EncKrbCredPart::ticket_info".to_string())
         )?;
@@ -127,23 +127,23 @@ impl EncKrbCredPartAsn1 {
         let mut enc_krb_cred_part = EncKrbCredPart::new(ticket_info.no_asn1_type()?);
 
         if let Some(nonce) = self.get_nonce() {
-            enc_krb_cred_part.set_nonce(nonce.no_asn1_type()?);
+            enc_krb_cred_part._set_nonce(nonce.no_asn1_type()?);
         }
 
         if let Some(timestamp) = self.get_timestamp() {
-            enc_krb_cred_part.set_timestamp(timestamp.no_asn1_type()?);
+            enc_krb_cred_part._set_timestamp(timestamp.no_asn1_type()?);
         }
 
         if let Some(usec) = self.get_usec() {
-            enc_krb_cred_part.set_usec(usec.no_asn1_type()?);
+            enc_krb_cred_part._set_usec(usec.no_asn1_type()?);
         }
 
         if let Some(s_address) = self.get_s_address() {
-            enc_krb_cred_part.set_s_address(s_address.no_asn1_type()?);
+            enc_krb_cred_part._set_s_address(s_address.no_asn1_type()?);
         }
 
         if let Some(r_address) = self.get_r_address() {
-            enc_krb_cred_part.set_r_address(r_address.no_asn1_type()?);
+            enc_krb_cred_part._set_r_address(r_address.no_asn1_type()?);
         }
 
         return Ok(enc_krb_cred_part);
@@ -317,7 +317,7 @@ mod test {
         let mut enc_krb_cred_part_asn1 = EncKrbCredPartAsn1::new_empty();
         enc_krb_cred_part_asn1.decode(&raw).unwrap();
 
-        assert_eq!(enc_krb_cred_part, enc_krb_cred_part_asn1.no_asn1_type().unwrap());
+        assert_eq!(enc_krb_cred_part, enc_krb_cred_part_asn1._no_asn1_type().unwrap());
     }
 
 }

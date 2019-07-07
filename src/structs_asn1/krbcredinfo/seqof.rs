@@ -24,7 +24,7 @@ impl DerefMut for SeqOfKrbCredInfo {
 impl SeqOfKrbCredInfo {
 
 
-    pub fn new(mut items: Vec<KrbCredInfo>) -> Self {
+    pub fn _new(mut items: Vec<KrbCredInfo>) -> Self {
         let mut seq_of = Self::new_empty();
         seq_of.append(&mut items);
         return seq_of;
@@ -37,12 +37,6 @@ impl SeqOfKrbCredInfo {
 
     pub fn asn1_type(&self) -> SeqOfKrbCredInfoAsn1 {
         return SeqOfKrbCredInfoAsn1::new(self);
-    }
-
-    pub fn parse(raw: &Vec<u8>) -> KerberosResult<Self> {
-        let mut seq_of_krb_cred_info_asn1 = SeqOfKrbCredInfoAsn1::new_empty();
-        seq_of_krb_cred_info_asn1.decode(raw)?;
-        return Ok(seq_of_krb_cred_info_asn1.no_asn1_type().unwrap());
     }
 
 }
@@ -72,7 +66,7 @@ impl SeqOfKrbCredInfoAsn1 {
         }
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<SeqOfKrbCredInfo> {
+    pub fn _no_asn1_type(&self) -> KerberosResult<SeqOfKrbCredInfo> {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
         for seq_of_krb_cred_info_asn1 in self.subtype.iter() {
             seq_of_krb_cred_info.push(seq_of_krb_cred_info_asn1.no_asn1_type()?);
