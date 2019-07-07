@@ -1,4 +1,4 @@
-use super::deltatime::*;
+pub use super::deltatime::*;
 
 pub enum Header {
     DeltaTime(DeltaTime)

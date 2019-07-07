@@ -6,3 +6,5 @@ mod keyblock;
 mod times;
 mod address;
 mod authdata;
+mod credential;
+mod ccache;

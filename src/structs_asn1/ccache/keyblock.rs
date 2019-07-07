@@ -1,12 +1,12 @@
 
-pub struct Keyblock {
+pub struct KeyBlock {
     keytype: u16,
     etype: u16,
     keyvalue: Vec<u8>
 }
 
 
-impl Keyblock {
+impl KeyBlock {
 
     pub fn new(keytype: u16, keyvalue: Vec<u8>) -> Self {
         return Self {
@@ -45,7 +45,7 @@ mod test {
                 0xde, 0xbe, 0x82, 0xfd, 0x9d, 0x64, 0xcf, 0x28, 
                 0x1b, 0x23, 0xea, 0x73, 0xfc, 0x91, 0xd4, 0xc2, 
             ],
-            Keyblock::new(
+            KeyBlock::new(
                 AES256_CTS_HMAC_SHA1_96 as u16, 
                 vec![
                     0x01, 0x27, 0x59, 0x90, 0x9b, 0x2a, 0xbf, 0x45, 

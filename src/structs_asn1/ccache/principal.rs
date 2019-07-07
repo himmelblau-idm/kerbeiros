@@ -1,5 +1,6 @@
 use super::countedoctetstring::*;
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct Principal {
     name_type: u32,
     realm: CountedOctetString,
@@ -35,6 +36,7 @@ impl Principal {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::constants::*;
 
     #[test]
     fn principal_to_bytes() {
@@ -48,7 +50,7 @@ mod test {
                 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79
             ],
             Principal::new(
-                0x1, 
+                NT_PRINCIPAL as u32, 
                 CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
                 vec![CountedOctetString::new("mickey".as_bytes().to_vec())]
             ).to_bytes()

@@ -1,5 +1,5 @@
 
-
+#[derive(Debug, PartialEq, Clone)]
 pub struct CountedOctetString {
     data: Vec<u8>
 }
@@ -10,6 +10,12 @@ impl CountedOctetString {
     pub fn new(data: Vec<u8>) -> Self {
         return CountedOctetString{
             data
+        }
+    }
+
+    pub fn new_empty() -> Self {
+        return Self{
+            data: Vec::new()
         }
     }
 
