@@ -1,4 +1,6 @@
 use super::countedoctetstring::*;
+use super::super::realm::*;
+use super::super::principalname::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Principal {
@@ -15,6 +17,20 @@ impl Principal {
             realm,
             components
         }
+    }
+
+    pub fn from_realm_and_principal_name(realm: &Realm, principal_name: &PrincipalName) -> Self {
+        let components = Vec::new();
+
+        for name in principal_name.get_name_string().iter() {
+            components.push(CountedOctetString::from(name));
+        }
+
+        return Self::new(
+            principal_name.get_name_type() as u32, 
+            CountedOctetString::from(realm),
+            components
+        )
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {

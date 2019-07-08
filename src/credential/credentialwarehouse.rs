@@ -49,10 +49,18 @@ impl CredentialWarehouse {
 
 
     pub fn to_ccache(&self) -> CCache {
-        unimplemented!()
-        // let header = ccache::Header::new_default();
+        let header = ccache::Header::new_default();
+        let primary_principal = ccache::Principal::from_realm_and_principal_name(&self.realm, &self.client);
 
-        // let ccache = CCache::new(header, primary_principal, credentials);
+        let ccache_credentials = Vec::with_capacity(self.credentials.len());
+
+        for credential in self.credentials.iter() {
+            ccache_credentials.push(credential.to_ccache_credential());
+        }
+
+        let ccache = CCache::new(header, primary_principal, ccache_credentials);
+
+        return ccache;
     }
 
 }

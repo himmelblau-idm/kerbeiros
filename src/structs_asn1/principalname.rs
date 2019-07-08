@@ -23,8 +23,8 @@ impl PrincipalName {
         return principal_name;
     }
 
-    pub fn get_name_type_i32(&self) -> &i32 {
-        return &self.name_type;
+    pub fn get_name_type(&self) -> i32 {
+        return self.name_type;
     }
 
     pub fn get_name_string(&self) -> &Vec<KerberosString> {

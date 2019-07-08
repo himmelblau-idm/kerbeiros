@@ -1,3 +1,5 @@
+use std::convert::From;
+use super::super::kerberosstring::*;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct CountedOctetString {
@@ -29,6 +31,18 @@ impl CountedOctetString {
 
 }
 
+impl From<&KerberosString> for CountedOctetString {
+    fn from(kerberos_string: &KerberosString) -> Self {
+        return Self::new(kerberos_string.as_bytes().to_vec());
+    }
+}
+
+impl From<&str> for CountedOctetString {
+    fn from(string: &str) -> Self {
+        return Self::new(string.as_bytes().to_vec());
+    }
+}
+
 
 
 #[cfg(test)]
@@ -42,7 +56,7 @@ mod test {
                 0x00, 0x00, 0x00, 0x0e, 
                 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53
             ],
-            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()).to_bytes()
+            CountedOctetString::from("KINGDOM.HEARTS").to_bytes()
         );
     }
 
