@@ -1,59 +1,70 @@
 use crate::structs_asn1::*;
+use super::credential::*;
+use crate::constants::*;
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct Credential {
-    crealm: Realm,
-    cname: PrincipalName,
-    ticket: Ticket,
-    client_part: EncKdcRepPart
+pub struct CredentialWarehouse {
+    credentials: Vec<Credential>,
+    realm: Realm,
+    client: PrincipalName
 }
 
 
-impl Credential {
+impl CredentialWarehouse {
 
-    pub fn new(
-        crealm: Realm, cname: PrincipalName, 
-        ticket: Ticket, client_part: EncKdcRepPart 
-    ) -> Self {
-        return Self{
-            crealm,
-            cname,
-            ticket,
-            client_part
-        };
+    pub fn new(credential: Credential) -> Self {
+        return Self {
+            realm: credential.get_crealm().clone(),
+            client: credential.get_cname().clone(),
+            credentials: vec![credential],
+        }
     }
 
-    pub fn get_crealm(&self) -> &Realm {
-        return &self.crealm;
+
+    pub fn get_credentials(&self) -> &Vec<Credential> {
+        return &self.credentials;
     }
 
-    pub fn get_cname(&self) -> &PrincipalName {
-        return &self.cname;
-    }
- 
-    pub fn get_ticket(&self) -> &Ticket {
-        return &self.ticket;
+    pub fn get_client(&self) -> &PrincipalName {
+        return &self.client;
     }
 
-    pub fn to_krb_info(&self) -> KrbCredInfo {
-        let mut krb_cred_info = self.client_part.to_krb_cred_info();
+    pub fn to_krb_cred(&self) -> KrbCred {
+        let mut seq_of_tickets = SeqOfTickets::new_empty();
+        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
 
-        krb_cred_info.set_prealm(self.crealm.clone());
-        krb_cred_info.set_pname(self.cname.clone());
-        return krb_cred_info;
+        for credential in self.credentials.iter() {
+            seq_of_tickets.push(credential.get_ticket().clone());
+            seq_of_krb_cred_info.push(credential.to_krb_info());
+        }
+        
+        let enc_krb_cred_part = EncKrbCredPart::new(
+            seq_of_krb_cred_info
+        );
+
+        return KrbCred::new(
+            seq_of_tickets,
+            EncryptedData::new(NO_ENCRYPTION, enc_krb_cred_part.build())
+        )
+    }
+
+
+    pub fn to_ccache(&self) -> CCache {
+        unimplemented!()
+        // let header = ccache::Header::new_default();
+
+        // let ccache = CCache::new(header, primary_principal, credentials);
     }
 
 }
+
 
 #[cfg(test)]
-
 mod test {
     use super::*;
-    use crate::constants::*;
     use chrono::prelude::*;
 
     #[test]
-    fn convert_to_krb_info() {
+    fn convert_credential_to_krb_cred() {
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
 
         let mut sname = PrincipalName::new(
@@ -101,10 +112,19 @@ mod test {
             auth_time.clone(), starttime.clone(), endtime.clone(), renew_till.clone(), 
             realm.clone(), sname.clone(), caddr.clone()
         );
+        let seq_of_krb_cred_info = SeqOfKrbCredInfo::_new(vec![krb_cred_info]);
 
-        assert_eq!(krb_cred_info, credential.to_krb_info());
+        let ticket = create_ticket(realm.clone(), sname.clone());
+        let seq_of_tickets = SeqOfTickets::_new(vec![ticket]);
+
+        let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
+
+        let krb_cred = KrbCred::new(seq_of_tickets, EncryptedData::new(NO_ENCRYPTION, enc_krb_cred_part.build()));
+
+        let credential_warehouse = CredentialWarehouse::new(credential);
+
+        assert_eq!(krb_cred, credential_warehouse.to_krb_cred());
     }
-
 
     fn create_krb_cred_info(
         encryption_key: EncryptionKey, prealm: Realm, pname: PrincipalName, ticket_flags: TicketFlags,
@@ -146,11 +166,7 @@ mod test {
         enc_as_rep_part.set_renew_till(renew_till);
         enc_as_rep_part.set_caddr(caddr);
 
-        let ticket = Ticket::new(
-            srealm.clone(), 
-            sname.clone(), 
-            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0])
-        );
+        let ticket = create_ticket(srealm.clone(), sname.clone());
 
         let credential = Credential::new(
             prealm.clone(),
@@ -162,4 +178,13 @@ mod test {
         return credential;
     }
 
+    fn create_ticket(realm: Realm, pname: PrincipalName) -> Ticket {
+        return Ticket::new( 
+            realm,
+            pname,
+            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0])
+        );
+    }
+
 }
+

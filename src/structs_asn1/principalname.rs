@@ -23,19 +23,16 @@ impl PrincipalName {
         return principal_name;
     }
 
-    fn new_empty() -> Self {
-        return Self {
-            name_type: 0,
-            name_string: Vec::new()
-        };
-    }
-
     pub fn get_name_type_i32(&self) -> &i32 {
         return &self.name_type;
     }
 
     pub fn get_name_string(&self) -> &Vec<KerberosString> {
         return &self.name_string;
+    }
+
+    pub fn get_main_name(&self) -> &KerberosString {
+        return &self.name_string[0];
     }
 
     pub fn asn1_type(&self) -> PrincipalNameAsn1 {
@@ -47,9 +44,6 @@ impl PrincipalName {
     }
 
     pub fn to_ascii_string(&self) -> AsciiString {
-        if self.name_string.len() == 0 {
-            return AsciiString::new();
-        }
 
         let mut string = self.name_string[0].to_ascii_string();
 
@@ -104,19 +98,24 @@ impl PrincipalNameAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<PrincipalName> {
-        let mut principal_name = PrincipalName::new_empty();
-
         let name_type = self.get_name_type().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("PrincipalName::name_type".to_string())
         )?;
-        principal_name.name_type = name_type.no_asn1_type()?;
 
         let name_string = self.get_name_string().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("PrincipalName::name_string".to_string())
         )?;
 
-        for kerb_string in name_string.iter() {
-            principal_name.name_string.push(kerb_string.no_asn1_type()?);
+        if name_string.len() == 0 {
+            return Err(KerberosErrorKind::NotAvailableData("PrincipalName::name_string".to_string()))?;
+        }
+
+        let mut principal_name = PrincipalName::new(name_type.no_asn1_type()?, name_string[0].no_asn1_type()?);
+
+        if name_string.len() > 1 {
+            for kerb_string in name_string[1..].iter() {
+                principal_name.name_string.push(kerb_string.no_asn1_type()?);
+            }
         }
 
         return Ok(principal_name);
@@ -212,9 +211,42 @@ mod tests {
     }
 
     #[test]
+    fn test_principal_name_with_empty_name_to_string() {
+        let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("").unwrap());
+        assert_eq!("", principal_name.to_ascii_string())
+    }
+
+    #[should_panic(expected="index out of bounds: the len is 0 but the index is 0")]
+    #[test]
     fn test_principal_name_with_no_name_to_string() {
-        let principal_name = PrincipalName::new_empty();
+        let principal_name = PrincipalName{name_type: NT_PRINCIPAL, name_string: Vec::new()};
         assert_eq!("", principal_name.to_ascii_string())
     }
  
+
+    #[test]
+    fn principal_name_get_main_name_one_string(){
+        let main_name = KerberosString::from_ascii("krbtgt").unwrap();
+        let principal_name = PrincipalName::new(NT_SRV_INST, main_name.clone());
+
+        assert_eq!(
+            &main_name,
+            principal_name.get_main_name()
+        )
+
+    }
+
+    #[test]
+    fn principal_name_get_main_name_many_strings(){
+        let main_name = KerberosString::from_ascii("krbtgt").unwrap();
+        let mut principal_name = PrincipalName::new(NT_SRV_INST, main_name.clone());
+        principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
+
+        assert_eq!(
+            &main_name,
+            principal_name.get_main_name()
+        )
+
+    }
+
 }

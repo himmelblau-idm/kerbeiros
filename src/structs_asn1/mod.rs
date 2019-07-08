@@ -66,4 +66,5 @@ pub use krbcredinfo::{KrbCredInfo,SeqOfKrbCredInfo};
 mod krberror;
 pub use krberror::KrbError;
 
-mod ccache;
+pub mod ccache;
+pub use ccache::CCache;

@@ -6,6 +6,10 @@ pub enum Header {
 
 impl Header {
 
+    pub fn new_default() -> Self {
+        return Header::DeltaTime(DeltaTime::new_default());
+    }
+
     pub fn to_bytes(&self) -> Vec<u8> {
         match &self {
             Header::DeltaTime(delta_time) => {
@@ -34,7 +38,7 @@ mod test {
     fn header_to_bytes() {
         assert_eq!(
             vec![0x00, 0x01, 0x00, 0x08, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00],
-            Header::DeltaTime(DeltaTime::new(u32::max_value(), 0)).to_bytes()
+            Header::new_default().to_bytes()
         )
     }
 }

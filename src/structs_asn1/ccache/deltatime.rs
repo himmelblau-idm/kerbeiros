@@ -6,6 +6,10 @@ pub struct DeltaTime {
 
 impl DeltaTime {
 
+    pub fn new_default() -> Self {
+        return Self::new(u32::max_value(), 0);
+    }
+
     pub fn new(time_offset: u32, usec_offset: u32 ) -> Self {
         return Self{
             time_offset,
@@ -30,7 +34,7 @@ mod test {
     fn deltatime_to_bytes() {
         assert_eq!(
             vec![0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00],
-            DeltaTime::new(u32::max_value(), 0).to_bytes()
+            DeltaTime::new_default().to_bytes()
         )
     }
 

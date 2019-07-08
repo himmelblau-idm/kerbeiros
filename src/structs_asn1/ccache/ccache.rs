@@ -20,6 +20,10 @@ impl CCache {
         };
     }
 
+    pub fn build(&self) -> Vec<u8> {
+        return self.to_bytes();
+    }
+
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = self.file_format_version.to_be_bytes().to_vec();
         
@@ -45,7 +49,7 @@ mod test {
     use chrono::prelude::*;
 
     #[test]
-    fn ccache_to_bytes() {
+    fn build_ccache() {
 
         let raw_ccache = vec![
             0x05, 0x04, 0x00, 0x0c, 0x00, 0x01, 0x00, 0x08,
@@ -399,7 +403,7 @@ mod test {
 
         let ccache = CCache::new(header, client_principal, vec![credential]);
 
-        assert_eq!(raw_ccache, ccache.to_bytes());
+        assert_eq!(raw_ccache, ccache.build());
     }
 
 }
