@@ -1,4 +1,5 @@
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct DeltaTime {
     time_offset: u32,
     usec_offset: u32

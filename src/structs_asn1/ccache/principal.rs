@@ -20,7 +20,7 @@ impl Principal {
     }
 
     pub fn from_realm_and_principal_name(realm: &Realm, principal_name: &PrincipalName) -> Self {
-        let components = Vec::new();
+        let mut components = Vec::new();
 
         for name in principal_name.get_name_string().iter() {
             components.push(CountedOctetString::from(name));

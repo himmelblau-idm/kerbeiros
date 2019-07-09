@@ -1,4 +1,4 @@
-
+#[derive(Debug, PartialEq, Clone)]
 pub struct Times {
     authtime: u32,
     starttime: u32,

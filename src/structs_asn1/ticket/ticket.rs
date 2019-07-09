@@ -44,6 +44,10 @@ impl Ticket {
         return TicketAsn1::new(self);
     }
 
+    pub fn build(&self) -> Vec<u8> {
+        return self.asn1_type().encode().unwrap();
+    }
+
 }
 
 #[derive(Asn1Sequence)]

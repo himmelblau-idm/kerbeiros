@@ -1,4 +1,5 @@
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct KeyBlock {
     keytype: u16,
     etype: u16,

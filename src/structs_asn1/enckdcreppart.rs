@@ -61,12 +61,40 @@ impl EncKdcRepPart {
         self.key_expiration = Some(key_expiration);
     }
 
+    pub fn get_flags(&self) -> &TicketFlags {
+        return &self.flags;
+    }
+
+    pub fn get_authtime(&self) -> &KerberosTime {
+        return &self.authtime;
+    }
+
+    pub fn get_starttime(&self) -> &Option<KerberosTime> {
+        return &self.starttime;
+    }
+
     pub fn set_starttime(&mut self, starttime: KerberosTime) {
         self.starttime = Some(starttime);
     }
 
+    pub fn get_endtime(&self) -> &KerberosTime {
+        return &self.endtime;
+    }
+
+    pub fn get_renew_till(&self) -> &Option<KerberosTime> {
+        return &self.renew_till;
+    }
+
     pub fn set_renew_till(&mut self, renew_till: KerberosTime) {
         self.renew_till = Some(renew_till);
+    }
+
+    pub fn get_srealm(&self) -> &Realm {
+        return &self.srealm;
+    }
+
+    pub fn get_sname(&self) -> &PrincipalName {
+        return &self.sname;
     }
 
     pub fn set_caddr(&mut self, caddr: HostAddresses) {

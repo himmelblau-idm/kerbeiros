@@ -1,6 +1,7 @@
 use super::header::*;
 use super::credential::*;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct CCache {
     file_format_version: u16,
     header: Header,

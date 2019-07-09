@@ -1,5 +1,6 @@
 use super::countedoctetstring::*;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct Address {
     addrtype: u16,
     addrdata: CountedOctetString

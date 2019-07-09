@@ -5,6 +5,7 @@ pub use super::address::*;
 pub use super::authdata::*;
 pub use super::countedoctetstring::*;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct Credential {
     client: Principal,
     server: Principal,

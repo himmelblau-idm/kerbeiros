@@ -43,6 +43,61 @@ impl Credential {
         return krb_cred_info;
     }
 
+    pub fn to_ccache_credential(&self) -> ccache::Credential {
+
+        let is_skey = 0;
+
+        let authtime = self.client_part.get_authtime().timestamp() as u32;
+        let endtime = self.client_part.get_endtime().timestamp() as u32;
+        let starttime;
+        let renew_till;
+        if let Some(client_starttime) = self.client_part.get_starttime() {
+            starttime = client_starttime.timestamp() as u32;
+        }else {
+            starttime = authtime
+        }
+
+        if let Some(client_renew_till) = self.client_part.get_renew_till() {
+            renew_till = client_renew_till.timestamp() as u32;
+        }else {
+            renew_till = 0;
+        }
+
+        let time = ccache::Times::new(
+            authtime,
+            starttime,
+            endtime,
+            renew_till,
+        );
+
+        let tktflags = self.client_part.get_flags().get_flags();
+
+        let key = ccache::KeyBlock::new(
+            self.client_part.get_key().get_keytype() as u16,
+            self.client_part.get_key().get_keyvalue().clone()
+        );
+
+        let ticket = ccache::CountedOctetString::new(self.ticket.build());
+
+        let client = ccache::Principal::from_realm_and_principal_name(&self.crealm, &self.cname);
+        let server = ccache::Principal::from_realm_and_principal_name(
+            self.client_part.get_srealm(), 
+            self.client_part.get_sname(),
+        );
+
+        let ccache_credential = ccache::Credential::new(
+            client, 
+            server, 
+            key, 
+            time, 
+            is_skey, 
+            tktflags, 
+            ticket
+        );
+
+        return ccache_credential;
+    }
+
 }
 
 #[cfg(test)]

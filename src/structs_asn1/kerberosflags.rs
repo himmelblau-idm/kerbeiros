@@ -32,6 +32,10 @@ impl KerberosFlags {
         self.flags &= !flags;
     }
 
+    pub fn get_flags(&self) -> u32 {
+        return self.flags;
+    }
+
     pub fn asn1_type(&self) -> KerberosFlagsAsn1 {
         return KerberosFlagsAsn1::new(self.flags);
     }

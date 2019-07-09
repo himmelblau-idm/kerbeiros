@@ -1,5 +1,6 @@
 pub use super::deltatime::*;
 
+#[derive(Debug, PartialEq, Clone)]
 pub enum Header {
     DeltaTime(DeltaTime)
 }
