@@ -65,7 +65,7 @@ impl TGTRequest {
     }
 
     fn extract_credential_from_as_rep(&self, as_rep: AsRep) -> KerberosResult<Credential> {
-        match CredentialTransformer::from_kdc_rep_to_credential(&self.password, &as_rep) {
+        match CredentialMapper::kdc_rep_to_credential(&self.password, &as_rep) {
             Ok(credential) => {
                 return Ok(credential);
             },

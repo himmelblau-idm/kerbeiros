@@ -10,7 +10,6 @@ use super::principalname::*;
 use super::hostaddress::*;
 use super::padata::*;
 use crate::error::*;
-use super::krbcredinfo::*;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct EncKdcRepPart {
