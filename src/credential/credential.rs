@@ -47,27 +47,11 @@ impl Credential {
 
         let is_skey = 0;
 
-        let authtime = self.client_part.get_authtime().timestamp() as u32;
-        let endtime = self.client_part.get_endtime().timestamp() as u32;
-        let starttime;
-        let renew_till;
-        if let Some(client_starttime) = self.client_part.get_starttime() {
-            starttime = client_starttime.timestamp() as u32;
-        }else {
-            starttime = authtime
-        }
-
-        if let Some(client_renew_till) = self.client_part.get_renew_till() {
-            renew_till = client_renew_till.timestamp() as u32;
-        }else {
-            renew_till = 0;
-        }
-
-        let time = ccache::Times::new(
-            authtime,
-            starttime,
-            endtime,
-            renew_till,
+        let time = TimesMapper::authtime_starttime_endtime_renew_till_to_times(
+            self.client_part.get_authtime(),
+            self.client_part.get_starttime(),
+            self.client_part.get_endtime(),
+            self.client_part.get_renew_till(),
         );
 
         let tktflags = self.client_part.get_flags().get_flags();

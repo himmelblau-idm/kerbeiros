@@ -69,8 +69,15 @@ impl EncKdcRepPart {
         return &self.authtime;
     }
 
-    pub fn get_starttime(&self) -> &Option<KerberosTime> {
-        return &self.starttime;
+    pub fn get_starttime(&self) -> Option<&KerberosTime> {
+        match &self.starttime {
+            Some(starttime) => {
+                return Some(starttime);
+            },
+            None => {
+                return None;
+            }
+        }
     }
 
     pub fn set_starttime(&mut self, starttime: KerberosTime) {
@@ -81,8 +88,15 @@ impl EncKdcRepPart {
         return &self.endtime;
     }
 
-    pub fn get_renew_till(&self) -> &Option<KerberosTime> {
-        return &self.renew_till;
+    pub fn get_renew_till(&self) -> Option<&KerberosTime> {
+        match &self.renew_till {
+            Some(renew_till) => {
+                return Some(renew_till);
+            },
+            None => {
+                return None;
+            }
+        }
     }
 
     pub fn set_renew_till(&mut self, renew_till: KerberosTime) {
