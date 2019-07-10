@@ -6,3 +6,6 @@ pub use principalmapper::*;
 
 mod timesmapper;
 pub use timesmapper::*;
+
+mod ticketflagsmapper;
+pub use ticketflagsmapper::*;

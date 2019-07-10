@@ -54,7 +54,7 @@ impl Credential {
             self.client_part.get_renew_till(),
         );
 
-        let tktflags = self.client_part.get_flags().get_flags();
+        let tktflags = TicketFlagsMapper::ticket_flags_to_tktflags(self.client_part.get_flags());
 
         let key = KeyBlockMapper::encryption_key_to_keyblock(self.client_part.get_key());
 
