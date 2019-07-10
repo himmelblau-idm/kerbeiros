@@ -1,4 +1,4 @@
-use crate::structs_asn1::*;
+use crate::structs::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Credential {
@@ -43,7 +43,7 @@ impl Credential {
         return krb_cred_info;
     }
 
-    pub fn to_ccache_credential(&self) -> ccache::Credential {
+    pub fn to_ccache_credential(&self) -> ccache::CredentialEntry {
 
         let is_skey = 0;
 
@@ -72,10 +72,7 @@ impl Credential {
 
         let tktflags = self.client_part.get_flags().get_flags();
 
-        let key = ccache::KeyBlock::new(
-            self.client_part.get_key().get_keytype() as u16,
-            self.client_part.get_key().get_keyvalue().clone()
-        );
+        let key = KeyBlockMapper::encryption_key_to_keyblock(self.client_part.get_key());
 
         let ticket = ccache::CountedOctetString::new(self.ticket.build());
 
@@ -85,7 +82,7 @@ impl Credential {
             self.client_part.get_sname(),
         );
 
-        let ccache_credential = ccache::Credential::new(
+        let ccache_credential = ccache::CredentialEntry::new(
             client, 
             server, 
             key, 

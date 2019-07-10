@@ -1,7 +1,7 @@
 mod asreq;
 pub use asreq::*;
 
-use crate::structs_asn1;
-pub type KrbError = structs_asn1::KrbError;
-pub type KdcRep = structs_asn1::KdcRep;
+use crate::structs;
+pub type KrbError = structs::KrbError;
+pub type KdcRep = structs::KdcRep;
 pub type AsRep = KdcRep;

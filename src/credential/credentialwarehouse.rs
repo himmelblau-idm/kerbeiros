@@ -1,5 +1,5 @@
-use crate::structs_asn1::*;
 use super::credential::*;
+use crate::structs::*;
 use crate::constants::*;
 
 pub struct CredentialWarehouse {
@@ -545,7 +545,7 @@ mod test {
 
         let is_skey = 0;
 
-        let ccache_credential = ccache::Credential::new(
+        let ccache_credential = ccache::CredentialEntry::new(
             client_principal.clone(),
             server_principal,
             key,

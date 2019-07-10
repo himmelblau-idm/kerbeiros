@@ -1,5 +1,5 @@
 use crate::constants::*;
-use crate::structs_asn1;
+use crate::structs::structs_asn1;
 use crate::error::*;
 use ascii::AsciiString;
 

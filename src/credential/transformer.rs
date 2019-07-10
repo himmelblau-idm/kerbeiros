@@ -2,7 +2,7 @@ use crate::messages::KdcRep;
 use super::credential::*;
 use crate::error::*;
 use crate::crypter::*;
-use crate::structs_asn1::*;
+use crate::structs::structs_asn1::*;
 use crate::constants::*;
 
 pub struct CredentialTransformer {
