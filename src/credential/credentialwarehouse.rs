@@ -1,4 +1,5 @@
 use super::credential::*;
+use super::mappers::*;
 use crate::structs::*;
 use crate::constants::*;
 
@@ -33,8 +34,9 @@ impl CredentialWarehouse {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
 
         for credential in self.credentials.iter() {
-            seq_of_tickets.push(credential.get_ticket().clone());
-            seq_of_krb_cred_info.push(credential.to_krb_info());
+            let (krb_cred_info, ticket) = CredentialMapper::credential_to_krb_info_and_ticket(credential);
+            seq_of_tickets.push(ticket);
+            seq_of_krb_cred_info.push(krb_cred_info);
         }
         
         let enc_krb_cred_part = EncKrbCredPart::new(

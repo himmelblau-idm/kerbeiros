@@ -1,24 +1,39 @@
 use crate::structs::*;
-use super::super::credential::*;
 
-pub struct CredentialMapper{}
+pub struct KrbInfoMapper{}
 
+impl KrbInfoMapper {
 
-métodos para transformar a krb_info y viceversa
-método para transformar a ccache credential
+    pub fn enc_kdc_rep_part_to_krb_cred_info(enc_kdc_rep_part: &EncKdcRepPart) -> KrbCredInfo {
 
-impl CredentialMapper {
+        let mut krb_cred_info = KrbCredInfo::new(enc_kdc_rep_part.get_key().clone());
 
+        krb_cred_info.set_flags(enc_kdc_rep_part.get_flags().clone());
+        krb_cred_info.set_authtime(enc_kdc_rep_part.get_authtime().clone());
+        
+        if let Some(starttime) = enc_kdc_rep_part.get_starttime() {
+            krb_cred_info.set_starttime(starttime.clone());
+        }
+        krb_cred_info.set_endtime(enc_kdc_rep_part.get_endtime().clone());
 
-    pub fn credential_to_krb_info_and_ticket(credential: &Credential) -> (KrbCredInfo,Ticket) {
-        let mut krb_cred_info = KrbInfoMapper::enc_kdc_rep_part_to_krb_cred_info(credential.get_client_part());
+        if let Some(renew_till) = enc_kdc_rep_part.get_renew_till() {
+            krb_cred_info.set_renew_till(renew_till.clone());
+        }
 
-        krb_cred_info.set_prealm(credential.get_crealm().clone());
-        krb_cred_info.set_pname(credential.get_cname().clone());
-        return (krb_cred_info, credential.get_ticket().clone());
+        krb_cred_info.set_srealm(enc_kdc_rep_part.get_srealm().clone());
+        krb_cred_info.set_sname(enc_kdc_rep_part.get_sname().clone());
+
+        if let Some(caddr) = enc_kdc_rep_part.get_caddr() {
+            krb_cred_info.set_caddr(caddr.clone());
+        }
+
+        return krb_cred_info;
+
     }
 
 }
+
+
 
 #[cfg(test)]
 
@@ -28,7 +43,8 @@ mod test {
     use chrono::prelude::*;
 
     #[test]
-    fn convert_to_krb_info() {
+    fn enc_kdc_rep_part_to_krb_info() {
+
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
 
         let mut sname = PrincipalName::new(
@@ -65,36 +81,28 @@ mod test {
             | ticketflags::RENEWABLE
         );
 
-        let credential = create_credential(
-            encryption_key.clone(), realm.clone(), pname.clone(), ticket_flags.clone(), 
+        let enc_kdc_rep_part = create_enc_kdc_rep_part(
+            encryption_key.clone(), ticket_flags.clone(), 
             auth_time.clone(), starttime.clone(), endtime.clone(), renew_till.clone(), 
             realm.clone(), sname.clone(), caddr.clone()
         );
 
         let krb_cred_info = create_krb_cred_info(
-            encryption_key.clone(), realm.clone(), pname.clone(), ticket_flags.clone(), 
+            encryption_key.clone(), ticket_flags.clone(), 
             auth_time.clone(), starttime.clone(), endtime.clone(), renew_till.clone(), 
             realm.clone(), sname.clone(), caddr.clone()
         );
 
-        let ticket = Ticket::new(
-            realm.clone(), 
-            sname.clone(), 
-            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0])
-        );
-
-        assert_eq!((krb_cred_info, ticket), CredentialMapper::credential_to_krb_info_and_ticket(&credential));
+        assert_eq!(krb_cred_info, KrbInfoMapper::enc_kdc_rep_part_to_krb_cred_info(&enc_kdc_rep_part));
     }
 
 
     fn create_krb_cred_info(
-        encryption_key: EncryptionKey, prealm: Realm, pname: PrincipalName, ticket_flags: TicketFlags,
+        encryption_key: EncryptionKey, ticket_flags: TicketFlags,
         authtime: KerberosTime, starttime: KerberosTime, endtime: KerberosTime, renew_till: KerberosTime,
         srealm: Realm, sname: PrincipalName, caddr: HostAddresses
     ) -> KrbCredInfo {
         let mut krb_cred_info = KrbCredInfo::new(encryption_key);
-        krb_cred_info.set_prealm(prealm);
-        krb_cred_info.set_pname(pname);
         krb_cred_info.set_flags(ticket_flags);
         krb_cred_info.set_authtime(authtime);
         krb_cred_info.set_starttime(starttime);
@@ -107,13 +115,13 @@ mod test {
         return krb_cred_info;
     }
 
-    fn create_credential(
-        encryption_key: EncryptionKey, prealm: Realm, pname: PrincipalName, ticket_flags: TicketFlags,
+    fn create_enc_kdc_rep_part(
+        encryption_key: EncryptionKey, ticket_flags: TicketFlags,
         authtime: KerberosTime, starttime: KerberosTime, endtime: KerberosTime, renew_till: KerberosTime,
         srealm: Realm, sname: PrincipalName, caddr: HostAddresses
-    ) -> Credential {
+    ) -> EncKdcRepPart {
         let nonce = 0;
-        let mut enc_as_rep_part = EncKdcRepPart::new(
+        let mut enc_kdc_rep_part = EncKdcRepPart::new(
             encryption_key,
             LastReq::new_empty(),
             nonce,
@@ -123,24 +131,11 @@ mod test {
             srealm.clone(),
             sname.clone()
         );
-        enc_as_rep_part.set_starttime(starttime);
-        enc_as_rep_part.set_renew_till(renew_till);
-        enc_as_rep_part.set_caddr(caddr);
+        enc_kdc_rep_part.set_starttime(starttime);
+        enc_kdc_rep_part.set_renew_till(renew_till);
+        enc_kdc_rep_part.set_caddr(caddr);
 
-        let ticket = Ticket::new(
-            srealm.clone(), 
-            sname.clone(), 
-            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0])
-        );
-
-        let credential = Credential::new(
-            prealm.clone(),
-            pname.clone(),
-            ticket, 
-            enc_as_rep_part
-        );
-
-        return credential;
+        return enc_kdc_rep_part;
     }
 
 }

@@ -111,6 +111,17 @@ impl EncKdcRepPart {
         return &self.sname;
     }
 
+    pub fn get_caddr(&self) -> Option<&HostAddresses> {
+        match &self.caddr {
+            Some(caddr) => {
+                return Some(caddr);
+            },
+            None => {
+                return None;
+            }
+        }
+    }
+
     pub fn set_caddr(&mut self, caddr: HostAddresses) {
         self.caddr = Some(caddr);
     }
@@ -123,32 +134,6 @@ impl EncKdcRepPart {
         let mut enc_as_rep_part_asn1 = EncAsRepPartAsn1::new_empty();
         enc_as_rep_part_asn1.decode(raw)?;
         return Ok(enc_as_rep_part_asn1.no_asn1_type().unwrap());
-    }
-
-    pub fn to_krb_cred_info(&self) -> KrbCredInfo {
-        let mut krb_cred_info = KrbCredInfo::new(self.key.clone());
-
-
-        krb_cred_info.set_flags(self.flags.clone());
-        krb_cred_info.set_authtime(self.authtime.clone());
-        
-        if let Some(starttime) = &self.starttime {
-            krb_cred_info.set_starttime(starttime.clone());
-        }
-        krb_cred_info.set_endtime(self.endtime.clone());
-
-        if let Some(renew_till) = &self.renew_till {
-            krb_cred_info.set_renew_till(renew_till.clone());
-        }
-
-        krb_cred_info.set_srealm(self.srealm.clone());
-        krb_cred_info.set_sname(self.sname.clone());
-
-        if let Some(caddr) = &self.caddr {
-            krb_cred_info.set_caddr(caddr.clone());
-        }
-
-        return krb_cred_info;
     }
 }
 
