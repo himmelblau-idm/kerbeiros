@@ -1,9 +1,8 @@
 use crate::structs::*;
 
-struct PrincipalMapper{}
+pub struct PrincipalMapper{}
 
 impl PrincipalMapper {
-
 
     pub fn realm_and_principal_name_to_principal(realm: &Realm, principal_name: &PrincipalName) -> Principal {
         let mut components = Vec::new();

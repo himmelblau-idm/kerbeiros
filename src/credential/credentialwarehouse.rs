@@ -50,7 +50,7 @@ impl CredentialWarehouse {
 
     pub fn to_ccache(&self) -> CCache {
         let header = ccache::Header::new_default();
-        let primary_principal = ccache::Principal::from_realm_and_principal_name(&self.realm, &self.client);
+        let primary_principal = PrincipalMapper::realm_and_principal_name_to_principal(&self.realm, &self.client);
 
         let mut ccache_credentials = Vec::with_capacity(self.credentials.len());
 

@@ -76,8 +76,8 @@ impl Credential {
 
         let ticket = ccache::CountedOctetString::new(self.ticket.build());
 
-        let client = ccache::Principal::from_realm_and_principal_name(&self.crealm, &self.cname);
-        let server = ccache::Principal::from_realm_and_principal_name(
+        let client = PrincipalMapper::realm_and_principal_name_to_principal(&self.crealm, &self.cname);
+        let server = PrincipalMapper::realm_and_principal_name_to_principal(
             self.client_part.get_srealm(), 
             self.client_part.get_sname(),
         );
