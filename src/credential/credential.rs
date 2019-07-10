@@ -67,11 +67,9 @@ impl Credential {
         return self.client_part.get_sname();
     }
 
-    pub fn get_client_part(&self) -> &EncKdcRepPart {
-        return &self.client_part;
+    pub fn get_caddr(&self) -> Option<&HostAddresses> {
+        return self.client_part.get_caddr();
     }
-
-
    
 
 }

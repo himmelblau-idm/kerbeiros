@@ -12,7 +12,27 @@ impl CredentialKrbInfoMapper {
 
 
     pub fn credential_to_krb_info_and_ticket(credential: &Credential) -> (KrbCredInfo,Ticket) {
-        let mut krb_cred_info = KrbInfoMapper::enc_kdc_rep_part_to_krb_cred_info(credential.get_client_part());
+
+        let mut krb_cred_info = KrbCredInfo::new(credential.get_key().clone());
+
+        krb_cred_info.set_flags(credential.get_flags().clone());
+        krb_cred_info.set_authtime(credential.get_authtime().clone());
+        
+        if let Some(starttime) = credential.get_starttime() {
+            krb_cred_info.set_starttime(starttime.clone());
+        }
+        krb_cred_info.set_endtime(credential.get_endtime().clone());
+
+        if let Some(renew_till) = credential.get_renew_till() {
+            krb_cred_info.set_renew_till(renew_till.clone());
+        }
+
+        krb_cred_info.set_srealm(credential.get_srealm().clone());
+        krb_cred_info.set_sname(credential.get_sname().clone());
+
+        if let Some(caddr) = credential.get_caddr() {
+            krb_cred_info.set_caddr(caddr.clone());
+        }
 
         krb_cred_info.set_prealm(credential.get_crealm().clone());
         krb_cred_info.set_pname(credential.get_cname().clone());

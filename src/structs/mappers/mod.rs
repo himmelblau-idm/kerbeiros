@@ -9,6 +9,3 @@ pub use timesmapper::*;
 
 mod ticketflagsmapper;
 pub use ticketflagsmapper::*;
-
-mod krbinfomapper;
-pub use krbinfomapper::*;
