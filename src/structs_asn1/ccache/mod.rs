@@ -27,3 +27,5 @@ pub use credential::*;
 
 mod ccache;
 pub use ccache::*;
+
+mod mappers;
