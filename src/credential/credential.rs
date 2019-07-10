@@ -35,44 +35,44 @@ impl Credential {
         return &self.ticket;
     }
 
+    pub fn get_authtime(&self) -> &KerberosTime {
+        return self.client_part.get_authtime();
+    }
+
+    pub fn get_starttime(&self) -> Option<&KerberosTime> {
+        return self.client_part.get_starttime();
+    }
+
+    pub fn get_endtime(&self) -> &KerberosTime {
+        return self.client_part.get_endtime();
+    }
+
+    pub fn get_renew_till(&self) -> Option<&KerberosTime> {
+        return self.client_part.get_renew_till();
+    }
+
+    pub fn get_flags(&self) -> &TicketFlags {
+        return self.client_part.get_flags();
+    }
+
+    pub fn get_key(&self) -> &EncryptionKey {
+        return self.client_part.get_key();
+    }
+
+    pub fn get_srealm(&self) -> &KerberosString {
+        return self.client_part.get_srealm();
+    }
+
+    pub fn get_sname(&self) -> &PrincipalName {
+        return self.client_part.get_sname();
+    }
+
     pub fn get_client_part(&self) -> &EncKdcRepPart {
         return &self.client_part;
     }
 
-    pub fn to_ccache_credential(&self) -> ccache::CredentialEntry {
 
-        let is_skey = 0;
-
-        let time = TimesMapper::authtime_starttime_endtime_renew_till_to_times(
-            self.client_part.get_authtime(),
-            self.client_part.get_starttime(),
-            self.client_part.get_endtime(),
-            self.client_part.get_renew_till(),
-        );
-
-        let tktflags = TicketFlagsMapper::ticket_flags_to_tktflags(self.client_part.get_flags());
-        let key = KeyBlockMapper::encryption_key_to_keyblock(self.client_part.get_key());
-
-        let ticket = ccache::CountedOctetString::new(self.ticket.build());
-
-        let client = PrincipalMapper::realm_and_principal_name_to_principal(&self.crealm, &self.cname);
-        let server = PrincipalMapper::realm_and_principal_name_to_principal(
-            self.client_part.get_srealm(), 
-            self.client_part.get_sname(),
-        );
-
-        let ccache_credential = ccache::CredentialEntry::new(
-            client, 
-            server, 
-            key, 
-            time, 
-            is_skey, 
-            tktflags, 
-            ticket
-        );
-
-        return ccache_credential;
-    }
+   
 
 }
 

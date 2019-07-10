@@ -3,12 +3,12 @@ use super::super::credential::*;
 use crate::crypter::*;
 use crate::constants::*;
 
-pub struct CredentialMapper{}
+pub struct CredentialKrbInfoMapper{}
 
 
 // método para transformar a ccache credential
 
-impl CredentialMapper {
+impl CredentialKrbInfoMapper {
 
 
     pub fn credential_to_krb_info_and_ticket(credential: &Credential) -> (KrbCredInfo,Ticket) {
@@ -102,7 +102,7 @@ mod test {
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0])
         );
 
-        assert_eq!((krb_cred_info, ticket), CredentialMapper::credential_to_krb_info_and_ticket(&credential));
+        assert_eq!((krb_cred_info, ticket), CredentialKrbInfoMapper::credential_to_krb_info_and_ticket(&credential));
     }
 
 
@@ -280,7 +280,7 @@ mod test {
 
         assert_eq!(
             credential, 
-            CredentialMapper::kdc_rep_to_credential("Minnie1234", &as_rep).unwrap()
+            CredentialKrbInfoMapper::kdc_rep_to_credential("Minnie1234", &as_rep).unwrap()
         );
 
     }

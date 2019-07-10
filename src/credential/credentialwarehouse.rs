@@ -34,7 +34,7 @@ impl CredentialWarehouse {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
 
         for credential in self.credentials.iter() {
-            let (krb_cred_info, ticket) = CredentialMapper::credential_to_krb_info_and_ticket(credential);
+            let (krb_cred_info, ticket) = CredentialKrbInfoMapper::credential_to_krb_info_and_ticket(credential);
             seq_of_tickets.push(ticket);
             seq_of_krb_cred_info.push(krb_cred_info);
         }
@@ -57,7 +57,7 @@ impl CredentialWarehouse {
         let mut ccache_credentials = Vec::with_capacity(self.credentials.len());
 
         for credential in self.credentials.iter() {
-            ccache_credentials.push(credential.to_ccache_credential());
+            ccache_credentials.push(CredentialCCacheMapper::credential_to_ccache_credential(credential));
         }
 
         let ccache = CCache::new(header, primary_principal, ccache_credentials);
