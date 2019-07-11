@@ -22,7 +22,7 @@ mod hostaddress;
 pub use hostaddress::{HostAddress, HostAddresses};
 
 mod padata;
-pub use padata::{PaEncTsEnc, PaData, MethodData, SeqOfPaData, EtypeInfo2, EtypeInfo2Entry};
+pub use padata::{PaEncTsEnc, PaData, PacRequest, MethodData, SeqOfPaData, EtypeInfo2, EtypeInfo2Entry};
 
 mod etype;
 mod kerberosflags;

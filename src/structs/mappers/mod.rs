@@ -13,3 +13,6 @@ pub use ticketflagsmapper::*;
 
 mod addressmapper;
 pub use addressmapper::*;
+
+mod authdatamapper;
+pub use authdatamapper::*;

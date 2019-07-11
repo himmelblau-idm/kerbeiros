@@ -30,7 +30,7 @@ impl SeqOfPaData {
         return Self::new_empty();
     }
 
-    fn new_empty() -> Self {
+    pub fn new_empty() -> Self {
         return Self{ padatas: Vec::new() };
     }
 
