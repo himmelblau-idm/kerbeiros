@@ -39,6 +39,10 @@ impl CredentialEntry {
         };
     }
 
+    pub fn set_authdata(&mut self, authdata: Vec<AuthData>) {
+        return self.authdata = authdata;
+    }
+
     pub fn set_addrs(&mut self, addrs: Vec<Address>) {
         return self.addrs = addrs;
     }

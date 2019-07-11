@@ -71,6 +71,9 @@ impl Credential {
         return self.client_part.get_caddr();
     }
    
+    pub fn get_encrypted_pa_data(&self) -> Option<&MethodData> {
+        return self.client_part.get_encrypted_pa_data();
+    }
 
 }
 

@@ -125,6 +125,17 @@ impl EncKdcRepPart {
         self.caddr = Some(caddr);
     }
 
+    pub fn get_encrypted_pa_data(&self) -> Option<&MethodData> {
+        match &self.encrypted_pa_data {
+            Some(encrypted_pa_data) => {
+                return Some(encrypted_pa_data);
+            },
+            None => {
+                return None;
+            }
+        }
+    }
+
     pub fn set_encrypted_pa_data(&mut self, encrypted_pa_data: MethodData) {
         self.encrypted_pa_data = Some(encrypted_pa_data);
     }

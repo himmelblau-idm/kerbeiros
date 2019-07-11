@@ -44,6 +44,12 @@ impl CredentialCCacheMapper {
             );
         }
 
+        if let Some(encrypted_pa_data) = credential.get_encrypted_pa_data() {
+            ccache_credential.set_authdata(
+                AuthDataMapper::method_data_to_auth_data_vector(encrypted_pa_data)
+            );
+        }
+
         return ccache_credential;
     }
 
@@ -58,7 +64,8 @@ mod test {
     fn create_credential(
         encryption_key: EncryptionKey, prealm: Realm, pname: PrincipalName, ticket_flags: TicketFlags,
         authtime: KerberosTime, starttime: KerberosTime, endtime: KerberosTime, renew_till: KerberosTime,
-        srealm: Realm, sname: PrincipalName, caddr: Option<HostAddresses>, ticket: Ticket
+        srealm: Realm, sname: PrincipalName, caddr: Option<HostAddresses>, method_data: MethodData,
+        ticket: Ticket
     ) -> Credential {
         let nonce = 0;
         let mut enc_as_rep_part = EncKdcRepPart::new(
@@ -78,6 +85,8 @@ mod test {
             enc_as_rep_part.set_caddr(caddr);
         }
 
+        enc_as_rep_part.set_encrypted_pa_data(method_data);
+
         let credential = Credential::new(
             prealm.clone(),
             pname.clone(),
@@ -90,7 +99,7 @@ mod test {
 
 
     #[test]
-    fn convert_credential_warehouse_to_ccache() {
+    fn convert_credential_to_ccache_credential() {
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
 
         let mut sname = PrincipalName::new(
@@ -156,11 +165,13 @@ mod test {
         );
 
         let host_addresses = HostAddresses::new(HostAddress::NetBios("HOLLOWBASTION".to_string()));
+        let mut method_data = MethodData::new_empty();
+        method_data.push(PaData::PacRequest(PacRequest::new(true)));
 
         let credential = create_credential(
             encryption_key.clone(), realm.clone(), pname.clone(), ticket_flags.clone(), 
             authtime.clone(), starttime.clone(), endtime.clone(), renew_till.clone(), 
-            realm.clone(), sname.clone(), Some(host_addresses), ticket_credential
+            realm.clone(), sname.clone(), Some(host_addresses), method_data, ticket_credential
         );
 
         let ticket = ccache::CountedOctetString::new(vec![
@@ -216,6 +227,16 @@ mod test {
             )
         );
         ccache_credential.set_addrs(addresses);
+
+        let mut auth_datas = Vec::new();
+        auth_datas.push(
+            AuthData::new(
+                PA_PAC_REQUEST as u16,
+                CountedOctetString::new(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff])
+            )
+        );
+
+        ccache_credential.set_authdata(auth_datas);
 
         assert_eq!(ccache_credential, CredentialCCacheMapper::credential_to_ccache_credential(&credential));
     }
