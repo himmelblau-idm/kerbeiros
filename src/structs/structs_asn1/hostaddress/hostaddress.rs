@@ -14,7 +14,7 @@ pub enum HostAddress {
 
 impl HostAddress {
 
-    pub fn bytes_value(&self) -> Vec<u8> {
+    pub fn get_address(&self) -> Vec<u8> {
         match self {
             HostAddress::NetBios(string) => {
                 return HostAddress::_get_padded_netbios_string_bytes(&string);
@@ -39,7 +39,18 @@ impl HostAddress {
         return padded_string.into_bytes();
     }
 
-    pub fn into_i32(&self) -> i32 {
+    pub fn get_address_without_modifications(&self) -> Vec<u8> {
+        match self {
+            HostAddress::NetBios(string) => {
+                return string.as_bytes().to_vec();
+            },
+            HostAddress::Raw(_, bytes) => {
+                return bytes.clone();
+            }
+        }
+    }
+
+    pub fn get_addr_type(&self) -> i32 {
         match self {
             HostAddress::NetBios(_) => NETBIOS_ADDRESS,
             HostAddress::Raw(kind,_) => *kind
@@ -65,8 +76,8 @@ impl HostAddressAsn1 {
     fn new(host_address: &HostAddress) -> HostAddressAsn1 {
         let mut host_address_asn1 = Self::new_empty();
 
-        host_address_asn1.set_addr_type(Int32Asn1::new(host_address.into_i32()));
-        host_address_asn1.set_address(OctetString::new(host_address.bytes_value()));
+        host_address_asn1.set_addr_type(Int32Asn1::new(host_address.get_addr_type()));
+        host_address_asn1.set_address(OctetString::new(host_address.get_address()));
     
         return host_address_asn1;
     }
@@ -129,29 +140,29 @@ mod tests {
     #[test]
     fn test_netbios_padding() {
         let mut host_address = HostAddress::NetBios("".to_string());
-        assert_eq!(Vec::<u8>::new(), host_address.bytes_value());
+        assert_eq!(Vec::<u8>::new(), host_address.get_address());
 
         host_address = HostAddress::NetBios("1".to_string());
         assert_eq!(vec![0x31, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 
                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20], 
-                    host_address.bytes_value());
+                    host_address.get_address());
         
         host_address = HostAddress::NetBios("12345".to_string());
         assert_eq!(vec![0x31, 0x32, 0x33, 0x34, 0x35, 0x20, 0x20, 0x20, 
                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20], 
-                    host_address.bytes_value());
+                    host_address.get_address());
 
         host_address = HostAddress::NetBios("1234567890123456".to_string());
         assert_eq!(vec![0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 
                         0x39, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36], 
-                    host_address.bytes_value());
+                    host_address.get_address());
         
         host_address = HostAddress::NetBios("12345678901234567".to_string());
         assert_eq!(vec![0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 
                         0x39, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
                         0x37, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 
                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20], 
-                    host_address.bytes_value());
+                    host_address.get_address());
     }
 
     #[test]

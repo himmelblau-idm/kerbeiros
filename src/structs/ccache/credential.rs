@@ -39,6 +39,10 @@ impl CredentialEntry {
         };
     }
 
+    pub fn set_addrs(&mut self, addrs: Vec<Address>) {
+        return self.addrs = addrs;
+    }
+
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = self.client.to_bytes();
         bytes.append(&mut self.server.to_bytes());
