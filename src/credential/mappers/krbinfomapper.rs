@@ -5,9 +5,6 @@ use crate::constants::*;
 
 pub struct CredentialKrbInfoMapper{}
 
-
-// método para transformar a ccache credential
-
 impl CredentialKrbInfoMapper {
 
 

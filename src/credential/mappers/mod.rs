@@ -1,5 +1,11 @@
-mod credentialkrbinfomapper;
-pub use credentialkrbinfomapper::*;
+mod krbinfomapper;
+pub use krbinfomapper::*;
 
-mod credentialccachecredmapper;
-pub use credentialccachecredmapper::*;
+mod cachecredentialmapper;
+pub use cachecredentialmapper::*;
+
+mod ccachemapper;
+pub use ccachemapper::*;
+
+mod krbcredmapper;
+pub use krbcredmapper::*;
