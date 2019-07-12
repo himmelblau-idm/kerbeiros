@@ -4,12 +4,12 @@ use crate::error::*;
 use chrono::Utc;
 use crate::crypter::*;
 use ascii::AsciiString;
-use super::asreqcredential::*;
+use crate::key::Key;
 
 pub struct AsReqTimestampCrypter<'a> {
     realm: &'a AsciiString,
     username: &'a AsciiString,
-    user_key: &'a AsReqCredential,
+    user_key: &'a Key,
     etypes: &'a Vec<i32>,
     raw_timestamp: Vec<u8>
 }
@@ -18,7 +18,7 @@ impl<'a> AsReqTimestampCrypter<'a> {
 
     pub fn build_encrypted_timestamp(
         realm: &'a AsciiString, username: &'a AsciiString, 
-        user_key: &'a AsReqCredential, etypes: &'a Vec<i32>
+        user_key: &'a Key, etypes: &'a Vec<i32>
     ) -> KerberosResult<(i32, Vec<u8>)> {
         let timestamp_builder = Self::new(realm, username, user_key, etypes);
         return timestamp_builder.produce_encrypted_timestamp();
@@ -26,7 +26,7 @@ impl<'a> AsReqTimestampCrypter<'a> {
 
     fn new(
         realm: &'a AsciiString, username: &'a AsciiString, 
-        user_key: &'a AsReqCredential, etypes: &'a Vec<i32>
+        user_key: &'a Key, etypes: &'a Vec<i32>
     ) -> Self {
         return Self{
             realm,
@@ -44,16 +44,16 @@ impl<'a> AsReqTimestampCrypter<'a> {
 
     fn produce_encrypted_timestamp(&self) -> KerberosResult<(i32, Vec<u8>)> {
         match self.user_key {
-            AsReqCredential::Password(password) => {
+            Key::Password(password) => {
                 return self.encrypt_timestamp_with_best_cipher_and_password(password);
             }
-            AsReqCredential::NTLM(ntlm) => {
+            Key::NTLM(ntlm) => {
                 return self.encrypt_timestamp_with_cipher_and_key(RC4_HMAC, ntlm);
             },
-            AsReqCredential::AES128Key(key_128) => {
+            Key::AES128Key(key_128) => {
                 return self.encrypt_timestamp_with_cipher_and_key(AES128_CTS_HMAC_SHA1_96, key_128); 
             },
-            AsReqCredential::AES256Key(key_256) => {
+            Key::AES256Key(key_256) => {
                 return self.encrypt_timestamp_with_cipher_and_key(AES256_CTS_HMAC_SHA1_96, key_256);
             }
         }
@@ -129,7 +129,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::NTLM(key.clone()),
+            &Key::NTLM(key.clone()),
             &etypes
         ).unwrap();
 
@@ -148,7 +148,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::AES128Key(key.clone()),
+            &Key::AES128Key(key.clone()),
             &etypes
         ).unwrap();
 
@@ -170,7 +170,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::AES256Key(key.clone()),
+            &Key::AES256Key(key.clone()),
             &etypes
         ).unwrap();
 
@@ -189,7 +189,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::NTLM(key.clone()),
+            &Key::NTLM(key.clone()),
             &etypes
         ).unwrap();
 
@@ -208,7 +208,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::AES128Key(key.clone()),
+            &Key::AES128Key(key.clone()),
             &etypes
         ).unwrap();
 
@@ -230,7 +230,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::AES256Key(key.clone()),
+            &Key::AES256Key(key.clone()),
             &etypes
         ).unwrap();
 
@@ -245,7 +245,7 @@ mod test {
         AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::Password("password".to_string()),
+            &Key::Password("password".to_string()),
             &etypes
         ).unwrap();
     }
@@ -259,7 +259,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::Password(password.to_string()),
+            &Key::Password(password.to_string()),
             &etypes
         ).unwrap();
 
@@ -280,7 +280,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::Password(password.to_string()),
+            &Key::Password(password.to_string()),
             &etypes
         ).unwrap();
 
@@ -301,7 +301,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &AsReqCredential::Password(password.to_string()),
+            &Key::Password(password.to_string()),
             &etypes
         ).unwrap();
 

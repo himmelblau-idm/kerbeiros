@@ -41,7 +41,9 @@ pub enum KerberosErrorKind {
     #[fail (display = "None cipher algorithm supported was specified")]
     NoProvidedSupportedCipherAlgorithm,
     #[fail (display = "Error in i/o operation")]
-    IOError
+    IOError,
+    #[fail (display = "No key was provided")]
+    NoKeyProvided,
 }
 
 #[derive(Clone, PartialEq, Debug, Fail)]

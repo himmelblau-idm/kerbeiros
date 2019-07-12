@@ -5,6 +5,7 @@ use crate::error::*;
 use crate::sysutils;
 use crate::credential::*;
 use super::tgtrequest::*;
+use crate::key::Key;
 
 
 #[derive(Debug)]
@@ -31,14 +32,20 @@ impl KerberosClient {
         };
     }
 
-    pub fn request_tgt(&self, username: AsciiString, password: String) -> KerberosResult<Credential> {
-        return TGTRequest::new(
+    pub fn request_tgt(&self, username: AsciiString, user_key: Option<Key>) -> KerberosResult<Credential> {
+        let mut tgt_request = TGTRequest::new(
             self.realm.clone(), 
             self.kdc_address.clone(), 
             self.hostname.clone(), 
-            username,
-            password
-        ).request_tgt();
+            username
+        );
+        
+        if let Some(key) = user_key {
+            tgt_request.set_user_key(key);
+        }
+
+        return tgt_request.request_tgt();
+
     }
 
 }

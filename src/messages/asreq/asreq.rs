@@ -3,13 +3,13 @@ use crate::structs::structs_asn1;
 use crate::error::*;
 use ascii::AsciiString;
 
-use super::asreqcredential::*;
+use crate::key::Key;
 use super::timestampcrypter::*;
 
 pub struct AsReq {
     realm: AsciiString,
     username: AsciiString,
-    user_key: Option<AsReqCredential>,
+    user_key: Option<Key>,
     hostname: String,
     kdc_options: u32,
     etypes: Vec<i32>,
@@ -41,12 +41,8 @@ impl AsReq {
         self.kdc_options = kdc_options;
     }
 
-    pub fn set_user_key(&mut self, user_key: AsReqCredential) {
+    pub fn set_user_key(&mut self, user_key: Key) {
         self.user_key = Some(user_key);
-    }
-
-    pub fn set_password(&mut self, password: String) {
-        self.set_user_key(AsReqCredential::Password(password));
     }
 
     pub fn include_pac(&mut self) {
@@ -83,7 +79,7 @@ impl AsReq {
         return Ok(as_req);
     }
 
-    fn produce_encrypted_timestamp(&self, user_key: &AsReqCredential) -> KerberosResult<(i32, Vec<u8>)>{
+    fn produce_encrypted_timestamp(&self, user_key: &Key) -> KerberosResult<(i32, Vec<u8>)>{
         return AsReqTimestampCrypter::build_encrypted_timestamp(
             &self.realm,
             &self.username,
@@ -125,7 +121,7 @@ mod test {
             "hostname".to_string()
         );
 
-        as_req.set_user_key(AsReqCredential::NTLM(key));
+        as_req.set_user_key(Key::NTLM(key));
 
         let as_req_struct = as_req.create_as_req_struct().unwrap();
 
@@ -146,7 +142,7 @@ mod test {
             "hostname".to_string()
         );
 
-        as_req.set_user_key(AsReqCredential::AES128Key(key));
+        as_req.set_user_key(Key::AES128Key(key));
 
         let as_req_struct = as_req.create_as_req_struct().unwrap();
 
@@ -170,7 +166,7 @@ mod test {
             "hostname".to_string()
         );
 
-        as_req.set_user_key(AsReqCredential::AES256Key(key));
+        as_req.set_user_key(Key::AES256Key(key));
 
         let as_req_struct = as_req.create_as_req_struct().unwrap();
 

@@ -2,6 +2,7 @@ use crate::structs::*;
 use super::super::credential::*;
 use crate::crypter::*;
 use crate::constants::*;
+use crate::key::Key;
 
 pub struct CredentialKrbInfoMapper{}
 
@@ -36,14 +37,16 @@ impl CredentialKrbInfoMapper {
         return (krb_cred_info, credential.get_ticket().clone());
     }
 
-    pub fn kdc_rep_to_credential(password: &str, kdc_rep: &KdcRep) -> KerberosResult<Credential> {
-        let crypter = new_kerberos_crypter(kdc_rep.get_enc_part_etype())?;
-        let plaintext = crypter.generate_key_from_password_and_decrypt(
-            password, 
-            &kdc_rep.get_encryption_salt(),
-            KEY_USAGE_AS_REP_ENC_PART, 
-            kdc_rep.get_enc_part_cipher()
-        )?;
+    pub fn kdc_rep_to_credential(key: &Key, kdc_rep: &KdcRep) -> KerberosResult<Credential> {
+        let plaintext;
+        match key {
+            Key::Password(password) => {
+                plaintext = Self::decrypt_enc_kdc_rep_part_with_password(password, kdc_rep)?;
+            },
+            cipher_key => {
+                plaintext = Self::decrypt_enc_kdc_rep_part_with_cipher_key(cipher_key, kdc_rep)?;
+            }
+        }
 
         let enc_kdc_rep_part = EncKdcRepPart::parse(&plaintext)?;
 
@@ -53,6 +56,41 @@ impl CredentialKrbInfoMapper {
             kdc_rep.get_ticket().clone(),
             enc_kdc_rep_part
         ));
+    }
+
+    fn decrypt_enc_kdc_rep_part_with_password(password: &str, kdc_rep: &KdcRep) -> KerberosResult<Vec<u8>> {
+        let crypter = new_kerberos_crypter(kdc_rep.get_enc_part_etype())?;
+        return crypter.generate_key_from_password_and_decrypt(
+            password, 
+            &kdc_rep.get_encryption_salt(),
+            KEY_USAGE_AS_REP_ENC_PART, 
+            kdc_rep.get_enc_part_cipher()
+        );
+    }
+
+    fn decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> KerberosResult<Vec<u8>> {
+        match Self::try_decrypt_enc_kdc_rep_part_with_cipher_key(key, kdc_rep) {
+            Err(error) => {
+                if key.get_etype() != kdc_rep.get_enc_part_etype() {
+                    return Err(KerberosCryptographyErrorKind::DecryptionError(
+                        format!("Key etype = {} doesn't match with message etype = {}", 
+                            key.get_etype(), kdc_rep.get_enc_part_etype())
+                    ))?;
+                }
+
+                return Err(error);
+            },
+            ok => ok
+        }
+    }
+
+    fn try_decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> KerberosResult<Vec<u8>> {
+        let crypter = new_kerberos_crypter(key.get_etype()).unwrap();
+        return crypter.decrypt(
+            key.get_value_as_bytes(),
+            KEY_USAGE_AS_REP_ENC_PART, 
+            kdc_rep.get_enc_part_cipher()
+        );
     }
 
 }
@@ -180,14 +218,53 @@ mod test {
     }
 
     #[test]
-    fn decode_and_decrypt_enc_part_aes256() {
+    fn decode_and_decrypt_enc_part_aes256_with_password() {
 
-        let ticket = Ticket::new(
-            Realm::from_ascii("fake").unwrap(),
-            PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("fake").unwrap()),
-            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9])
+        let as_rep = create_as_rep_aes256_to_decrypt();
+        let credential = create_credential_to_check_decryption();
+
+        assert_eq!(
+            credential, 
+            CredentialKrbInfoMapper::kdc_rep_to_credential(&Key::Password("Minnie1234".to_string()), &as_rep).unwrap()
         );
+    }
 
+    #[test]
+    fn decode_and_decrypt_enc_part_aes256_with_key() {
+
+        let as_rep = create_as_rep_aes256_to_decrypt();
+        let credential = create_credential_to_check_decryption();
+
+        assert_eq!(
+            credential, 
+            CredentialKrbInfoMapper::kdc_rep_to_credential(&Key::AES256Key([
+                0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 
+                0x26, 0xa5, 0x69, 0xf8, 0xb7, 0xc3, 0x67, 0x15, 
+                0xc8, 0xda, 0xef, 0x10, 0x9f, 0xa3, 0xd8, 0xb2, 
+                0xe1, 0x46, 0x16, 0xaa, 0xca, 0xb5, 0x49, 0xfd
+                ]), 
+                &as_rep).unwrap()
+        );
+    }
+
+    #[should_panic(expected="Key etype = 17 doesn't match with message etype = 18")]
+    #[test]
+    fn decode_and_decrypt_enc_part_aes256_with_key_of_aes128() {
+
+        let as_rep = create_as_rep_aes256_to_decrypt();
+        let credential = create_credential_to_check_decryption();
+
+        assert_eq!(
+            credential, 
+            CredentialKrbInfoMapper::kdc_rep_to_credential(&Key::AES128Key([
+                0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45,
+                0x9a, 0x1c, 0x39, 0xbf, 0x83, 0x23, 0x56, 0x09
+                ]), 
+                &as_rep).unwrap()
+        );
+    }
+
+    fn create_as_rep_aes256_to_decrypt() -> KdcRep {
         let encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![
             0xe2, 0xbb, 0xa9, 0x28, 0x8e, 0x2e, 0x2e, 0x3e, 0xf5, 0xfa, 0xee, 0x6d, 0x9e, 0xde, 0x0e, 0x77,
             0x38, 0x70, 0x9b, 0xca, 0xc4, 0x74, 0x6f, 0x7f, 0x00, 0xbf, 0xc7, 0x92, 0x30, 0x30, 0x98, 0xd5,
@@ -212,6 +289,12 @@ mod test {
             0x95, 0xb7, 0x6c, 0x75, 0xc0, 0x7d, 0x13, 0xa0, 0x7b
         ]);
 
+        let ticket = Ticket::new(
+            Realm::from_ascii("fake").unwrap(),
+            PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("fake").unwrap()),
+            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9])
+        );
+
         let mut padata = SeqOfPaData::new();
         let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
         entry1._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
@@ -228,6 +311,17 @@ mod test {
         );
 
         as_rep.set_padata(padata);
+
+        return as_rep;
+    }
+
+    fn create_credential_to_check_decryption() -> Credential {
+
+        let ticket = Ticket::new(
+            Realm::from_ascii("fake").unwrap(),
+            PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("fake").unwrap()),
+            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9])
+        );
 
         let encryption_key = EncryptionKey::new(
             AES256_CTS_HMAC_SHA1_96,
@@ -288,18 +382,12 @@ mod test {
         );
         enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_datas);
 
-        let credential = Credential::new(
+        return Credential::new(
             Realm::from_ascii("fake").unwrap(),
             PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("fake").unwrap()),
             ticket,
             enc_as_rep_part
         );
-
-        assert_eq!(
-            credential, 
-            CredentialKrbInfoMapper::kdc_rep_to_credential("Minnie1234", &as_rep).unwrap()
-        );
-
     }
 
 }

@@ -5,24 +5,28 @@ use crate::messages::*;
 use crate::error::*;
 use crate::constants::*;
 use crate::credential::*;
+use crate::key::Key;
 
 pub struct TGTRequest {
     requester: Box<KerberosRequester>,
     as_req: AsReq,
-    password: String
+    user_key: Option<Key>
 }
 
 impl TGTRequest {
 
     pub fn new(
-        realm: AsciiString, kdc_address: IpAddr, hostname: String,
-        username: AsciiString, password: String
+        realm: AsciiString, kdc_address: IpAddr, hostname: String, username: AsciiString
         ) -> Self {
         return Self {
             requester: new_requester(kdc_address),
             as_req: AsReq::new(realm, username, hostname),
-            password
+            user_key: None
         };
+    }
+
+    pub fn set_user_key(&mut self, user_key: Key) {
+        self.user_key = Some(user_key);
     }
 
     pub fn _set_requester(&mut self, requester: Box<KerberosRequester>) {
@@ -47,11 +51,15 @@ impl TGTRequest {
             return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
         }
 
-        return self.request_2nd_as_req();
+        if let Some(user_key) = self.user_key.clone() {
+            return self.request_2nd_as_req(&user_key);
+        }
+
+        return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
     }
 
-    fn request_2nd_as_req(&mut self) -> KerberosResult<Credential> {
-        self.as_req.set_password(self.password.clone());
+    fn request_2nd_as_req(&mut self, user_key: &Key) -> KerberosResult<Credential> {
+        self.as_req.set_user_key(user_key.clone());
         let raw_response = self.as_request_and_response()?;
 
         match self.parse_as_request_response(&raw_response)? {
@@ -65,14 +73,21 @@ impl TGTRequest {
     }
 
     fn extract_credential_from_as_rep(&self, as_rep: AsRep) -> KerberosResult<Credential> {
-        match CredentialKrbInfoMapper::kdc_rep_to_credential(&self.password, &as_rep) {
+        let user_key;
+
+        if let Some(key) = &self.user_key {
+            user_key = key;
+        } 
+        else {
+            return Err(KerberosErrorKind::ParseKdcRepError(as_rep, Box::new(KerberosErrorKind::NoKeyProvided)))?;
+        }
+        
+        match CredentialKrbInfoMapper::kdc_rep_to_credential(user_key, &as_rep) {
             Ok(credential) => {
                 return Ok(credential);
             },
             Err(error) => {
-                return Err(
-                    KerberosErrorKind::ParseKdcRepError(as_rep, Box::new(error.kind().clone()))
-                )?;
+                return Err(KerberosErrorKind::ParseKdcRepError(as_rep, Box::new(error.kind().clone())))?;
             }
         }
     }
@@ -151,9 +166,10 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             "A".to_string(),
-            AsciiString::from_ascii("Mickey").unwrap(),
-            "Minnie1234".to_string()
+            AsciiString::from_ascii("Mickey").unwrap()
         );
+
+        tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
         tgt_request._set_requester(Box::new(FakeRequester{}));
 
@@ -163,7 +179,7 @@ mod test {
 
 
     #[test]
-    fn request_tgt_as_rep_without_pre_authentication() {
+    fn request_tgt_as_rep_for_user_without_pre_authentication_required() {
 
         struct FakeRequester{}
 
@@ -273,9 +289,10 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             "A".to_string(),
-            AsciiString::from_ascii("mickey").unwrap(),
-            "Minnie1234".to_string()
+            AsciiString::from_ascii("mickey").unwrap()
         );
+
+        tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
         tgt_request._set_requester(Box::new(FakeRequester{}));
 
@@ -395,9 +412,10 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             "A".to_string(),
-            AsciiString::from_ascii("mickey").unwrap(),
-            "Incorrect password".to_string()
+            AsciiString::from_ascii("mickey").unwrap()
         );
+
+        tgt_request.set_user_key(Key::Password("Incorrect password".to_string()));
 
         tgt_request._set_requester(Box::new(FakeRequester{}));
 
@@ -554,8 +572,61 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             "A".to_string(),
-            AsciiString::from_ascii("mickey").unwrap(),
-            "Minnie1234".to_string()
+            AsciiString::from_ascii("mickey").unwrap()
+        );
+
+        tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
+
+        tgt_request._set_requester(Box::new(FakeRequester{}));
+
+        tgt_request.request_tgt().unwrap();
+
+    }
+
+
+    #[should_panic(expected="Received KRB-ERROR response")]
+    #[test]
+    fn request_tgt_without_user_key() {
+
+        struct FakeRequester{}
+
+        impl KerberosRequester for FakeRequester {
+            fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
+                return Ok(vec![
+                    0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 
+                    0xa0, 0x03, 0x02, 0x01, 0x05, 
+                    0xa1, 0x03, 0x02, 0x01, 0x1e, 
+                    0xa4, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x34, 0x31, 0x38, 0x30, 0x36, 0x30, 0x30, 0x33, 0x31, 0x5a, 
+                    0xa5, 0x05, 0x02, 0x03, 0x05, 0x34, 0x2f, 
+                    0xa6, 0x03, 0x02, 0x01, 0x19, 
+                    0xa9, 0x10, 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 
+                    0xaa, 0x23, 0x30, 0x21, 
+                        0xa0, 0x03, 0x02, 0x01, 0x02, 
+                        0xa1, 0x1a, 0x30, 0x18, 0x1b, 0x06, 0x6b, 0x72, 0x62, 0x74, 0x67, 0x74, 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 
+                    0xac, 0x77, 0x04, 0x75, 0x30, 0x73, 
+                        0x30, 0x50, 
+                            0xa1, 0x03, 0x02, 0x01, 0x13, 
+                            0xa2, 0x49, 0x04, 0x47, 
+                                0x30, 0x45, 0x30, 0x1d, 
+                                    0xa0, 0x03, 0x02, 0x01, 0x12, 
+                                    0xa1, 0x16, 0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79, 
+                                0x30, 0x05, 
+                                    0xa0, 0x03, 0x02, 0x01, 0x17, 
+                                0x30, 0x1d, 
+                                    0xa0, 0x03, 0x02, 0x01, 0x03, 
+                                    0xa1, 0x16, 0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79, 
+                        0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x02, 0xa2, 0x02, 0x04, 0x00, 
+                        0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x10, 0xa2, 0x02, 0x04, 0x00, 
+                        0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x0f, 0xa2, 0x02, 0x04, 0x00
+                ]);
+            }
+        }
+
+        let mut tgt_request = TGTRequest::new(
+            AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+            "A".to_string(),
+            AsciiString::from_ascii("Mickey").unwrap(),
         );
 
         tgt_request._set_requester(Box::new(FakeRequester{}));
