@@ -12,7 +12,8 @@ pub struct UInt32Asn1 {
 impl UInt32Asn1 {
     pub fn new(value: UInt32) -> UInt32Asn1 {
         return UInt32Asn1{
-            subtype: Integer::new(value as i64)
+            // convert first to i32 to transform values > i32_max into negatives, avoiding overflow when convert to asn1
+            subtype: Integer::new((value as i32) as i64)
         };
     }
 
@@ -71,9 +72,27 @@ mod test {
 
     #[test]
     fn test_encode_uint32() {
-        assert_eq!(vec![0x02, 0x04, 0x06, 0x08, 0x95, 0xb6],
+        assert_eq!(
+            vec![0x02, 0x04, 0x06, 0x08, 0x95, 0xb6],
             UInt32Asn1::new(101225910).encode().unwrap()
         );
+
+        assert_eq!(
+            vec![0x02, 0x04, 0xc1, 0x75, 0xc7, 0xce],
+            UInt32Asn1::new(3245721550).encode().unwrap()
+        );
+    }
+
+
+    #[test]
+    fn test_decode_uint32() {
+        let mut uint32 = UInt32Asn1::new_empty();
+
+        uint32.decode(&[0x02, 0x04, 0x06, 0x08, 0x95, 0xb6]).unwrap();
+        assert_eq!(101225910, uint32.no_asn1_type().unwrap());
+
+        uint32.decode(&[0x02, 0x04, 0xc1, 0x75, 0xc7, 0xce]).unwrap();
+        assert_eq!(3245721550, uint32.no_asn1_type().unwrap());
     }
 
 }

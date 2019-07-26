@@ -3,7 +3,6 @@ use asn1::*;
 use std::result::Result;
 use crate::error::*;
 
-
 pub type KerberosString = AsciiString;
 
 pub struct KerberosStringAsn1 {

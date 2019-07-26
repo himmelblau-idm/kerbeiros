@@ -273,7 +273,6 @@ mod test {
         krb_error.e_data = Some(Edata::MethodData(method_data));
 
         assert_eq!(krb_error, krb_error_asn1.no_asn1_type().unwrap());
-
     }
 
 }
