@@ -33,7 +33,7 @@ impl TCPRequester {
         tcp_stream.read_exact(&mut len_data_bytes)?;
         let data_length = u32::from_be_bytes(len_data_bytes);
 
-        let mut raw_response: Vec<u8> = Vec::with_capacity(data_length as usize);
+        let mut raw_response: Vec<u8> = vec![0; data_length as usize];
         tcp_stream.read_exact(&mut raw_response)?;
 
         return Ok(raw_response);
