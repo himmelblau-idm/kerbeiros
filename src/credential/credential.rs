@@ -81,5 +81,9 @@ impl Credential {
         return CredentialWarehouse::new(self.clone()).save_into_ccache_file(path);
     }
 
+    pub fn save_into_krb_cred_file(&self, path: &str) -> KerberosResult<()> {
+        return CredentialWarehouse::new(self.clone()).save_into_krb_cred_file(path);
+    }
+
 }
 

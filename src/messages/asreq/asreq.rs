@@ -27,7 +27,7 @@ impl AsReq {
             hostname,
             kdc_options: FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK,
             pac: true,
-            etypes: vec![RC4_HMAC, AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96]
+            etypes: vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC]
         };
 
         return as_req;
@@ -105,7 +105,7 @@ mod test {
 
         let as_req_struct = as_req.create_as_req_struct().unwrap();
 
-        assert_eq!(vec![RC4_HMAC, AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96], **as_req_struct._get_etypes());
+        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC], **as_req_struct._get_etypes());
     }
 
     #[test]

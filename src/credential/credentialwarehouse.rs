@@ -44,5 +44,8 @@ impl CredentialWarehouse {
     pub fn save_into_ccache_file(&self, path: &str) -> KerberosResult<()> {
         return CredentialFileConverter::save_into_ccache_file(self, path);
     }
+    pub fn save_into_krb_cred_file(&self, path: &str) -> KerberosResult<()> {
+        return CredentialFileConverter::save_into_krb_cred_file(self, path);
+    }
 }
 
