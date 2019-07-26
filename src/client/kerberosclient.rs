@@ -1,5 +1,4 @@
 use std::net::IpAddr;
-use dns_lookup;
 pub use ascii::AsciiString;
 use crate::error::*;
 use crate::sysutils;
@@ -16,15 +15,8 @@ pub struct KerberosClient {
 }
 
 impl KerberosClient {
-    pub fn new(realm: AsciiString) -> KerberosResult<KerberosClient> {
-        let ips = dns_lookup::lookup_host(&realm.to_string()).map_err(|_|
-            KerberosErrorKind::NameResolutionError(realm.to_string())
-        )?;
 
-        return Ok(Self::new_witk_kdc_address(realm, ips[0]));
-    }
-
-    pub fn new_witk_kdc_address(realm: AsciiString, kdc_address: IpAddr) -> Self {
+    pub fn new(realm: AsciiString, kdc_address: IpAddr) -> Self {
         return Self {
             realm,
             kdc_address,
