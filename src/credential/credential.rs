@@ -1,4 +1,6 @@
 use crate::structs::*;
+use crate::error::*;
+use super::credentialwarehouse::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Credential {
@@ -73,6 +75,10 @@ impl Credential {
    
     pub fn get_encrypted_pa_data(&self) -> Option<&MethodData> {
         return self.client_part.get_encrypted_pa_data();
+    }
+
+    pub fn save_into_ccache_file(&self, path: &str) -> KerberosResult<()> {
+        return CredentialWarehouse::new(self.clone()).save_into_ccache_file(path);
     }
 
 }

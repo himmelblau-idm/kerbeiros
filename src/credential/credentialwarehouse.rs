@@ -1,6 +1,8 @@
 use super::credential::*;
 use super::mappers::*;
 use crate::structs::*;
+use crate::error::*;
+use super::file::*;
 
 pub struct CredentialWarehouse {
     credentials: Vec<Credential>,
@@ -37,6 +39,10 @@ impl CredentialWarehouse {
 
     pub fn to_ccache(&self) -> CCache {
         return CredentialWarehouseCCacheMapper::credential_warehouse_to_ccache(self);
+    }
+
+    pub fn save_into_ccache_file(&self, path: &str) -> KerberosResult<()> {
+        return CredentialFileConverter::save_into_ccache_file(self, path);
     }
 }
 
