@@ -17,11 +17,11 @@ impl TGTRequest {
 
     pub fn new(
         realm: AsciiString, kdc_address: IpAddr, transport_protocol: TransportProtocol, 
-        hostname: String, username: AsciiString
+        username: AsciiString
     ) -> Self {
         return Self {
             requester: new_requester(kdc_address, transport_protocol),
-            as_req: AsReq::new(realm, username, hostname),
+            as_req: AsReq::new(realm, username),
             user_key: None
         };
     }
@@ -167,7 +167,6 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            "A".to_string(),
             AsciiString::from_ascii("Mickey").unwrap()
         );
 
@@ -291,7 +290,6 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            "A".to_string(),
             AsciiString::from_ascii("mickey").unwrap()
         );
 
@@ -415,7 +413,6 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            "A".to_string(),
             AsciiString::from_ascii("mickey").unwrap()
         );
 
@@ -576,7 +573,6 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            "A".to_string(),
             AsciiString::from_ascii("mickey").unwrap()
         );
 
@@ -631,7 +627,6 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            "A".to_string(),
             AsciiString::from_ascii("Mickey").unwrap(),
         );
 

@@ -70,5 +70,4 @@ mod tests {
         requester.request_and_response(&vec![]).unwrap();
     }
 
-
 }

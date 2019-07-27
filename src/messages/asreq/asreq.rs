@@ -10,7 +10,6 @@ pub struct AsReq {
     realm: AsciiString,
     username: AsciiString,
     user_key: Option<Key>,
-    hostname: String,
     kdc_options: u32,
     etypes: Vec<i32>,
     pac: bool,
@@ -19,12 +18,11 @@ pub struct AsReq {
 
 impl AsReq {
 
-    pub fn new(realm: AsciiString, username: AsciiString, hostname: String) -> Self {
+    pub fn new(realm: AsciiString, username: AsciiString) -> Self {
         let as_req = Self {
             realm,
             username,
             user_key: None,
-            hostname,
             kdc_options: FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK,
             pac: true,
             etypes: vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC]
@@ -59,7 +57,7 @@ impl AsReq {
     }
 
     fn create_as_req_struct(&self) -> KerberosResult<structs_asn1::AsReq> {
-        let mut as_req = structs_asn1::AsReq::new(self.realm.clone(), self.username.clone(), self.hostname.clone());
+        let mut as_req = structs_asn1::AsReq::new(self.realm.clone(), self.username.clone());
         as_req.set_kdc_options(self.kdc_options);
 
         if self.pac {
@@ -99,8 +97,7 @@ mod test {
     fn as_req_with_supported_rc4_and_aes_by_default() {
         let as_req = AsReq::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("Mickey").unwrap(),
-            "hostname".to_string()
+            AsciiString::from_ascii("Mickey").unwrap()
         );
 
         let as_req_struct = as_req.create_as_req_struct().unwrap();
@@ -117,8 +114,7 @@ mod test {
 
         let mut as_req = AsReq::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("Mickey").unwrap(),
-            "hostname".to_string()
+            AsciiString::from_ascii("Mickey").unwrap()
         );
 
         as_req.set_user_key(Key::NTLM(key));
@@ -138,8 +134,7 @@ mod test {
 
         let mut as_req = AsReq::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("Mickey").unwrap(),
-            "hostname".to_string()
+            AsciiString::from_ascii("Mickey").unwrap()
         );
 
         as_req.set_user_key(Key::AES128Key(key));
@@ -162,8 +157,7 @@ mod test {
 
         let mut as_req = AsReq::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("Mickey").unwrap(),
-            "hostname".to_string()
+            AsciiString::from_ascii("Mickey").unwrap()
         );
 
         as_req.set_user_key(Key::AES256Key(key));

@@ -95,7 +95,7 @@ impl KdcReqBody {
         return &self.etypes;
     }
 
-    pub fn set_address(&mut self, address: HostAddress) {
+    pub fn _set_address(&mut self, address: HostAddress) {
         self.addresses = Some(HostAddresses::new(address));
     }
 
@@ -241,7 +241,7 @@ mod test {
         kdc_req_body.push_etype(RC4_HMAC_EXP);
         kdc_req_body.push_etype(RC4_HMAC_OLD_EXP);
         kdc_req_body.push_etype(DES_CBC_MD5);
-        kdc_req_body.set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
+        kdc_req_body._set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
 
         let kdc_req_body_asn1 = kdc_req_body.asn1_type();
 

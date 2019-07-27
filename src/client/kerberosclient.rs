@@ -1,7 +1,6 @@
 use std::net::IpAddr;
 pub use ascii::AsciiString;
 use crate::error::*;
-use crate::sysutils;
 use crate::credential::*;
 use super::tgtrequest::*;
 use crate::key::Key;
@@ -11,7 +10,6 @@ use crate::key::Key;
 pub struct KerberosClient {
     realm: AsciiString,
     kdc_address: IpAddr,
-    hostname: String,
     transport_protocol: TransportProtocol
 }
 
@@ -21,7 +19,6 @@ impl KerberosClient {
         return Self {
             realm,
             kdc_address,
-            hostname: sysutils::get_hostname(),
             transport_protocol: TransportProtocol::TCP
         };
     }
@@ -35,7 +32,6 @@ impl KerberosClient {
             self.realm.clone(), 
             self.kdc_address.clone(),
             self.transport_protocol,
-            self.hostname.clone(), 
             username
         );
         

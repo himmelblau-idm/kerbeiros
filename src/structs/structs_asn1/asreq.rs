@@ -19,7 +19,7 @@ pub struct AsReq {
 
 impl AsReq {
 
-    pub fn new(domain: AsciiString, username: AsciiString, hostname: String) -> AsReq {
+    pub fn new(domain: AsciiString, username: AsciiString) -> AsReq {
         let mut as_req = AsReq{
             pvno: 5,
             msg_type: 10,
@@ -33,8 +33,6 @@ impl AsReq {
         as_req.push_sname(domain).unwrap();
 
         as_req.set_default_rtime();
-
-        as_req.set_address(HostAddress::NetBios(hostname));
 
         return as_req;
     }
@@ -102,8 +100,8 @@ impl AsReq {
         return self.req_body._get_etypes();
     }
 
-    fn set_address(&mut self, address: HostAddress) {
-        self.req_body.set_address(address);
+    fn _set_address(&mut self, address: HostAddress) {
+        self.req_body._set_address(address);
     }
 
     pub fn build(&self) -> Vec<u8> {
@@ -172,7 +170,8 @@ mod test {
         let mut as_req = AsReq::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(), 
             AsciiString::from_ascii("mickey").unwrap(), 
-            "HOLLOWBASTION".to_string());
+        );
+        as_req._set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
         as_req.set_kdc_options(FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK);
         as_req.include_pac();
         as_req.push_etype(AES256_CTS_HMAC_SHA1_96);

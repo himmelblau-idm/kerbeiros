@@ -1,7 +1,6 @@
 mod structs;
 mod byteparser;
 mod crypter;
-mod sysutils;
 
 
 pub mod requester;
