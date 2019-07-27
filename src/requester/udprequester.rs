@@ -27,13 +27,22 @@ impl UDPRequester {
 
         udp_socket.send(raw_request)?;
 
-        let mut raw_response = Vec::new();
-        let data_length = udp_socket.peek(&mut raw_response)?;
+        let data_length = self.calculate_response_size(&udp_socket)?;
 
         let mut raw_response = vec![0; data_length as usize];
         udp_socket.recv(&mut raw_response)?;
 
         return Ok(raw_response);
+    }
+
+    fn calculate_response_size(&self, udp_socket: &UdpSocket) -> io::Result<usize> {
+        let mut raw_response = vec![0; 2048];
+        let mut data_length = udp_socket.peek(&mut raw_response)?;
+        while data_length == raw_response.len() {
+            raw_response.append(&mut raw_response.clone());
+            data_length = udp_socket.peek(&mut raw_response)?;
+        }
+        return Ok(data_length);
     }
 
 }
