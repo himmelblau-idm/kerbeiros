@@ -16,10 +16,11 @@ pub struct TGTRequest {
 impl TGTRequest {
 
     pub fn new(
-        realm: AsciiString, kdc_address: IpAddr, hostname: String, username: AsciiString
-        ) -> Self {
+        realm: AsciiString, kdc_address: IpAddr, transport_protocol: TransportProtocol, 
+        hostname: String, username: AsciiString
+    ) -> Self {
         return Self {
-            requester: new_requester(kdc_address),
+            requester: new_requester(kdc_address, transport_protocol),
             as_req: AsReq::new(realm, username, hostname),
             user_key: None
         };
@@ -165,6 +166,7 @@ mod test {
         let mut tgt_request = TGTRequest::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+            TransportProtocol::TCP,
             "A".to_string(),
             AsciiString::from_ascii("Mickey").unwrap()
         );
@@ -288,6 +290,7 @@ mod test {
         let mut tgt_request = TGTRequest::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+            TransportProtocol::TCP,
             "A".to_string(),
             AsciiString::from_ascii("mickey").unwrap()
         );
@@ -411,6 +414,7 @@ mod test {
         let mut tgt_request = TGTRequest::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+            TransportProtocol::TCP,
             "A".to_string(),
             AsciiString::from_ascii("mickey").unwrap()
         );
@@ -571,6 +575,7 @@ mod test {
         let mut tgt_request = TGTRequest::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+            TransportProtocol::TCP,
             "A".to_string(),
             AsciiString::from_ascii("mickey").unwrap()
         );
@@ -625,6 +630,7 @@ mod test {
         let mut tgt_request = TGTRequest::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+            TransportProtocol::TCP,
             "A".to_string(),
             AsciiString::from_ascii("Mickey").unwrap(),
         );

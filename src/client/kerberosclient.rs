@@ -11,7 +11,8 @@ use crate::key::Key;
 pub struct KerberosClient {
     realm: AsciiString,
     kdc_address: IpAddr,
-    hostname: String
+    hostname: String,
+    transport_protocol: TransportProtocol
 }
 
 impl KerberosClient {
@@ -20,14 +21,20 @@ impl KerberosClient {
         return Self {
             realm,
             kdc_address,
-            hostname: sysutils::get_hostname()
+            hostname: sysutils::get_hostname(),
+            transport_protocol: TransportProtocol::TCP
         };
+    }
+
+    pub fn set_transport_protocol(&mut self, transport_protocol: TransportProtocol) {
+        self.transport_protocol = transport_protocol;
     }
 
     pub fn request_tgt(&self, username: AsciiString, user_key: Option<Key>) -> KerberosResult<Credential> {
         let mut tgt_request = TGTRequest::new(
             self.realm.clone(), 
-            self.kdc_address.clone(), 
+            self.kdc_address.clone(),
+            self.transport_protocol,
             self.hostname.clone(), 
             username
         );

@@ -1,4 +1,4 @@
-pub use std::net::IpAddr;
+use std::net::IpAddr;
 use std::net::*;
 use std::io::{Write, Read};
 use std::io;
