@@ -111,8 +111,8 @@ impl convert::From<FromAsciiError<&str>> for KerberosError {
     }
 }
 
-impl convert::From<red_asn1::Errora> for KerberosError {
-    fn from(error: red_asn1::Errora) -> Self {
+impl convert::From<red_asn1::Error> for KerberosError {
+    fn from(error: red_asn1::Error) -> Self {
         return KerberosError {
             inner: Context::new(KerberosErrorKind::Asn1Error(error.kind().clone()))
         };
