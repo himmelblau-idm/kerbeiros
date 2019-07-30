@@ -4,7 +4,7 @@ use std::result::Result;
 use ascii::FromAsciiError;
 use failure::*;
 use failure_derive::Fail;
-use asn1;
+use red_asn1;
 use crate::messages::*;
 
 pub type KerberosResult<T> = Result<T, KerberosError>;
@@ -29,7 +29,7 @@ pub enum KerberosErrorKind {
     #[fail(display = "Not available data {}", _0)]
     NotAvailableData(String),
     #[fail (display = "Asn1 error: {}", _0)]
-    Asn1Error(asn1::Asn1ErrorKind),
+    Asn1Error(red_asn1::ErrorKind),
     #[fail (display = "Cryptography error: {}", _0)]
     CryptographyError(Box<KerberosCryptographyErrorKind>),
     #[fail (display = "Error resolving name: {}", _0)]
@@ -111,8 +111,8 @@ impl convert::From<FromAsciiError<&str>> for KerberosError {
     }
 }
 
-impl convert::From<asn1::Asn1Error> for KerberosError {
-    fn from(error: asn1::Asn1Error) -> Self {
+impl convert::From<red_asn1::Errora> for KerberosError {
+    fn from(error: red_asn1::Errora) -> Self {
         return KerberosError {
             inner: Context::new(KerberosErrorKind::Asn1Error(error.kind().clone()))
         };

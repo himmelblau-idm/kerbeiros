@@ -1,4 +1,4 @@
-use asn1::*;
+use red_asn1::*;
 use crate::error::*;
 
 pub type UInt32 = u32;
@@ -31,24 +31,16 @@ impl UInt32Asn1 {
     }
 }
 
-impl Asn1Tagged for UInt32Asn1 {
-
-    fn type_tag() -> Tag {
-        return Integer::type_tag();
-    }
-
-}
-
 impl Asn1Object for UInt32Asn1 {
     fn tag(&self) -> Tag {
         return self.subtype.tag();
     }
 
-    fn encode_value(&self) -> Result<Vec<u8>,Asn1Error> {
+    fn encode_value(&self) -> red_asn1::Result<Vec<u8>> {
         return self.subtype.encode_value();
     }
 
-    fn decode_value(&mut self, raw: &[u8]) -> Result<(), Asn1Error> {
+    fn decode_value(&mut self, raw: &[u8]) -> red_asn1::Result<()> {
         return self.subtype.decode_value(raw);
     }
 

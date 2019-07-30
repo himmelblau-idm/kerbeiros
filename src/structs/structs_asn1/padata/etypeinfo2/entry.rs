@@ -1,5 +1,5 @@
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 use super::super::super::int32::*;
 use super::super::super::kerberosstring::*;
 use crate::error::*;

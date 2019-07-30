@@ -1,5 +1,5 @@
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 use super::int32::*;
 use super::uint32::*;
 use crate::error::*;
@@ -93,12 +93,6 @@ impl EncryptedDataAsn1 {
         return Ok(enc_data);
     }
 
-}
-
-impl Asn1Tagged for EncryptedDataAsn1 {
-    fn type_tag() -> Tag {
-        return Sequence::type_tag();
-    }
 }
 
 impl Asn1InstanciableObject for EncryptedDataAsn1 {

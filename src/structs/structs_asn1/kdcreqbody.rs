@@ -1,5 +1,5 @@
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 use super::uint32::{UInt32, UInt32Asn1};
 use super::kerberosstring::*;
 use super::realm::{Realm, RealmAsn1};
@@ -199,15 +199,6 @@ impl KdcReqBodyAsn1 {
         if let Some(tickets) = &kdc_body.additional_tickets {
             self.set_additional_tickets(tickets.asn1_type());
         }
-    }
-
-}
-
-
-impl Asn1Tagged for KdcReqBodyAsn1{
-
-    fn type_tag() -> Tag {
-        return Sequence::type_tag();
     }
 
 }

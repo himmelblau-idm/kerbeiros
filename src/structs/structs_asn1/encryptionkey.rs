@@ -1,7 +1,7 @@
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 pub use super::int32::*;
-pub use asn1::OctetString;
+pub use red_asn1::OctetString;
 use crate::error::*;
 
 #[derive(Debug, PartialEq, Clone)]

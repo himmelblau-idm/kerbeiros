@@ -1,6 +1,6 @@
 use super::kerberosstring::*;
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 use super::int32::{Int32,Int32Asn1};
 use crate::error::*;
 
@@ -126,12 +126,6 @@ impl PrincipalNameAsn1 {
 impl Asn1InstanciableObject for PrincipalNameAsn1 {
     fn new_default() -> Self {
         return Self::new_empty();
-    }
-}
-
-impl Asn1Tagged for PrincipalNameAsn1 {
-    fn type_tag() -> Tag {
-        return Sequence::type_tag();
     }
 }
 

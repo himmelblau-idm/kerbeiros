@@ -1,4 +1,4 @@
-use asn1::*;
+use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 use crate::error::*;
 use super::entry::*;
@@ -86,23 +86,16 @@ impl Asn1Object for EtypeInfo2Asn1 {
         return self.subtype.tag();
     }
 
-    fn encode_value(&self) -> Result<Vec<u8>, Asn1Error> {
+    fn encode_value(&self) -> red_asn1::Result<Vec<u8>> {
         return self.subtype.encode_value();
     }
 
-    fn decode_value(&mut self, raw: &[u8]) -> Result<(), Asn1Error> {
+    fn decode_value(&mut self, raw: &[u8]) -> red_asn1::Result<()> {
         return self.subtype.decode_value(raw);
     }
 
     fn unset_value(&mut self) {
         return self.subtype.unset_value();
-    }
-}
-
-
-impl Asn1Tagged for EtypeInfo2Asn1 {
-    fn type_tag() -> Tag {
-        return SequenceOf::<EtypeInfo2EntryAsn1>::type_tag();
     }
 }
 

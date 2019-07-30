@@ -1,7 +1,7 @@
 use std::result::Result;
 use chrono::{Utc, DateTime, Duration};
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 use crate::error::*;
 use super::padata::*;
 use super::kdcreqbody::*;

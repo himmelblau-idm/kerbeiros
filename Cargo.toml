@@ -5,8 +5,8 @@ authors = ["Zer1t0 <Zer1t0@mail.com>"]
 edition = "2018"
 
 [dependencies]
-asn1 = { path = "../asn1" }
-asn1_derive = { path = "../asn1/asn1_derive" }
+red_asn1 = { path = "../red_asn1" }
+red_asn1_derive = { path = "../red_asn1/red_asn1_derive" }
 
 ascii = "0.9.1"
 chrono = "0.4"

@@ -7,8 +7,8 @@ use super::super::principalname::*;
 use super::edata::Edata;
 use crate::constants::errorcodes::*;
 use super::super::padata::*;
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 use chrono::Utc;
 
 

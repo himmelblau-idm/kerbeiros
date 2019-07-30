@@ -1,5 +1,5 @@
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 use crate::error::*;
 use super::super::realm::*;
 use super::super::principalname::*;

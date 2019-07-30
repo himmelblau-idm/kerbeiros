@@ -1,4 +1,4 @@
-use asn1::*;
+use red_asn1::*;
 use crate::error::*;
 
 pub type Int32 = i32;
@@ -30,25 +30,17 @@ impl Int32Asn1 {
 
 }
 
-impl Asn1Tagged for Int32Asn1 {
-
-    fn type_tag() -> Tag {
-        return Integer::type_tag();
-    }
-
-}
-
 impl Asn1Object for Int32Asn1 {
 
     fn tag(&self) -> Tag {
         return self.subtype.tag();
     }
 
-    fn encode_value(&self) -> Result<Vec<u8>,Asn1Error> {
+    fn encode_value(&self) -> red_asn1::Result<Vec<u8>> {
         return self.subtype.encode_value();
     }
 
-    fn decode_value(&mut self, raw: &[u8]) -> Result<(), Asn1Error> {
+    fn decode_value(&mut self, raw: &[u8]) -> red_asn1::Result<()> {
         let previous_value = self.subtype.value().cloned();
         self.subtype.decode_value(raw)?;
         let new_value = self.subtype.value().unwrap().clone();
@@ -63,7 +55,7 @@ impl Asn1Object for Int32Asn1 {
                 }
             };
 
-            return Err(Asn1ErrorKind::InvalidValue(
+            return Err(red_asn1::ErrorKind::InvalidValue(
                         format!("{} is not valid, must be between -2147483648 and 2147483647", new_value)
                         ))?; 
         }

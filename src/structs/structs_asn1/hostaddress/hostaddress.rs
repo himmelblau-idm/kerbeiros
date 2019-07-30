@@ -1,5 +1,5 @@
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 pub use super::super::int32::{Int32, Int32Asn1};
 use crate::error::*;
 use crate::constants::hostaddress::*;

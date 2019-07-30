@@ -1,5 +1,5 @@
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 use super::pacrequest::PacRequest;
 use super::etypeinfo2::*;
 use super::super::int32::*;
@@ -119,12 +119,6 @@ impl Asn1InstanciableObject for PaDataAsn1 {
 
     fn new_default() -> PaDataAsn1 {
         return PaDataAsn1::new_empty();
-    }
-}
-
-impl Asn1Tagged for PaDataAsn1 {
-    fn type_tag() -> Tag {
-        return Sequence::type_tag();
     }
 }
 

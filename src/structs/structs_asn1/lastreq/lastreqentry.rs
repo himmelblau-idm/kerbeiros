@@ -1,5 +1,5 @@
-use asn1::*;
-use asn1_derive::*;
+use red_asn1::*;
+use red_asn1_derive::*;
 pub use super::super::int32::*;
 pub use super::super::kerberostime::*;
 use crate::error::*;

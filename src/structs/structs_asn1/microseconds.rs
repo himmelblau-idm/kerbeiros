@@ -1,4 +1,4 @@
-use asn1::*;
+use red_asn1::*;
 use crate::error::*;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -63,25 +63,16 @@ impl MicrosecondsAsn1 {
 
 }
 
-
-impl Asn1Tagged for MicrosecondsAsn1 {
-
-    fn type_tag() -> Tag {
-        return Integer::type_tag();
-    }
-
-}
-
 impl Asn1Object for MicrosecondsAsn1 {
     fn tag(&self) -> Tag {
         return self.subtype.tag();
     }
 
-    fn encode_value(&self) -> Result<Vec<u8>,Asn1Error> {
+    fn encode_value(&self) -> red_asn1::Result<Vec<u8>> {
         return self.subtype.encode_value();
     }
 
-    fn decode_value(&mut self, raw: &[u8]) -> Result<(), Asn1Error> {
+    fn decode_value(&mut self, raw: &[u8]) -> red_asn1::Result<()> {
         let previous_value = self.subtype.value().cloned();
         self.subtype.decode_value(raw)?;
         let new_value = self.subtype.value().unwrap().clone();
@@ -96,7 +87,7 @@ impl Asn1Object for MicrosecondsAsn1 {
                 }
             };
 
-            return Err(Asn1ErrorKind::InvalidValue(
+            return Err(red_asn1::ErrorKind::InvalidValue(
                         format!("{} is not valid, must be between 0 and 999999", new_value)
                         ))?; 
         }
