@@ -5,21 +5,18 @@ use crate::error::*;
 pub type KerberosString = AsciiString;
 
 pub struct KerberosStringAsn1 {
-    tag: Tag,
     subtype: IA5String
 }
 
 impl KerberosStringAsn1 {
     pub fn new(value: AsciiString) -> KerberosStringAsn1 {
         return KerberosStringAsn1 {
-            tag: KerberosStringAsn1::type_tag(),
             subtype: IA5String::new(value),
         }
     }
 
     fn new_empty() -> KerberosStringAsn1 {
         return KerberosStringAsn1 {
-            tag: KerberosStringAsn1::type_tag(),
             subtype: IA5String::new_empty(),
         }
     }
@@ -36,7 +33,7 @@ impl KerberosStringAsn1 {
 impl Asn1Object for KerberosStringAsn1 {
     
     fn tag(&self) -> Tag {
-        return self.tag.clone();
+        return GeneralString::new_default().tag();
     }
 
     fn encode_value(&self) -> red_asn1::Result<Vec<u8>> {
@@ -59,11 +56,6 @@ impl Asn1InstanciableObject for KerberosStringAsn1 {
     }
 }
 
-impl Asn1Tagged for KerberosStringAsn1 {
-    fn type_tag() -> Tag {
-        return GeneralString::type_tag();
-    }
-}
 
 #[cfg(test)]
 mod tests {
