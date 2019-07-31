@@ -33,7 +33,7 @@ impl EncryptionKey {
 }
 
 
-#[derive(Sequence, Default)]
+#[derive(Sequence, Default, PartialEq, Debug)]
 pub struct EncryptionKeyAsn1 {
     #[seq_field(context_tag = 0)]
     keytype: SeqField<Int32Asn1>,

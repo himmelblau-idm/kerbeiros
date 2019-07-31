@@ -140,13 +140,13 @@ impl EncKdcRepPart {
     }
 
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
-        let mut enc_as_rep_part_asn1 = EncAsRepPartAsn1::new_empty();
+        let mut enc_as_rep_part_asn1 = EncAsRepPartAsn1::default();
         enc_as_rep_part_asn1.decode(raw)?;
         return Ok(enc_as_rep_part_asn1.no_asn1_type().unwrap());
     }
 }
 
-#[derive(Sequence)]
+#[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 25)]
 struct EncAsRepPartAsn1 {
     #[seq_field(context_tag = 0)]
@@ -178,25 +178,6 @@ struct EncAsRepPartAsn1 {
 }
 
 impl EncAsRepPartAsn1 {
-
-
-    fn new_empty() -> Self {
-        return Self {
-            key: SeqField::default(),
-            last_req: SeqField::default(),
-            nonce: SeqField::default(),
-            key_expiration: SeqField::default(),
-            flags: SeqField::default(),
-            authtime: SeqField::default(),
-            starttime: SeqField::default(),
-            endtime: SeqField::default(),
-            renew_till: SeqField::default(),
-            srealm: SeqField::default(),
-            sname: SeqField::default(),
-            caddr: SeqField::default(),
-            encrypted_pa_data: SeqField::default()
-        };
-    }
 
     fn no_asn1_type(&self) -> KerberosResult<EncKdcRepPart> {
         let key = self.get_key().ok_or_else(|| 
@@ -266,6 +247,28 @@ mod test {
     use crate::constants::*;
 
     #[test]
+    fn create_default_enc_as_rep_part_asn1() {
+        assert_eq!(
+            EncAsRepPartAsn1 {
+                key: SeqField::default(),
+                last_req: SeqField::default(),
+                nonce: SeqField::default(),
+                key_expiration: SeqField::default(),
+                flags: SeqField::default(),
+                authtime: SeqField::default(),
+                starttime: SeqField::default(),
+                endtime: SeqField::default(),
+                renew_till: SeqField::default(),
+                srealm: SeqField::default(),
+                sname: SeqField::default(),
+                caddr: SeqField::default(),
+                encrypted_pa_data: SeqField::default()
+            },
+            EncAsRepPartAsn1::default()
+        )
+    }
+
+    #[test]
     fn decode_enc_as_rep_part() {
         let raw: Vec<u8> = vec![
             0x79, 0x82, 0x01, 0x29, 0x30, 0x82, 0x01, 0x25,
@@ -308,7 +311,7 @@ mod test {
             0x04, 0x1f, 0x00, 0x00, 0x00
         ];
 
-        let mut enc_as_rep_part_asn1 = EncAsRepPartAsn1::new_empty();
+        let mut enc_as_rep_part_asn1 = EncAsRepPartAsn1::default();
         enc_as_rep_part_asn1.decode(&raw).unwrap();
 
 
