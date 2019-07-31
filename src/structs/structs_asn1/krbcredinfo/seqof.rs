@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use super::krbcredinfo::*;
 use crate::error::*;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct SeqOfKrbCredInfo {
     entries: Vec<KrbCredInfo>
 }
@@ -23,16 +23,10 @@ impl DerefMut for SeqOfKrbCredInfo {
 
 impl SeqOfKrbCredInfo {
 
-
     pub fn _new(mut items: Vec<KrbCredInfo>) -> Self {
-        let mut seq_of = Self::new_empty();
+        let mut seq_of = Self::default();
         seq_of.append(&mut items);
         return seq_of;
-    }
-
-
-    pub fn new_empty() -> Self {
-        return Self{ entries: Vec::new() };
     }
 
     pub fn asn1_type(&self) -> SeqOfKrbCredInfoAsn1 {
@@ -67,7 +61,7 @@ impl SeqOfKrbCredInfoAsn1 {
     }
 
     pub fn _no_asn1_type(&self) -> KerberosResult<SeqOfKrbCredInfo> {
-        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
+        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         for seq_of_krb_cred_info_asn1 in self.subtype.iter() {
             seq_of_krb_cred_info.push(seq_of_krb_cred_info_asn1.no_asn1_type()?);
         }
@@ -101,6 +95,12 @@ impl Asn1Object for SeqOfKrbCredInfoAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+
+    #[test]
+    fn create_seq_of_krb_cred_info() {
+        let seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
+        assert_eq!(Vec::<KrbCredInfo>::new(), seq_of_krb_cred_info.entries);
+    }
 
     #[test]
     fn test_encode_seq_of_krb_cred_info() {
@@ -173,7 +173,7 @@ mod test {
         krb_cred_info.set_sname(sname);
 
 
-        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
+        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
         assert_eq!(raw, seq_of_krb_cred_info.asn1_type().encode().unwrap());
@@ -251,7 +251,7 @@ mod test {
         krb_cred_info.set_sname(sname);
 
 
-        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
+        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
         let mut seq_of_krb_cred_info_asn1 = SeqOfKrbCredInfoAsn1::new_empty();

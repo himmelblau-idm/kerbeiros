@@ -10,7 +10,7 @@ impl CredentialWarehouseKrbCredMapper {
     pub fn credential_warehouse_to_krb_cred(warehouse: &CredentialWarehouse) -> KrbCred {
         let credentials = warehouse.get_credentials();
         let mut seq_of_tickets = SeqOfTickets::default();
-        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
+        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
 
         for credential in credentials.iter() {
             let (krb_cred_info, ticket) = CredentialKrbInfoMapper::credential_to_krb_info_and_ticket(credential);

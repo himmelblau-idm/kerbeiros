@@ -228,7 +228,7 @@ mod test {
         krb_cred_info.set_sname(sname);
 
 
-        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
+        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
         let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
@@ -308,7 +308,7 @@ mod test {
         krb_cred_info.set_sname(sname);
 
 
-        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::new_empty();
+        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
         let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
