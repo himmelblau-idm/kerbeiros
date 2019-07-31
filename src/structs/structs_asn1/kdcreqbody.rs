@@ -34,7 +34,7 @@ impl KdcReqBody {
 
     pub fn new(domain: Realm) -> KdcReqBody {
         return KdcReqBody{
-            kdc_options: KdcOptions::new_empty(),
+            kdc_options: KdcOptions::default(),
             cname: None,
             realm: domain,
             sname: None,

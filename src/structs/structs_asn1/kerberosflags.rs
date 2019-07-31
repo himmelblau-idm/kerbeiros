@@ -1,18 +1,12 @@
 use red_asn1::*;
 use crate::error::*;
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Default)]
 pub struct KerberosFlags {
     flags: u32
 }
 
 impl KerberosFlags {
-
-    pub fn new_empty() -> KerberosFlags {
-        return KerberosFlags{
-            flags: 0
-        };
-    }
 
     pub fn new(flags: u32) -> KerberosFlags {
         return KerberosFlags{
@@ -60,7 +54,7 @@ impl KerberosFlagsAsn1 {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KerberosFlags".to_string())
         )?;
-        let mut flags = KerberosFlags::new_empty();
+        let mut flags = KerberosFlags::default();
         
         let mut bytes = value.get_bytes().clone();
 
@@ -108,6 +102,12 @@ impl Asn1Object for KerberosFlagsAsn1 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_create_default_flags() {
+        let kdc_flags = KerberosFlags::default();
+        assert_eq!(0, kdc_flags.flags);
+    }
 
     #[test]
     fn test_convert_flags_to_bit_string() {

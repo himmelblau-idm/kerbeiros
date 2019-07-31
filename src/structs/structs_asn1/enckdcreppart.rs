@@ -327,7 +327,7 @@ mod test {
             Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)
         ));
 
-        let mut ticket_flags = TicketFlags::new_empty();
+        let mut ticket_flags = TicketFlags::default();
         ticket_flags.set_flags(
             ticketflags::INITIAL 
             | ticketflags::FORWARDABLE 
