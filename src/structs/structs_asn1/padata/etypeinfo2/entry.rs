@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::super::super::int32::*;
 use super::super::super::kerberosstring::*;
 use crate::error::*;
@@ -47,13 +46,13 @@ impl EtypeInfo2Entry {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct EtypeInfo2EntryAsn1{
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     etype: SeqField<Int32Asn1>,
-    #[seq_comp(context_tag = 1, optional)]
+    #[seq_field(context_tag = 1, optional)]
     salt: SeqField<KerberosStringAsn1>,
-    #[seq_comp(context_tag = 2, optional)]
+    #[seq_field(context_tag = 2, optional)]
     s2kparams: SeqField<OctetString>
 }
 
@@ -106,13 +105,6 @@ impl EtypeInfo2EntryAsn1 {
         return Ok(entry);
     }
 
-}
-
-
-impl Asn1InstanciableObject for EtypeInfo2EntryAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
 }
 
 

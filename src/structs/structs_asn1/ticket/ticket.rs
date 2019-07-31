@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use crate::error::*;
 use super::super::realm::*;
 use super::super::principalname::*;
@@ -50,16 +49,16 @@ impl Ticket {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 #[seq(application_tag = 1)]
 pub struct TicketAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     tkt_vno: SeqField<Integer>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     realm: SeqField<RealmAsn1>,
-    #[seq_comp(context_tag = 2)]
+    #[seq_field(context_tag = 2)]
     sname: SeqField<PrincipalNameAsn1>,
-    #[seq_comp(context_tag = 3)]
+    #[seq_field(context_tag = 3)]
     enc_part: SeqField<EncryptedDataAsn1>
     
 }
@@ -116,13 +115,6 @@ impl TicketAsn1 {
 
     }
 
-}
-
-impl Asn1InstanciableObject for TicketAsn1 {
-
-    fn new_default() -> TicketAsn1 {
-        return TicketAsn1::new_empty();
-    }
 }
 
 #[cfg(test)]

@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::int32::*;
 use super::uint32::*;
 use crate::error::*;
@@ -40,13 +39,13 @@ impl EncryptedData {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct EncryptedDataAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     etype: SeqField<Int32Asn1>,
-    #[seq_comp(context_tag = 1, optional)]
+    #[seq_field(context_tag = 1, optional)]
     kvno: SeqField<UInt32Asn1>,
-    #[seq_comp(context_tag = 2)]
+    #[seq_field(context_tag = 2)]
     cipher: SeqField<OctetString>
 }
 
@@ -93,12 +92,6 @@ impl EncryptedDataAsn1 {
         return Ok(enc_data);
     }
 
-}
-
-impl Asn1InstanciableObject for EncryptedDataAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
 }
 
 #[cfg(test)]

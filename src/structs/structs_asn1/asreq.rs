@@ -1,7 +1,6 @@
 use std::result::Result;
 use chrono::{Utc, DateTime, Duration};
 use red_asn1::*;
-use red_asn1_derive::*;
 use crate::error::*;
 use super::padata::*;
 use super::kdcreqbody::*;
@@ -114,16 +113,16 @@ impl AsReq {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence)]
 #[seq(application_tag = 10)]
 pub struct AsReqAsn1 {
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     pvno: SeqField<Integer>,
-    #[seq_comp(context_tag = 2)]
+    #[seq_field(context_tag = 2)]
     msg_type: SeqField<Integer>,
-    #[seq_comp(context_tag = 3, optional)]
+    #[seq_field(context_tag = 3, optional)]
     padata: SeqField<SeqOfPaDataAsn1>,
-    #[seq_comp(context_tag = 4)]
+    #[seq_field(context_tag = 4)]
     req_body: SeqField<KdcReqBodyAsn1>
 }
 

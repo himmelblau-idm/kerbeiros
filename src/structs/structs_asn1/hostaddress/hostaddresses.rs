@@ -41,6 +41,7 @@ impl DerefMut for HostAddresses {
     }
 }
 
+#[derive(Default)]
 pub struct HostAddressesAsn1 {
     subtype: SequenceOf<HostAddressAsn1>
 }
@@ -97,15 +98,6 @@ impl Asn1Object for HostAddressesAsn1 {
     }
 
 }
-
-impl Asn1InstanciableObject for HostAddressesAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
-}
-
-
-
 
 
 #[cfg(test)]

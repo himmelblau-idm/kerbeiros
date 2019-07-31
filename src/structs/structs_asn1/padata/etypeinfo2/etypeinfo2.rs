@@ -99,12 +99,6 @@ impl Asn1Object for EtypeInfo2Asn1 {
     }
 }
 
-impl Asn1InstanciableObject for EtypeInfo2Asn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
-}
-
 
 
 #[cfg(test)]

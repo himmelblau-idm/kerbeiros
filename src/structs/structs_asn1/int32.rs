@@ -3,7 +3,7 @@ use crate::error::*;
 
 pub type Int32 = i32;
 
-
+#[derive(Default)]
 pub struct Int32Asn1 {
     subtype: Integer
 }
@@ -17,7 +17,7 @@ impl Int32Asn1 {
 
     fn new_empty() -> Int32Asn1 {
         return Int32Asn1{
-            subtype: Integer::new_default(),
+            subtype: Integer::default(),
         }
     }
 
@@ -67,13 +67,6 @@ impl Asn1Object for Int32Asn1 {
         self.subtype.unset_value();
     }
 
-}
-
-impl Asn1InstanciableObject for Int32Asn1 {
-    
-    fn new_default() -> Int32Asn1 {
-        return Int32Asn1::new_empty();
-    }
 }
 
 

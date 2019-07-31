@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 
 use super::principalname::*;
 use super::realm::*;
@@ -93,22 +92,22 @@ impl KdcRep {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence)]
 #[seq(application_tag = 11)]
 struct AsRepAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     pvno: SeqField<Integer>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     msg_type: SeqField<Integer>,
-    #[seq_comp(context_tag = 2, optional)]
+    #[seq_field(context_tag = 2, optional)]
     padata: SeqField<SeqOfPaDataAsn1>,
-    #[seq_comp(context_tag = 3)]
+    #[seq_field(context_tag = 3)]
     crealm: SeqField<RealmAsn1>,
-    #[seq_comp(context_tag = 4)]
+    #[seq_field(context_tag = 4)]
     cname: SeqField<PrincipalNameAsn1>,
-    #[seq_comp(context_tag = 5)]
+    #[seq_field(context_tag = 5)]
     ticket: SeqField<TicketAsn1>,
-    #[seq_comp(context_tag = 6)]
+    #[seq_field(context_tag = 6)]
     enc_part: SeqField<EncryptedDataAsn1>,
 }
 

@@ -4,6 +4,7 @@ use crate::error::*;
 
 pub type KerberosString = AsciiString;
 
+#[derive(Default)]
 pub struct KerberosStringAsn1 {
     subtype: IA5String
 }
@@ -33,7 +34,7 @@ impl KerberosStringAsn1 {
 impl Asn1Object for KerberosStringAsn1 {
     
     fn tag(&self) -> Tag {
-        return GeneralString::new_default().tag();
+        return GeneralString::default().tag();
     }
 
     fn encode_value(&self) -> red_asn1::Result<Vec<u8>> {
@@ -46,13 +47,6 @@ impl Asn1Object for KerberosStringAsn1 {
 
     fn unset_value(&mut self) {
         return self.subtype.unset_value();
-    }
-}
-
-impl Asn1InstanciableObject for KerberosStringAsn1 {
-
-    fn new_default() -> KerberosStringAsn1 {
-        return KerberosStringAsn1::new_empty();
     }
 }
 
@@ -85,7 +79,7 @@ mod tests {
 
     #[test]
     fn test_decode_kerberos_string() {
-        let mut kerberos_string_asn1 = KerberosStringAsn1::new_default();
+        let mut kerberos_string_asn1 = KerberosStringAsn1::default();
 
         kerberos_string_asn1.decode(&[0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 
                         0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53]).unwrap();

@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use crate::error::*;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -29,9 +28,9 @@ impl PacRequest {
 }
 
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence)]
 pub struct PacRequestAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     include_pac: SeqField<Boolean>
 }
 

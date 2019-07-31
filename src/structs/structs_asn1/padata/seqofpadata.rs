@@ -46,7 +46,7 @@ impl SeqOfPaData {
 
 }
 
-
+#[derive(Default)]
 pub struct SeqOfPaDataAsn1 {
     subtype: SequenceOf<PaDataAsn1>
 }
@@ -100,13 +100,6 @@ impl Asn1Object for SeqOfPaDataAsn1 {
         return self.subtype.unset_value();
     }
 }
-
-impl Asn1InstanciableObject for SeqOfPaDataAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
-}
-
 
 
 #[cfg(test)]

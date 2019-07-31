@@ -28,6 +28,7 @@ impl DerefMut for LastReq {
     }
 }
 
+#[derive(Default)]
 pub struct LastReqAsn1 {
     subtype: SequenceOf<LastReqEntryAsn1>
 }
@@ -67,12 +68,6 @@ impl Asn1Object for LastReqAsn1 {
 
     fn unset_value(&mut self) {
         return self.subtype.unset_value();
-    }
-}
-
-impl Asn1InstanciableObject for LastReqAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
     }
 }
 

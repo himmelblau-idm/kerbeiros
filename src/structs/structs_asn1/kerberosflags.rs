@@ -42,7 +42,7 @@ impl KerberosFlags {
 
 }
 
-
+#[derive(Default)]
 pub struct KerberosFlagsAsn1 {
     subtype: BitSring
 }
@@ -108,12 +108,6 @@ impl Asn1Object for KerberosFlagsAsn1 {
         return self.subtype.unset_value();
     }
 
-}
-
-impl Asn1InstanciableObject for KerberosFlagsAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
 }
 
 

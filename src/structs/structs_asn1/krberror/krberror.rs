@@ -8,7 +8,6 @@ use super::edata::Edata;
 use crate::constants::errorcodes::*;
 use super::super::padata::*;
 use red_asn1::*;
-use red_asn1_derive::*;
 use chrono::Utc;
 
 
@@ -62,34 +61,34 @@ impl KrbError {
     }
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 #[seq(application_tag = 30)]
 struct KrbErrorAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     pvno: SeqField<Integer>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     msg_type: SeqField<Integer>,
-    #[seq_comp(context_tag = 2, optional)]
+    #[seq_field(context_tag = 2, optional)]
     ctime: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 3, optional)]
+    #[seq_field(context_tag = 3, optional)]
     cusec: SeqField<MicrosecondsAsn1>,
-    #[seq_comp(context_tag = 4)]
+    #[seq_field(context_tag = 4)]
     stime: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 5)]
+    #[seq_field(context_tag = 5)]
     susec: SeqField<MicrosecondsAsn1>,
-    #[seq_comp(context_tag = 6)]
+    #[seq_field(context_tag = 6)]
     error_code: SeqField<Int32Asn1>,
-    #[seq_comp(context_tag = 7, optional)]
+    #[seq_field(context_tag = 7, optional)]
     crealm: SeqField<RealmAsn1>,
-    #[seq_comp(context_tag = 8, optional)]
+    #[seq_field(context_tag = 8, optional)]
     cname: SeqField<PrincipalNameAsn1>,
-    #[seq_comp(context_tag = 9)]
+    #[seq_field(context_tag = 9)]
     realm: SeqField<RealmAsn1>,
-    #[seq_comp(context_tag = 10)]
+    #[seq_field(context_tag = 10)]
     sname: SeqField<PrincipalNameAsn1>,
-    #[seq_comp(context_tag = 11, optional)]
+    #[seq_field(context_tag = 11, optional)]
     e_text: SeqField<KerberosStringAsn1>,
-    #[seq_comp(context_tag = 12, optional)]
+    #[seq_field(context_tag = 12, optional)]
     e_data: SeqField<OctetString>
 }
 

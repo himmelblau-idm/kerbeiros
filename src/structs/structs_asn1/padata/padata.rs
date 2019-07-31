@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::pacrequest::PacRequest;
 use super::etypeinfo2::*;
 use super::super::int32::*;
@@ -42,11 +41,11 @@ impl PaData {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct PaDataAsn1 {
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     padata_type: SeqField<Int32Asn1>,
-    #[seq_comp(context_tag = 2)]
+    #[seq_field(context_tag = 2)]
     padata_value: SeqField<OctetString>
 }
 
@@ -113,13 +112,6 @@ impl PaDataAsn1 {
         return Ok(padata);
     }
 
-}
-
-impl Asn1InstanciableObject for PaDataAsn1 {
-
-    fn new_default() -> PaDataAsn1 {
-        return PaDataAsn1::new_empty();
-    }
 }
 
 

@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 pub use super::int32::*;
 pub use red_asn1::OctetString;
 use crate::error::*;
@@ -34,11 +33,11 @@ impl EncryptionKey {
 }
 
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct EncryptionKeyAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     keytype: SeqField<Int32Asn1>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     keyvalue: SeqField<OctetString>
 }
 
@@ -78,12 +77,6 @@ impl EncryptionKeyAsn1 {
         return Ok(encryption_key);
     }
 
-}
-
-impl Asn1InstanciableObject for EncryptionKeyAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
 }
 
 

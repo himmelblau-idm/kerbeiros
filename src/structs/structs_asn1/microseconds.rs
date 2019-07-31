@@ -35,7 +35,7 @@ impl Microseconds {
     }
 }
 
-
+#[derive(Default)]
 pub struct MicrosecondsAsn1 {
     subtype: Integer
 }
@@ -100,12 +100,6 @@ impl Asn1Object for MicrosecondsAsn1 {
     }
 }
 
-
-impl Asn1InstanciableObject for MicrosecondsAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
-}
 
 #[cfg(test)]
 mod test {

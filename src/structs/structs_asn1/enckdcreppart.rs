@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::encryptionkey::*;
 use super::uint32::*;
 use super::lastreq::*;
@@ -147,34 +146,34 @@ impl EncKdcRepPart {
     }
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence)]
 #[seq(application_tag = 25)]
 struct EncAsRepPartAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     key: SeqField<EncryptionKeyAsn1>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     last_req: SeqField<LastReqAsn1>,
-    #[seq_comp(context_tag = 2)]
+    #[seq_field(context_tag = 2)]
     nonce: SeqField<UInt32Asn1>,
-    #[seq_comp(context_tag = 3, optional)]
+    #[seq_field(context_tag = 3, optional)]
     key_expiration: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 4)]
+    #[seq_field(context_tag = 4)]
     flags: SeqField<TicketFlagsAsn1>,
-    #[seq_comp(context_tag = 5)]
+    #[seq_field(context_tag = 5)]
     authtime: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 6, optional)]
+    #[seq_field(context_tag = 6, optional)]
     starttime: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 7)]
+    #[seq_field(context_tag = 7)]
     endtime: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 8, optional)]
+    #[seq_field(context_tag = 8, optional)]
     renew_till: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 9)]
+    #[seq_field(context_tag = 9)]
     srealm: SeqField<RealmAsn1>,
-    #[seq_comp(context_tag = 10)]
+    #[seq_field(context_tag = 10)]
     sname: SeqField<PrincipalNameAsn1>,
-    #[seq_comp(context_tag = 11, optional)]
+    #[seq_field(context_tag = 11, optional)]
     caddr: SeqField<HostAddressesAsn1>,
-    #[seq_comp(context_tag = 12, optional)]
+    #[seq_field(context_tag = 12, optional)]
     encrypted_pa_data: SeqField<MethodDataAsn1>
 }
 

@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::ticket::*;
 use super::encrypteddata::*;
 
@@ -32,16 +31,16 @@ impl KrbCred {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence)]
 #[seq(application_tag = 22)]
 struct KrbCredAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     pvno: SeqField<Integer>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     msg_type: SeqField<Integer>,
-    #[seq_comp(context_tag = 2)]
+    #[seq_field(context_tag = 2)]
     tickets: SeqField<SeqOfTicketsAsn1>,
-    #[seq_comp(context_tag = 3)]
+    #[seq_field(context_tag = 3)]
     enc_part: SeqField<EncryptedDataAsn1>,
 }
 

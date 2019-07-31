@@ -5,6 +5,7 @@ use crate::error::*;
 
 pub type KerberosTime = DateTime<Utc>;
 
+#[derive(Default)]
 pub struct KerberosTimeAsn1 {
     subtype: GeneralizedTime
 }
@@ -57,11 +58,6 @@ impl Asn1Object for KerberosTimeAsn1 {
     }
 }
 
-impl Asn1InstanciableObject for KerberosTimeAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
-}
 
 #[cfg(test)]
 mod tests {

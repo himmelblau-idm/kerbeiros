@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::uint32::{UInt32, UInt32Asn1};
 use super::kerberosstring::*;
 use super::realm::{Realm, RealmAsn1};
@@ -110,31 +109,31 @@ impl KdcReqBody {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct KdcReqBodyAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     kdc_options: SeqField<KdcOptionsAsn1>,
-    #[seq_comp(context_tag = 1, optional)]
+    #[seq_field(context_tag = 1, optional)]
     cname: SeqField<PrincipalNameAsn1>,
-    #[seq_comp(context_tag = 2)]
+    #[seq_field(context_tag = 2)]
     realm: SeqField<RealmAsn1>,
-    #[seq_comp(context_tag = 3, optional)]
+    #[seq_field(context_tag = 3, optional)]
     sname: SeqField<PrincipalNameAsn1>,
-    #[seq_comp(context_tag = 4, optional)]
+    #[seq_field(context_tag = 4, optional)]
     from: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 5)]
+    #[seq_field(context_tag = 5)]
     till: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 6, optional)]
+    #[seq_field(context_tag = 6, optional)]
     rtime: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 7)]
+    #[seq_field(context_tag = 7)]
     nonce: SeqField<UInt32Asn1>,
-    #[seq_comp(context_tag = 8)]
+    #[seq_field(context_tag = 8)]
     etype: SeqField<SeqOfEtypeAsn1>,
-    #[seq_comp(context_tag = 9, optional)]
+    #[seq_field(context_tag = 9, optional)]
     addresses: SeqField<HostAddressesAsn1>,
-    #[seq_comp(context_tag = 10, optional)]
+    #[seq_field(context_tag = 10, optional)]
     enc_authorization_data: SeqField<EncryptedDataAsn1>,
-    #[seq_comp(context_tag = 11, optional)]
+    #[seq_field(context_tag = 11, optional)]
     additional_tickets: SeqField<SeqOfTicketsAsn1>
 }
 
@@ -201,12 +200,6 @@ impl KdcReqBodyAsn1 {
         }
     }
 
-}
-
-impl Asn1InstanciableObject for KdcReqBodyAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
 }
 
 

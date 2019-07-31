@@ -41,7 +41,7 @@ impl SeqOfKrbCredInfo {
 
 }
 
-
+#[derive(Default)]
 pub struct SeqOfKrbCredInfoAsn1 {
     subtype: SequenceOf<KrbCredInfoAsn1>
 }
@@ -92,12 +92,6 @@ impl Asn1Object for SeqOfKrbCredInfoAsn1 {
 
     fn unset_value(&mut self) {
         return self.subtype.unset_value();
-    }
-}
-
-impl Asn1InstanciableObject for SeqOfKrbCredInfoAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
     }
 }
 

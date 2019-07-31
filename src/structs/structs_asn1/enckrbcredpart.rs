@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::uint32::*;
 use super::kerberostime::*;
 use super::krbcredinfo::*;
@@ -62,20 +61,20 @@ impl EncKrbCredPart {
 }
 
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence)]
 #[seq(application_tag = 29)]
 pub struct EncKrbCredPartAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     ticket_info: SeqField<SeqOfKrbCredInfoAsn1>,
-    #[seq_comp(context_tag = 1, optional)]
+    #[seq_field(context_tag = 1, optional)]
     nonce: SeqField<UInt32Asn1>,
-    #[seq_comp(context_tag = 2, optional)]
+    #[seq_field(context_tag = 2, optional)]
     timestamp: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 3, optional)]
+    #[seq_field(context_tag = 3, optional)]
     usec: SeqField<MicrosecondsAsn1>,
-    #[seq_comp(context_tag = 4, optional)]
+    #[seq_field(context_tag = 4, optional)]
     s_address: SeqField<HostAddressAsn1>,
-    #[seq_comp(context_tag = 5, optional)]
+    #[seq_field(context_tag = 5, optional)]
     r_address: SeqField<HostAddressAsn1>,
     
 }

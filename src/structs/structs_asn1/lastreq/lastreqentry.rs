@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 pub use super::super::int32::*;
 pub use super::super::kerberostime::*;
 use crate::error::*;
@@ -22,11 +21,11 @@ impl LastReqEntry {
 }
 
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct LastReqEntryAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     lr_type: SeqField<Int32Asn1>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     lr_value: SeqField<KerberosTimeAsn1>,
 }
 
@@ -53,14 +52,6 @@ impl LastReqEntryAsn1 {
         );
 
         return Ok(last_req_entry);
-    }
-
-}
-
-impl Asn1InstanciableObject for LastReqEntryAsn1 {
-
-    fn new_default() -> Self {
-        return Self::new_empty();
     }
 
 }

@@ -1,6 +1,5 @@
 use super::kerberosstring::*;
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::int32::{Int32,Int32Asn1};
 use crate::error::*;
 
@@ -58,11 +57,11 @@ impl PrincipalName {
 }
 
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct PrincipalNameAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     name_type: SeqField<Int32Asn1>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     name_string: SeqField<SequenceOf<KerberosStringAsn1>>
 }
 
@@ -123,11 +122,6 @@ impl PrincipalNameAsn1 {
 
 }
 
-impl Asn1InstanciableObject for PrincipalNameAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
-}
 
 #[cfg(test)]
 mod tests {

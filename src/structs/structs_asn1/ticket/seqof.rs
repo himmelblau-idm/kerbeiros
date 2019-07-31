@@ -39,7 +39,7 @@ impl SeqOfTickets {
 
 }
 
-
+#[derive(Default)]
 pub struct SeqOfTicketsAsn1 {
     subtype: SequenceOf<TicketAsn1>
 }
@@ -85,9 +85,3 @@ impl Asn1Object for SeqOfTicketsAsn1 {
     }
 }
 
-
-impl Asn1InstanciableObject for SeqOfTicketsAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
-}

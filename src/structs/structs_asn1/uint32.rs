@@ -4,7 +4,7 @@ use crate::error::*;
 pub type UInt32 = u32;
 
 
-
+#[derive(Default)]
 pub struct UInt32Asn1 {
     subtype: Integer
 }
@@ -48,14 +48,6 @@ impl Asn1Object for UInt32Asn1 {
         return self.subtype.unset_value();
     }
 }
-
-
-impl Asn1InstanciableObject for UInt32Asn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
-}
-
 
 
 #[cfg(test)]

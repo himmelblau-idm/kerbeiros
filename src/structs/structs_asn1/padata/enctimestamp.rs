@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 use super::super::kerberostime::*;
 use super::super::microseconds::*;
 use crate::error::*;
@@ -40,11 +39,11 @@ impl PaEncTsEnc {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence)]
 pub struct PaEncTsEncAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     patimestamp: SeqField<KerberosTimeAsn1>,
-    #[seq_comp(context_tag = 1, optional)]
+    #[seq_field(context_tag = 1, optional)]
     pausec: SeqField<MicrosecondsAsn1>
 }
 

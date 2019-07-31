@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 pub use super::super::encryptionkey::*;
 pub use super::super::kerberostime::*;
 pub use super::super::realm::*;
@@ -88,39 +87,39 @@ impl KrbCredInfo {
 }
 
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct KrbCredInfoAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     key: SeqField<EncryptionKeyAsn1>,
     
-    #[seq_comp(context_tag = 1, optional)]
+    #[seq_field(context_tag = 1, optional)]
     prealm: SeqField<RealmAsn1>,
     
-    #[seq_comp(context_tag = 2, optional)]
+    #[seq_field(context_tag = 2, optional)]
     pname: SeqField<PrincipalNameAsn1>,
     
-    #[seq_comp(context_tag = 3, optional)]
+    #[seq_field(context_tag = 3, optional)]
     flags: SeqField<TicketFlagsAsn1>,
     
-    #[seq_comp(context_tag = 4, optional)]
+    #[seq_field(context_tag = 4, optional)]
     authtime: SeqField<KerberosTimeAsn1>,
     
-    #[seq_comp(context_tag = 5, optional)]
+    #[seq_field(context_tag = 5, optional)]
     starttime: SeqField<KerberosTimeAsn1>,
 
-    #[seq_comp(context_tag = 6, optional)]
+    #[seq_field(context_tag = 6, optional)]
     endtime: SeqField<KerberosTimeAsn1>,
 
-    #[seq_comp(context_tag = 7, optional)]
+    #[seq_field(context_tag = 7, optional)]
     renew_till: SeqField<KerberosTimeAsn1>,
 
-    #[seq_comp(context_tag = 8, optional)]
+    #[seq_field(context_tag = 8, optional)]
     srealm: SeqField<RealmAsn1>,
 
-    #[seq_comp(context_tag = 9, optional)]
+    #[seq_field(context_tag = 9, optional)]
     sname: SeqField<PrincipalNameAsn1>,
 
-    #[seq_comp(context_tag = 10, optional)]
+    #[seq_field(context_tag = 10, optional)]
     caddr: SeqField<HostAddressesAsn1>,    
 }
 
@@ -241,12 +240,6 @@ impl KrbCredInfoAsn1 {
 
     }
 
-}
-
-impl Asn1InstanciableObject for KrbCredInfoAsn1 {
-    fn new_default() -> Self {
-        return Self::new_empty();
-    }
 }
 
 #[cfg(test)]

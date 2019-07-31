@@ -1,5 +1,4 @@
 use red_asn1::*;
-use red_asn1_derive::*;
 pub use super::super::int32::{Int32, Int32Asn1};
 use crate::error::*;
 use crate::constants::hostaddress::*;
@@ -63,11 +62,11 @@ impl HostAddress {
 
 }
 
-#[derive(Asn1Sequence)]
+#[derive(Sequence, Default)]
 pub struct HostAddressAsn1 {
-    #[seq_comp(context_tag = 0)]
+    #[seq_field(context_tag = 0)]
     addr_type: SeqField<Int32Asn1>,
-    #[seq_comp(context_tag = 1)]
+    #[seq_field(context_tag = 1)]
     address: SeqField<OctetString>
 }
 
@@ -114,13 +113,6 @@ impl HostAddressAsn1 {
         return Ok(host_address);
     }
 
-}
-
-impl Asn1InstanciableObject for HostAddressAsn1 {
-
-    fn new_default() -> HostAddressAsn1 {
-        return HostAddressAsn1::new_empty();
-    }
 }
 
 
