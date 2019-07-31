@@ -63,7 +63,7 @@ mod test {
             0x33, 0x31, 0x5a
         ];
 
-        let mut last_req_entry_asn1 = LastReqEntryAsn1::new_empty();
+        let mut last_req_entry_asn1 = LastReqEntryAsn1::default();
         last_req_entry_asn1.decode(&raw).unwrap();
 
 

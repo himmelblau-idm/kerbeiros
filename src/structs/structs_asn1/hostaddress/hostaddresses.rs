@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn test_decode_netbios_host_addresses() {
-        let mut host_addresses_asn1 = HostAddressesAsn1::new_empty();
+        let mut host_addresses_asn1 = HostAddressesAsn1::default();
 
         host_addresses_asn1.decode(&[
             0x30, 0x1b, 

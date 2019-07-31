@@ -64,7 +64,7 @@ mod test {
 
     #[test]
     fn test_decode_uint32() {
-        let mut uint32 = UInt32Asn1::new_empty();
+        let mut uint32 = UInt32Asn1::default();
 
         uint32.decode(&[0x02, 0x04, 0x06, 0x08, 0x95, 0xb6]).unwrap();
         assert_eq!(101225910, uint32.no_asn1_type().unwrap());

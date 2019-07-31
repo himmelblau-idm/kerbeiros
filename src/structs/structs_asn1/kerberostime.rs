@@ -63,7 +63,7 @@ mod tests {
 
     #[test]
     fn test_decode_kerberos_time() {
-        let mut kerberos_time_asn1 = KerberosTimeAsn1::new_empty();
+        let mut kerberos_time_asn1 = KerberosTimeAsn1::default();
 
         kerberos_time_asn1.decode(
             &[0x18 ,0x0f ,0x32 ,0x30 ,0x33 ,0x37 ,0x30 ,0x39 ,0x31 ,0x33 ,0x30 ,0x32 ,0x34 ,0x38 ,0x30 ,0x35 ,0x5a]

@@ -15,12 +15,6 @@ impl Int32Asn1 {
         };
     }
 
-    fn new_empty() -> Int32Asn1 {
-        return Int32Asn1{
-            subtype: Integer::default(),
-        }
-    }
-
     pub fn no_asn1_type(&self) -> KerberosResult<Int32> {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("Int32".to_string())
@@ -87,7 +81,7 @@ mod test {
 
     #[test]
     fn test_decode_int32() {
-        let mut int32_asn1 = Int32Asn1::new_empty();
+        let mut int32_asn1 = Int32Asn1::default();
 
         int32_asn1.decode(&[0x02, 0x02, 0xff, 0x79]).unwrap();
 
@@ -100,20 +94,20 @@ mod test {
     #[should_panic (expected = "Invalid value")]
     #[test]
     fn test_decode_higher_value_than_int32() {
-        let mut int32_asn1 = Int32Asn1::new_empty();
+        let mut int32_asn1 = Int32Asn1::default();
         int32_asn1.decode(&[0x02, 0x05, 0x01, 0x00, 0x00, 0x00, 0x00]).unwrap();
     }
 
     #[should_panic (expected = "Invalid value")]
     #[test]
     fn test_decode_lower_value_than_int32() {
-        let mut int32_asn1 = Int32Asn1::new_empty();
+        let mut int32_asn1 = Int32Asn1::default();
         int32_asn1.decode(&[0x02, 0x05, 0xf1, 0x00, 0x00, 0x00, 0x00]).unwrap();
     }
 
     #[test]
     fn test_decode_not_change_value_after_decode_failure() {
-        let mut int32_asn1 = Int32Asn1::new_empty();
+        let mut int32_asn1 = Int32Asn1::default();
         int32_asn1.decode(&[0x02, 0x05, 0x01, 0x00, 0x00, 0x00, 0x00]).err();
         assert_eq!(None, int32_asn1.subtype.value());
 

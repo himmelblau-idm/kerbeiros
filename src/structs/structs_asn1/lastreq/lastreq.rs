@@ -35,12 +35,6 @@ pub struct LastReqAsn1 {
 
 impl LastReqAsn1 {
 
-    fn new_empty() -> Self {
-        return Self{
-            subtype: SequenceOf::new()
-        };
-    }
-
     pub fn no_asn1_type(&self) -> KerberosResult<LastReq> {
         let mut last_req = LastReq::new_empty();
         for last_req_asn1 in self.subtype.iter() {
@@ -85,7 +79,7 @@ mod test {
             0x33, 0x31, 0x5a
         ];
 
-        let mut last_req_asn1 = LastReqAsn1::new_empty();
+        let mut last_req_asn1 = LastReqAsn1::default();
         last_req_asn1.decode(&raw).unwrap();
 
         let mut last_req = LastReq::new_empty();

@@ -138,7 +138,7 @@ mod test {
 
     #[test]
     fn test_decode_microseconds() {
-        let mut mic_asn1 = MicrosecondsAsn1::new_empty();
+        let mut mic_asn1 = MicrosecondsAsn1::default();
         mic_asn1.decode(&[0x02, 0x03, 0x05, 0x34, 0x2f]).unwrap();
 
         assert_eq!(341039, mic_asn1.no_asn1_type().unwrap().value);
@@ -147,21 +147,21 @@ mod test {
     #[should_panic (expected = "Invalid value")]
     #[test]
     fn test_decode_high_value_of_microseconds() {
-        let mut mic_asn1 = MicrosecondsAsn1::new_empty();
+        let mut mic_asn1 = MicrosecondsAsn1::default();
         mic_asn1.decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f]).unwrap();
     }
 
     #[should_panic (expected = "Invalid value")]
     #[test]
     fn test_decode_low_value_of_microseconds() {
-        let mut mic_asn1 = MicrosecondsAsn1::new_empty();
+        let mut mic_asn1 = MicrosecondsAsn1::default();
         mic_asn1.decode(&[0x02, 0x04, 0xff, 0x05, 0x34, 0x2f]).unwrap();
     }
 
 
     #[test]
     fn test_decode_not_change_value_after_decode_failure() {
-        let mut mic_asn1 = MicrosecondsAsn1::new_empty();
+        let mut mic_asn1 = MicrosecondsAsn1::default();
         mic_asn1.decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f]).err();
         assert_eq!(None, mic_asn1.subtype.value());
 

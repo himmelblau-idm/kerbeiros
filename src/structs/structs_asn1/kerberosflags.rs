@@ -126,28 +126,28 @@ mod tests {
 
     #[test]
     fn test_decode_kerberos_flags() {
-        let mut kdc_flags = KerberosFlagsAsn1::new_empty();
+        let mut kdc_flags = KerberosFlagsAsn1::default();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x40,0x0,0x0,0x0]).unwrap();
         assert_eq!(
             KerberosFlags::new(0x40000000), 
             kdc_flags.no_asn1_type().unwrap()
         );
 
-        let mut kdc_flags = KerberosFlagsAsn1::new_empty();
+        let mut kdc_flags = KerberosFlagsAsn1::default();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0,0x0,0x0,0x1]).unwrap();
         assert_eq!(
             KerberosFlags::new(0x01),
             kdc_flags.no_asn1_type().unwrap()
         ); 
 
-        let mut kdc_flags = KerberosFlagsAsn1::new_empty();
+        let mut kdc_flags = KerberosFlagsAsn1::default();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0, 0x80,0x0,0x2]).unwrap();
         assert_eq!(
             KerberosFlags::new(0x0000800002),
             kdc_flags.no_asn1_type().unwrap()
         );
 
-        let mut kdc_flags = KerberosFlagsAsn1::new_empty();
+        let mut kdc_flags = KerberosFlagsAsn1::default();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x28,0x14,0x48,0x12]).unwrap();
         assert_eq!(
             KerberosFlags::new(0x0028144812),
@@ -158,14 +158,14 @@ mod tests {
 
     #[test]
     fn test_decode_short_kerberos_flags() {
-        let mut kdc_flags = KerberosFlagsAsn1::new_empty();
+        let mut kdc_flags = KerberosFlagsAsn1::default();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x2, 0x0, 0x40]).unwrap();
         assert_eq!(
             KerberosFlags::new(0x40000000), 
             kdc_flags.no_asn1_type().unwrap()
         );
 
-        let mut kdc_flags = KerberosFlagsAsn1::new_empty();
+        let mut kdc_flags = KerberosFlagsAsn1::default();
         kdc_flags.decode(&[BIT_STRING_TAG_NUMBER, 0x3, 0x0, 0x28, 0x14]).unwrap();
         assert_eq!(
             KerberosFlags::new(0x28140000),
