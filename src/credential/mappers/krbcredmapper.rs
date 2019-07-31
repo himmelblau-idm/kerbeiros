@@ -129,7 +129,7 @@ mod test {
         let nonce = 0;
         let mut enc_as_rep_part = EncKdcRepPart::new(
             encryption_key,
-            LastReq::new_empty(),
+            LastReq::default(),
             nonce,
             ticket_flags,
             authtime,

@@ -321,7 +321,7 @@ mod test {
             0x41, 0x91, 0x72, 0x17, 0xff]
         );
 
-        let mut last_req = LastReq::new_empty();
+        let mut last_req = LastReq::default();
         last_req.push(LastReqEntry::new(
             0,
             Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)

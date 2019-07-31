@@ -3,16 +3,9 @@ use super::lastreqentry::*;
 use crate::error::*;
 use std::ops::{Deref, DerefMut};
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct LastReq {
     entries: Vec<LastReqEntry>
-}
-
-impl LastReq {
-
-    pub fn new_empty() -> Self {
-        return Self{ entries: Vec::new() };
-    }
 }
 
 impl Deref for LastReq {
@@ -36,7 +29,7 @@ pub struct LastReqAsn1 {
 impl LastReqAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<LastReq> {
-        let mut last_req = LastReq::new_empty();
+        let mut last_req = LastReq::default();
         for last_req_asn1 in self.subtype.iter() {
             last_req.push(last_req_asn1.no_asn1_type()?);
         }
@@ -70,6 +63,12 @@ mod test {
     use super::*;
 
     #[test]
+    fn create_default_last_req() {
+        let last_req = LastReq::default();
+        assert_eq!(Vec::<LastReqEntry>::new(), last_req.entries);
+    }
+
+    #[test]
     fn test_decode_last_req() {
         let raw: Vec<u8> = vec![
             0x30, 0x1a,
@@ -82,7 +81,7 @@ mod test {
         let mut last_req_asn1 = LastReqAsn1::default();
         last_req_asn1.decode(&raw).unwrap();
 
-        let mut last_req = LastReq::new_empty();
+        let mut last_req = LastReq::default();
 
         last_req.push(LastReqEntry::new(
             0,
