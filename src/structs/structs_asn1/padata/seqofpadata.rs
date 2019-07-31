@@ -38,7 +38,7 @@ impl SeqOfPaData {
 
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct SeqOfPaDataAsn1 {
     subtype: SequenceOf<PaDataAsn1>
 }

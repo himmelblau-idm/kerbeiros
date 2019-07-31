@@ -4,7 +4,7 @@ use crate::error::*;
 pub type UInt32 = u32;
 
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct UInt32Asn1 {
     subtype: Integer
 }

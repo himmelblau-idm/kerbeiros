@@ -57,7 +57,7 @@ impl PrincipalName {
 }
 
 
-#[derive(Sequence, Default)]
+#[derive(Sequence, Default, Debug, PartialEq)]
 pub struct PrincipalNameAsn1 {
     #[seq_field(context_tag = 0)]
     name_type: SeqField<Int32Asn1>,

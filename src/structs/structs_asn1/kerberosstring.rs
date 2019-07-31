@@ -4,7 +4,7 @@ use crate::error::*;
 
 pub type KerberosString = AsciiString;
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct KerberosStringAsn1 {
     subtype: IA5String
 }

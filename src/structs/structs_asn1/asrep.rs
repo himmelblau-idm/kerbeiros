@@ -85,14 +85,14 @@ impl KdcRep {
 
 
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
-        let mut as_rep_asn1 = AsRepAsn1::new_empty();
+        let mut as_rep_asn1 = AsRepAsn1::default();
         as_rep_asn1.decode(raw)?;
         return Ok(as_rep_asn1.no_asn1_type().unwrap());
     }
 
 }
 
-#[derive(Sequence)]
+#[derive(Sequence, Debug, PartialEq, Default)]
 #[seq(application_tag = 11)]
 struct AsRepAsn1 {
     #[seq_field(context_tag = 0)]
@@ -112,18 +112,6 @@ struct AsRepAsn1 {
 }
 
 impl AsRepAsn1 {
-
-    fn new_empty() -> Self {
-        return Self {
-            pvno: SeqField::new(),
-            msg_type: SeqField::new(),
-            padata: SeqField::new(),
-            crealm: SeqField::new(),
-            cname: SeqField::new(),
-            ticket: SeqField::new(),
-            enc_part: SeqField::new(),
-        };
-    }
 
     fn no_asn1_type(&self) -> KerberosResult<KdcRep> {
         let pvno = self.get_pvno().ok_or_else(|| 
@@ -177,6 +165,22 @@ impl AsRepAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+
+    #[test]
+    fn create_default_as_rep_asn1() {
+        let as_rep_asn1 = AsRepAsn1::default();
+        assert_eq!(
+            AsRepAsn1 {
+                pvno: SeqField::new(),
+                msg_type: SeqField::new(),
+                padata: SeqField::new(),
+                crealm: SeqField::new(),
+                cname: SeqField::new(),
+                ticket: SeqField::new(),
+                enc_part: SeqField::new(),
+            },
+            as_rep_asn1);
+    }
 
     #[test]
     fn decode_as_rep() {

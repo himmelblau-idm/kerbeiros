@@ -3,7 +3,7 @@ use crate::error::*;
 
 pub type Int32 = i32;
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct Int32Asn1 {
     subtype: Integer
 }
