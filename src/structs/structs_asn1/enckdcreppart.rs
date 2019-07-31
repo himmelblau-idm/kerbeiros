@@ -182,19 +182,19 @@ impl EncAsRepPartAsn1 {
 
     fn new_empty() -> Self {
         return Self {
-            key: SeqField::new(),
-            last_req: SeqField::new(),
-            nonce: SeqField::new(),
-            key_expiration: SeqField::new(),
-            flags: SeqField::new(),
-            authtime: SeqField::new(),
-            starttime: SeqField::new(),
-            endtime: SeqField::new(),
-            renew_till: SeqField::new(),
-            srealm: SeqField::new(),
-            sname: SeqField::new(),
-            caddr: SeqField::new(),
-            encrypted_pa_data: SeqField::new()
+            key: SeqField::default(),
+            last_req: SeqField::default(),
+            nonce: SeqField::default(),
+            key_expiration: SeqField::default(),
+            flags: SeqField::default(),
+            authtime: SeqField::default(),
+            starttime: SeqField::default(),
+            endtime: SeqField::default(),
+            renew_till: SeqField::default(),
+            srealm: SeqField::default(),
+            sname: SeqField::default(),
+            caddr: SeqField::default(),
+            encrypted_pa_data: SeqField::default()
         };
     }
 

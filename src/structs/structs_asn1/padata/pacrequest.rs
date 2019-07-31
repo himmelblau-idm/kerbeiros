@@ -46,7 +46,7 @@ impl PacRequestAsn1 {
 
     fn new_empty() -> Self {
         return Self{
-            include_pac: SeqField::new()
+            include_pac: SeqField::default()
         };
     }
 

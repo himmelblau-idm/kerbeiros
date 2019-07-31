@@ -159,10 +159,10 @@ mod test {
     fn create_default_as_req() {
         assert_eq!(
             AsReqAsn1 {
-                pvno: SeqField::new(),
-                msg_type: SeqField::new(),
-                padata: SeqField::new(),
-                req_body: SeqField::new()
+                pvno: SeqField::default(),
+                msg_type: SeqField::default(),
+                padata: SeqField::default(),
+                req_body: SeqField::default()
             },
             AsReqAsn1::default()
         );

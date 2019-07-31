@@ -63,8 +63,8 @@ impl PaEncTsEncAsn1 {
 
     fn new_empty() -> Self {
         return Self {
-            patimestamp: SeqField::new(),
-            pausec: SeqField::new()
+            patimestamp: SeqField::default(),
+            pausec: SeqField::default()
         }
     }
 

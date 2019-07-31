@@ -96,19 +96,19 @@ impl KrbErrorAsn1 {
 
     fn new_empty() -> Self {
         return Self{
-            pvno: SeqField::new(),
-            msg_type: SeqField::new(),
-            ctime: SeqField::new(),
-            cusec: SeqField::new(),
-            stime: SeqField::new(),
-            susec: SeqField::new(),
-            error_code: SeqField::new(),
-            crealm: SeqField::new(),
-            cname: SeqField::new(),
-            realm: SeqField::new(),
-            sname: SeqField::new(),
-            e_text: SeqField::new(),
-            e_data: SeqField::new(),
+            pvno: SeqField::default(),
+            msg_type: SeqField::default(),
+            ctime: SeqField::default(),
+            cusec: SeqField::default(),
+            stime: SeqField::default(),
+            susec: SeqField::default(),
+            error_code: SeqField::default(),
+            crealm: SeqField::default(),
+            cname: SeqField::default(),
+            realm: SeqField::default(),
+            sname: SeqField::default(),
+            e_text: SeqField::default(),
+            e_data: SeqField::default(),
         }
     }
 

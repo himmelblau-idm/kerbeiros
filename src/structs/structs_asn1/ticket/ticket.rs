@@ -78,10 +78,10 @@ impl TicketAsn1 {
 
     fn new_empty() -> TicketAsn1 {
         return TicketAsn1 {
-            tkt_vno: SeqField::new(),
-            realm: SeqField::new(),
-            sname: SeqField::new(),
-            enc_part: SeqField::new()
+            tkt_vno: SeqField::default(),
+            realm: SeqField::default(),
+            sname: SeqField::default(),
+            enc_part: SeqField::default()
         };
     }
 

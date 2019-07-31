@@ -76,8 +76,8 @@ impl PrincipalNameAsn1 {
 
     fn new_empty() -> PrincipalNameAsn1 {
         return PrincipalNameAsn1{
-            name_type: SeqField::new(),
-            name_string: SeqField::new()
+            name_type: SeqField::default(),
+            name_string: SeqField::default()
         };
     }
 

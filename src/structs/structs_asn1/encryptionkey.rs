@@ -53,8 +53,8 @@ impl EncryptionKeyAsn1 {
 
     fn new_empty() -> Self {
         return Self {
-            keytype: SeqField::new(),
-            keyvalue: SeqField::new()
+            keytype: SeqField::default(),
+            keyvalue: SeqField::default()
         }
     }
 

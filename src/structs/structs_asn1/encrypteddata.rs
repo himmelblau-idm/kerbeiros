@@ -66,9 +66,9 @@ impl EncryptedDataAsn1 {
 
     fn new_empty() -> EncryptedDataAsn1 {
         return EncryptedDataAsn1{
-            etype: SeqField::new(),
-            kvno: SeqField::new(),
-            cipher: SeqField::new()
+            etype: SeqField::default(),
+            kvno: SeqField::default(),
+            cipher: SeqField::default()
         };
     }
 

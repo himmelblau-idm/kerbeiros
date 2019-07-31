@@ -109,12 +109,12 @@ impl EncKrbCredPartAsn1 {
 
     fn new_empty() -> Self {
         return Self {
-            ticket_info: SeqField::new(),
-            nonce: SeqField::new(),
-            timestamp: SeqField::new(),
-            usec: SeqField::new(),
-            s_address: SeqField::new(),
-            r_address: SeqField::new()
+            ticket_info: SeqField::default(),
+            nonce: SeqField::default(),
+            timestamp: SeqField::default(),
+            usec: SeqField::default(),
+            s_address: SeqField::default(),
+            r_address: SeqField::default()
         };
     }
 

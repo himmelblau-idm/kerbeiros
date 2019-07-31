@@ -59,10 +59,10 @@ impl KrbCredAsn1 {
 
     fn new_empty() -> Self {
         return Self {
-            pvno: SeqField::new(),
-            msg_type: SeqField::new(),
-            tickets: SeqField::new(),
-            enc_part: SeqField::new()
+            pvno: SeqField::default(),
+            msg_type: SeqField::default(),
+            tickets: SeqField::default(),
+            enc_part: SeqField::default()
         };
     }
 

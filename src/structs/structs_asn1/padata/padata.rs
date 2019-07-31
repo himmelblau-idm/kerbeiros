@@ -59,8 +59,8 @@ impl PaDataAsn1 {
 
     fn new_empty() -> PaDataAsn1 {
         let pa_data_asn1 = PaDataAsn1 {
-            padata_type: SeqField::new(),
-            padata_value: SeqField::new(),
+            padata_type: SeqField::default(),
+            padata_value: SeqField::default(),
         };
         return pa_data_asn1;
     }

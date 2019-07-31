@@ -171,13 +171,13 @@ mod test {
         let as_rep_asn1 = AsRepAsn1::default();
         assert_eq!(
             AsRepAsn1 {
-                pvno: SeqField::new(),
-                msg_type: SeqField::new(),
-                padata: SeqField::new(),
-                crealm: SeqField::new(),
-                cname: SeqField::new(),
-                ticket: SeqField::new(),
-                enc_part: SeqField::new(),
+                pvno: SeqField::default(),
+                msg_type: SeqField::default(),
+                padata: SeqField::default(),
+                crealm: SeqField::default(),
+                cname: SeqField::default(),
+                ticket: SeqField::default(),
+                enc_part: SeqField::default(),
             },
             as_rep_asn1);
     }

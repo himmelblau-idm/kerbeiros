@@ -147,18 +147,18 @@ impl KdcReqBodyAsn1 {
 
     fn new_empty() -> Self {
         return Self{
-            kdc_options: SeqField::new(),
-            cname: SeqField::new(),
-            realm: SeqField::new(),
-            sname: SeqField::new(),
-            from: SeqField::new(),
-            till: SeqField::new(),
-            rtime: SeqField::new(),
-            nonce: SeqField::new(),
-            etype: SeqField::new(),
-            addresses: SeqField::new(),
-            enc_authorization_data: SeqField::new(),
-            additional_tickets: SeqField::new(),
+            kdc_options: SeqField::default(),
+            cname: SeqField::default(),
+            realm: SeqField::default(),
+            sname: SeqField::default(),
+            from: SeqField::default(),
+            till: SeqField::default(),
+            rtime: SeqField::default(),
+            nonce: SeqField::default(),
+            etype: SeqField::default(),
+            addresses: SeqField::default(),
+            enc_authorization_data: SeqField::default(),
+            additional_tickets: SeqField::default(),
         };
     }
 

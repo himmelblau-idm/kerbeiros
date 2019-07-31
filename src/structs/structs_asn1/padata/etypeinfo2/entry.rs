@@ -77,9 +77,9 @@ impl EtypeInfo2EntryAsn1 {
 
     fn new_empty() -> Self {
         return Self {
-            etype: SeqField::new(),
-            salt: SeqField::new(),
-            s2kparams: SeqField::new()
+            etype: SeqField::default(),
+            salt: SeqField::default(),
+            s2kparams: SeqField::default()
         };
     }
 

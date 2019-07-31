@@ -83,8 +83,8 @@ impl HostAddressAsn1 {
 
     fn new_empty() -> HostAddressAsn1 {
         return HostAddressAsn1{
-            addr_type: SeqField::new(),
-            address: SeqField::new()
+            addr_type: SeqField::default(),
+            address: SeqField::default()
         };
     }
 
