@@ -35,7 +35,7 @@ impl CredentialEntry {
             addrs: Vec::new(),
             authdata: Vec::new(),
             ticket,
-            second_ticket: CountedOctetString::new_empty()
+            second_ticket: CountedOctetString::default()
         };
     }
 

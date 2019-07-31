@@ -1,7 +1,7 @@
 use std::convert::From;
 use crate::structs::KerberosString;
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Default)]
 pub struct CountedOctetString {
     data: Vec<u8>
 }
@@ -14,13 +14,6 @@ impl CountedOctetString {
             data
         }
     }
-
-    pub fn new_empty() -> Self {
-        return Self{
-            data: Vec::new()
-        }
-    }
-
 
     pub fn to_bytes(&self) -> Vec<u8> {
         let data_len = self.data.len() as u32;
@@ -48,6 +41,12 @@ impl From<&str> for CountedOctetString {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn create_default_octet_string() {
+        let octet_string = CountedOctetString::default();
+        assert_eq!(Vec::<u8>::new(), octet_string.data);
+    }
 
     #[test]
     fn counted_octet_string_to_bytes() {
