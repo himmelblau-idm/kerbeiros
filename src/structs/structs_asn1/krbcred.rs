@@ -92,7 +92,7 @@ mod test {
             encrypted_data
         );
 
-        let mut seq_of_tickets = SeqOfTickets::new_empty();
+        let mut seq_of_tickets = SeqOfTickets::default();
         seq_of_tickets.push(ticket);
 
 

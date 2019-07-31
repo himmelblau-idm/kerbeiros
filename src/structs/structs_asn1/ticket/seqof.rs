@@ -2,7 +2,7 @@ use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::ticket::*;
 
-#[derive(Debug,PartialEq,Clone)]
+#[derive(Debug,PartialEq,Clone, Default)]
 pub struct SeqOfTickets {
     tickets: Vec<Ticket>
 }
@@ -23,14 +23,9 @@ impl DerefMut for SeqOfTickets {
 impl SeqOfTickets {
 
     pub fn _new(mut items: Vec<Ticket>) -> Self {
-        let mut seq_of = Self::new_empty();
+        let mut seq_of = Self::default();
         seq_of.append(&mut items);
         return seq_of;
-    }
-
-
-    pub fn new_empty() -> Self {
-        return Self{ tickets: Vec::new() };
     }
 
     pub fn asn1_type(&self) -> SeqOfTicketsAsn1 {
@@ -85,3 +80,15 @@ impl Asn1Object for SeqOfTicketsAsn1 {
     }
 }
 
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn create_default_seq_of_tickets() {
+        let seq_of_tickets = SeqOfTickets::default();
+        assert_eq!(Vec::<Ticket>::new(), seq_of_tickets.tickets);
+    }
+
+}
