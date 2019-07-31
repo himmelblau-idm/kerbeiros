@@ -31,13 +31,6 @@ pub struct LastReqEntryAsn1 {
 
 impl LastReqEntryAsn1 {
 
-    fn new_empty() -> Self {
-        return Self {
-            lr_type: SeqField::new(),
-            lr_value: SeqField::new()
-        }
-    }
-
     pub fn no_asn1_type(&self) -> KerberosResult<LastReqEntry> {
         let lr_type = self.get_lr_type().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("LastReqEntry::lr_type".to_string())

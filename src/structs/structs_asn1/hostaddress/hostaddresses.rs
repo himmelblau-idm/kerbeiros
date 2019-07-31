@@ -53,12 +53,6 @@ impl HostAddressesAsn1 {
         }
     }
 
-    fn new_empty() -> Self {
-        return Self{
-            subtype: SequenceOf::new()
-        };
-    }
-
     fn _seq_of_host_address(host_addresses: &HostAddresses) -> SequenceOf<HostAddressAsn1> {
         let mut seq_of_host_addresses: SequenceOf<HostAddressAsn1> = SequenceOf::new();
 

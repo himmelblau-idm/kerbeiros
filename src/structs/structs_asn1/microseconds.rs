@@ -48,12 +48,6 @@ impl MicrosecondsAsn1 {
         };
     }
 
-    fn new_empty() -> Self {
-        return Self{
-            subtype: Integer::new_empty()
-        };
-    }
-
     pub fn no_asn1_type(&self) -> KerberosResult<Microseconds> {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("Microseconds".to_string())

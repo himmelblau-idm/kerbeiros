@@ -56,12 +56,6 @@ impl KerberosFlagsAsn1 {
         };
     }
 
-    fn new_empty() -> Self {
-        return Self{
-            subtype: BitSring::new_empty()
-        };
-    }
-
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosFlags> {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KerberosFlags".to_string())

@@ -16,12 +16,6 @@ impl KerberosStringAsn1 {
         }
     }
 
-    fn new_empty() -> KerberosStringAsn1 {
-        return KerberosStringAsn1 {
-            subtype: IA5String::new_empty(),
-        }
-    }
-
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosString> {
         let ascii_string = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KerberosString".to_string())

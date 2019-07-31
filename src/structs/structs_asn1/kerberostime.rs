@@ -21,14 +21,6 @@ impl KerberosTimeAsn1 {
         }
     }
 
-    fn new_empty() -> Self {
-        let mut generalized_time = GeneralizedTime::new_empty();
-        generalized_time.set_format(TimeFormat::YYYYmmddHHMMSSZ);
-        return Self {
-            subtype: generalized_time
-        };
-    }
-
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosTime> {
         let time = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KerberosTime".to_string())
