@@ -5,7 +5,7 @@ use crate::error::*;
 
 pub type KerberosTime = DateTime<Utc>;
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct KerberosTimeAsn1 {
     subtype: GeneralizedTime
 }

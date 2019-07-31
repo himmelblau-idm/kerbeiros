@@ -41,7 +41,7 @@ impl DerefMut for HostAddresses {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct HostAddressesAsn1 {
     subtype: SequenceOf<HostAddressAsn1>
 }

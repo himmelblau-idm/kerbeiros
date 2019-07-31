@@ -109,7 +109,7 @@ impl KdcReqBody {
 
 }
 
-#[derive(Sequence, Default)]
+#[derive(Sequence, Default, Debug, PartialEq)]
 pub struct KdcReqBodyAsn1 {
     #[seq_field(context_tag = 0)]
     kdc_options: SeqField<KdcOptionsAsn1>,

@@ -34,7 +34,7 @@ impl SeqOfTickets {
 
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct SeqOfTicketsAsn1 {
     subtype: SequenceOf<TicketAsn1>
 }

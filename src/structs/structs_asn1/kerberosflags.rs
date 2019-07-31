@@ -36,7 +36,7 @@ impl KerberosFlags {
 
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct KerberosFlagsAsn1 {
     subtype: BitSring
 }

@@ -113,7 +113,7 @@ impl AsReq {
 
 }
 
-#[derive(Sequence)]
+#[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 10)]
 pub struct AsReqAsn1 {
     #[seq_field(context_tag = 1)]
@@ -130,19 +130,10 @@ pub struct AsReqAsn1 {
 impl AsReqAsn1 {
 
     fn new(as_req: &AsReq) -> Self {
-        let mut as_req_asn1 = Self::new_empty();
+        let mut as_req_asn1 = Self::default();
 
         as_req_asn1._set_asn1_values(as_req);
         return as_req_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self{
-            pvno: SeqField::new(),
-            msg_type: SeqField::new(),
-            padata: SeqField::new(),
-            req_body: SeqField::new()
-        };
     }
 
     fn _set_asn1_values(&mut self, as_req: &AsReq) {
@@ -163,6 +154,19 @@ impl AsReqAsn1 {
 mod test {
     use super::*;
     use chrono::*;
+
+    #[test]
+    fn create_default_as_req() {
+        assert_eq!(
+            AsReqAsn1 {
+                pvno: SeqField::new(),
+                msg_type: SeqField::new(),
+                padata: SeqField::new(),
+                req_body: SeqField::new()
+            },
+            AsReqAsn1::default()
+        );
+    }
 
     #[test]
     fn test_encode_as_req() {
