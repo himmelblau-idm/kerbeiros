@@ -247,7 +247,7 @@ mod test {
         krb_error.sname = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         krb_error.sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
         
-        let mut method_data = MethodData::new();
+        let mut method_data = MethodData::default();
 
         let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
         entry1._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());

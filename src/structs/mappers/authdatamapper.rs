@@ -59,7 +59,7 @@ mod test {
             )
         );
 
-        let mut method_data = MethodData::new_empty();
+        let mut method_data = MethodData::default();
         method_data.push(PaData::PacRequest(PacRequest::new(true)));
         method_data.push(PaData::Raw(9, vec![0x8, 0x9]));
 

@@ -50,7 +50,7 @@ impl AsReq {
                 padatas.push(padata);
             },
             None => {
-                let mut padatas = SeqOfPaData::new();
+                let mut padatas = SeqOfPaData::default();
                 padatas.push(padata);
                 self.padata = Some(padatas);
             }

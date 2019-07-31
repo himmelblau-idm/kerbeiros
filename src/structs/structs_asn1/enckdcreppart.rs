@@ -340,7 +340,7 @@ mod test {
         let mut sname =  PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
-        let mut encrypted_pa_datas = MethodData::new();
+        let mut encrypted_pa_datas = MethodData::default();
         encrypted_pa_datas.push(
             PaData::Raw(PA_SUPPORTED_ENCTYPES, vec![0x1f, 0x0, 0x0, 0x0])
         );

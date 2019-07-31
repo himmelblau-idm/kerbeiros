@@ -6,7 +6,7 @@ use crate::error::*;
 pub type MethodData = SeqOfPaData;
 pub type MethodDataAsn1 = SeqOfPaDataAsn1;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct SeqOfPaData {
     padatas: Vec<PaData>
 }
@@ -25,14 +25,6 @@ impl DerefMut for SeqOfPaData {
 }
 
 impl SeqOfPaData {
-
-    pub fn new() -> Self {
-        return Self::new_empty();
-    }
-
-    pub fn new_empty() -> Self {
-        return Self{ padatas: Vec::new() };
-    }
 
     pub fn asn1_type(&self) -> SeqOfPaDataAsn1 {
         return SeqOfPaDataAsn1::new(self);
@@ -73,7 +65,7 @@ impl SeqOfPaDataAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<SeqOfPaData> {
-        let mut seq_of_padata = SeqOfPaData::new_empty();
+        let mut seq_of_padata = SeqOfPaData::default();
         for padata_asn1 in self.subtype.iter() {
             seq_of_padata.push(padata_asn1.no_asn1_type()?);
         }
@@ -108,8 +100,14 @@ mod test {
     use super::super::pacrequest::PacRequest;
 
     #[test]
+    fn create_default_seq_of_padatas() {
+        let seq_of_padatas = SeqOfPaData::default();
+        assert_eq!(Vec::<PaData>::new(), seq_of_padatas.padatas);
+    }
+
+    #[test]
     fn test_encode_seq_of_padatas(){
-        let mut seq_of_padatas = SeqOfPaData::new();
+        let mut seq_of_padatas = SeqOfPaData::default();
         seq_of_padatas.push(PaData::PacRequest(PacRequest::new(true)));
 
         assert_eq!(vec![0x30, 0x13, 0x30, 0x11, 
@@ -121,7 +119,7 @@ mod test {
 
     #[test]
     fn test_encode_empty_seq_of_padatas(){
-        let seq_of_padatas = SeqOfPaData::new();
+        let seq_of_padatas = SeqOfPaData::default();
 
         assert_eq!(vec![0x30, 0x0],
                         seq_of_padatas.asn1_type().encode().unwrap()
@@ -137,7 +135,7 @@ mod test {
                         0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
                         0xa2, 0x09, 0x04, 0x07, 0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff]).unwrap();
 
-        let mut seq_of_padatas = SeqOfPaData::new();
+        let mut seq_of_padatas = SeqOfPaData::default();
         seq_of_padatas.push(PaData::PacRequest(PacRequest::new(true)));
 
         assert_eq!(seq_of_padatas, seq_of_padatas_asn1.no_asn1_type().unwrap());

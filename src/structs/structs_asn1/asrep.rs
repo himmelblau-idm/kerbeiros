@@ -234,7 +234,7 @@ mod test {
         let mut encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
         encrypted_data.set_kvno(2);
 
-        let mut padata = SeqOfPaData::new();
+        let mut padata = SeqOfPaData::default();
         let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
         entry1._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 

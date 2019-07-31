@@ -295,7 +295,7 @@ mod test {
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9])
         );
 
-        let mut padata = SeqOfPaData::new();
+        let mut padata = SeqOfPaData::default();
         let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
         entry1._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
@@ -351,7 +351,7 @@ mod test {
         let mut sname =  PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
-        let mut encrypted_pa_datas = MethodData::new();
+        let mut encrypted_pa_datas = MethodData::default();
         encrypted_pa_datas.push(
             PaData::Raw(PA_SUPPORTED_ENCTYPES, vec![0x1f, 0x0, 0x0, 0x0])
         );

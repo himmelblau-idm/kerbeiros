@@ -165,7 +165,7 @@ mod test {
         );
 
         let host_addresses = HostAddresses::new(HostAddress::NetBios("HOLLOWBASTION".to_string()));
-        let mut method_data = MethodData::new_empty();
+        let mut method_data = MethodData::default();
         method_data.push(PaData::PacRequest(PacRequest::new(true)));
 
         let credential = create_credential(
