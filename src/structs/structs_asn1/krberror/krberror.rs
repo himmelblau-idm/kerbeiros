@@ -32,7 +32,7 @@ pub struct KrbError {
 
 impl KrbError {
 
-    fn new_empty() -> Self {
+    fn default() -> Self {
         return Self {
             pvno: 5,
             msg_type: 30,
@@ -95,7 +95,7 @@ struct KrbErrorAsn1 {
 impl KrbErrorAsn1 {
 
     fn no_asn1_type(&self) -> KerberosResult<KrbError> {
-        let mut krb_error = KrbError::new_empty();
+        let mut krb_error = KrbError::default();
 
         let pvno = self.get_pvno().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KrbError::pvno".to_string())
@@ -242,7 +242,7 @@ mod test {
         0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x10, 0xa2, 0x02, 0x04, 0x00, 
         0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x0f, 0xa2, 0x02, 0x04, 0x00]).unwrap();
 
-        let mut krb_error = KrbError::new_empty();
+        let mut krb_error = KrbError::default();
 
         krb_error.stime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
         krb_error.susec = Microseconds::new(341039).unwrap();
