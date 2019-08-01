@@ -31,7 +31,7 @@ impl KrbCred {
 
 }
 
-#[derive(Sequence)]
+#[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 22)]
 struct KrbCredAsn1 {
     #[seq_field(context_tag = 0)]
@@ -47,7 +47,7 @@ struct KrbCredAsn1 {
 impl KrbCredAsn1 {
 
     fn new(krb_cred: &KrbCred) -> Self {
-        let mut krb_cred_asn1 = Self::new_empty();
+        let mut krb_cred_asn1 = Self::default();
 
         krb_cred_asn1.set_pvno(Integer::new(krb_cred.pvno as i64));
         krb_cred_asn1.set_msg_type(Integer::new(krb_cred.msg_type as i64));
@@ -55,15 +55,6 @@ impl KrbCredAsn1 {
         krb_cred_asn1.set_enc_part(krb_cred.enc_part.asn1_type());
 
         return krb_cred_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self {
-            pvno: SeqField::default(),
-            msg_type: SeqField::default(),
-            tickets: SeqField::default(),
-            enc_part: SeqField::default()
-        };
     }
 
 }
@@ -76,6 +67,19 @@ mod test {
     use super::super::kerberosstring::*;
     use super::super::realm::*;
     use crate::constants::*;
+
+    #[test]
+    fn create_default_krb_cred_asn1() {
+        assert_eq!(
+            KrbCredAsn1 {
+                pvno: SeqField::default(),
+                msg_type: SeqField::default(),
+                tickets: SeqField::default(),
+                enc_part: SeqField::default()
+            },
+            KrbCredAsn1::default()
+        )
+    }
 
     #[test]
     fn test_encode_krb_cred() {
