@@ -68,17 +68,10 @@ pub struct PrincipalNameAsn1 {
 impl PrincipalNameAsn1 {
 
     fn new(principal_name: &PrincipalName) -> PrincipalNameAsn1 {
-        let mut asn1_principal_name = Self::new_empty();
+        let mut asn1_principal_name = Self::default();
         asn1_principal_name._set_asn1_values(principal_name);
 
         return asn1_principal_name;
-    }
-
-    fn new_empty() -> PrincipalNameAsn1 {
-        return PrincipalNameAsn1{
-            name_type: SeqField::default(),
-            name_string: SeqField::default()
-        };
     }
 
     fn _set_asn1_values(&mut self, principal_name: &PrincipalName) {
@@ -129,6 +122,17 @@ mod tests {
     use crate::constants::principalnametypes::*;
 
     #[test]
+    fn create_default_principal_name_asn1() {
+        assert_eq!(
+            PrincipalNameAsn1{
+                name_type: SeqField::default(),
+                name_string: SeqField::default()
+            },
+            PrincipalNameAsn1::default()
+        )
+    }
+
+    #[test]
     fn test_encode_principal_name(){
         let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
         let principal_name_asn1 = principal_name.asn1_type();
@@ -159,7 +163,7 @@ mod tests {
 
     #[test]
     fn test_decode_principal_name(){
-        let mut principal_name_asn1 = PrincipalNameAsn1::new_empty();
+        let mut principal_name_asn1 = PrincipalNameAsn1::default();
 
         principal_name_asn1.decode(&[0x30 ,0x11 ,0xa0 ,0x03 ,0x02 ,0x01 ,0x01 ,
             0xa1 ,0x0a ,0x30 ,0x08 ,0x1b ,0x06 ,0x6d ,0x69 ,0x63 ,0x6b ,0x65 ,0x79]).unwrap();
@@ -170,7 +174,7 @@ mod tests {
 
     #[test]
     fn test_decode_many_principal_name_strings(){
-        let mut principal_name_asn1 = PrincipalNameAsn1::new_empty();
+        let mut principal_name_asn1 = PrincipalNameAsn1::default();
 
         principal_name_asn1.decode(&[0x30, 0x21, 
             0xa0, 0x03, 0x02, 0x01, 0x02, 0xa1, 
