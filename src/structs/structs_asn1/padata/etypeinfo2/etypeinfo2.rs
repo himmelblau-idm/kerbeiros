@@ -4,7 +4,7 @@ use crate::error::*;
 use super::entry::*;
 
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct EtypeInfo2 {
     entries: Vec<EtypeInfo2Entry>
 }
@@ -23,14 +23,6 @@ impl DerefMut for EtypeInfo2 {
 }
 
 impl EtypeInfo2 {
-
-    pub fn _new() -> Self {
-        return Self::new_empty();
-    }
-
-    fn new_empty() -> Self {
-        return Self{ entries: Vec::new() };
-    }
 
     pub fn asn1_type(&self) -> EtypeInfo2Asn1 {
         return EtypeInfo2Asn1::new(self);
@@ -71,7 +63,7 @@ impl EtypeInfo2Asn1 {
     }
 
     fn no_asn1_type(&self) -> KerberosResult<EtypeInfo2> {
-        let mut seq_of_padata = EtypeInfo2::new_empty();
+        let mut seq_of_padata = EtypeInfo2::default();
         for padata_asn1 in self.subtype.iter() {
             seq_of_padata.entries.push(padata_asn1.no_asn1_type()?);
         }
@@ -108,6 +100,14 @@ mod test {
     use crate::constants::etypes::*;
 
     #[test]
+    fn test_create_default_etypeinfo2() {
+        assert_eq!(
+            EtypeInfo2 { entries: Vec::new() },
+            EtypeInfo2::default()
+        )
+    }
+
+    #[test]
     fn decode_etypeinfo2() {
         let mut info2_asn1 = EtypeInfo2Asn1::new_empty();
 
@@ -132,7 +132,7 @@ mod test {
         let mut entry3 = EtypeInfo2Entry::_new(DES_CBC_MD5);
         entry3._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
-        let mut info2 = EtypeInfo2::new_empty();
+        let mut info2 = EtypeInfo2::default();
 
         info2.push(entry1);
         info2.push(entry2);

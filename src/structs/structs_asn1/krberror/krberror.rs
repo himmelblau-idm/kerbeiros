@@ -257,7 +257,7 @@ mod test {
         let mut entry3 = EtypeInfo2Entry::_new(DES_CBC_MD5);
         entry3._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
-        let mut info2 = EtypeInfo2::_new();
+        let mut info2 = EtypeInfo2::default();
 
         info2.push(entry1);
         info2.push(entry2);
