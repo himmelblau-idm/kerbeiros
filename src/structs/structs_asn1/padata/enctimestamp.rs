@@ -50,7 +50,7 @@ pub struct PaEncTsEncAsn1 {
 impl PaEncTsEncAsn1 {
 
     fn new(pa_enc_ts_enc: &PaEncTsEnc) -> Self {
-        let mut pa_enc_ts_enc_asn1 = Self::new_empty();
+        let mut pa_enc_ts_enc_asn1 = Self::default();
 
         pa_enc_ts_enc_asn1.set_patimestamp(KerberosTimeAsn1::new(pa_enc_ts_enc.patimestamp.clone()));
 
@@ -61,7 +61,7 @@ impl PaEncTsEncAsn1 {
         return pa_enc_ts_enc_asn1;
     }
 
-    fn new_empty() -> Self {
+    fn default() -> Self {
         return Self {
             patimestamp: SeqField::default(),
             pausec: SeqField::default()
