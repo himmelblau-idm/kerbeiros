@@ -66,7 +66,7 @@ pub struct TicketAsn1 {
 impl TicketAsn1 {
 
     fn new(ticket: &Ticket) -> TicketAsn1 {
-        let mut ticket_asn1 = Self::new_empty();
+        let mut ticket_asn1 = Self::default();
 
         ticket_asn1.set_tkt_vno(Integer::new(ticket.tkt_vno as i64));
         ticket_asn1.set_realm(RealmAsn1::new(ticket.realm.clone()));
@@ -74,15 +74,6 @@ impl TicketAsn1 {
         ticket_asn1.set_enc_part(ticket.enc_part.asn1_type());
 
         return ticket_asn1;
-    }
-
-    fn new_empty() -> TicketAsn1 {
-        return TicketAsn1 {
-            tkt_vno: SeqField::default(),
-            realm: SeqField::default(),
-            sname: SeqField::default(),
-            enc_part: SeqField::default()
-        };
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<Ticket> {
@@ -124,8 +115,21 @@ mod test {
     use crate::constants::*;
 
     #[test]
+    fn create_default_ticket_asn1() {
+        assert_eq!(
+            TicketAsn1 {
+                tkt_vno: SeqField::default(),
+                realm: SeqField::default(),
+                sname: SeqField::default(),
+                enc_part: SeqField::default()
+            },
+            TicketAsn1::default()
+        )
+    }
+
+    #[test]
     fn decode_ticket() {
-        let mut ticket_asn1 = TicketAsn1::new_empty();
+        let mut ticket_asn1 = TicketAsn1::default();
 
         ticket_asn1.decode(&[
             0x61, 0x82, 0x04, 0x13, 0x30, 0x82, 0x04, 0x0f,
