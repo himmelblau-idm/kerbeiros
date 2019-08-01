@@ -42,16 +42,10 @@ pub struct SeqOfEtypeAsn1 {
 impl SeqOfEtypeAsn1 {
 
     fn new(seq_of_etype: &SeqOfEtype) -> SeqOfEtypeAsn1 {
-        let mut seq_etype_asn1 = Self::new_empty();
+        let mut seq_etype_asn1 = Self::default();
 
         seq_etype_asn1._set_asn1_values(seq_of_etype);
         return seq_etype_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self{
-            subtype: SequenceOf::new()
-        };
     }
 
     fn _set_asn1_values(&mut self, seq_of_etype: &SeqOfEtype) {
@@ -85,6 +79,16 @@ impl Asn1Object for SeqOfEtypeAsn1 {
 mod test {
     use super::*;
     use crate::constants::etypes::*;
+
+    #[test]
+    fn create_default_sequence_of_etypes_asn1() {
+        assert_eq!(
+            SeqOfEtypeAsn1 {
+                subtype: SequenceOf::new()
+            },
+            SeqOfEtypeAsn1::default()
+        )
+    }
 
     #[test]
     fn test_encode_sequence_of_etypes() {
