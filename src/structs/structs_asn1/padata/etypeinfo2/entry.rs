@@ -32,7 +32,7 @@ impl EtypeInfo2Entry {
         return Vec::new();
     }
 
-    fn new_empty() -> Self {
+    fn default() -> Self {
         return Self {
             etype: 0,
             salt: None,
@@ -76,7 +76,7 @@ impl EtypeInfo2EntryAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<EtypeInfo2Entry> {
-        let mut entry = EtypeInfo2Entry::new_empty();
+        let mut entry = EtypeInfo2Entry::default();
 
         let etype_asn1 = self.get_etype().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("EtypeInfo2Entry::etype".to_string())
@@ -127,7 +127,7 @@ mod test {
                             0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 
                             0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79]).unwrap();
 
-        let mut entry = EtypeInfo2Entry::new_empty();
+        let mut entry = EtypeInfo2Entry::default();
         entry.etype = AES256_CTS_HMAC_SHA1_96;
         entry.salt = Some(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
