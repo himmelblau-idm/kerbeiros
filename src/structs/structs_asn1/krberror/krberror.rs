@@ -55,13 +55,13 @@ impl KrbError {
     }
 
     pub fn parse(raw: &[u8]) -> KerberosResult<KrbError> {
-        let mut krb_error_asn1 = KrbErrorAsn1::new_empty();
+        let mut krb_error_asn1 = KrbErrorAsn1::default();
         krb_error_asn1.decode(raw)?;
         return Ok(krb_error_asn1.no_asn1_type().unwrap());
     }
 }
 
-#[derive(Sequence, Default)]
+#[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 30)]
 struct KrbErrorAsn1 {
     #[seq_field(context_tag = 0)]
@@ -93,24 +93,6 @@ struct KrbErrorAsn1 {
 }
 
 impl KrbErrorAsn1 {
-
-    fn new_empty() -> Self {
-        return Self{
-            pvno: SeqField::default(),
-            msg_type: SeqField::default(),
-            ctime: SeqField::default(),
-            cusec: SeqField::default(),
-            stime: SeqField::default(),
-            susec: SeqField::default(),
-            error_code: SeqField::default(),
-            crealm: SeqField::default(),
-            cname: SeqField::default(),
-            realm: SeqField::default(),
-            sname: SeqField::default(),
-            e_text: SeqField::default(),
-            e_data: SeqField::default(),
-        }
-    }
 
     fn no_asn1_type(&self) -> KerberosResult<KrbError> {
         let mut krb_error = KrbError::new_empty();
@@ -210,8 +192,30 @@ mod test {
     use crate::constants::*;
 
     #[test]
+    fn create_default_krb_error_asn1() {
+        assert_eq!(
+            KrbErrorAsn1 {
+                pvno: SeqField::default(),
+                msg_type: SeqField::default(),
+                ctime: SeqField::default(),
+                cusec: SeqField::default(),
+                stime: SeqField::default(),
+                susec: SeqField::default(),
+                error_code: SeqField::default(),
+                crealm: SeqField::default(),
+                cname: SeqField::default(),
+                realm: SeqField::default(),
+                sname: SeqField::default(),
+                e_text: SeqField::default(),
+                e_data: SeqField::default(),
+            },
+            KrbErrorAsn1::default()
+        )
+    }
+
+    #[test]
     fn test_decode_krb_error() {
-        let mut krb_error_asn1 = KrbErrorAsn1::new_empty();
+        let mut krb_error_asn1 = KrbErrorAsn1::default();
         krb_error_asn1.decode(&[0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 
     0xa0, 0x03, 0x02, 0x01, 0x05, 
     0xa1, 0x03, 0x02, 0x01, 0x1e, 
