@@ -29,7 +29,7 @@ impl EtypeInfo2 {
     }
 
     pub fn parse(raw: &Vec<u8>) -> KerberosResult<Self> {
-        let mut seq_of_padata_asn1 = EtypeInfo2Asn1::new_empty();
+        let mut seq_of_padata_asn1 = EtypeInfo2Asn1::default();
         seq_of_padata_asn1.decode(raw)?;
         return Ok(seq_of_padata_asn1.no_asn1_type().unwrap());
     }
@@ -44,13 +44,13 @@ pub struct EtypeInfo2Asn1 {
 impl EtypeInfo2Asn1 {
 
     fn new(seq_of_padatas: &EtypeInfo2) -> Self {
-        let mut seq_padatas_asn1 = Self::new_empty();
+        let mut seq_padatas_asn1 = Self::default();
 
         seq_padatas_asn1._set_asn1_values(seq_of_padatas);
         return seq_padatas_asn1;
     }
 
-    fn new_empty() -> Self {
+    fn default() -> Self {
         return Self{
             subtype: SequenceOf::new()
         };
@@ -109,7 +109,7 @@ mod test {
 
     #[test]
     fn decode_etypeinfo2() {
-        let mut info2_asn1 = EtypeInfo2Asn1::new_empty();
+        let mut info2_asn1 = EtypeInfo2Asn1::default();
 
         info2_asn1.decode(&[0x30, 0x45, 0x30, 0x1d, 
                     0xa0, 0x03, 0x02, 0x01, 0x12, 
