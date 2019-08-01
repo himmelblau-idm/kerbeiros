@@ -42,16 +42,10 @@ pub struct SeqOfTicketsAsn1 {
 impl SeqOfTicketsAsn1 {
 
     fn new(seq_of_tickets: &SeqOfTickets) -> SeqOfTicketsAsn1 {
-        let mut seq_tickets_asn1 = Self::new_empty();
+        let mut seq_tickets_asn1 = Self::default();
 
         seq_tickets_asn1._set_asn1_values(seq_of_tickets);
         return seq_tickets_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self {
-            subtype: SequenceOf::new(),
-        };
     }
 
     fn _set_asn1_values(&mut self, seq_of_tickets: &SeqOfTickets) {
@@ -84,6 +78,16 @@ impl Asn1Object for SeqOfTicketsAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn create_default_sequence_of_tickets_asn1() {
+        assert_eq!(
+            SeqOfTicketsAsn1{
+                subtype: SequenceOf::new(),
+            },
+            SeqOfTicketsAsn1::default()
+        )
+    }
 
     #[test]
     fn create_default_seq_of_tickets() {
