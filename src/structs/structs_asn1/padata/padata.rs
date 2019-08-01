@@ -52,16 +52,8 @@ pub struct PaDataAsn1 {
 impl PaDataAsn1 {
 
     fn new(pa_data: &PaData) -> PaDataAsn1 {
-        let mut pa_data_asn1 = Self::new_empty();
+        let mut pa_data_asn1 = Self::default();
         pa_data_asn1._set_asn1_values(pa_data);
-        return pa_data_asn1;
-    }
-
-    fn new_empty() -> PaDataAsn1 {
-        let pa_data_asn1 = PaDataAsn1 {
-            padata_type: SeqField::default(),
-            padata_value: SeqField::default(),
-        };
         return pa_data_asn1;
     }
 
@@ -120,6 +112,17 @@ mod test {
     use super::*;
 
     #[test]
+    fn create_default_padata_asn1() {
+        assert_eq!(
+            PaDataAsn1 {
+                padata_type: SeqField::default(),
+                padata_value: SeqField::default(),
+            },
+            PaDataAsn1::default()
+        )
+    }
+
+    #[test]
     fn test_encode_padata_pac_request(){
         assert_eq!(vec![0x30, 0x11, 
                         0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
@@ -135,7 +138,7 @@ mod test {
 
     #[test]
     fn test_decode_padata_pac_request(){
-        let mut padata_asn1 = PaDataAsn1::new_empty();
+        let mut padata_asn1 = PaDataAsn1::default();
 
         padata_asn1.decode(&[0x30, 0x11, 
                         0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
