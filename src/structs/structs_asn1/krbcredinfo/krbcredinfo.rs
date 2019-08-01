@@ -125,24 +125,8 @@ pub struct KrbCredInfoAsn1 {
 
 impl KrbCredInfoAsn1 {
 
-    fn new_empty() -> Self {
-        return Self{
-            key: SeqField::default(),
-            prealm: SeqField::default(),
-            pname: SeqField::default(),
-            flags: SeqField::default(),
-            authtime: SeqField::default(),
-            starttime: SeqField::default(),
-            endtime: SeqField::default(),
-            renew_till: SeqField::default(),
-            srealm: SeqField::default(),
-            sname: SeqField::default(),
-            caddr: SeqField::default(),
-        }
-    }
-
     fn new(krb_cred_info: &KrbCredInfo) -> Self {
-        let mut krb_cred_info_asn1 = Self::new_empty();
+        let mut krb_cred_info_asn1 = Self::default();
 
         krb_cred_info_asn1.set_key(krb_cred_info.key.asn1_type());
 
@@ -246,6 +230,26 @@ impl KrbCredInfoAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+
+    #[test]
+    fn create_default_kdc_cred_info_asn1() {
+        assert_eq!(
+            KrbCredInfoAsn1 {
+                key: SeqField::default(),
+                prealm: SeqField::default(),
+                pname: SeqField::default(),
+                flags: SeqField::default(),
+                authtime: SeqField::default(),
+                starttime: SeqField::default(),
+                endtime: SeqField::default(),
+                renew_till: SeqField::default(),
+                srealm: SeqField::default(),
+                sname: SeqField::default(),
+                caddr: SeqField::default(),
+            },
+            KrbCredInfoAsn1::default()
+        )
+    }
 
     #[test]
     fn test_krb_cred_info_decode() {
@@ -389,7 +393,7 @@ mod test {
         krb_cred_info.set_srealm(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
         krb_cred_info.set_sname(sname);
 
-        let mut krb_cred_info_asn1 = KrbCredInfoAsn1::new_empty();
+        let mut krb_cred_info_asn1 = KrbCredInfoAsn1::default();
         krb_cred_info_asn1.decode(&raw).unwrap();
 
         assert_eq!(krb_cred_info, krb_cred_info_asn1.no_asn1_type().unwrap());
