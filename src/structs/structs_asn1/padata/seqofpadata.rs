@@ -31,7 +31,7 @@ impl SeqOfPaData {
     }
 
     pub fn parse(raw: &Vec<u8>) -> KerberosResult<Self> {
-        let mut seq_of_padata_asn1 = SeqOfPaDataAsn1::new_empty();
+        let mut seq_of_padata_asn1 = SeqOfPaDataAsn1::default();
         seq_of_padata_asn1.decode(raw)?;
         return Ok(seq_of_padata_asn1.no_asn1_type().unwrap());
     }
@@ -46,16 +46,10 @@ pub struct SeqOfPaDataAsn1 {
 impl SeqOfPaDataAsn1 {
 
     fn new(seq_of_padatas: &SeqOfPaData) -> Self {
-        let mut seq_padatas_asn1 = Self::new_empty();
+        let mut seq_padatas_asn1 = Self::default();
 
         seq_padatas_asn1._set_asn1_values(seq_of_padatas);
         return seq_padatas_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self{
-            subtype: SequenceOf::new()
-        };
     }
 
     fn _set_asn1_values(&mut self, seq_of_padatas: &SeqOfPaData) {
@@ -100,6 +94,16 @@ mod test {
     use super::super::pacrequest::PacRequest;
 
     #[test]
+    fn create_default_seq_of_padatas_asn1() {
+        assert_eq!(
+            SeqOfPaDataAsn1{
+                subtype: SequenceOf::new()
+            },
+            SeqOfPaDataAsn1::default()
+        )
+    }
+
+    #[test]
     fn create_default_seq_of_padatas() {
         let seq_of_padatas = SeqOfPaData::default();
         assert_eq!(Vec::<PaData>::new(), seq_of_padatas.padatas);
@@ -129,7 +133,7 @@ mod test {
     #[test]
     fn test_decode_seq_of_padatas(){
 
-        let mut seq_of_padatas_asn1 = SeqOfPaDataAsn1::new_empty();
+        let mut seq_of_padatas_asn1 = SeqOfPaDataAsn1::default();
 
         seq_of_padatas_asn1.decode(&[0x30, 0x13, 0x30, 0x11, 
                         0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
