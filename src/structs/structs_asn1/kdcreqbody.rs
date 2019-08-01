@@ -140,26 +140,9 @@ pub struct KdcReqBodyAsn1 {
 impl KdcReqBodyAsn1 {
 
     fn new(kdc_body: &KdcReqBody) -> KdcReqBodyAsn1 {
-        let mut kdc_body_asn1 = Self::new_empty();
+        let mut kdc_body_asn1 = Self::default();
         kdc_body_asn1._set_asn1_values(kdc_body);
         return kdc_body_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self{
-            kdc_options: SeqField::default(),
-            cname: SeqField::default(),
-            realm: SeqField::default(),
-            sname: SeqField::default(),
-            from: SeqField::default(),
-            till: SeqField::default(),
-            rtime: SeqField::default(),
-            nonce: SeqField::default(),
-            etype: SeqField::default(),
-            addresses: SeqField::default(),
-            enc_authorization_data: SeqField::default(),
-            additional_tickets: SeqField::default(),
-        };
     }
 
     fn _set_asn1_values(&mut self, kdc_body: &KdcReqBody) {
@@ -208,6 +191,27 @@ mod test {
     use super::*;
     use crate::constants::*;
     use chrono::*;
+
+    #[test]
+    fn create_default_kdc_req_body_asn1() {
+        assert_eq!(
+            KdcReqBodyAsn1 {
+                kdc_options: SeqField::default(),
+                cname: SeqField::default(),
+                realm: SeqField::default(),
+                sname: SeqField::default(),
+                from: SeqField::default(),
+                till: SeqField::default(),
+                rtime: SeqField::default(),
+                nonce: SeqField::default(),
+                etype: SeqField::default(),
+                addresses: SeqField::default(),
+                enc_authorization_data: SeqField::default(),
+                additional_tickets: SeqField::default(),
+            },
+            KdcReqBodyAsn1::default()
+        )
+    }
 
     #[test]
     fn test_encode_kdc_req_body() {
