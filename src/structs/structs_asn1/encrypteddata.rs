@@ -52,7 +52,7 @@ pub struct EncryptedDataAsn1 {
 impl EncryptedDataAsn1 {
 
     fn new(enc_data: &EncryptedData) -> EncryptedDataAsn1 {
-        let mut enc_data_asn1 = Self::new_empty();
+        let mut enc_data_asn1 = Self::default();
 
         enc_data_asn1.set_etype(Int32Asn1::new(enc_data.etype));
         enc_data_asn1.set_cipher(OctetString::new(enc_data.cipher.clone()));
@@ -62,14 +62,6 @@ impl EncryptedDataAsn1 {
         }
 
         return enc_data_asn1;
-    }
-
-    fn new_empty() -> EncryptedDataAsn1 {
-        return EncryptedDataAsn1{
-            etype: SeqField::default(),
-            kvno: SeqField::default(),
-            cipher: SeqField::default()
-        };
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<EncryptedData> {
@@ -101,6 +93,18 @@ mod test {
     use crate::constants::etypes::*;
 
     #[test]
+    fn create_default_encrypted_data_asn1() {
+        assert_eq!(
+            EncryptedDataAsn1{
+                etype: SeqField::default(),
+                kvno: SeqField::default(),
+                cipher: SeqField::default()
+            },
+            EncryptedDataAsn1::default()
+        )
+    }
+
+    #[test]
     fn encode_encrypted_data(){
         let enc_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![
             0x64, 0x67, 0x3f, 0x70, 0x45, 
@@ -125,7 +129,7 @@ mod test {
 
     #[test]
     fn decode_encrypted_data() {
-        let mut enc_data_asn1 = EncryptedDataAsn1::new_empty();
+        let mut enc_data_asn1 = EncryptedDataAsn1::default();
         enc_data_asn1.decode(&[0x30, 0x41, 
             0xa0, 0x03, 0x02, 0x01, 0x12, 
             0xa2, 0x3a, 0x04, 0x38, 0x64, 0x67, 0x3f, 0x70, 0x45, 

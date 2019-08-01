@@ -35,7 +35,7 @@ impl Microseconds {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, PartialEq)]
 pub struct MicrosecondsAsn1 {
     subtype: Integer
 }

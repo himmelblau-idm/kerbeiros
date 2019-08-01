@@ -61,7 +61,7 @@ impl EncKrbCredPart {
 }
 
 
-#[derive(Sequence)]
+#[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 29)]
 pub struct EncKrbCredPartAsn1 {
     #[seq_field(context_tag = 0)]
@@ -83,7 +83,7 @@ pub struct EncKrbCredPartAsn1 {
 impl EncKrbCredPartAsn1 {
 
     pub fn new(enc_krb_cred_part: &EncKrbCredPart) -> Self {
-        let mut enc_krb_cred_part_asn1 = Self::new_empty();
+        let mut enc_krb_cred_part_asn1 = Self::default();
 
         enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.ticket_info.asn1_type());
 
@@ -104,18 +104,6 @@ impl EncKrbCredPartAsn1 {
         }
 
         return enc_krb_cred_part_asn1;
-    }
-
-
-    fn new_empty() -> Self {
-        return Self {
-            ticket_info: SeqField::default(),
-            nonce: SeqField::default(),
-            timestamp: SeqField::default(),
-            usec: SeqField::default(),
-            s_address: SeqField::default(),
-            r_address: SeqField::default()
-        };
     }
 
     pub fn _no_asn1_type(&self) -> KerberosResult<EncKrbCredPart> {
@@ -155,6 +143,22 @@ impl EncKrbCredPartAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+
+
+    #[test]
+    fn create_default_enc_krb_cred_part_asn1() {
+        assert_eq!(
+            EncKrbCredPartAsn1 {
+                ticket_info: SeqField::default(),
+                nonce: SeqField::default(),
+                timestamp: SeqField::default(),
+                usec: SeqField::default(),
+                s_address: SeqField::default(),
+                r_address: SeqField::default()
+            },
+            EncKrbCredPartAsn1::default()
+        );
+    }
 
     #[test]
     fn decode_enc_krb_cred_part() {
@@ -313,7 +317,7 @@ mod test {
 
         let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
 
-        let mut enc_krb_cred_part_asn1 = EncKrbCredPartAsn1::new_empty();
+        let mut enc_krb_cred_part_asn1 = EncKrbCredPartAsn1::default();
         enc_krb_cred_part_asn1.decode(&raw).unwrap();
 
         assert_eq!(enc_krb_cred_part, enc_krb_cred_part_asn1._no_asn1_type().unwrap());
