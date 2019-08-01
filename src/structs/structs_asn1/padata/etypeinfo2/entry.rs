@@ -46,7 +46,7 @@ impl EtypeInfo2Entry {
 
 }
 
-#[derive(Sequence, Default)]
+#[derive(Sequence, Debug, Default, PartialEq)]
 pub struct EtypeInfo2EntryAsn1{
     #[seq_field(context_tag = 0)]
     etype: SeqField<Int32Asn1>,
@@ -60,7 +60,7 @@ pub struct EtypeInfo2EntryAsn1{
 impl EtypeInfo2EntryAsn1 {
 
     fn new(entry: &EtypeInfo2Entry) -> Self {
-        let mut entry_asn1 = Self::new_empty();
+        let mut entry_asn1 = Self::default();
 
         entry_asn1.set_etype(Int32Asn1::new(entry.etype));
         
@@ -73,14 +73,6 @@ impl EtypeInfo2EntryAsn1 {
         }
 
         return entry_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self {
-            etype: SeqField::default(),
-            salt: SeqField::default(),
-            s2kparams: SeqField::default()
-        };
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<EtypeInfo2Entry> {
@@ -114,8 +106,20 @@ mod test {
     use crate::constants::etypes::*;
 
     #[test]
+    fn create_default_etypeinfo2_entry_asn1() {
+        assert_eq!(
+            EtypeInfo2EntryAsn1 {
+                etype: SeqField::default(),
+                salt: SeqField::default(),
+                s2kparams: SeqField::default()
+            },
+            EtypeInfo2EntryAsn1::default()
+        )
+    }
+
+    #[test]
     fn decode_etypeinfo2entry() {
-        let mut entry_asn1 = EtypeInfo2EntryAsn1::new_empty();
+        let mut entry_asn1 = EtypeInfo2EntryAsn1::default();
 
         entry_asn1.decode(&[0x30, 0x1d, 
                             0xa0, 0x03, 0x02, 0x01, 0x12, 

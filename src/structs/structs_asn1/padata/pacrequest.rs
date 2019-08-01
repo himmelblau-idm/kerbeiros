@@ -19,7 +19,7 @@ impl PacRequest {
     }
 
     pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
-        let mut pac_request_asn1 = PacRequestAsn1::new_empty();
+        let mut pac_request_asn1 = PacRequestAsn1::default();
         pac_request_asn1.decode(raw)?;
         return Ok(pac_request_asn1.no_asn1_type().unwrap());
 
@@ -37,14 +37,14 @@ pub struct PacRequestAsn1 {
 impl PacRequestAsn1 {
 
     fn new(pac_request: &PacRequest) -> PacRequestAsn1 {
-        let mut pac_request_asn1 = Self::new_empty();
+        let mut pac_request_asn1 = Self::default();
         
         pac_request_asn1.set_include_pac(Boolean::new(pac_request.include_pac));
 
         return pac_request_asn1;
     }
 
-    fn new_empty() -> Self {
+    fn default() -> Self {
         return Self{
             include_pac: SeqField::default()
         };
@@ -83,7 +83,7 @@ mod test{
 
     #[test]
     fn test_decode_pac_request_true() {
-        let mut pac_request_asn1 = PacRequestAsn1::new_empty();
+        let mut pac_request_asn1 = PacRequestAsn1::default();
 
         pac_request_asn1.decode(&[0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff]).unwrap();
 
@@ -92,7 +92,7 @@ mod test{
 
     #[test]
     fn test_decode_pac_request_false() {
-        let mut pac_request_asn1 = PacRequestAsn1::new_empty();
+        let mut pac_request_asn1 = PacRequestAsn1::default();
 
         pac_request_asn1.decode(&[0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0x00]).unwrap();
 
