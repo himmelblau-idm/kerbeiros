@@ -10,7 +10,7 @@ pub struct HostAddresses {
 
 impl HostAddresses {
 
-    fn new_empty() -> Self {
+    fn default() -> Self {
         return Self {
             addresses: Vec::new()
         };
@@ -64,7 +64,7 @@ impl HostAddressesAsn1 {
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<HostAddresses> {
-        let mut host_addresses = HostAddresses::new_empty();
+        let mut host_addresses = HostAddresses::default();
         for host_address_asn1 in self.subtype.iter() {
             host_addresses.push(host_address_asn1.no_asn1_type()?);
         }
