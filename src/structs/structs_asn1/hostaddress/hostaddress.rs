@@ -73,19 +73,12 @@ pub struct HostAddressAsn1 {
 impl HostAddressAsn1 {
 
     fn new(host_address: &HostAddress) -> HostAddressAsn1 {
-        let mut host_address_asn1 = Self::new_empty();
+        let mut host_address_asn1 = Self::default();
 
         host_address_asn1.set_addr_type(Int32Asn1::new(host_address.get_addr_type()));
         host_address_asn1.set_address(OctetString::new(host_address.get_address()));
     
         return host_address_asn1;
-    }
-
-    fn new_empty() -> HostAddressAsn1 {
-        return HostAddressAsn1{
-            addr_type: SeqField::default(),
-            address: SeqField::default()
-        };
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<HostAddress> {
@@ -119,6 +112,17 @@ impl HostAddressAsn1 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn create_default_host_address_asn1() {
+        assert_eq!(
+            HostAddressAsn1{
+                addr_type: SeqField::default(),
+                address: SeqField::default()
+            },
+            HostAddressAsn1::default()
+        )
+    }
 
     #[test]
     fn test_encode_netbios_host_address() {
@@ -159,7 +163,7 @@ mod tests {
 
     #[test]
     fn test_decode_netbios_host_address() {
-        let mut netbios_address_asn1 = HostAddressAsn1::new_empty();
+        let mut netbios_address_asn1 = HostAddressAsn1::default();
 
         netbios_address_asn1.decode(&[
             0x30, 0x19, 0xa0, 0x03, 0x02, 0x01, 0x14, 
