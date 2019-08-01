@@ -45,17 +45,10 @@ pub struct EncryptionKeyAsn1 {
 impl EncryptionKeyAsn1 {
 
     fn new(encryption_key: &EncryptionKey) -> Self {
-        let mut  encryption_key_asn1 = Self::new_empty();
+        let mut  encryption_key_asn1 = Self::default();
         encryption_key_asn1.set_keytype(Int32Asn1::new(encryption_key.keytype));
         encryption_key_asn1.set_keyvalue(OctetString::new(encryption_key.keyvalue.clone()));
         return encryption_key_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self {
-            keytype: SeqField::default(),
-            keyvalue: SeqField::default()
-        }
     }
 
     pub fn no_asn1_type(&self) -> KerberosResult<EncryptionKey> {
@@ -86,6 +79,17 @@ mod test {
     use crate::constants::*;
 
     #[test]
+    fn create_default_encryption_key_asn1() {
+        assert_eq!(
+            EncryptionKeyAsn1 {
+                keytype: SeqField::default(),
+                keyvalue: SeqField::default()
+            },
+            EncryptionKeyAsn1::default()
+        )
+    }
+
+    #[test]
     fn test_decode_encryption_key (){
         let raw: Vec<u8> = vec![
             0x30, 0x29, 0xa0, 0x03, 0x02, 0x01,
@@ -96,7 +100,7 @@ mod test {
             0x41, 0x91, 0x72, 0x17, 0xff
         ];
 
-        let mut encryption_key_asn1 = EncryptionKeyAsn1::new_empty();
+        let mut encryption_key_asn1 = EncryptionKeyAsn1::default();
         encryption_key_asn1.decode(&raw).unwrap();
 
         let encryption_key = EncryptionKey::new(
