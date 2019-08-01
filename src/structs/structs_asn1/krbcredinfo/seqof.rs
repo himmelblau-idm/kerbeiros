@@ -43,15 +43,9 @@ pub struct SeqOfKrbCredInfoAsn1 {
 impl SeqOfKrbCredInfoAsn1 {
 
     fn new(seq_of_krb_cred_info: &SeqOfKrbCredInfo) -> Self {
-        let mut seq_of_krb_cred_info_asn1 = Self::new_empty();
+        let mut seq_of_krb_cred_info_asn1 = Self::default();
         seq_of_krb_cred_info_asn1._set_asn1_values(seq_of_krb_cred_info);
         return seq_of_krb_cred_info_asn1;
-    }
-
-    fn new_empty() -> Self {
-        return Self{
-            subtype: SequenceOf::new()
-        };
     }
 
     fn _set_asn1_values(&mut self, seq_of_krb_cred_info: &SeqOfKrbCredInfo) {
@@ -95,6 +89,16 @@ impl Asn1Object for SeqOfKrbCredInfoAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+
+    #[test]
+    fn create_default_seq_of_krb_cred_info_asn1() {
+        assert_eq!(
+            SeqOfKrbCredInfoAsn1 {
+                subtype: SequenceOf::new()
+            },
+            SeqOfKrbCredInfoAsn1::default()
+        )
+    }
 
     #[test]
     fn create_seq_of_krb_cred_info() {
@@ -254,7 +258,7 @@ mod test {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
-        let mut seq_of_krb_cred_info_asn1 = SeqOfKrbCredInfoAsn1::new_empty();
+        let mut seq_of_krb_cred_info_asn1 = SeqOfKrbCredInfoAsn1::default();
         seq_of_krb_cred_info_asn1.decode(&raw).unwrap();
 
 
