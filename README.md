@@ -1,3 +1,3 @@
-# kerby
+# Kerbeiros
 
 Kerberos client library
