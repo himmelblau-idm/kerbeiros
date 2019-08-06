@@ -148,8 +148,8 @@ impl AsRepAsn1 {
             enc_part.no_asn1_type()?
         );
 
-        as_rep.set_pvno(*pvno_value as i8);
-        as_rep.set_msg_type(*msg_type_value as i8);
+        as_rep.set_pvno(pvno_value as i8);
+        as_rep.set_msg_type(msg_type_value as i8);
 
         if let Some(padata) = self.get_padata() {
             as_rep.set_padata(padata.no_asn1_type()?);

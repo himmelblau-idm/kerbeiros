@@ -58,7 +58,7 @@ impl PacRequestAsn1 {
             KerberosErrorKind::NotAvailableData("PacRequest::include_pac".to_string())
         )?;
 
-        return Ok(PacRequest::new(*include_pac));
+        return Ok(PacRequest::new(include_pac));
     }
 
 }

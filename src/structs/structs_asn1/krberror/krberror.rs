@@ -103,7 +103,7 @@ impl KrbErrorAsn1 {
         let pvno_value = pvno.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KrbError::pvno".to_string())
         )?;
-        krb_error.pvno = *pvno_value as i8;
+        krb_error.pvno = pvno_value as i8;
 
         let msg_type = self.get_msg_type().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KrbError::msg_type".to_string())
@@ -111,7 +111,7 @@ impl KrbErrorAsn1 {
         let msg_type_value = msg_type.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("KrbError::msg_type".to_string())
         )?;
-        krb_error.msg_type = *msg_type_value as i8;
+        krb_error.msg_type = msg_type_value as i8;
 
         
         if let Some(ctime) = self.get_ctime() {

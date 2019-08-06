@@ -21,7 +21,7 @@ impl UInt32Asn1 {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("UInt32Asn1".to_string())
         )?;
-        return Ok(*value as u32);
+        return Ok(value as u32);
     }
 }
 

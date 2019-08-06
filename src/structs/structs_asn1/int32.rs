@@ -19,7 +19,7 @@ impl Int32Asn1 {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("Int32".to_string())
         )?;
-        return Ok(*value as Int32);
+        return Ok(value as Int32);
     }
 
 }
@@ -35,7 +35,7 @@ impl Asn1Object for Int32Asn1 {
     }
 
     fn decode_value(&mut self, raw: &[u8]) -> red_asn1::Result<()> {
-        let previous_value = self.subtype.value().cloned();
+        let previous_value = self.subtype.value().clone();
         self.subtype.decode_value(raw)?;
         let new_value = self.subtype.value().unwrap().clone();
 
@@ -113,7 +113,7 @@ mod test {
 
         int32_asn1.subtype.set_value(1);
         int32_asn1.decode(&[0x02, 0x05, 0x01, 0x00, 0x00, 0x00, 0x00]).err();
-        assert_eq!(&1, int32_asn1.subtype.value().unwrap());
+        assert_eq!(1, int32_asn1.subtype.value().unwrap());
     }
 
 }

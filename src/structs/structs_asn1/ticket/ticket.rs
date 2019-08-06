@@ -99,7 +99,7 @@ impl TicketAsn1 {
             sname.no_asn1_type()?,
             enc_part.no_asn1_type()?
         );
-        ticket.set_tkt_vno(*tkt_vno_value as i8);
+        ticket.set_tkt_vno(tkt_vno_value as i8);
 
 
         return Ok(ticket);

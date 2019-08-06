@@ -5,8 +5,7 @@ authors = ["Zer1t0 <Zer1t0@mail.com>"]
 edition = "2018"
 
 [dependencies]
-red_asn1 = { path = "../red_asn1/red_asn1" }
-
+red_asn1 = "0.1"
 ascii = "0.9.1"
 chrono = "0.4"
 failure = "0.1.5"

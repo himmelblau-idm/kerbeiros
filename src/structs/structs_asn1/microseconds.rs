@@ -52,7 +52,7 @@ impl MicrosecondsAsn1 {
         let value = self.subtype.value().ok_or_else(|| 
             KerberosErrorKind::NotAvailableData("Microseconds".to_string())
         )?;
-        return Microseconds::new(*value as u32);
+        return Microseconds::new(value as u32);
     }
 
 }
@@ -67,7 +67,7 @@ impl Asn1Object for MicrosecondsAsn1 {
     }
 
     fn decode_value(&mut self, raw: &[u8]) -> red_asn1::Result<()> {
-        let previous_value = self.subtype.value().cloned();
+        let previous_value = self.subtype.value().clone();
         self.subtype.decode_value(raw)?;
         let new_value = self.subtype.value().unwrap().clone();
 
@@ -167,7 +167,7 @@ mod test {
 
         mic_asn1.subtype.set_value(1);
         mic_asn1.decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f]).err();
-        assert_eq!(&1, mic_asn1.subtype.value().unwrap());
+        assert_eq!(1, mic_asn1.subtype.value().unwrap());
     }
 
 
