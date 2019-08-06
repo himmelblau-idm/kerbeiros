@@ -84,7 +84,7 @@ mod test {
     fn create_default_sequence_of_etypes_asn1() {
         assert_eq!(
             SeqOfEtypeAsn1 {
-                subtype: SequenceOf::new()
+                subtype: SequenceOf::default()
             },
             SeqOfEtypeAsn1::default()
         )

@@ -13,7 +13,7 @@ pub struct KerberosTimeAsn1 {
 impl KerberosTimeAsn1 {
 
     pub fn new(date: KerberosTime) -> KerberosTimeAsn1 {
-        let mut generalized_time = GeneralizedTime::new(date);
+        let mut generalized_time = GeneralizedTime::from(date);
         generalized_time.set_format(TimeFormat::YYYYmmddHHMMSSZ);
 
         return KerberosTimeAsn1{

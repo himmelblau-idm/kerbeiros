@@ -55,7 +55,7 @@ impl EncryptedDataAsn1 {
         let mut enc_data_asn1 = Self::default();
 
         enc_data_asn1.set_etype(Int32Asn1::new(enc_data.etype));
-        enc_data_asn1.set_cipher(OctetString::new(enc_data.cipher.clone()));
+        enc_data_asn1.set_cipher(OctetString::from(enc_data.cipher.clone()));
 
         if let Some(kvno) = &enc_data.kvno {
             enc_data_asn1.set_kvno(UInt32Asn1::new(*kvno));

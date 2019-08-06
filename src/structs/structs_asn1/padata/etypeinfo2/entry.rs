@@ -69,7 +69,7 @@ impl EtypeInfo2EntryAsn1 {
         }
 
         if let Some(s2kparams) = &entry.s2kparams {
-            entry_asn1.set_s2kparams(OctetString::new(s2kparams.clone()));
+            entry_asn1.set_s2kparams(OctetString::from(s2kparams.clone()));
         }
 
         return entry_asn1;

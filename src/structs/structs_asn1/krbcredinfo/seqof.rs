@@ -94,7 +94,7 @@ mod test {
     fn create_default_seq_of_krb_cred_info_asn1() {
         assert_eq!(
             SeqOfKrbCredInfoAsn1 {
-                subtype: SequenceOf::new()
+                subtype: SequenceOf::default()
             },
             SeqOfKrbCredInfoAsn1::default()
         )

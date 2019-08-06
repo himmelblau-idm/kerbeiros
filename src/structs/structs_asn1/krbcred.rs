@@ -49,8 +49,8 @@ impl KrbCredAsn1 {
     fn new(krb_cred: &KrbCred) -> Self {
         let mut krb_cred_asn1 = Self::default();
 
-        krb_cred_asn1.set_pvno(Integer::new(krb_cred.pvno as i64));
-        krb_cred_asn1.set_msg_type(Integer::new(krb_cred.msg_type as i64));
+        krb_cred_asn1.set_pvno(Integer::from(krb_cred.pvno as i64));
+        krb_cred_asn1.set_msg_type(Integer::from(krb_cred.msg_type as i64));
         krb_cred_asn1.set_tickets(krb_cred.tickets.asn1_type());
         krb_cred_asn1.set_enc_part(krb_cred.enc_part.asn1_type());
 

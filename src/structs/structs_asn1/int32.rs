@@ -11,7 +11,7 @@ pub struct Int32Asn1 {
 impl Int32Asn1 {
     pub fn new(value: Int32) -> Int32Asn1 {
         return Int32Asn1{
-            subtype: Integer::new(value as i64)
+            subtype: Integer::from(value as i64)
         };
     }
 
@@ -49,7 +49,7 @@ impl Asn1Object for Int32Asn1 {
                 }
             };
 
-            return Err(red_asn1::ErrorKind::InvalidValue(
+            return Err(red_asn1::ValueErrorKind::ConstraintError(
                         format!("{} is not valid, must be between -2147483648 and 2147483647", new_value)
                         ))?; 
         }

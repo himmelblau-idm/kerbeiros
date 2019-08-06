@@ -12,7 +12,7 @@ pub struct KerberosStringAsn1 {
 impl KerberosStringAsn1 {
     pub fn new(value: AsciiString) -> KerberosStringAsn1 {
         return KerberosStringAsn1 {
-            subtype: IA5String::new(value),
+            subtype: IA5String::from(value),
         }
     }
 

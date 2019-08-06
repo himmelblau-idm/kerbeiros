@@ -97,7 +97,7 @@ mod test {
     fn create_default_seq_of_padatas_asn1() {
         assert_eq!(
             SeqOfPaDataAsn1{
-                subtype: SequenceOf::new()
+                subtype: SequenceOf::default()
             },
             SeqOfPaDataAsn1::default()
         )

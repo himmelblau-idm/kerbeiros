@@ -52,7 +52,7 @@ impl EtypeInfo2Asn1 {
 
     fn default() -> Self {
         return Self{
-            subtype: SequenceOf::new()
+            subtype: SequenceOf::default()
         };
     }
 

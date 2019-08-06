@@ -68,7 +68,7 @@ impl TicketAsn1 {
     fn new(ticket: &Ticket) -> TicketAsn1 {
         let mut ticket_asn1 = Self::default();
 
-        ticket_asn1.set_tkt_vno(Integer::new(ticket.tkt_vno as i64));
+        ticket_asn1.set_tkt_vno(Integer::from(ticket.tkt_vno as i64));
         ticket_asn1.set_realm(RealmAsn1::new(ticket.realm.clone()));
         ticket_asn1.set_sname(ticket.sname.asn1_type());
         ticket_asn1.set_enc_part(ticket.enc_part.asn1_type());

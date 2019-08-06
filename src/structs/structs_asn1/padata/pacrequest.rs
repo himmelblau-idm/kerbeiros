@@ -39,7 +39,7 @@ impl PacRequestAsn1 {
     fn new(pac_request: &PacRequest) -> PacRequestAsn1 {
         let mut pac_request_asn1 = Self::default();
         
-        pac_request_asn1.set_include_pac(Boolean::new(pac_request.include_pac));
+        pac_request_asn1.set_include_pac(Boolean::from(pac_request.include_pac));
 
         return pac_request_asn1;
     }

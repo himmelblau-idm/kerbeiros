@@ -83,7 +83,7 @@ mod test {
     fn create_default_sequence_of_tickets_asn1() {
         assert_eq!(
             SeqOfTicketsAsn1{
-                subtype: SequenceOf::new(),
+                subtype: SequenceOf::default(),
             },
             SeqOfTicketsAsn1::default()
         )

@@ -137,8 +137,8 @@ impl AsReqAsn1 {
     }
 
     fn _set_asn1_values(&mut self, as_req: &AsReq) {
-        self.set_pvno(Integer::new(as_req.pvno as i64));
-        self.set_msg_type(Integer::new(as_req.msg_type as i64));
+        self.set_pvno(Integer::from(as_req.pvno as i64));
+        self.set_msg_type(Integer::from(as_req.msg_type as i64));
 
         if let Some(seq_of_padatas) = &as_req.padata {
             self.set_padata(seq_of_padatas.asn1_type());

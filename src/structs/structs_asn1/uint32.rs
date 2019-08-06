@@ -13,7 +13,7 @@ impl UInt32Asn1 {
     pub fn new(value: UInt32) -> UInt32Asn1 {
         return UInt32Asn1{
             // convert first to i32 to transform values > i32_max into negatives, avoiding overflow when convert to asn1
-            subtype: Integer::new((value as i32) as i64)
+            subtype: Integer::from((value as i32) as i64)
         };
     }
 

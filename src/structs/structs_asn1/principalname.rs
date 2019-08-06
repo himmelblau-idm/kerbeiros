@@ -80,7 +80,7 @@ impl PrincipalNameAsn1 {
     }
 
     fn _seq_of_kerberos_strings(&self, principal_name: &PrincipalName) -> SequenceOf<KerberosStringAsn1> {
-        let mut seq_of_kerberos_strings: SequenceOf<KerberosStringAsn1> = SequenceOf::new();
+        let mut seq_of_kerberos_strings: SequenceOf<KerberosStringAsn1> = SequenceOf::default();
 
         for kerb_string in principal_name.name_string.iter() {
             seq_of_kerberos_strings.push(KerberosStringAsn1::new(kerb_string.clone()));

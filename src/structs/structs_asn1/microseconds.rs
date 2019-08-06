@@ -44,7 +44,7 @@ impl MicrosecondsAsn1 {
     
     fn new(value: &Microseconds) -> Self {
         return Self{
-            subtype: Integer::new(value.get() as i64)
+            subtype: Integer::from(value.get() as i64)
         };
     }
 
@@ -81,7 +81,7 @@ impl Asn1Object for MicrosecondsAsn1 {
                 }
             };
 
-            return Err(red_asn1::ErrorKind::InvalidValue(
+            return Err(red_asn1::ValueErrorKind::ConstraintError(
                         format!("{} is not valid, must be between 0 and 999999", new_value)
                         ))?; 
         }
