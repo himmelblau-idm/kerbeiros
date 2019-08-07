@@ -5,19 +5,18 @@ use std::result::Result;
 use crate::error::*;
 use failure::ResultExt;
 
-use super::kerberosrequester::*;
+use super::transporter_trait::*;
 
+/// Send Kerberos messages over UDP
 #[derive(Debug)]
-pub struct UDPRequester {
+pub struct UDPTransporter {
     dst_addr: SocketAddr
 }
 
-impl UDPRequester {
+impl UDPTransporter {
 
-    pub fn new(host_address: IpAddr) -> Self {
-        return Self{
-            dst_addr: SocketAddr::new(host_address, DEFAULT_KERBEROS_PORT)
-        };
+    pub fn new(dst_addr: SocketAddr) -> Self {
+        return Self { dst_addr };
     }
 
     fn request_and_response_udp(&self, raw_request: &[u8]) -> Result<Vec<u8>, io::Error> {
@@ -47,7 +46,7 @@ impl UDPRequester {
 
 }
 
-impl KerberosRequester for UDPRequester {
+impl Transporter for UDPTransporter {
 
     fn request_and_response(&self, raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
         let raw_response = self.request_and_response_udp(raw_request).context(
@@ -66,7 +65,7 @@ mod tests {
     #[should_panic(expected = "Network error")]
     #[test]
     fn test_request_networks_error() {
-        let requester = UDPRequester::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)));
+        let requester = UDPTransporter::new(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),88));
         requester.request_and_response(&vec![]).unwrap();
     }
 

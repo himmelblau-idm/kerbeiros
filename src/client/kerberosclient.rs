@@ -4,6 +4,7 @@ use crate::error::*;
 use crate::credential::*;
 use super::tgtrequest::*;
 use crate::key::Key;
+use crate::transporter::*;
 
 
 #[derive(Debug)]

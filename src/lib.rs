@@ -1,10 +1,11 @@
+//! Kerberos client
+
 mod structs;
 mod byteparser;
 mod crypter;
+mod transporter;
 
-
-pub mod requester;
-pub use requester::*;
+pub use transporter::TransportProtocol;
 
 pub mod client;
 pub use client::*;

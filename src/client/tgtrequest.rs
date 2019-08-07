@@ -1,6 +1,6 @@
 use std::net::IpAddr;
 use ascii::AsciiString;
-pub use crate::requester::*;
+use crate::transporter::*;
 use crate::messages::*;
 use crate::error::*;
 use crate::constants::*;
@@ -8,7 +8,7 @@ use crate::credential::*;
 use crate::key::Key;
 
 pub struct TGTRequest {
-    requester: Box<KerberosRequester>,
+    transporter: Box<Transporter>,
     as_req: AsReq,
     user_key: Option<Key>
 }
@@ -20,7 +20,7 @@ impl TGTRequest {
         username: AsciiString
     ) -> Self {
         return Self {
-            requester: new_requester(kdc_address, transport_protocol),
+            transporter: new_transporter(kdc_address, transport_protocol),
             as_req: AsReq::new(realm, username),
             user_key: None
         };
@@ -30,8 +30,8 @@ impl TGTRequest {
         self.user_key = Some(user_key);
     }
 
-    pub fn _set_requester(&mut self, requester: Box<KerberosRequester>) {
-        self.requester = requester;
+    pub fn _set_requester(&mut self, requester: Box<Transporter>) {
+        self.transporter = requester;
     }
 
     pub fn request_tgt(&mut self) -> KerberosResult<Credential> {
@@ -107,7 +107,7 @@ impl TGTRequest {
 
     fn as_request_and_response(&self) -> KerberosResult<Vec<u8>> {
         let raw_as_req = self.as_req.build().unwrap();
-        return self.requester.request_and_response(&raw_as_req);
+        return self.transporter.request_and_response(&raw_as_req);
     }
 
 }
@@ -129,9 +129,9 @@ mod test {
     #[test]
     fn request_tgt_receiving_krb_error() {
 
-        struct FakeRequester{}
+        struct FakeTransporter{}
 
-        impl KerberosRequester for FakeRequester {
+        impl Transporter for FakeTransporter {
             fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
                 return Ok(vec![
                     0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 
@@ -172,7 +172,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_requester(Box::new(FakeRequester{}));
+        tgt_request._set_requester(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -182,9 +182,9 @@ mod test {
     #[test]
     fn request_tgt_as_rep_for_user_without_pre_authentication_required() {
 
-        struct FakeRequester{}
+        struct FakeTransporter{}
 
-        impl KerberosRequester for FakeRequester {
+        impl Transporter for FakeTransporter {
             fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
                 return Ok(vec![
                     0x6b, 0x82, 0x05, 0xe3, 0x30, 0x82, 0x05, 0xdf, 0xa0, 0x03, 0x02, 0x01,
@@ -295,7 +295,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_requester(Box::new(FakeRequester{}));
+        tgt_request._set_requester(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -305,9 +305,9 @@ mod test {
     #[test]
     fn request_tgt_as_rep_without_pre_authentication_and_incorrect_password() {
 
-        struct FakeRequester{}
+        struct FakeTransporter{}
 
-        impl KerberosRequester for FakeRequester {
+        impl Transporter for FakeTransporter {
             fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
                 return Ok(vec![
                     0x6b, 0x82, 0x05, 0xe3, 0x30, 0x82, 0x05, 0xdf, 0xa0, 0x03, 0x02, 0x01,
@@ -418,7 +418,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Incorrect password".to_string()));
 
-        tgt_request._set_requester(Box::new(FakeRequester{}));
+        tgt_request._set_requester(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -427,15 +427,15 @@ mod test {
     #[test]
     fn request_tgt_as_rep() {
 
-        struct FakeRequester{}
+        struct FakeTransporter{}
 
-        impl FakeRequester {
+        impl FakeTransporter {
             fn include_password(&self, raw_request: &[u8]) -> bool {
                 return raw_request.len() > 215;
             }
         }
 
-        impl KerberosRequester for FakeRequester {
+        impl Transporter for FakeTransporter {
             fn request_and_response(&self, raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
                 if self.include_password(raw_request) {
                     return Ok(vec![
@@ -578,7 +578,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_requester(Box::new(FakeRequester{}));
+        tgt_request._set_requester(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -589,9 +589,9 @@ mod test {
     #[test]
     fn request_tgt_without_user_key() {
 
-        struct FakeRequester{}
+        struct FakeTransporter{}
 
-        impl KerberosRequester for FakeRequester {
+        impl Transporter for FakeTransporter {
             fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
                 return Ok(vec![
                     0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 
@@ -630,7 +630,7 @@ mod test {
             AsciiString::from_ascii("Mickey").unwrap(),
         );
 
-        tgt_request._set_requester(Box::new(FakeRequester{}));
+        tgt_request._set_requester(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
