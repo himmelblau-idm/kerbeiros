@@ -6,10 +6,10 @@ use failure_derive::Fail;
 use red_asn1;
 use crate::messages::*;
 
-pub type KerberosResult<T> = result::Result<T, KerberosError>;
+pub type KerberosResult<T> = result::Result<T, Error>;
 
 #[derive(Debug)]
-pub struct KerberosError {
+pub struct Error {
     inner: Context<ErrorKind>
 }
 
@@ -53,7 +53,7 @@ pub enum CryptographyErrorKind {
     DecryptionError(String),
 }
 
-impl KerberosError {
+impl Error {
 
     pub fn kind(&self) -> &ErrorKind {
         return self.inner.get_context();
@@ -61,7 +61,7 @@ impl KerberosError {
 
 }
 
-impl Fail for KerberosError {
+impl Fail for Error {
     fn cause(&self) -> Option<&Fail> {
         self.inner.cause()
     }
@@ -71,29 +71,29 @@ impl Fail for KerberosError {
     }
 }
 
-impl fmt::Display for KerberosError {
+impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         fmt::Display::fmt(&self.inner, f)
     }
 }
 
-impl From<ErrorKind> for KerberosError {
-    fn from(kind: ErrorKind) -> KerberosError {
-        return KerberosError {
+impl From<ErrorKind> for Error {
+    fn from(kind: ErrorKind) -> Error {
+        return Error {
             inner: Context::new(kind)
         };
     }
 }
 
-impl From<Context<ErrorKind>> for KerberosError {
-    fn from(inner: Context<ErrorKind>) -> KerberosError {
-        return KerberosError { inner };
+impl From<Context<ErrorKind>> for Error {
+    fn from(inner: Context<ErrorKind>) -> Error {
+        return Error { inner };
     }
 }
 
-impl From<CryptographyErrorKind> for KerberosError {
-    fn from(kind: CryptographyErrorKind) -> KerberosError {
-        return KerberosError {
+impl From<CryptographyErrorKind> for Error {
+    fn from(kind: CryptographyErrorKind) -> Error {
+        return Error {
             inner: Context::new(
                 ErrorKind::CryptographyError(Box::new(kind))
             )
@@ -102,17 +102,17 @@ impl From<CryptographyErrorKind> for KerberosError {
 }
 
 
-impl From<FromAsciiError<&str>> for KerberosError {
+impl From<FromAsciiError<&str>> for Error {
     fn from(_error: FromAsciiError<&str>) -> Self {
-        return KerberosError {
+        return Error {
             inner: Context::new(ErrorKind::InvalidAscii)
         };
     }
 }
 
-impl From<red_asn1::Error> for KerberosError {
+impl From<red_asn1::Error> for Error {
     fn from(error: red_asn1::Error) -> Self {
-        return KerberosError {
+        return Error {
             inner: Context::new(ErrorKind::Asn1Error(error.kind().clone()))
         };
     }

@@ -1,4 +1,3 @@
-use std::result::Result;
 use chrono::{Utc, DateTime, Duration};
 use red_asn1::*;
 use crate::error::*;
@@ -71,7 +70,7 @@ impl AsReq {
         self.req_body.set_sname(name_type, name_string);
     }
 
-    fn push_sname(&mut self, name_string: KerberosString) -> Result<(), KerberosError> {
+    fn push_sname(&mut self, name_string: KerberosString) -> KerberosResult<()> {
         return self.req_body.push_sname(name_string);
     }
 
