@@ -1,13 +1,12 @@
 use std::fmt;
-use std::convert;
-use std::result::Result;
+use std::result;
 use ascii::FromAsciiError;
 use failure::*;
 use failure_derive::Fail;
 use red_asn1;
 use crate::messages::*;
 
-pub type KerberosResult<T> = Result<T, KerberosError>;
+pub type KerberosResult<T> = result::Result<T, KerberosError>;
 
 #[derive(Debug)]
 pub struct KerberosError {
@@ -78,7 +77,7 @@ impl fmt::Display for KerberosError {
     }
 }
 
-impl convert::From<KerberosErrorKind> for KerberosError {
+impl From<KerberosErrorKind> for KerberosError {
     fn from(kind: KerberosErrorKind) -> KerberosError {
         return KerberosError {
             inner: Context::new(kind)
@@ -86,13 +85,13 @@ impl convert::From<KerberosErrorKind> for KerberosError {
     }
 }
 
-impl convert::From<Context<KerberosErrorKind>> for KerberosError {
+impl From<Context<KerberosErrorKind>> for KerberosError {
     fn from(inner: Context<KerberosErrorKind>) -> KerberosError {
         return KerberosError { inner };
     }
 }
 
-impl convert::From<KerberosCryptographyErrorKind> for KerberosError {
+impl From<KerberosCryptographyErrorKind> for KerberosError {
     fn from(kind: KerberosCryptographyErrorKind) -> KerberosError {
         return KerberosError {
             inner: Context::new(
@@ -103,7 +102,7 @@ impl convert::From<KerberosCryptographyErrorKind> for KerberosError {
 }
 
 
-impl convert::From<FromAsciiError<&str>> for KerberosError {
+impl From<FromAsciiError<&str>> for KerberosError {
     fn from(_error: FromAsciiError<&str>) -> Self {
         return KerberosError {
             inner: Context::new(KerberosErrorKind::InvalidAscii)
@@ -111,7 +110,7 @@ impl convert::From<FromAsciiError<&str>> for KerberosError {
     }
 }
 
-impl convert::From<red_asn1::Error> for KerberosError {
+impl From<red_asn1::Error> for KerberosError {
     fn from(error: red_asn1::Error) -> Self {
         return KerberosError {
             inner: Context::new(KerberosErrorKind::Asn1Error(error.kind().clone()))
