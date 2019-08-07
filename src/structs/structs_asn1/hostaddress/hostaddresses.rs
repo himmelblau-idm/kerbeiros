@@ -1,6 +1,6 @@
 use red_asn1::*;
 use super::hostaddress::*;
-use crate::error::*;
+use crate::error::Result;
 use std::ops::{Deref, DerefMut};
 
 #[derive(Debug, PartialEq, Clone)]
@@ -63,7 +63,7 @@ impl HostAddressesAsn1 {
         return seq_of_host_addresses;
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<HostAddresses> {
+    pub fn no_asn1_type(&self) -> Result<HostAddresses> {
         let mut host_addresses = HostAddresses::default();
         for host_address_asn1 in self.subtype.iter() {
             host_addresses.push(host_address_asn1.no_asn1_type()?);

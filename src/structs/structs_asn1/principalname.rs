@@ -1,8 +1,7 @@
 use super::kerberosstring::*;
 use red_asn1::*;
 use super::int32::{Int32,Int32Asn1};
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PrincipalName {
@@ -90,7 +89,7 @@ impl PrincipalNameAsn1 {
         return seq_of_kerberos_strings;
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<PrincipalName> {
+    pub fn no_asn1_type(&self) -> Result<PrincipalName> {
         let name_type = self.get_name_type().ok_or_else(|| 
             ErrorKind::NotAvailableData("PrincipalName::name_type".to_string())
         )?;

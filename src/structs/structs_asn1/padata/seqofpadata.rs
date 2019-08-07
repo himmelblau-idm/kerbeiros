@@ -1,7 +1,7 @@
 use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::padata::*;
-use crate::error::*;
+use crate::error::Result;
 
 pub type MethodData = SeqOfPaData;
 pub type MethodDataAsn1 = SeqOfPaDataAsn1;
@@ -30,7 +30,7 @@ impl SeqOfPaData {
         return SeqOfPaDataAsn1::new(self);
     }
 
-    pub fn parse(raw: &Vec<u8>) -> KerberosResult<Self> {
+    pub fn parse(raw: &Vec<u8>) -> Result<Self> {
         let mut seq_of_padata_asn1 = SeqOfPaDataAsn1::default();
         seq_of_padata_asn1.decode(raw)?;
         return Ok(seq_of_padata_asn1.no_asn1_type().unwrap());
@@ -58,7 +58,7 @@ impl SeqOfPaDataAsn1 {
         }
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<SeqOfPaData> {
+    pub fn no_asn1_type(&self) -> Result<SeqOfPaData> {
         let mut seq_of_padata = SeqOfPaData::default();
         for padata_asn1 in self.subtype.iter() {
             seq_of_padata.push(padata_asn1.no_asn1_type()?);

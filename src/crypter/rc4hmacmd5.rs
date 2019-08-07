@@ -19,7 +19,7 @@ pub fn encrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, timestamp: &[u8], preamb
 }
 
 
-pub fn decrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
+pub fn decrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, ciphertext: &[u8]) -> Result<Vec<u8>> {
     if ciphertext.len() < 24 {
         return Err(CryptographyErrorKind::DecryptionError("Ciphertext too short".to_string()))?;
     }

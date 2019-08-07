@@ -2,8 +2,7 @@ use red_asn1::*;
 use super::pacrequest::PacRequest;
 use super::etypeinfo2::*;
 use super::super::int32::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 use super::super::encrypteddata::EncryptedData;
 use crate::constants::padatatypes::*;
 
@@ -63,7 +62,7 @@ impl PaDataAsn1 {
         self.set_padata_value(OctetString::from(pa_data.get_padata_value_as_bytes()));
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<PaData> {
+    pub fn no_asn1_type(&self) -> Result<PaData> {
         let padata_type_asn1 = self.get_padata_type().ok_or_else(||
             ErrorKind::NotAvailableData("PaData::type".to_string())
         )?;

@@ -4,8 +4,7 @@ use super::kerberosstring::*;
 use super::realm::{Realm, RealmAsn1};
 use super::kdcoptions::{KdcOptions, KdcOptionsAsn1};
 use super::principalname::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 use crate::constants::principalnametypes::*;
 use super::kerberostime::{KerberosTime, KerberosTimeAsn1};
 use super::hostaddress::{HostAddresses, HostAddressesAsn1, HostAddress};
@@ -62,7 +61,7 @@ impl KdcReqBody {
         self.sname = Some(PrincipalName::new(name_type, name_string));
     }
 
-    pub fn push_sname(&mut self, name_string: KerberosString) -> KerberosResult<()> {
+    pub fn push_sname(&mut self, name_string: KerberosString) -> Result<()> {
         match &mut self.sname {
             Some(sname) => {
                 sname.push(name_string);

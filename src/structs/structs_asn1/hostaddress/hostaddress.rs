@@ -1,7 +1,6 @@
 use red_asn1::*;
 pub use super::super::int32::{Int32, Int32Asn1};
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 use crate::constants::hostaddress::*;
 
 static NETBIOS_PADDING_CHAR: char = 32 as char;
@@ -82,7 +81,7 @@ impl HostAddressAsn1 {
         return host_address_asn1;
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<HostAddress> {
+    pub fn no_asn1_type(&self) -> Result<HostAddress> {
         let addr_type_asn1 = self.get_addr_type().ok_or_else(|| 
             ErrorKind::NotAvailableData("HostAddress::addr_type".to_string())
         )?;

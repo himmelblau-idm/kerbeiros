@@ -19,7 +19,7 @@ impl<'a> AsReqTimestampCrypter<'a> {
     pub fn build_encrypted_timestamp(
         realm: &'a AsciiString, username: &'a AsciiString, 
         user_key: &'a Key, etypes: &'a Vec<i32>
-    ) -> KerberosResult<(i32, Vec<u8>)> {
+    ) -> Result<(i32, Vec<u8>)> {
         let timestamp_builder = Self::new(realm, username, user_key, etypes);
         return timestamp_builder.produce_encrypted_timestamp();
     }
@@ -42,7 +42,7 @@ impl<'a> AsReqTimestampCrypter<'a> {
         return timestamp.build();
     }
 
-    fn produce_encrypted_timestamp(&self) -> KerberosResult<(i32, Vec<u8>)> {
+    fn produce_encrypted_timestamp(&self) -> Result<(i32, Vec<u8>)> {
         match self.user_key {
             Key::Password(password) => {
                 return self.encrypt_timestamp_with_best_cipher_and_password(password);
@@ -59,7 +59,7 @@ impl<'a> AsReqTimestampCrypter<'a> {
         }
     }
 
-    fn encrypt_timestamp_with_best_cipher_and_password(&self, password: &str) -> KerberosResult<(i32, Vec<u8>)> {
+    fn encrypt_timestamp_with_best_cipher_and_password(&self, password: &str) -> Result<(i32, Vec<u8>)> {
         let etype;
         let salt;
         
@@ -82,13 +82,13 @@ impl<'a> AsReqTimestampCrypter<'a> {
         return self.encrypt_timestamp_with_cipher_and_password(etype, password, &salt);
     }
 
-    fn encrypt_timestamp_with_cipher_and_key(&self, etype: i32, key: &[u8]) -> KerberosResult<(i32, Vec<u8>)> {
+    fn encrypt_timestamp_with_cipher_and_key(&self, etype: i32, key: &[u8]) -> Result<(i32, Vec<u8>)> {
         let crypter = new_kerberos_crypter(etype)?;
         return Ok((etype, crypter.encrypt(key, KEY_USAGE_AS_REQ_TIMESTAMP, &self.raw_timestamp))); 
     }
 
     fn encrypt_timestamp_with_cipher_and_password(&self, etype: i32, password: &str, salt: &[u8]
-        ) -> KerberosResult<(i32, Vec<u8>)> {
+        ) -> Result<(i32, Vec<u8>)> {
         let crypter = new_kerberos_crypter(etype)?;
         return Ok((etype, crypter.generate_key_from_password_and_encrypt(
                                 password,

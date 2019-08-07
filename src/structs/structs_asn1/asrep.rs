@@ -4,8 +4,7 @@ use super::realm::*;
 use super::padata::*;
 use super::ticket::*;
 use super::encrypteddata::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct KdcRep {
@@ -84,7 +83,7 @@ impl KdcRep {
     }
 
 
-    pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
+    pub fn parse(raw: &[u8]) -> Result<Self> {
         let mut as_rep_asn1 = AsRepAsn1::default();
         as_rep_asn1.decode(raw)?;
         return Ok(as_rep_asn1.no_asn1_type().unwrap());
@@ -113,7 +112,7 @@ struct AsRepAsn1 {
 
 impl AsRepAsn1 {
 
-    fn no_asn1_type(&self) -> KerberosResult<KdcRep> {
+    fn no_asn1_type(&self) -> Result<KdcRep> {
         let pvno = self.get_pvno().ok_or_else(|| 
             ErrorKind::NotAvailableData("AsRep::pvno".to_string())
         )?;

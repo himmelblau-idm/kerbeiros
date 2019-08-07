@@ -39,7 +39,7 @@ impl KerberosCrypter for RC4Crypter {
         return self.generate_key(&raw_key, salt);
     }
 
-    fn decrypt(&self, key: &[u8], key_usage: i32, ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
+    fn decrypt(&self, key: &[u8], key_usage: i32, ciphertext: &[u8]) -> Result<Vec<u8>> {
         let real_key_usage;
         if key_usage == 3 {
             real_key_usage = 8; // RFC 4757 rules

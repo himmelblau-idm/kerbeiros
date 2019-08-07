@@ -37,7 +37,7 @@ impl CredentialKrbInfoMapper {
         return (krb_cred_info, credential.get_ticket().clone());
     }
 
-    pub fn kdc_rep_to_credential(key: &Key, kdc_rep: &KdcRep) -> KerberosResult<Credential> {
+    pub fn kdc_rep_to_credential(key: &Key, kdc_rep: &KdcRep) -> Result<Credential> {
         let plaintext;
         match key {
             Key::Password(password) => {
@@ -58,7 +58,7 @@ impl CredentialKrbInfoMapper {
         ));
     }
 
-    fn decrypt_enc_kdc_rep_part_with_password(password: &str, kdc_rep: &KdcRep) -> KerberosResult<Vec<u8>> {
+    fn decrypt_enc_kdc_rep_part_with_password(password: &str, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
         let crypter = new_kerberos_crypter(kdc_rep.get_enc_part_etype())?;
         return crypter.generate_key_from_password_and_decrypt(
             password, 
@@ -68,7 +68,7 @@ impl CredentialKrbInfoMapper {
         );
     }
 
-    fn decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> KerberosResult<Vec<u8>> {
+    fn decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
         match Self::try_decrypt_enc_kdc_rep_part_with_cipher_key(key, kdc_rep) {
             Err(error) => {
                 if key.get_etype() != kdc_rep.get_enc_part_etype() {
@@ -84,7 +84,7 @@ impl CredentialKrbInfoMapper {
         }
     }
 
-    fn try_decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> KerberosResult<Vec<u8>> {
+    fn try_decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
         let crypter = new_kerberos_crypter(key.get_etype()).unwrap();
         return crypter.decrypt(
             key.get_value_as_bytes(),

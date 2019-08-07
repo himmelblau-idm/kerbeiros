@@ -1,4 +1,6 @@
-use crate::error::*;
+use red_asn1::*;
+use chrono::Utc;
+use crate::error::{ErrorKind, Result};
 use super::super::kerberostime::*;
 use super::super::microseconds::*;
 use super::super::int32::*;
@@ -7,11 +9,6 @@ use super::super::principalname::*;
 use super::edata::Edata;
 use crate::constants::errorcodes::*;
 use super::super::padata::*;
-use red_asn1::*;
-use chrono::Utc;
-use crate::error::ErrorKind;
-
-
 
 
 #[derive(Debug, Clone, PartialEq)]
@@ -55,7 +52,7 @@ impl KrbError {
         return self.error_code;
     }
 
-    pub fn parse(raw: &[u8]) -> KerberosResult<KrbError> {
+    pub fn parse(raw: &[u8]) -> Result<KrbError> {
         let mut krb_error_asn1 = KrbErrorAsn1::default();
         krb_error_asn1.decode(raw)?;
         return Ok(krb_error_asn1.no_asn1_type().unwrap());
@@ -95,7 +92,7 @@ struct KrbErrorAsn1 {
 
 impl KrbErrorAsn1 {
 
-    fn no_asn1_type(&self) -> KerberosResult<KrbError> {
+    fn no_asn1_type(&self) -> Result<KrbError> {
         let mut krb_error = KrbError::default();
 
         let pvno = self.get_pvno().ok_or_else(|| 

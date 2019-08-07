@@ -77,11 +77,11 @@ impl Credential {
         return self.client_part.get_encrypted_pa_data();
     }
 
-    pub fn save_into_ccache_file(&self, path: &str) -> KerberosResult<()> {
+    pub fn save_into_ccache_file(&self, path: &str) -> Result<()> {
         return CredentialWarehouse::new(self.clone()).save_into_ccache_file(path);
     }
 
-    pub fn save_into_krb_cred_file(&self, path: &str) -> KerberosResult<()> {
+    pub fn save_into_krb_cred_file(&self, path: &str) -> Result<()> {
         return CredentialWarehouse::new(self.clone()).save_into_krb_cred_file(path);
     }
 

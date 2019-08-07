@@ -2,7 +2,6 @@ use std::net::*;
 use std::io::{Write, Read};
 use std::io;
 use std::time::Duration;
-use std::result::Result;
 use crate::error::*;
 use failure::ResultExt;
 
@@ -20,7 +19,7 @@ impl TCPTransporter {
         return Self { dst_addr };
     }
 
-    fn request_and_response_tcp(&self, raw_request: &[u8]) -> Result<Vec<u8>, io::Error> {
+    fn request_and_response_tcp(&self, raw_request: &[u8]) -> io::Result<Vec<u8>> {
         
         let mut tcp_stream = TcpStream::connect_timeout(&self.dst_addr, Duration::new(5, 0))?;
 
@@ -49,7 +48,7 @@ impl TCPTransporter {
 
 impl Transporter for TCPTransporter {
 
-    fn request_and_response(&self, raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
+    fn request_and_response(&self, raw_request: &[u8]) -> Result<Vec<u8>> {
         let raw_response = self.request_and_response_tcp(raw_request).context(
             ErrorKind::NetworkError
         )?;

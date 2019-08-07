@@ -4,8 +4,7 @@ use super::kerberostime::*;
 use super::krbcredinfo::*;
 use super::hostaddress::*;
 use super::microseconds::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct EncKrbCredPart {
@@ -107,7 +106,7 @@ impl EncKrbCredPartAsn1 {
         return enc_krb_cred_part_asn1;
     }
 
-    pub fn _no_asn1_type(&self) -> KerberosResult<EncKrbCredPart> {
+    pub fn _no_asn1_type(&self) -> Result<EncKrbCredPart> {
         let ticket_info = self.get_ticket_info().ok_or_else(|| 
             ErrorKind::NotAvailableData("EncKrbCredPart::ticket_info".to_string())
         )?;

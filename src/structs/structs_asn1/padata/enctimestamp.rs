@@ -1,7 +1,7 @@
 use red_asn1::*;
 use super::super::kerberostime::*;
 use super::super::microseconds::*;
-use crate::error::*;
+use crate::error::Result;
 
 
 pub struct PaEncTsEnc {
@@ -22,7 +22,7 @@ impl PaEncTsEnc {
         self.pausec = Some(pausec);
     }
 
-    pub fn from_datetime(datetime: DateTime<Utc>) -> KerberosResult<Self> {
+    pub fn from_datetime(datetime: DateTime<Utc>) -> Result<Self> {
         let mut pa_enc_ts_enc = Self::new(datetime);
         pa_enc_ts_enc.set_pausec(Microseconds::new(datetime.timestamp_subsec_micros())?);
         

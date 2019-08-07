@@ -8,8 +8,7 @@ use super::realm::*;
 use super::principalname::*;
 use super::hostaddress::*;
 use super::padata::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct EncKdcRepPart {
@@ -140,7 +139,7 @@ impl EncKdcRepPart {
         self.encrypted_pa_data = Some(encrypted_pa_data);
     }
 
-    pub fn parse(raw: &[u8]) -> KerberosResult<Self> {
+    pub fn parse(raw: &[u8]) -> Result<Self> {
         let mut enc_as_rep_part_asn1 = EncAsRepPartAsn1::default();
         enc_as_rep_part_asn1.decode(raw)?;
         return Ok(enc_as_rep_part_asn1.no_asn1_type().unwrap());
@@ -180,7 +179,7 @@ struct EncAsRepPartAsn1 {
 
 impl EncAsRepPartAsn1 {
 
-    fn no_asn1_type(&self) -> KerberosResult<EncKdcRepPart> {
+    fn no_asn1_type(&self) -> Result<EncKdcRepPart> {
         let key = self.get_key().ok_or_else(|| 
             ErrorKind::NotAvailableData("EncKdcRepPart::key".to_string())
         )?;

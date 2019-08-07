@@ -34,7 +34,7 @@ impl TGTRequest {
         self.transporter = requester;
     }
 
-    pub fn request_tgt(&mut self) -> KerberosResult<Credential> {
+    pub fn request_tgt(&mut self) -> Result<Credential> {
         let raw_response = self.as_request_and_response()?;
 
         match self.parse_as_request_response(&raw_response)? {
@@ -47,7 +47,7 @@ impl TGTRequest {
         }
     }
 
-    fn process_1st_krb_error(&mut self, krb_error: KrbError) -> KerberosResult<Credential> {
+    fn process_1st_krb_error(&mut self, krb_error: KrbError) -> Result<Credential> {
         if krb_error.get_error_code() != KDC_ERR_PREAUTH_REQUIRED {
             return Err(ErrorKind::KrbErrorResponse(krb_error))?;
         }
@@ -59,7 +59,7 @@ impl TGTRequest {
         return Err(ErrorKind::KrbErrorResponse(krb_error))?;
     }
 
-    fn request_2nd_as_req(&mut self, user_key: &Key) -> KerberosResult<Credential> {
+    fn request_2nd_as_req(&mut self, user_key: &Key) -> Result<Credential> {
         self.as_req.set_user_key(user_key.clone());
         let raw_response = self.as_request_and_response()?;
 
@@ -73,7 +73,7 @@ impl TGTRequest {
         }
     }
 
-    fn extract_credential_from_as_rep(&self, as_rep: AsRep) -> KerberosResult<Credential> {
+    fn extract_credential_from_as_rep(&self, as_rep: AsRep) -> Result<Credential> {
         let user_key;
 
         if let Some(key) = &self.user_key {
@@ -93,7 +93,7 @@ impl TGTRequest {
         }
     }
 
-    fn parse_as_request_response(&self, raw_response: &[u8]) -> KerberosResult<AsReqResponse> {
+    fn parse_as_request_response(&self, raw_response: &[u8]) -> Result<AsReqResponse> {
         match KrbError::parse(raw_response) {
             Ok(krb_error) => {
                 return Ok(AsReqResponse::KrbError(krb_error));
@@ -105,7 +105,7 @@ impl TGTRequest {
         }
     }
 
-    fn as_request_and_response(&self) -> KerberosResult<Vec<u8>> {
+    fn as_request_and_response(&self) -> Result<Vec<u8>> {
         let raw_as_req = self.as_req.build().unwrap();
         return self.transporter.request_and_response(&raw_as_req);
     }
@@ -132,7 +132,7 @@ mod test {
         struct FakeTransporter{}
 
         impl Transporter for FakeTransporter {
-            fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
+            fn request_and_response(&self, _raw_request: &[u8]) -> Result<Vec<u8>> {
                 return Ok(vec![
                     0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 
                     0xa0, 0x03, 0x02, 0x01, 0x05, 
@@ -185,7 +185,7 @@ mod test {
         struct FakeTransporter{}
 
         impl Transporter for FakeTransporter {
-            fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
+            fn request_and_response(&self, _raw_request: &[u8]) -> Result<Vec<u8>> {
                 return Ok(vec![
                     0x6b, 0x82, 0x05, 0xe3, 0x30, 0x82, 0x05, 0xdf, 0xa0, 0x03, 0x02, 0x01,
                     0x05, 0xa1, 0x03, 0x02, 0x01, 0x0b, 0xa2, 0x2e, 0x30, 0x2c, 0x30, 0x2a, 0xa1, 0x03, 0x02, 0x01,
@@ -308,7 +308,7 @@ mod test {
         struct FakeTransporter{}
 
         impl Transporter for FakeTransporter {
-            fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
+            fn request_and_response(&self, _raw_request: &[u8]) -> Result<Vec<u8>> {
                 return Ok(vec![
                     0x6b, 0x82, 0x05, 0xe3, 0x30, 0x82, 0x05, 0xdf, 0xa0, 0x03, 0x02, 0x01,
                     0x05, 0xa1, 0x03, 0x02, 0x01, 0x0b, 0xa2, 0x2e, 0x30, 0x2c, 0x30, 0x2a, 0xa1, 0x03, 0x02, 0x01,
@@ -436,7 +436,7 @@ mod test {
         }
 
         impl Transporter for FakeTransporter {
-            fn request_and_response(&self, raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
+            fn request_and_response(&self, raw_request: &[u8]) -> Result<Vec<u8>> {
                 if self.include_password(raw_request) {
                     return Ok(vec![
                         0x6b, 0x82, 0x05, 0xe3, 0x30, 0x82, 0x05, 0xdf, 0xa0, 0x03, 0x02, 0x01,
@@ -592,7 +592,7 @@ mod test {
         struct FakeTransporter{}
 
         impl Transporter for FakeTransporter {
-            fn request_and_response(&self, _raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
+            fn request_and_response(&self, _raw_request: &[u8]) -> Result<Vec<u8>> {
                 return Ok(vec![
                     0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 
                     0xa0, 0x03, 0x02, 0x01, 0x05, 

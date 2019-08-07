@@ -1,7 +1,6 @@
 pub use std::net::IpAddr;
 use std::net::*;
 use std::io;
-use std::result::Result;
 use crate::error::*;
 use failure::ResultExt;
 
@@ -19,7 +18,7 @@ impl UDPTransporter {
         return Self { dst_addr };
     }
 
-    fn request_and_response_udp(&self, raw_request: &[u8]) -> Result<Vec<u8>, io::Error> {
+    fn request_and_response_udp(&self, raw_request: &[u8]) -> io::Result<Vec<u8>> {
         
         let udp_socket = UdpSocket::bind("0.0.0.0:0")?;
         udp_socket.connect(self.dst_addr)?;
@@ -48,7 +47,7 @@ impl UDPTransporter {
 
 impl Transporter for UDPTransporter {
 
-    fn request_and_response(&self, raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
+    fn request_and_response(&self, raw_request: &[u8]) -> Result<Vec<u8>> {
         let raw_response = self.request_and_response_udp(raw_request).context(
             ErrorKind::NetworkError
         )?;

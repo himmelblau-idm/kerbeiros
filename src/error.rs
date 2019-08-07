@@ -6,7 +6,7 @@ use failure_derive::Fail;
 use red_asn1;
 use crate::messages::*;
 
-pub type KerberosResult<T> = result::Result<T, Error>;
+pub type Result<T> = result::Result<T, Error>;
 
 #[derive(Debug)]
 pub struct Error {
@@ -141,7 +141,7 @@ mod tests{
         }
     }
 
-    fn produce_invalid_network_error() -> KerberosResult<()> {
+    fn produce_invalid_network_error() -> Result<()> {
         Err(ErrorKind::NetworkError)?;
         unreachable!();
     }

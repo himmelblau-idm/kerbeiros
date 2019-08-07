@@ -28,7 +28,7 @@ impl KerberosClient {
         self.transport_protocol = transport_protocol;
     }
 
-    pub fn request_tgt(&self, username: AsciiString, user_key: Option<Key>) -> KerberosResult<Credential> {
+    pub fn request_tgt(&self, username: AsciiString, user_key: Option<Key>) -> Result<Credential> {
         let mut tgt_request = TGTRequest::new(
             self.realm.clone(), 
             self.kdc_address.clone(),

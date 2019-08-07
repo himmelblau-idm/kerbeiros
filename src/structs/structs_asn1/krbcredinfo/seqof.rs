@@ -1,7 +1,7 @@
 use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::krbcredinfo::*;
-use crate::error::*;
+use crate::error::Result;
 
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct SeqOfKrbCredInfo {
@@ -54,7 +54,7 @@ impl SeqOfKrbCredInfoAsn1 {
         }
     }
 
-    pub fn _no_asn1_type(&self) -> KerberosResult<SeqOfKrbCredInfo> {
+    pub fn _no_asn1_type(&self) -> Result<SeqOfKrbCredInfo> {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         for seq_of_krb_cred_info_asn1 in self.subtype.iter() {
             seq_of_krb_cred_info.push(seq_of_krb_cred_info_asn1.no_asn1_type()?);

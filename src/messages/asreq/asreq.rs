@@ -51,12 +51,12 @@ impl AsReq {
         self.pac = false;
     }
 
-    pub fn build(&self) -> KerberosResult<Vec<u8>> {
+    pub fn build(&self) -> Result<Vec<u8>> {
         let as_req = self.create_as_req_struct()?;
         return Ok(as_req.build());
     }
 
-    fn create_as_req_struct(&self) -> KerberosResult<structs_asn1::AsReq> {
+    fn create_as_req_struct(&self) -> Result<structs_asn1::AsReq> {
         let mut as_req = structs_asn1::AsReq::new(self.realm.clone(), self.username.clone());
         as_req.set_kdc_options(self.kdc_options);
 
@@ -77,7 +77,7 @@ impl AsReq {
         return Ok(as_req);
     }
 
-    fn produce_encrypted_timestamp(&self, user_key: &Key) -> KerberosResult<(i32, Vec<u8>)>{
+    fn produce_encrypted_timestamp(&self, user_key: &Key) -> Result<(i32, Vec<u8>)>{
         return AsReqTimestampCrypter::build_encrypted_timestamp(
             &self.realm,
             &self.username,

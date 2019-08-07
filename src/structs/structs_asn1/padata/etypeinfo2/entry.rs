@@ -1,8 +1,7 @@
 use red_asn1::*;
 use super::super::super::int32::*;
 use super::super::super::kerberosstring::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 
 
 #[derive(Debug, Clone, PartialEq)]
@@ -76,7 +75,7 @@ impl EtypeInfo2EntryAsn1 {
         return entry_asn1;
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<EtypeInfo2Entry> {
+    pub fn no_asn1_type(&self) -> Result<EtypeInfo2Entry> {
         let mut entry = EtypeInfo2Entry::default();
 
         let etype_asn1 = self.get_etype().ok_or_else(|| 

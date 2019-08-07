@@ -1,6 +1,6 @@
 use red_asn1::*;
 use std::ops::{Deref, DerefMut};
-use crate::error::*;
+use crate::error::Result;
 use super::entry::*;
 
 
@@ -28,7 +28,7 @@ impl EtypeInfo2 {
         return EtypeInfo2Asn1::new(self);
     }
 
-    pub fn parse(raw: &Vec<u8>) -> KerberosResult<Self> {
+    pub fn parse(raw: &Vec<u8>) -> Result<Self> {
         let mut seq_of_padata_asn1 = EtypeInfo2Asn1::default();
         seq_of_padata_asn1.decode(raw)?;
         return Ok(seq_of_padata_asn1.no_asn1_type().unwrap());
@@ -62,7 +62,7 @@ impl EtypeInfo2Asn1 {
         }
     }
 
-    fn no_asn1_type(&self) -> KerberosResult<EtypeInfo2> {
+    fn no_asn1_type(&self) -> Result<EtypeInfo2> {
         let mut seq_of_padata = EtypeInfo2::default();
         for padata_asn1 in self.subtype.iter() {
             seq_of_padata.entries.push(padata_asn1.no_asn1_type()?);

@@ -1,7 +1,6 @@
 pub use ascii::*;
 use red_asn1::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 
 pub type KerberosString = AsciiString;
 
@@ -17,7 +16,7 @@ impl KerberosStringAsn1 {
         }
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<KerberosString> {
+    pub fn no_asn1_type(&self) -> Result<KerberosString> {
         let ascii_string = self.subtype.value().ok_or_else(|| 
             ErrorKind::NotAvailableData("KerberosString".to_string())
         )?;

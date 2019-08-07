@@ -1,6 +1,5 @@
 use red_asn1::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 use super::super::realm::*;
 use super::super::principalname::*;
 use super::super::encrypteddata::*;
@@ -77,7 +76,7 @@ impl TicketAsn1 {
         return ticket_asn1;
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<Ticket> {
+    pub fn no_asn1_type(&self) -> Result<Ticket> {
         let tkt_vno = self.get_tkt_vno().ok_or_else(||
             ErrorKind::NotAvailableData("Ticket::tkt_vno".to_string())
         )?;

@@ -1,8 +1,7 @@
 use red_asn1::*;
 use super::int32::*;
 use super::uint32::*;
-use crate::error::*;
-use crate::error::ErrorKind;
+use crate::error::{ErrorKind, Result};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct EncryptedData {
@@ -65,7 +64,7 @@ impl EncryptedDataAsn1 {
         return enc_data_asn1;
     }
 
-    pub fn no_asn1_type(&self) -> KerberosResult<EncryptedData> {
+    pub fn no_asn1_type(&self) -> Result<EncryptedData> {
         let etype = self.get_etype().ok_or_else(|| 
             ErrorKind::NotAvailableData("EncryptedData::etype".to_string())
         )?;

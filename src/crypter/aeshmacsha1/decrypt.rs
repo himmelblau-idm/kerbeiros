@@ -51,7 +51,7 @@ fn basic_encrypt(key: &[u8], plaintext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> 
     return swapped_ciphertext;
 }
 
-pub fn aes_hmac_sh1_decrypt(key: &[u8], key_usage: i32, ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
+pub fn aes_hmac_sh1_decrypt(key: &[u8], key_usage: i32, ciphertext: &[u8], aes_sizes: &AesSizes) -> Result<Vec<u8>> {
     let (ki, ke) = generate_ki_ke(key, key_usage, aes_sizes);
 
     if ciphertext.len() < aes_sizes.block_size() + aes_sizes.mac_size() {
@@ -74,7 +74,7 @@ pub fn aes_hmac_sh1_decrypt(key: &[u8], key_usage: i32, ciphertext: &[u8], aes_s
 }
 
 
-fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> KerberosResult<Vec<u8>> {
+fn basic_decrypt(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Result<Vec<u8>> {
     if ciphertext.len() == aes_sizes.block_size() {
         let plaintext = decrypt_aes_ecb(key, ciphertext, aes_sizes);
         return Ok(plaintext);

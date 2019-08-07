@@ -11,14 +11,14 @@ pub struct CredentialFileConverter<'a> {
 
 impl<'a> CredentialFileConverter<'a> {
 
-    pub fn save_into_krb_cred_file(credentials: &'a CredentialWarehouse, path: &'a str) -> KerberosResult<()> {
+    pub fn save_into_krb_cred_file(credentials: &'a CredentialWarehouse, path: &'a str) -> Result<()> {
         let converter = Self::new(credentials, path);
         let data = converter.build_krb_cred();
         return converter.save_data_to_file(&data);
     }
 
     
-    pub fn save_into_ccache_file(credentials: &'a CredentialWarehouse, path: &'a str) -> KerberosResult<()> {
+    pub fn save_into_ccache_file(credentials: &'a CredentialWarehouse, path: &'a str) -> Result<()> {
         let converter = Self::new(credentials, path);
         let data = converter.build_ccache();
         return converter.save_data_to_file(&data);
@@ -32,7 +32,7 @@ impl<'a> CredentialFileConverter<'a> {
         };
     }
 
-    fn save_data_to_file(&self, data: &[u8]) -> KerberosResult<()> {
+    fn save_data_to_file(&self, data: &[u8]) -> Result<()> {
         let mut fp = File::create(self.path).context(
             ErrorKind::IOError
         )?;

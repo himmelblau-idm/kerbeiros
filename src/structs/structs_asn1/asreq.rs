@@ -1,6 +1,6 @@
 use chrono::{Utc, DateTime, Duration};
 use red_asn1::*;
-use crate::error::*;
+use crate::error::Result;
 use super::padata::*;
 use super::kdcreqbody::*;
 use super::kerberosstring::*;
@@ -70,7 +70,7 @@ impl AsReq {
         self.req_body.set_sname(name_type, name_string);
     }
 
-    fn push_sname(&mut self, name_string: KerberosString) -> KerberosResult<()> {
+    fn push_sname(&mut self, name_string: KerberosString) -> Result<()> {
         return self.req_body.push_sname(name_string);
     }
 

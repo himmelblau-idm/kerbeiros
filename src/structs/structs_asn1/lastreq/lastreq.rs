@@ -1,6 +1,6 @@
 use red_asn1::*;
 use super::lastreqentry::*;
-use crate::error::*;
+use crate::error::Result;
 use std::ops::{Deref, DerefMut};
 
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -28,7 +28,7 @@ pub struct LastReqAsn1 {
 
 impl LastReqAsn1 {
 
-    pub fn no_asn1_type(&self) -> KerberosResult<LastReq> {
+    pub fn no_asn1_type(&self) -> Result<LastReq> {
         let mut last_req = LastReq::default();
         for last_req_asn1 in self.subtype.iter() {
             last_req.push(last_req_asn1.no_asn1_type()?);
