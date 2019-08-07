@@ -6,6 +6,7 @@ pub use super::super::principalname::*;
 pub use super::super::ticketflags::*;
 pub use super::super::hostaddress::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct KrbCredInfo {
@@ -173,7 +174,7 @@ impl KrbCredInfoAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<KrbCredInfo> {
         let key = self.get_key().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("KrbCredInfo::key".to_string())
+            ErrorKind::NotAvailableData("KrbCredInfo::key".to_string())
         )?;
 
         let mut krb_cred_info = KrbCredInfo::new(

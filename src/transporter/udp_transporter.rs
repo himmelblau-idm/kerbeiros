@@ -50,7 +50,7 @@ impl Transporter for UDPTransporter {
 
     fn request_and_response(&self, raw_request: &[u8]) -> KerberosResult<Vec<u8>> {
         let raw_response = self.request_and_response_udp(raw_request).context(
-            KerberosErrorKind::NetworkError
+            ErrorKind::NetworkError
         )?;
         return Ok(raw_response);
     }

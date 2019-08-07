@@ -49,14 +49,14 @@ impl TGTRequest {
 
     fn process_1st_krb_error(&mut self, krb_error: KrbError) -> KerberosResult<Credential> {
         if krb_error.get_error_code() != KDC_ERR_PREAUTH_REQUIRED {
-            return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
+            return Err(ErrorKind::KrbErrorResponse(krb_error))?;
         }
 
         if let Some(user_key) = self.user_key.clone() {
             return self.request_2nd_as_req(&user_key);
         }
 
-        return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
+        return Err(ErrorKind::KrbErrorResponse(krb_error))?;
     }
 
     fn request_2nd_as_req(&mut self, user_key: &Key) -> KerberosResult<Credential> {
@@ -65,7 +65,7 @@ impl TGTRequest {
 
         match self.parse_as_request_response(&raw_response)? {
             AsReqResponse::KrbError(krb_error) => {
-                return Err(KerberosErrorKind::KrbErrorResponse(krb_error))?;
+                return Err(ErrorKind::KrbErrorResponse(krb_error))?;
             },
             AsReqResponse::AsRep(as_rep) => {
                 return self.extract_credential_from_as_rep(as_rep);
@@ -80,7 +80,7 @@ impl TGTRequest {
             user_key = key;
         } 
         else {
-            return Err(KerberosErrorKind::ParseKdcRepError(as_rep, Box::new(KerberosErrorKind::NoKeyProvided)))?;
+            return Err(ErrorKind::ParseKdcRepError(as_rep, Box::new(ErrorKind::NoKeyProvided)))?;
         }
         
         match CredentialKrbInfoMapper::kdc_rep_to_credential(user_key, &as_rep) {
@@ -88,7 +88,7 @@ impl TGTRequest {
                 return Ok(credential);
             },
             Err(error) => {
-                return Err(KerberosErrorKind::ParseKdcRepError(as_rep, Box::new(error.kind().clone())))?;
+                return Err(ErrorKind::ParseKdcRepError(as_rep, Box::new(error.kind().clone())))?;
             }
         }
     }

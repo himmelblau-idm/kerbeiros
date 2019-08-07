@@ -1,5 +1,6 @@
 use red_asn1::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Microseconds{
@@ -10,7 +11,7 @@ pub struct Microseconds{
 impl Microseconds {
     pub fn new(x: u32) -> KerberosResult<Self> {
         if x > 999999 {
-            return Err(KerberosErrorKind::InvalidMicroseconds(x))?;
+            return Err(ErrorKind::InvalidMicroseconds(x))?;
         }
         return Ok(Self{
             value: x
@@ -23,7 +24,7 @@ impl Microseconds {
 
     fn _set(&mut self, x: u32) -> KerberosResult<()> {
         if x > 999999 {
-            return Err(KerberosErrorKind::InvalidMicroseconds(x))?;
+            return Err(ErrorKind::InvalidMicroseconds(x))?;
         }
 
         self.value = x;
@@ -50,7 +51,7 @@ impl MicrosecondsAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<Microseconds> {
         let value = self.subtype.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("Microseconds".to_string())
+            ErrorKind::NotAvailableData("Microseconds".to_string())
         )?;
         return Microseconds::new(value as u32);
     }

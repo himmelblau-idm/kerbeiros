@@ -5,6 +5,7 @@ use super::realm::{Realm, RealmAsn1};
 use super::kdcoptions::{KdcOptions, KdcOptionsAsn1};
 use super::principalname::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 use crate::constants::principalnametypes::*;
 use super::kerberostime::{KerberosTime, KerberosTimeAsn1};
 use super::hostaddress::{HostAddresses, HostAddressesAsn1, HostAddress};
@@ -68,7 +69,7 @@ impl KdcReqBody {
                 return Ok(());
             },
             None => {
-                Err(KerberosErrorKind::PrincipalNameTypeUndefined("sname".to_string()))?;
+                Err(ErrorKind::PrincipalNameTypeUndefined("sname".to_string()))?;
             }
         };
         unreachable!()

@@ -10,11 +10,11 @@ pub type KerberosResult<T> = result::Result<T, KerberosError>;
 
 #[derive(Debug)]
 pub struct KerberosError {
-    inner: Context<KerberosErrorKind>
+    inner: Context<ErrorKind>
 }
 
 #[derive(Clone, PartialEq, Debug, Fail)]
-pub enum KerberosErrorKind {
+pub enum ErrorKind {
     #[fail(display = "Invalid KDC hostname")]
     InvalidKDC,
     #[fail(display = "Network error")]
@@ -30,13 +30,13 @@ pub enum KerberosErrorKind {
     #[fail (display = "Asn1 error: {}", _0)]
     Asn1Error(red_asn1::ErrorKind),
     #[fail (display = "Cryptography error: {}", _0)]
-    CryptographyError(Box<KerberosCryptographyErrorKind>),
+    CryptographyError(Box<CryptographyErrorKind>),
     #[fail (display = "Error resolving name: {}", _0)]
     NameResolutionError(String),
     #[fail (display = "Received KRB-ERROR response")]
     KrbErrorResponse(KrbError),
     #[fail (display = "Error parsing KdcRep: {}", _1)]
-    ParseKdcRepError(KdcRep, Box<KerberosErrorKind>),
+    ParseKdcRepError(KdcRep, Box<ErrorKind>),
     #[fail (display = "None cipher algorithm supported was specified")]
     NoProvidedSupportedCipherAlgorithm,
     #[fail (display = "Error in i/o operation")]
@@ -46,7 +46,7 @@ pub enum KerberosErrorKind {
 }
 
 #[derive(Clone, PartialEq, Debug, Fail)]
-pub enum KerberosCryptographyErrorKind {
+pub enum CryptographyErrorKind {
     #[fail (display = "Cipher algorithm with etype = {} is not supported", _0)]
     UnsupportedCipherAlgorithm(i32),
     #[fail (display = "Decryption error: {}", _0)]
@@ -55,7 +55,7 @@ pub enum KerberosCryptographyErrorKind {
 
 impl KerberosError {
 
-    pub fn kind(&self) -> &KerberosErrorKind {
+    pub fn kind(&self) -> &ErrorKind {
         return self.inner.get_context();
     }
 
@@ -77,25 +77,25 @@ impl fmt::Display for KerberosError {
     }
 }
 
-impl From<KerberosErrorKind> for KerberosError {
-    fn from(kind: KerberosErrorKind) -> KerberosError {
+impl From<ErrorKind> for KerberosError {
+    fn from(kind: ErrorKind) -> KerberosError {
         return KerberosError {
             inner: Context::new(kind)
         };
     }
 }
 
-impl From<Context<KerberosErrorKind>> for KerberosError {
-    fn from(inner: Context<KerberosErrorKind>) -> KerberosError {
+impl From<Context<ErrorKind>> for KerberosError {
+    fn from(inner: Context<ErrorKind>) -> KerberosError {
         return KerberosError { inner };
     }
 }
 
-impl From<KerberosCryptographyErrorKind> for KerberosError {
-    fn from(kind: KerberosCryptographyErrorKind) -> KerberosError {
+impl From<CryptographyErrorKind> for KerberosError {
+    fn from(kind: CryptographyErrorKind) -> KerberosError {
         return KerberosError {
             inner: Context::new(
-                KerberosErrorKind::CryptographyError(Box::new(kind))
+                ErrorKind::CryptographyError(Box::new(kind))
             )
         };
     }
@@ -105,7 +105,7 @@ impl From<KerberosCryptographyErrorKind> for KerberosError {
 impl From<FromAsciiError<&str>> for KerberosError {
     fn from(_error: FromAsciiError<&str>) -> Self {
         return KerberosError {
-            inner: Context::new(KerberosErrorKind::InvalidAscii)
+            inner: Context::new(ErrorKind::InvalidAscii)
         };
     }
 }
@@ -113,7 +113,7 @@ impl From<FromAsciiError<&str>> for KerberosError {
 impl From<red_asn1::Error> for KerberosError {
     fn from(error: red_asn1::Error) -> Self {
         return KerberosError {
-            inner: Context::new(KerberosErrorKind::Asn1Error(error.kind().clone()))
+            inner: Context::new(ErrorKind::Asn1Error(error.kind().clone()))
         };
     }
 }
@@ -127,7 +127,7 @@ mod tests{
         match produce_invalid_network_error() {
             Err(kerberos_error) => {
                 match kerberos_error.kind() {
-                    KerberosErrorKind::NetworkError  => {
+                    ErrorKind::NetworkError  => {
                         
                     }
                     _ => {
@@ -142,7 +142,7 @@ mod tests{
     }
 
     fn produce_invalid_network_error() -> KerberosResult<()> {
-        Err(KerberosErrorKind::NetworkError)?;
+        Err(ErrorKind::NetworkError)?;
         unreachable!();
     }
 }

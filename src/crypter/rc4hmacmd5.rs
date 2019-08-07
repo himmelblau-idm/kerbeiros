@@ -21,7 +21,7 @@ pub fn encrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, timestamp: &[u8], preamb
 
 pub fn decrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, ciphertext: &[u8]) -> KerberosResult<Vec<u8>> {
     if ciphertext.len() < 24 {
-        return Err(KerberosCryptographyErrorKind::DecryptionError("Ciphertext too short".to_string()))?;
+        return Err(CryptographyErrorKind::DecryptionError("Ciphertext too short".to_string()))?;
     }
 
     let cksum = &ciphertext[0..16];
@@ -33,7 +33,7 @@ pub fn decrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, ciphertext: &[u8]) -> Ke
     let  plaintext_cksum = hmac_md5(&ki, &plaintext);
 
     if cksum != &plaintext_cksum[..] {
-        return Err(KerberosCryptographyErrorKind::DecryptionError("Hmac integrity failure".to_string()))?;
+        return Err(CryptographyErrorKind::DecryptionError("Hmac integrity failure".to_string()))?;
     }
 
     return Ok(plaintext[8..].to_vec());

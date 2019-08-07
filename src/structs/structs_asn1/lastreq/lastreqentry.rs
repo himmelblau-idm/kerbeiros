@@ -2,6 +2,7 @@ use red_asn1::*;
 pub use super::super::int32::*;
 pub use super::super::kerberostime::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct LastReqEntry {
@@ -33,10 +34,10 @@ impl LastReqEntryAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<LastReqEntry> {
         let lr_type = self.get_lr_type().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("LastReqEntry::lr_type".to_string())
+            ErrorKind::NotAvailableData("LastReqEntry::lr_type".to_string())
         )?;
         let lr_value = self.get_lr_value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("LastReqEntry::lr_value".to_string())
+            ErrorKind::NotAvailableData("LastReqEntry::lr_value".to_string())
         )?;
 
         let last_req_entry = LastReqEntry::new(

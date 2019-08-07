@@ -2,6 +2,7 @@ use red_asn1::*;
 pub use super::int32::*;
 pub use red_asn1::OctetString;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct EncryptionKey {
@@ -53,13 +54,13 @@ impl EncryptionKeyAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<EncryptionKey> {
         let keytype = self.get_keytype().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncryptionKey::keytype".to_string())
+            ErrorKind::NotAvailableData("EncryptionKey::keytype".to_string())
         )?;
         let keyvalue = self.get_keyvalue().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncryptionKey::keyvalue".to_string())
+            ErrorKind::NotAvailableData("EncryptionKey::keyvalue".to_string())
         )?;
         let keyvalue_value = keyvalue.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncryptionKey::keyvalue".to_string())
+            ErrorKind::NotAvailableData("EncryptionKey::keyvalue".to_string())
         )?;
         
         let encryption_key = EncryptionKey::new(

@@ -1,5 +1,6 @@
 use red_asn1::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, PartialEq, Clone, Default)]
 pub struct KerberosFlags {
@@ -52,7 +53,7 @@ impl KerberosFlagsAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosFlags> {
         let value = self.subtype.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("KerberosFlags".to_string())
+            ErrorKind::NotAvailableData("KerberosFlags".to_string())
         )?;
         let mut flags = KerberosFlags::default();
         

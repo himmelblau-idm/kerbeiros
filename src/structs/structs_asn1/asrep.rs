@@ -1,11 +1,11 @@
 use red_asn1::*;
-
 use super::principalname::*;
 use super::realm::*;
 use super::padata::*;
 use super::ticket::*;
 use super::encrypteddata::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct KdcRep {
@@ -115,30 +115,30 @@ impl AsRepAsn1 {
 
     fn no_asn1_type(&self) -> KerberosResult<KdcRep> {
         let pvno = self.get_pvno().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("AsRep::pvno".to_string())
+            ErrorKind::NotAvailableData("AsRep::pvno".to_string())
         )?;
         let pvno_value = pvno.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("AsRep::pvno".to_string())
+            ErrorKind::NotAvailableData("AsRep::pvno".to_string())
         )?;
         
         let msg_type = self.get_msg_type().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("AsRep::msg_type".to_string())
+            ErrorKind::NotAvailableData("AsRep::msg_type".to_string())
         )?;
         let msg_type_value = msg_type.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("AsRep::msg_type".to_string())
+            ErrorKind::NotAvailableData("AsRep::msg_type".to_string())
         )?;
         
         let crealm = self.get_crealm().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("AsRep::crealm".to_string())
+            ErrorKind::NotAvailableData("AsRep::crealm".to_string())
         )?;
         let cname = self.get_cname().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("AsRep::cname".to_string())
+            ErrorKind::NotAvailableData("AsRep::cname".to_string())
         )?;
         let ticket = self.get_ticket().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("AsRep::ticket".to_string())
+            ErrorKind::NotAvailableData("AsRep::ticket".to_string())
         )?;
         let enc_part = self.get_enc_part().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("AsRep::enc_part".to_string())
+            ErrorKind::NotAvailableData("AsRep::enc_part".to_string())
         )?;
         
         let mut as_rep = KdcRep::new(

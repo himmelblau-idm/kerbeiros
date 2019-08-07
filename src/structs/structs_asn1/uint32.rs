@@ -1,5 +1,6 @@
 use red_asn1::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 pub type UInt32 = u32;
 
@@ -19,7 +20,7 @@ impl UInt32Asn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<UInt32> {
         let value = self.subtype.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("UInt32Asn1".to_string())
+            ErrorKind::NotAvailableData("UInt32Asn1".to_string())
         )?;
         return Ok(value as u32);
     }

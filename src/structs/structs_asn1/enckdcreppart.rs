@@ -9,6 +9,7 @@ use super::principalname::*;
 use super::hostaddress::*;
 use super::padata::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct EncKdcRepPart {
@@ -181,28 +182,28 @@ impl EncAsRepPartAsn1 {
 
     fn no_asn1_type(&self) -> KerberosResult<EncKdcRepPart> {
         let key = self.get_key().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncKdcRepPart::key".to_string())
+            ErrorKind::NotAvailableData("EncKdcRepPart::key".to_string())
         )?;
         let last_req = self.get_last_req().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncKdcRepPart::last_req".to_string())
+            ErrorKind::NotAvailableData("EncKdcRepPart::last_req".to_string())
         )?;
         let nonce = self.get_nonce().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncKdcRepPart::nonce".to_string())
+            ErrorKind::NotAvailableData("EncKdcRepPart::nonce".to_string())
         )?;
         let flags = self.get_flags().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncKdcRepPart::flags".to_string())
+            ErrorKind::NotAvailableData("EncKdcRepPart::flags".to_string())
         )?;
         let authtime = self.get_authtime().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncKdcRepPart::authtime".to_string())
+            ErrorKind::NotAvailableData("EncKdcRepPart::authtime".to_string())
         )?;
         let endtime = self.get_endtime().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncKdcRepPart::endtime".to_string())
+            ErrorKind::NotAvailableData("EncKdcRepPart::endtime".to_string())
         )?;
         let srealm = self.get_srealm().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncKdcRepPart::srealm".to_string())
+            ErrorKind::NotAvailableData("EncKdcRepPart::srealm".to_string())
         )?;
         let sname = self.get_sname().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncKdcRepPart::sname".to_string())
+            ErrorKind::NotAvailableData("EncKdcRepPart::sname".to_string())
         )?;
 
         let mut enc_as_rep_part = EncKdcRepPart::new(

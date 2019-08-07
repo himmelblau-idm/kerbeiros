@@ -55,7 +55,7 @@ pub fn aes_hmac_sh1_decrypt(key: &[u8], key_usage: i32, ciphertext: &[u8], aes_s
     let (ki, ke) = generate_ki_ke(key, key_usage, aes_sizes);
 
     if ciphertext.len() < aes_sizes.block_size() + aes_sizes.mac_size() {
-        return Err(KerberosCryptographyErrorKind::DecryptionError("Ciphertext too short".to_string()))?;
+        return Err(CryptographyErrorKind::DecryptionError("Ciphertext too short".to_string()))?;
     }
 
     let ciphertext_end_index = ciphertext.len() - aes_sizes.mac_size();
@@ -67,7 +67,7 @@ pub fn aes_hmac_sh1_decrypt(key: &[u8], key_usage: i32, ciphertext: &[u8], aes_s
     let calculated_mac = hmac_sha1(&ki, &plaintext);
 
     if calculated_mac[..aes_sizes.mac_size()] != mac[..] {
-        return Err(KerberosCryptographyErrorKind::DecryptionError("Hmac integrity failure".to_string()))?;
+        return Err(CryptographyErrorKind::DecryptionError("Hmac integrity failure".to_string()))?;
     }
 
     return Ok(plaintext[aes_sizes.block_size()..].to_vec());

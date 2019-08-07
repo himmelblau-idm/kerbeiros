@@ -76,7 +76,7 @@ impl<'a> AsReqTimestampCrypter<'a> {
             salt = Vec::new();
         }
         else {
-            return Err(KerberosErrorKind::NoProvidedSupportedCipherAlgorithm)?;
+            return Err(ErrorKind::NoProvidedSupportedCipherAlgorithm)?;
         }
 
         return self.encrypt_timestamp_with_cipher_and_password(etype, password, &salt);

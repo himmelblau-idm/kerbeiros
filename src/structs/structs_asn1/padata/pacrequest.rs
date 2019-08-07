@@ -1,5 +1,6 @@
 use red_asn1::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PacRequest {
@@ -52,10 +53,10 @@ impl PacRequestAsn1 {
 
     fn no_asn1_type(&self) -> KerberosResult<PacRequest> {
         let include_pac_asn1 =  self.get_include_pac().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("PacRequest::include_pac".to_string())
+            ErrorKind::NotAvailableData("PacRequest::include_pac".to_string())
         )?;
         let include_pac = include_pac_asn1.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("PacRequest::include_pac".to_string())
+            ErrorKind::NotAvailableData("PacRequest::include_pac".to_string())
         )?;
 
         return Ok(PacRequest::new(include_pac));

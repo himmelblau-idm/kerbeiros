@@ -34,11 +34,11 @@ impl<'a> CredentialFileConverter<'a> {
 
     fn save_data_to_file(&self, data: &[u8]) -> KerberosResult<()> {
         let mut fp = File::create(self.path).context(
-            KerberosErrorKind::IOError
+            ErrorKind::IOError
         )?;
 
         fp.write_all(data).context(
-            KerberosErrorKind::IOError
+            ErrorKind::IOError
         )?;
 
         return Ok(());

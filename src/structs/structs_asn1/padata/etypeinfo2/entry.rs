@@ -2,6 +2,7 @@ use red_asn1::*;
 use super::super::super::int32::*;
 use super::super::super::kerberosstring::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 
 #[derive(Debug, Clone, PartialEq)]
@@ -79,7 +80,7 @@ impl EtypeInfo2EntryAsn1 {
         let mut entry = EtypeInfo2Entry::default();
 
         let etype_asn1 = self.get_etype().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EtypeInfo2Entry::etype".to_string())
+            ErrorKind::NotAvailableData("EtypeInfo2Entry::etype".to_string())
         )?;
         entry.etype = etype_asn1.no_asn1_type()?;
 
@@ -89,7 +90,7 @@ impl EtypeInfo2EntryAsn1 {
         
         if let Some(s2kparams_asn1) = self.get_s2kparams() {
             let s2kparams = s2kparams_asn1.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EtypeInfo2Entry::s2kparams".to_string())
+            ErrorKind::NotAvailableData("EtypeInfo2Entry::s2kparams".to_string())
         )?;
             entry.s2kparams = Some(s2kparams.clone());
         }

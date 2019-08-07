@@ -11,7 +11,7 @@ pub mod client;
 pub use client::*;
 
 pub mod error;
-pub use error::{KerberosResult, KerberosError, KerberosErrorKind};
+pub use error::*;
 
 pub mod messages;
 pub use messages::*;

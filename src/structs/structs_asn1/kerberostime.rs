@@ -1,6 +1,7 @@
 pub use chrono::prelude::*;
 use red_asn1::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 
 pub type KerberosTime = DateTime<Utc>;
@@ -23,7 +24,7 @@ impl KerberosTimeAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<KerberosTime> {
         let time = self.subtype.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("KerberosTime".to_string())
+            ErrorKind::NotAvailableData("KerberosTime".to_string())
         )?;
         return Ok(time.clone());
     }

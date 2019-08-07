@@ -72,7 +72,7 @@ impl CredentialKrbInfoMapper {
         match Self::try_decrypt_enc_kdc_rep_part_with_cipher_key(key, kdc_rep) {
             Err(error) => {
                 if key.get_etype() != kdc_rep.get_enc_part_etype() {
-                    return Err(KerberosCryptographyErrorKind::DecryptionError(
+                    return Err(CryptographyErrorKind::DecryptionError(
                         format!("Key etype = {} doesn't match with message etype = {}", 
                             key.get_etype(), kdc_rep.get_enc_part_etype())
                     ))?;

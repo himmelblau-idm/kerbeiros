@@ -2,6 +2,7 @@ use super::kerberosstring::*;
 use red_asn1::*;
 use super::int32::{Int32,Int32Asn1};
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PrincipalName {
@@ -91,15 +92,15 @@ impl PrincipalNameAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<PrincipalName> {
         let name_type = self.get_name_type().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("PrincipalName::name_type".to_string())
+            ErrorKind::NotAvailableData("PrincipalName::name_type".to_string())
         )?;
 
         let name_string = self.get_name_string().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("PrincipalName::name_string".to_string())
+            ErrorKind::NotAvailableData("PrincipalName::name_string".to_string())
         )?;
 
         if name_string.len() == 0 {
-            return Err(KerberosErrorKind::NotAvailableData("PrincipalName::name_string".to_string()))?;
+            return Err(ErrorKind::NotAvailableData("PrincipalName::name_string".to_string()))?;
         }
 
         let mut principal_name = PrincipalName::new(name_type.no_asn1_type()?, name_string[0].no_asn1_type()?);

@@ -2,6 +2,7 @@ use red_asn1::*;
 use super::int32::*;
 use super::uint32::*;
 use crate::error::*;
+use crate::error::ErrorKind;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct EncryptedData {
@@ -66,13 +67,13 @@ impl EncryptedDataAsn1 {
 
     pub fn no_asn1_type(&self) -> KerberosResult<EncryptedData> {
         let etype = self.get_etype().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncryptedData::etype".to_string())
+            ErrorKind::NotAvailableData("EncryptedData::etype".to_string())
         )?;
         let cipher = self.get_cipher().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncryptedData::cipher".to_string())
+            ErrorKind::NotAvailableData("EncryptedData::cipher".to_string())
         )?;
         let cipher_value = cipher.value().ok_or_else(|| 
-            KerberosErrorKind::NotAvailableData("EncryptedData::cipher".to_string())
+            ErrorKind::NotAvailableData("EncryptedData::cipher".to_string())
         )?;
 
         let mut enc_data = EncryptedData::new(etype.no_asn1_type()?, cipher_value.clone());

@@ -28,7 +28,7 @@ pub fn new_kerberos_crypter(etype: i32) -> KerberosResult<Box<KerberosCrypter>> 
             return Ok(Box::new(RC4Crypter::new()));
         }
         _ => {
-            return Err(KerberosCryptographyErrorKind::UnsupportedCipherAlgorithm(etype))?;
+            return Err(CryptographyErrorKind::UnsupportedCipherAlgorithm(etype))?;
         }
     }
 
