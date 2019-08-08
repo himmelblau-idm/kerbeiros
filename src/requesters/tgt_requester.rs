@@ -6,11 +6,11 @@ use crate::error::*;
 use crate::constants::*;
 use crate::credential::*;
 use crate::key::Key;
+use super::as_requester::*;
 
 pub struct TGTRequester {
-    transporter: Box<Transporter>,
-    as_req: AsReq,
-    user_key: Option<Key>
+    user_key: Option<Key>,
+    as_requester: ASRequester
 }
 
 impl TGTRequester {
@@ -20,8 +20,7 @@ impl TGTRequester {
         username: AsciiString
     ) -> Self {
         return Self {
-            transporter: new_transporter(kdc_address, transport_protocol),
-            as_req: AsReq::new(realm, username),
+            as_requester: ASRequester::new(realm, username, kdc_address, transport_protocol),
             user_key: None
         };
     }
@@ -30,14 +29,13 @@ impl TGTRequester {
         self.user_key = Some(user_key);
     }
 
-    pub fn _set_requester(&mut self, requester: Box<Transporter>) {
-        self.transporter = requester;
+    pub fn _set_transporter(&mut self, transporter: Box<Transporter>) {
+        self.as_requester._set_transporter(transporter);
     }
 
     pub fn request_tgt(&mut self) -> Result<Credential> {
-        let raw_response = self.as_request_and_response()?;
 
-        match self.parse_as_request_response(&raw_response)? {
+        match self.as_requester.request()? {
             AsReqResponse::KrbError(krb_error) => {
                 return self.process_1st_krb_error(krb_error);
             },
@@ -60,10 +58,9 @@ impl TGTRequester {
     }
 
     fn request_2nd_as_req(&mut self, user_key: &Key) -> Result<Credential> {
-        self.as_req.set_user_key(user_key.clone());
-        let raw_response = self.as_request_and_response()?;
+        self.as_requester.set_user_key(user_key.clone());
 
-        match self.parse_as_request_response(&raw_response)? {
+        match self.as_requester.request()? {
             AsReqResponse::KrbError(krb_error) => {
                 return Err(ErrorKind::KrbErrorResponse(krb_error))?;
             },
@@ -93,28 +90,6 @@ impl TGTRequester {
         }
     }
 
-    fn parse_as_request_response(&self, raw_response: &[u8]) -> Result<AsReqResponse> {
-        match KrbError::parse(raw_response) {
-            Ok(krb_error) => {
-                return Ok(AsReqResponse::KrbError(krb_error));
-            },
-            Err(_) => {
-                let as_rep = AsRep::parse(raw_response)?;
-                return Ok(AsReqResponse::AsRep(as_rep));
-            }
-        }
-    }
-
-    fn as_request_and_response(&self) -> Result<Vec<u8>> {
-        let raw_as_req = self.as_req.build().unwrap();
-        return self.transporter.request_and_response(&raw_as_req);
-    }
-
-}
-
-enum AsReqResponse {
-    KrbError(KrbError),
-    AsRep(AsRep)
 }
 
 
@@ -172,7 +147,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_requester(Box::new(FakeTransporter{}));
+        tgt_request._set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -295,7 +270,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_requester(Box::new(FakeTransporter{}));
+        tgt_request._set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -418,7 +393,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Incorrect password".to_string()));
 
-        tgt_request._set_requester(Box::new(FakeTransporter{}));
+        tgt_request._set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -578,7 +553,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_requester(Box::new(FakeTransporter{}));
+        tgt_request._set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -630,7 +605,7 @@ mod test {
             AsciiString::from_ascii("Mickey").unwrap(),
         );
 
-        tgt_request._set_requester(Box::new(FakeTransporter{}));
+        tgt_request._set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
