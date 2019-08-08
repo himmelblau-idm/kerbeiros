@@ -1,4 +1,9 @@
 //! Kerberos client
+//! 
+//! # Terminology
+//! * KDC (Key Distribution Center): Service that distributes the tickets. The host that provides this server is also called KDC.
+//! 
+
 
 mod structs;
 mod byteparser;

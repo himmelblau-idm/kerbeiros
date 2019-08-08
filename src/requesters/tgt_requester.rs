@@ -8,19 +8,20 @@ use crate::credential::*;
 use crate::key::Key;
 use super::as_requester::*;
 
-pub struct TGTRequester {
+/// Class that gets a TGT from KDC by sending one or more AS-REQ requests
+pub struct TgtRequester {
     user_key: Option<Key>,
-    as_requester: ASRequester
+    as_requester: AsRequester
 }
 
-impl TGTRequester {
+impl TgtRequester {
 
     pub fn new(
         realm: AsciiString, username: AsciiString,
         kdc_address: IpAddr, transport_protocol: TransportProtocol,
     ) -> Self {
         return Self {
-            as_requester: ASRequester::new(realm, username, kdc_address, transport_protocol),
+            as_requester: AsRequester::new(realm, username, kdc_address, transport_protocol),
             user_key: None
         };
     }
@@ -137,7 +138,7 @@ mod test {
             }
         }
 
-        let mut tgt_request = TGTRequester::new(
+        let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             AsciiString::from_ascii("Mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
@@ -260,7 +261,7 @@ mod test {
             }
         }
 
-        let mut tgt_request = TGTRequester::new(
+        let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
@@ -383,7 +384,7 @@ mod test {
             }
         }
 
-        let mut tgt_request = TGTRequester::new(
+        let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
@@ -543,7 +544,7 @@ mod test {
             
         }
 
-        let mut tgt_request = TGTRequester::new(
+        let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
@@ -597,7 +598,7 @@ mod test {
             }
         }
 
-        let mut tgt_request = TGTRequester::new(
+        let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             AsciiString::from_ascii("Mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),

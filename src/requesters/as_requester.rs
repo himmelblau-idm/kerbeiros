@@ -5,18 +5,21 @@ use crate::messages::*;
 use crate::error::*;
 use crate::key::Key;
 
+
+/// Encapsule the possible responses to an AS-REQ request
 #[derive(Debug, PartialEq)]
 pub enum AsReqResponse {
     KrbError(KrbError),
     AsRep(AsRep)
 }
 
-pub struct ASRequester {
+/// Send the AS-REQ requests and retrieves the response
+pub struct AsRequester {
     transporter: Box<Transporter>,
     as_req: AsReq,
 }
 
-impl ASRequester {
+impl AsRequester {
 
     pub fn new(
         realm: AsciiString, username: AsciiString, 
@@ -39,15 +42,15 @@ impl ASRequester {
     }
 
     pub fn request(&self) -> Result<AsReqResponse> {
-        return ASRequest::request(&self.as_req, &self.transporter);
+        return AsRequest::request(&self.as_req, &self.transporter);
     }
 
 }
 
 
-struct ASRequest {}
+struct AsRequest {}
 
-impl ASRequest {
+impl AsRequest {
 
     pub fn request(as_req: &AsReq, transporter: &Box<Transporter>) -> Result<AsReqResponse> {
          let raw_as_req = as_req.build().unwrap();
@@ -111,7 +114,7 @@ mod test {
             }
         }
 
-        let mut as_requester = ASRequester::new(
+        let mut as_requester = AsRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             AsciiString::from_ascii("Mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
@@ -236,7 +239,7 @@ mod test {
             }
         }
 
-        let mut as_requester = ASRequester::new(
+        let mut as_requester = AsRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),

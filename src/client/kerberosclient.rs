@@ -4,7 +4,7 @@ use crate::error::*;
 use crate::credential::*;
 use crate::key::Key;
 use crate::transporter::*;
-use crate::requesters::TGTRequester;
+use crate::requesters::TgtRequester;
 
 
 #[derive(Debug)]
@@ -29,7 +29,7 @@ impl KerberosClient {
     }
 
     pub fn request_tgt(&self, username: AsciiString, user_key: Option<Key>) -> Result<Credential> {
-        let mut tgt_requester = TGTRequester::new(
+        let mut tgt_requester = TgtRequester::new(
             self.realm.clone(), 
             username,
             self.kdc_address.clone(),
