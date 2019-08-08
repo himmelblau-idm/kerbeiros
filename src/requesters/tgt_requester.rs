@@ -29,8 +29,9 @@ impl TGTRequester {
         self.user_key = Some(user_key);
     }
 
-    pub fn _set_transporter(&mut self, transporter: Box<Transporter>) {
-        self.as_requester._set_transporter(transporter);
+    #[cfg(test)]
+    fn set_transporter(&mut self, transporter: Box<Transporter>) {
+        self.as_requester.set_transporter(transporter);
     }
 
     pub fn request_tgt(&mut self) -> Result<Credential> {
@@ -98,8 +99,6 @@ mod test {
     use super::*;
     use std::net::Ipv4Addr;
 
-    
-
     #[should_panic(expected="Received KRB-ERROR response")]
     #[test]
     fn request_tgt_receiving_krb_error() {
@@ -147,7 +146,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_transporter(Box::new(FakeTransporter{}));
+        tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -270,7 +269,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_transporter(Box::new(FakeTransporter{}));
+        tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -393,7 +392,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Incorrect password".to_string()));
 
-        tgt_request._set_transporter(Box::new(FakeTransporter{}));
+        tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -553,7 +552,7 @@ mod test {
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
 
-        tgt_request._set_transporter(Box::new(FakeTransporter{}));
+        tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
@@ -605,7 +604,7 @@ mod test {
             AsciiString::from_ascii("Mickey").unwrap(),
         );
 
-        tgt_request._set_transporter(Box::new(FakeTransporter{}));
+        tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
         tgt_request.request_tgt().unwrap();
 
