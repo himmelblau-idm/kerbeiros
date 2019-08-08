@@ -6,8 +6,10 @@ use failure_derive::Fail;
 use red_asn1;
 use crate::messages::*;
 
+/// Result to wrap library error
 pub type Result<T> = result::Result<T, Error>;
 
+/// Error returned by the library
 #[derive(Debug)]
 pub struct Error {
     inner: Context<ErrorKind>
@@ -15,8 +17,6 @@ pub struct Error {
 
 #[derive(Clone, PartialEq, Debug, Fail)]
 pub enum ErrorKind {
-    #[fail(display = "Invalid KDC hostname")]
-    InvalidKDC,
     #[fail(display = "Network error")]
     NetworkError,
     #[fail(display = "Invalid ascii string")]
@@ -45,10 +45,15 @@ pub enum ErrorKind {
     NoKeyProvided,
 }
 
+/// Types of errors related to data encryption/decryption
 #[derive(Clone, PartialEq, Debug, Fail)]
 pub enum CryptographyErrorKind {
+
+    /// Data is encrypted with an unsupported algorithm
     #[fail (display = "Cipher algorithm with etype = {} is not supported", _0)]
     UnsupportedCipherAlgorithm(i32),
+
+    /// Error while decrypting the data
     #[fail (display = "Decryption error: {}", _0)]
     DecryptionError(String),
 }
