@@ -34,7 +34,7 @@ impl TGTRequester {
         self.as_requester.set_transporter(transporter);
     }
 
-    pub fn request_tgt(&mut self) -> Result<Credential> {
+    pub fn request(&mut self) -> Result<Credential> {
 
         match self.as_requester.request()? {
             AsReqResponse::KrbError(krb_error) => {
@@ -148,7 +148,7 @@ mod test {
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request_tgt().unwrap();
+        tgt_request.request().unwrap();
 
     }
 
@@ -271,7 +271,7 @@ mod test {
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request_tgt().unwrap();
+        tgt_request.request().unwrap();
 
     }
 
@@ -394,7 +394,7 @@ mod test {
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request_tgt().unwrap();
+        tgt_request.request().unwrap();
 
     }
 
@@ -554,7 +554,7 @@ mod test {
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request_tgt().unwrap();
+        tgt_request.request().unwrap();
 
     }
 
@@ -606,7 +606,7 @@ mod test {
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request_tgt().unwrap();
+        tgt_request.request().unwrap();
 
     }
 

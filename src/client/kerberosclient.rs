@@ -40,7 +40,7 @@ impl KerberosClient {
             tgt_requester.set_user_key(key);
         }
 
-        return tgt_requester.request_tgt();
+        return tgt_requester.request();
 
     }
 
