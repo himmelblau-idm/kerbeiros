@@ -7,13 +7,13 @@ use crate::constants::*;
 use crate::credential::*;
 use crate::key::Key;
 
-pub struct TGTRequest {
+pub struct TGTRequester {
     transporter: Box<Transporter>,
     as_req: AsReq,
     user_key: Option<Key>
 }
 
-impl TGTRequest {
+impl TGTRequester {
 
     pub fn new(
         realm: AsciiString, kdc_address: IpAddr, transport_protocol: TransportProtocol, 
@@ -163,7 +163,7 @@ mod test {
             }
         }
 
-        let mut tgt_request = TGTRequest::new(
+        let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
@@ -286,7 +286,7 @@ mod test {
             }
         }
 
-        let mut tgt_request = TGTRequest::new(
+        let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
@@ -409,7 +409,7 @@ mod test {
             }
         }
 
-        let mut tgt_request = TGTRequest::new(
+        let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
@@ -569,7 +569,7 @@ mod test {
             
         }
 
-        let mut tgt_request = TGTRequest::new(
+        let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
@@ -623,7 +623,7 @@ mod test {
             }
         }
 
-        let mut tgt_request = TGTRequest::new(
+        let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,

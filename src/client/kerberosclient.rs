@@ -2,9 +2,9 @@ use std::net::IpAddr;
 pub use ascii::AsciiString;
 use crate::error::*;
 use crate::credential::*;
-use super::tgtrequest::*;
 use crate::key::Key;
 use crate::transporter::*;
+use crate::requesters::TGTRequester;
 
 
 #[derive(Debug)]
@@ -29,7 +29,7 @@ impl KerberosClient {
     }
 
     pub fn request_tgt(&self, username: AsciiString, user_key: Option<Key>) -> Result<Credential> {
-        let mut tgt_request = TGTRequest::new(
+        let mut tgt_request = TGTRequester::new(
             self.realm.clone(), 
             self.kdc_address.clone(),
             self.transport_protocol,

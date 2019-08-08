@@ -4,6 +4,7 @@ mod structs;
 mod byteparser;
 mod crypter;
 mod transporter;
+pub mod requesters;
 
 pub use transporter::TransportProtocol;
 
@@ -24,7 +25,6 @@ pub use credential::*;
 
 pub mod key;
 pub use key::*;
-
 
 pub mod utils;
 pub use utils::*;
