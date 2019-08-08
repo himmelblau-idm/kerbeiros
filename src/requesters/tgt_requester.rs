@@ -16,8 +16,8 @@ pub struct TGTRequester {
 impl TGTRequester {
 
     pub fn new(
-        realm: AsciiString, kdc_address: IpAddr, transport_protocol: TransportProtocol, 
-        username: AsciiString
+        realm: AsciiString, username: AsciiString,
+        kdc_address: IpAddr, transport_protocol: TransportProtocol,
     ) -> Self {
         return Self {
             as_requester: ASRequester::new(realm, username, kdc_address, transport_protocol),
@@ -139,9 +139,9 @@ mod test {
 
         let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("Mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            AsciiString::from_ascii("Mickey").unwrap()
         );
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
@@ -262,9 +262,9 @@ mod test {
 
         let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            AsciiString::from_ascii("mickey").unwrap()
         );
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
@@ -385,9 +385,9 @@ mod test {
 
         let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            AsciiString::from_ascii("mickey").unwrap()
         );
 
         tgt_request.set_user_key(Key::Password("Incorrect password".to_string()));
@@ -545,9 +545,9 @@ mod test {
 
         let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            AsciiString::from_ascii("mickey").unwrap()
         );
 
         tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
@@ -599,9 +599,9 @@ mod test {
 
         let mut tgt_request = TGTRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+            AsciiString::from_ascii("Mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
-            AsciiString::from_ascii("Mickey").unwrap(),
         );
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));

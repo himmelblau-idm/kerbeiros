@@ -29,18 +29,18 @@ impl KerberosClient {
     }
 
     pub fn request_tgt(&self, username: AsciiString, user_key: Option<Key>) -> Result<Credential> {
-        let mut tgt_request = TGTRequester::new(
+        let mut tgt_requester = TGTRequester::new(
             self.realm.clone(), 
+            username,
             self.kdc_address.clone(),
             self.transport_protocol,
-            username
         );
         
         if let Some(key) = user_key {
-            tgt_request.set_user_key(key);
+            tgt_requester.set_user_key(key);
         }
 
-        return tgt_request.request_tgt();
+        return tgt_requester.request_tgt();
 
     }
 
