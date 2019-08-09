@@ -15,8 +15,8 @@ pub use etypes::*;
 pub mod kdc_options;
 pub use kdc_options::*;
 
-pub mod keyusages;
-pub use keyusages::*;
+pub mod key_usages;
+pub use key_usages::*;
 
 pub mod padatatypes;
 pub use padatatypes::*;

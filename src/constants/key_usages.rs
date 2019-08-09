@@ -1,3 +1,7 @@
+//! These constants define the use of keys in Kerberos protocol.
+//! 
+//! Reference: RFC 4210, Section 7.5.1
+
 pub const KEY_USAGE_AS_REQ_TIMESTAMP: i32 = 1;
 pub const KEY_USAGE_AS_REP_TICKET: i32 = 2;
 pub const KEY_USAGE_AS_REP_ENC_PART: i32 = 3;
