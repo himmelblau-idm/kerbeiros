@@ -1,3 +1,5 @@
+//! Define the constants used by Kerberos.
+
 pub mod errorcodes;
 pub use errorcodes::*;
 

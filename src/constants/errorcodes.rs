@@ -1,3 +1,5 @@
+//! Error codes retrieved by [`KrbError`](../../messages/struct.KrbError.html)
+
 pub const KDC_ERR_NONE : i32 = 0;
 pub const KDC_ERR_NAME_EXP : i32 = 1;
 pub const KDC_ERR_SERVICE_EXP : i32 = 2;
