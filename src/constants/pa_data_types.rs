@@ -1,6 +1,6 @@
 //! Preauthentication data types used by Kerberos protocol.
 //! 
-//! References: 
+//! # References
 //! * RFC 4210, Section 7.5.2. 
 //! * [MS-KILE], Section 3.1.5.1
 
