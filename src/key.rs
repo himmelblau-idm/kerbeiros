@@ -3,13 +3,13 @@
 use crate::crypter;
 use crate::constants::*;
 
-/// Size of [`Key::NTLM`](./enum.Key.html#variant.NTLM)
+/// Size of [`Key::NTLM`](./enum.Key.html#variant.NTLM).
 pub const NTLM_SIZE: usize = crypter::RC4_KEY_SIZE;
 
-/// Size of [`Key::AES128Key`](./enum.Key.html#variant.AES128Key)
+/// Size of [`Key::AES128Key`](./enum.Key.html#variant.AES128Key).
 pub const AES128_KEY_SIZE: usize = crypter::AES128_KEY_SIZE;
 
-/// Size of [`Key::AES256Key`](./enum.Key.html#variant.AES256Key)
+/// Size of [`Key::AES256Key`](./enum.Key.html#variant.AES256Key).
 pub const AES256_KEY_SIZE: usize = crypter::AES256_KEY_SIZE;
 
 /// Encapsules the possible keys used by this Kerberos implementation.
