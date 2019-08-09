@@ -5,3 +5,5 @@ pub use as_requester::*;
 
 mod tgt_requester;
 pub use tgt_requester::*;
+
+pub use crate::transporter::TransportProtocol;

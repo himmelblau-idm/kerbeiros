@@ -11,8 +11,6 @@ mod crypter;
 mod transporter;
 pub mod requesters;
 
-pub use transporter::TransportProtocol;
-
 pub mod client;
 pub use client::*;
 
