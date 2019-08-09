@@ -68,10 +68,10 @@ mod test {
 
         let caddr = HostAddresses::new(HostAddress::NetBios("HOLLOWBASTION".to_string()));
         let ticket_flags = TicketFlags::new(
-            ticketflags::INITIAL 
-            | ticketflags::FORWARDABLE 
-            | ticketflags::PRE_AUTHENT 
-            | ticketflags::RENEWABLE
+            ticket_flags::INITIAL 
+            | ticket_flags::FORWARDABLE 
+            | ticket_flags::PRE_AUTHENT 
+            | ticket_flags::RENEWABLE
         );
 
         let ticket_credential = create_ticket(realm.clone(), sname.clone());

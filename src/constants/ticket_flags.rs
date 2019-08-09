@@ -1,3 +1,8 @@
+//! Flags used by `Ticket` in Kerberos protocol.
+//! 
+//! # References
+//! * RFC 4120, Section 5.3.
+
 pub const RESERVED: u32 = 0x80000000;
 pub const FORWARDABLE: u32 = 0x40000000;
 pub const FORWARDED: u32 = 0x20000000;

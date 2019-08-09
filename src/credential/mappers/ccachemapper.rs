@@ -113,11 +113,11 @@ mod test {
             renew_till.timestamp() as u32,
         );
 
-        let tktflags = ticketflags::FORWARDABLE | 
-        ticketflags::PROXIABLE |
-        ticketflags::RENEWABLE |
-        ticketflags::INITIAL |
-        ticketflags::PRE_AUTHENT;
+        let tktflags = ticket_flags::FORWARDABLE | 
+        ticket_flags::PROXIABLE |
+        ticket_flags::RENEWABLE |
+        ticket_flags::INITIAL |
+        ticket_flags::PRE_AUTHENT;
 
         let ticket_flags = TicketFlags::new(tktflags);
 

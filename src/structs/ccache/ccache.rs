@@ -377,11 +377,11 @@ mod test {
 
         let is_skey = 0;
 
-        let tktflags = ticketflags::FORWARDABLE | 
-        ticketflags::PROXIABLE |
-        ticketflags::RENEWABLE |
-        ticketflags::INITIAL |
-        ticketflags::PRE_AUTHENT;
+        let tktflags = ticket_flags::FORWARDABLE | 
+        ticket_flags::PROXIABLE |
+        ticket_flags::RENEWABLE |
+        ticket_flags::INITIAL |
+        ticket_flags::PRE_AUTHENT;
 
         let time = Times::new(
             Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,

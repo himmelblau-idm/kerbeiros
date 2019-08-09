@@ -133,10 +133,10 @@ mod test {
 
         let caddr = HostAddresses::new(HostAddress::NetBios("HOLLOWBASTION".to_string()));
         let ticket_flags = TicketFlags::new(
-            ticketflags::INITIAL 
-            | ticketflags::FORWARDABLE 
-            | ticketflags::PRE_AUTHENT 
-            | ticketflags::RENEWABLE
+            ticket_flags::INITIAL 
+            | ticket_flags::FORWARDABLE 
+            | ticket_flags::PRE_AUTHENT 
+            | ticket_flags::RENEWABLE
         );
 
         let credential = create_credential(
@@ -340,10 +340,10 @@ mod test {
 
         let mut ticket_flags = TicketFlags::default();
         ticket_flags.set_flags(
-            ticketflags::INITIAL 
-            | ticketflags::FORWARDABLE 
-            | ticketflags::PRE_AUTHENT 
-            | ticketflags::RENEWABLE
+            ticket_flags::INITIAL 
+            | ticket_flags::FORWARDABLE 
+            | ticket_flags::PRE_AUTHENT 
+            | ticket_flags::RENEWABLE
         );
 
         let kerb_time = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);

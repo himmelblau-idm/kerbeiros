@@ -24,5 +24,5 @@ pub use pa_data_types::*;
 pub mod principal_name_types;
 pub use principal_name_types::*;
 
-pub mod ticketflags;
-pub use ticketflags::*;
+pub mod ticket_flags;
+pub use ticket_flags::*;
