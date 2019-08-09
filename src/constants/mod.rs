@@ -12,8 +12,8 @@ pub use etypes::*;
 pub mod hostaddress;
 pub use hostaddress::*;
 
-pub mod kdcoptions;
-pub use kdcoptions::*;
+pub mod kdc_options;
+pub use kdc_options::*;
 
 pub mod keyusages;
 pub use keyusages::*;
