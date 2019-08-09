@@ -5,7 +5,7 @@ use super::realm::{Realm, RealmAsn1};
 use super::kdcoptions::{KdcOptions, KdcOptionsAsn1};
 use super::principalname::*;
 use crate::error::{ErrorKind, Result};
-use crate::constants::principalnametypes::*;
+use crate::constants::principal_name_types::*;
 use super::kerberostime::{KerberosTime, KerberosTimeAsn1};
 use super::hostaddress::{HostAddresses, HostAddressesAsn1, HostAddress};
 use super::encrypteddata::{EncryptedData, EncryptedDataAsn1};

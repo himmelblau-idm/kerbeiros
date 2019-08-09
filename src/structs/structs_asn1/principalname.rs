@@ -119,7 +119,7 @@ impl PrincipalNameAsn1 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::constants::principalnametypes::*;
+    use crate::constants::principal_name_types::*;
 
     #[test]
     fn create_default_principal_name_asn1() {

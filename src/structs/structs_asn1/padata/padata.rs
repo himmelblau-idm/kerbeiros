@@ -4,7 +4,7 @@ use super::etypeinfo2::*;
 use super::super::int32::*;
 use crate::error::{ErrorKind, Result};
 use super::super::encrypteddata::EncryptedData;
-use crate::constants::padatatypes::*;
+use crate::constants::pa_data_types::*;
 
 
 #[derive(Debug, Clone, PartialEq)]

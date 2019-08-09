@@ -1,3 +1,8 @@
+//! Preauthentication data types used by Kerberos protocol.
+//! 
+//! References: 
+//! * RFC 4210, Section 7.5.2. 
+//! * [MS-KILE], Section 3.1.5.1
 
 pub const PA_TGS_REQ : i32 = 1;
 pub const PA_ENC_TIMESTAMP : i32 = 2;

@@ -18,11 +18,11 @@ pub use kdc_options::*;
 pub mod key_usages;
 pub use key_usages::*;
 
-pub mod padatatypes;
-pub use padatatypes::*;
+pub mod pa_data_types;
+pub use pa_data_types::*;
 
-pub mod principalnametypes;
-pub use principalnametypes::*;
+pub mod principal_name_types;
+pub use principal_name_types::*;
 
 pub mod ticketflags;
 pub use ticketflags::*;

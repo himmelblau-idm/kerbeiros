@@ -1,3 +1,8 @@
+//! Types of names used by Kerberos protocol.
+//! 
+//! # References
+//! * RFC 4210, Section 6.2
+
 pub const NT_UNKNOWN: i32 = 0;
 pub const NT_PRINCIPAL: i32 = 1;
 pub const NT_SRV_INST: i32 = 2;
