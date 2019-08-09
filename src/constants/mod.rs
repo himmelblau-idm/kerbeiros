@@ -3,8 +3,8 @@
 pub mod apoptions;
 pub use apoptions::*;
 
-pub mod errorcodes;
-pub use errorcodes::*;
+pub mod error_codes;
+pub use error_codes::*;
 
 pub mod etypes;
 pub use etypes::*;

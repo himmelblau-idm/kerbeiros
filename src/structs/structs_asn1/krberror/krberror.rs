@@ -7,7 +7,7 @@ use super::super::int32::*;
 use super::super::realm::*;
 use super::super::principalname::*;
 use super::edata::Edata;
-use crate::constants::errorcodes::*;
+use crate::constants::error_codes::*;
 use super::super::padata::*;
 
 

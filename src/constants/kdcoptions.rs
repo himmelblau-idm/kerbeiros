@@ -1,3 +1,5 @@
+//! Options used by the message [`AsReq`](../../messages/struct.AsReq.html)
+
 pub const NO_OPTION: u32 = 0x00000000;
 pub const FORWARDABLE: u32 = 0x40000000;
 pub const FORWARDED: u32 = 0x20000000;
