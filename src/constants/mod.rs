@@ -1,7 +1,7 @@
 //! Define the constants used by Kerberos.
 
-pub mod apoptions;
-pub use apoptions::*;
+pub mod ap_options;
+pub use ap_options::*;
 
 pub mod error_codes;
 pub use error_codes::*;
