@@ -1,7 +1,16 @@
 //! Exports the types of user keys available for this implementation.
 
-use crate::crypter::*;
+use crate::crypter;
 use crate::constants::*;
+
+/// Size of [`Key::NTLM`](./enum.Key.html#variant.NTLM)
+pub const NTLM_SIZE: usize = crypter::RC4_KEY_SIZE;
+
+/// Size of [`Key::AES128Key`](./enum.Key.html#variant.AES128Key)
+pub const AES128_KEY_SIZE: usize = crypter::AES128_KEY_SIZE;
+
+/// Size of [`Key::AES256Key`](./enum.Key.html#variant.AES256Key)
+pub const AES256_KEY_SIZE: usize = crypter::AES256_KEY_SIZE;
 
 /// Encapsules the possible keys used by this Kerberos implementation.
 /// Each key can be used by a different cryptographic algorithm.
@@ -11,7 +20,7 @@ pub enum Key {
     Password(String),
 
     /// NTLM hash of the user password, used by RC4-HMAC algorithm.
-    NTLM([u8; RC4_KEY_SIZE]),
+    NTLM([u8; NTLM_SIZE]),
 
     /// AES key used by AES128-CTS-HMAC-SHA1-96 algorithm.
     AES128Key([u8; AES128_KEY_SIZE]),
@@ -24,6 +33,17 @@ pub enum Key {
 impl Key {
 
     /// Return the etype associated with the type of key.
+    /// 
+    /// # Examples
+    /// ```
+    /// use kerbeiros::key;
+    /// use kerbeiros::constants;
+    /// 
+    /// assert_eq!(0, key::Key::Password("".to_string()).get_etype());
+    /// assert_eq!(constants::etypes::RC4_HMAC, key::Key::NTLM([0; key::NTLM_SIZE]).get_etype());
+    /// assert_eq!(constants::etypes::AES128_CTS_HMAC_SHA1_96, key::Key::AES128Key([0; key::AES128_KEY_SIZE]).get_etype());
+    /// assert_eq!(constants::etypes::AES256_CTS_HMAC_SHA1_96, key::Key::AES256Key([0; key::AES256_KEY_SIZE]).get_etype());
+    /// ```
     pub fn get_etype(&self) -> i32 {
         match self {
             Key::Password(_) => 0,
@@ -34,7 +54,17 @@ impl Key {
     }
 
     /// Retrieve the key as an array of bytes.
-    pub fn get_value_as_bytes(&self) -> &[u8] {
+    /// 
+    /// # Examples
+    /// ```
+    /// use kerbeiros::key;
+    /// 
+    /// assert_eq!(&[0x73, 0x65, 0x63, 0x72, 0x65, 0x74], key::Key::Password("secret".to_string()).as_bytes());
+    /// assert_eq!(&[0; key::NTLM_SIZE], key::Key::NTLM([0; key::NTLM_SIZE]).as_bytes());
+    /// assert_eq!(&[0; key::AES128_KEY_SIZE], key::Key::AES128Key([0; key::AES128_KEY_SIZE]).as_bytes());
+    /// assert_eq!(&[0; key::AES256_KEY_SIZE], key::Key::AES256Key([0; key::AES256_KEY_SIZE]).as_bytes());
+    /// ```
+    pub fn as_bytes(&self) -> &[u8] {
         match self {
             Key::Password(ref password) => password.as_bytes(),
             Key::NTLM(ref ntlm) => ntlm,

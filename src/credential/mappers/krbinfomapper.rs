@@ -87,7 +87,7 @@ impl CredentialKrbInfoMapper {
     fn try_decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
         let crypter = new_kerberos_crypter(key.get_etype()).unwrap();
         return crypter.decrypt(
-            key.get_value_as_bytes(),
+            key.as_bytes(),
             KEY_USAGE_AS_REP_ENC_PART, 
             kdc_rep.get_enc_part_cipher()
         );
