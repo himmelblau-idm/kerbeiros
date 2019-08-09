@@ -34,7 +34,7 @@ mod test {
         let host_address = HostAddress::NetBios("KINGDOM.HEARTS".to_string());
 
         let address = Address::new(
-            NETBIOS_ADDRESS as u16,
+            address_type::NETBIOS as u16,
             CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
         );
 
@@ -48,7 +48,7 @@ mod test {
         let mut addresses = Vec::new();
         addresses.push(
             Address::new(
-                NETBIOS_ADDRESS as u16,
+                address_type::NETBIOS as u16,
                 CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
             )
         );

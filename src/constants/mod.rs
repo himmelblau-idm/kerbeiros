@@ -1,5 +1,8 @@
 //! Define the constants used by Kerberos.
 
+pub mod address_type;
+pub use address_type::*;
+
 pub mod ap_options;
 pub use ap_options::*;
 
@@ -8,9 +11,6 @@ pub use error_codes::*;
 
 pub mod etypes;
 pub use etypes::*;
-
-pub mod hostaddress;
-pub use hostaddress::*;
 
 pub mod kdc_options;
 pub use kdc_options::*;

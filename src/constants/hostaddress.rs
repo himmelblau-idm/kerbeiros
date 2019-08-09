@@ -1,1 +1,0 @@
-pub const NETBIOS_ADDRESS: i32 = 20;

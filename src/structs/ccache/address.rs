@@ -38,7 +38,7 @@ mod test {
                 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53
             ],
             Address::new(
-                NETBIOS_ADDRESS as u16,
+                address_type::NETBIOS as u16,
                 CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
             ).to_bytes()
         )

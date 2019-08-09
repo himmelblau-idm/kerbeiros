@@ -1,7 +1,7 @@
 use red_asn1::*;
 pub use super::super::int32::{Int32, Int32Asn1};
 use crate::error::{ErrorKind, Result};
-use crate::constants::hostaddress::*;
+use crate::constants::address_type;
 
 static NETBIOS_PADDING_CHAR: char = 32 as char;
 
@@ -51,7 +51,7 @@ impl HostAddress {
 
     pub fn get_addr_type(&self) -> i32 {
         match self {
-            HostAddress::NetBios(_) => NETBIOS_ADDRESS,
+            HostAddress::NetBios(_) => address_type::NETBIOS,
             HostAddress::Raw(kind,_) => *kind
         }
     }
@@ -94,7 +94,7 @@ impl HostAddressAsn1 {
         )?;
 
         let host_address = match addr_type {
-            NETBIOS_ADDRESS => {
+            address_type::NETBIOS => {
                 let addr_name = String::from_utf8_lossy(address).to_string().trim_end().to_string();
                 HostAddress::NetBios(addr_name)
             },

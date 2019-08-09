@@ -222,7 +222,7 @@ mod test {
         let mut addresses = Vec::new();
         addresses.push(
             Address::new(
-                NETBIOS_ADDRESS as u16,
+                address_type::NETBIOS as u16,
                 CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec())
             )
         );
