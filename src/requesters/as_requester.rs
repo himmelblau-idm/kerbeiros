@@ -4,6 +4,7 @@ use crate::transporter::*;
 use crate::messages::*;
 use crate::error::*;
 use crate::key::Key;
+use std::collections::HashSet;
 
 
 /// Encapsule the possible responses to an AS-REQ request
@@ -32,6 +33,30 @@ impl AsRequester {
         };
     }
 
+    pub fn request(&self, username: &AsciiString, user_key: Option<&Key>) -> Result<AsReqResponse> {
+        return AsRequest::request(username, user_key, &self.as_options, &self.transporter);
+    }
+
+    pub fn get_etypes(&self) -> &HashSet<i32> {
+        return self.as_options.get_etypes();
+    }
+
+    pub fn set_etype(&mut self, etype: i32) -> Result<()> {
+        return self.as_options.set_etype(etype);
+    }
+
+    pub fn set_etypes(&mut self, etypes: HashSet<i32>) -> Result<()> {
+        return self.as_options.set_etypes(etypes);
+    }
+
+    pub fn get_kdc_options(&self) -> u32 {
+        return self.as_options.get_kdc_options();
+    }
+
+    pub fn get_realm(&self) -> &AsciiString {
+        return self.as_options.get_realm();
+    }
+
     pub fn set_transport_protocol(&mut self, transport_protocol: TransportProtocol) {
         self.transporter = new_transporter(self.kdc_address, transport_protocol);
     }
@@ -39,10 +64,6 @@ impl AsRequester {
     #[cfg(test)]
     pub fn set_transporter(&mut self, transporter: Box<Transporter>) {
         self.transporter = transporter;
-    }
-
-    pub fn request(&self, username: &AsciiString, user_key: Option<&Key>) -> Result<AsReqResponse> {
-        return AsRequest::request(username, user_key, &self.as_options, &self.transporter);
     }
 
 }
