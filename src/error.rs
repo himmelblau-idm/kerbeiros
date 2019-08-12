@@ -1,3 +1,5 @@
+//! Errors raised by this library
+
 use std::fmt;
 use std::result;
 use ascii::FromAsciiError;
@@ -6,42 +8,67 @@ use failure_derive::Fail;
 use red_asn1;
 use crate::messages::*;
 
-/// Result to wrap kerbeiros error
+/// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;
 
-/// Error returned by functions of the kerbeiros library
+/// Error returned by functions of the kerbeiros library.
 #[derive(Debug)]
 pub struct Error {
     inner: Context<ErrorKind>
 }
 
-/// Type of error in kerbeiros library
+/// Type of error in kerbeiros library.
 #[derive(Clone, PartialEq, Debug, Fail)]
 pub enum ErrorKind {
+    /// Error handlening asn1 entities.
     #[fail (display = "Asn1 error: {}", _0)]
     Asn1Error(red_asn1::ErrorKind),
+
+    /// Error produced in the application of cryptographic algorithms.
     #[fail (display = "Cryptography error: {}", _0)]
     CryptographyError(Box<CryptographyErrorKind>),
+
+    /// Invalid ascii string.
     #[fail(display = "Invalid ascii string")]
     InvalidAscii,
+
+    /// Invalid microseconds value. Minimum = 0, Maximum = 999999.
     #[fail(display = "Invalid microseconds value {}. Max is 999999", _0)]
     InvalidMicroseconds(u32),
+    
+    /// Error in i/o operation.
     #[fail (display = "Error in i/o operation")]
     IOError,
+
+    /// Received KRB-ERROR response.
     #[fail (display = "Received KRB-ERROR response")]
     KrbErrorResponse(KrbError),
+
+    /// Error resolving name.
     #[fail (display = "Error resolving name: {}", _0)]
     NameResolutionError(String),
+
+    /// Error sending/receiving data over the network.
     #[fail(display = "Network error")]
     NetworkError,
+
+    /// No key was provided in order to decrypt the KDC response.
     #[fail (display = "No key was provided")]
     NoKeyProvided,
+
+    /// None cipher algorithm supported was specified.
     #[fail (display = "None cipher algorithm supported was specified")]
     NoProvidedSupportedCipherAlgorithm,
+
+    /// Some necessary data was not available in order to build the required message.
     #[fail(display = "Not available data {}", _0)]
     NotAvailableData(String),
+
+    /// Error parsing KDC-REP message.
     #[fail (display = "Error parsing KdcRep: {}", _1)]
     ParseKdcRepError(KdcRep, Box<ErrorKind>),
+
+    /// The type of the principal name was not specified.
     #[fail(display = "Undefined type of principal name: {}", _0)]
     PrincipalNameTypeUndefined(String),
 }
