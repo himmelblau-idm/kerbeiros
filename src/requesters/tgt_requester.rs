@@ -7,8 +7,9 @@ use crate::constants::*;
 use crate::credential::*;
 use crate::key::Key;
 use super::as_requester::*;
+use std::collections::HashSet;
 
-/// Class that gets a TGT from KDC by sending one or more AS-REQ requests
+/// Gets a TGT from KDC by sending one or more AS-REQ requests
 pub struct TgtRequester {
     as_requester: AsRequester
 }
@@ -23,6 +24,30 @@ impl TgtRequester {
         };
     }
 
+    pub fn request(& self, username: &AsciiString, user_key: Option<&Key>) -> Result<Credential> {
+        return TGTRequest::request(username, user_key, &self.as_requester);
+    }
+
+    pub fn get_etypes(&self) -> &HashSet<i32> {
+        return self.as_requester.get_etypes();
+    }
+
+    pub fn set_etype(&mut self, etype: i32) -> Result<()> {
+        return self.as_requester.set_etype(etype);
+    }
+
+    pub fn set_etypes(&mut self, etypes: HashSet<i32>) -> Result<()> {
+        return self.as_requester.set_etypes(etypes);
+    }
+
+    pub fn get_kdc_options(&self) -> u32 {
+        return self.as_requester.get_kdc_options();
+    }
+
+    pub fn get_realm(&self) -> &AsciiString {
+        return self.as_requester.get_realm();
+    }
+
     pub fn set_transport_protocol(&mut self, transport_protocol: TransportProtocol) {
         self.as_requester.set_transport_protocol(transport_protocol);
     }
@@ -31,11 +56,7 @@ impl TgtRequester {
     fn set_transporter(&mut self, transporter: Box<Transporter>) {
         self.as_requester.set_transporter(transporter);
     }
-
-    pub fn request(& self, username: &AsciiString, user_key: Option<&Key>) -> Result<Credential> {
-        return TGTRequest::request(username, user_key, &self.as_requester);
-    }
-
+    
 }
 
 
