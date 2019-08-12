@@ -12,6 +12,7 @@ mod transporter;
 
 pub mod error;
 pub use error::*;
+pub use error::Error;
 
 pub mod messages;
 pub use messages::*;
