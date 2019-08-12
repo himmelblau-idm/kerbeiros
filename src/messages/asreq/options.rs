@@ -32,6 +32,10 @@ impl AsReqOptions {
         return &self.etypes;
     }
 
+    pub fn set_etype(&mut self, etype: i32) -> Result<()> {
+        return self.set_etypes([ etype ].iter().cloned().collect());
+    }
+
     pub fn set_etypes(&mut self, etypes: HashSet<i32>) -> Result<()> {
         self.error_if_unsupported_etypes(&etypes)?;
         self.etypes = etypes;
@@ -150,6 +154,30 @@ mod test {
             options.get_sorted_etypes()
         );
 
+    }
+
+    #[test]
+    fn set_etype() {
+        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
+
+        let etypes: HashSet<i32> = [ RC4_HMAC ].iter().cloned().collect();
+        options.set_etype(RC4_HMAC).unwrap();
+        assert_eq!(&etypes, options.get_etypes());
+
+        let etypes: HashSet<i32> = [ AES128_CTS_HMAC_SHA1_96 ].iter().cloned().collect();
+        options.set_etype(AES128_CTS_HMAC_SHA1_96).unwrap();
+        assert_eq!(&etypes, options.get_etypes());
+
+        let etypes: HashSet<i32> = [ AES256_CTS_HMAC_SHA1_96 ].iter().cloned().collect();
+        options.set_etype(AES256_CTS_HMAC_SHA1_96).unwrap();
+        assert_eq!(&etypes, options.get_etypes());
+    }
+
+    #[should_panic(expected="Cipher algorithm with etype = 3 is not supported")]
+    #[test]
+    fn error_setting_unsupported_etype() {
+        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
+        options.set_etype(DES_CBC_MD5).unwrap();
     }
 
 }
