@@ -16,24 +16,20 @@ pub enum AsReqResponse {
 /// Send the AS-REQ requests and retrieves the response
 pub struct AsRequester {
     transporter: Box<Transporter>,
-    as_req: AsReq,
+    realm: AsciiString,
+    as_options: AsReqOptions
 }
 
 impl AsRequester {
 
     pub fn new(
-        realm: AsciiString, username: AsciiString, 
-        kdc_address: IpAddr, transport_protocol: TransportProtocol, 
-        
+        realm: AsciiString, kdc_address: IpAddr, transport_protocol: TransportProtocol 
     ) -> Self {
         return Self {
             transporter: new_transporter(kdc_address, transport_protocol),
-            as_req: AsReq::new(realm, username)
+            realm,
+            as_options: AsReqOptions::default()
         };
-    }
-
-    pub fn set_user_key(&mut self, user_key: Key) {
-        self.as_req.set_user_key(user_key);
     }
 
     #[cfg(test)]
@@ -41,8 +37,8 @@ impl AsRequester {
         self.transporter = transporter;
     }
 
-    pub fn request(&self) -> Result<AsReqResponse> {
-        return AsRequest::request(&self.as_req, &self.transporter);
+    pub fn request(&self, username: &AsciiString, user_key: Option<&Key>) -> Result<AsReqResponse> {
+        return AsRequest::request(&self.realm, username, user_key, &self.as_options, &self.transporter);
     }
 
 }
@@ -52,10 +48,15 @@ struct AsRequest {}
 
 impl AsRequest {
 
-    pub fn request(as_req: &AsReq, transporter: &Box<Transporter>) -> Result<AsReqResponse> {
-         let raw_as_req = as_req.build().unwrap();
-         let raw_response = transporter.request_and_response(&raw_as_req)?;
-         return Self::parse_as_request_response(&raw_response);
+    pub fn request(
+        realm: &AsciiString,
+        username: &AsciiString,
+        user_key: Option< &Key>,
+        options: &AsReqOptions,
+        transporter: &Box<Transporter>) -> Result<AsReqResponse> {
+        let raw_as_req = AsReqBuilder::build_as_req(realm, username, user_key, options).unwrap();
+        let raw_response = transporter.request_and_response(&raw_as_req)?;
+        return Self::parse_as_request_response(&raw_response);
     }
 
     fn parse_as_request_response(raw_response: &[u8]) -> Result<AsReqResponse> {
@@ -116,13 +117,12 @@ mod test {
 
         let mut as_requester = AsRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("Mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP
         );
         as_requester.set_transporter(Box::new(FakeTransporter{}));
 
-        match as_requester.request().unwrap() {
+        match as_requester.request(&AsciiString::from_ascii("Mickey").unwrap(), None).unwrap() {
             AsReqResponse::KrbError(_) => {
 
             }
@@ -241,14 +241,15 @@ mod test {
 
         let mut as_requester = AsRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
         );
-        as_requester.set_user_key(Key::Password("Minnie1234".to_string()));
         as_requester.set_transporter(Box::new(FakeTransporter{}));
 
-        match as_requester.request().unwrap() {
+        match as_requester.request(
+            &AsciiString::from_ascii("mickey").unwrap(),
+            Some(&Key::Password("Minnie1234".to_string()))
+            ).unwrap() {
             AsReqResponse::KrbError(_) => {
                  unreachable!();
             }

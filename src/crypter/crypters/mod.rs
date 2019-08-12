@@ -9,7 +9,6 @@ use rc4::*;
 
 
 use crate::constants::etypes::*;
-use crate::error::*;
 
 pub const RC4_KEY_SIZE: usize = 16;
 pub const AES128_KEY_SIZE: usize = 16;

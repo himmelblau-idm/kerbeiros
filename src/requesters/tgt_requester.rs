@@ -10,24 +10,17 @@ use super::as_requester::*;
 
 /// Class that gets a TGT from KDC by sending one or more AS-REQ requests
 pub struct TgtRequester {
-    user_key: Option<Key>,
     as_requester: AsRequester
 }
 
 impl TgtRequester {
 
     pub fn new(
-        realm: AsciiString, username: AsciiString,
-        kdc_address: IpAddr, transport_protocol: TransportProtocol,
+        realm: AsciiString, kdc_address: IpAddr, transport_protocol: TransportProtocol,
     ) -> Self {
         return Self {
-            as_requester: AsRequester::new(realm, username, kdc_address, transport_protocol),
-            user_key: None
+            as_requester: AsRequester::new(realm, kdc_address, transport_protocol),
         };
-    }
-
-    pub fn set_user_key(&mut self, user_key: Key) {
-        self.user_key = Some(user_key);
     }
 
     #[cfg(test)]
@@ -35,9 +28,34 @@ impl TgtRequester {
         self.as_requester.set_transporter(transporter);
     }
 
-    pub fn request(&mut self) -> Result<Credential> {
+    pub fn request(& self, username: &AsciiString, user_key: Option<&Key>) -> Result<Credential> {
+        return TGTRequest::request(username, user_key, &self.as_requester);
+    }
 
-        match self.as_requester.request()? {
+}
+
+
+struct TGTRequest<'a> {
+    username: &'a AsciiString, 
+    user_key: Option<&'a Key>,
+    as_requester: &'a AsRequester
+}
+
+impl<'a> TGTRequest<'a> {
+
+    pub fn request(
+        username: &'a AsciiString, 
+        user_key: Option<&'a Key>,
+        as_requester: &'a AsRequester
+    ) -> Result<Credential> {
+        let request = Self {username, user_key, as_requester};
+        return request.request_tgt();
+    }
+
+
+    fn request_tgt(&self) -> Result<Credential> {
+
+        match self.as_requester.request(self.username, None)? {
             AsReqResponse::KrbError(krb_error) => {
                 return self.process_1st_krb_error(krb_error);
             },
@@ -47,7 +65,7 @@ impl TgtRequester {
         }
     }
 
-    fn process_1st_krb_error(&mut self, krb_error: KrbError) -> Result<Credential> {
+    fn process_1st_krb_error(&self, krb_error: KrbError) -> Result<Credential> {
         if krb_error.get_error_code() != KDC_ERR_PREAUTH_REQUIRED {
             return Err(ErrorKind::KrbErrorResponse(krb_error))?;
         }
@@ -59,10 +77,9 @@ impl TgtRequester {
         return Err(ErrorKind::KrbErrorResponse(krb_error))?;
     }
 
-    fn request_2nd_as_req(&mut self, user_key: &Key) -> Result<Credential> {
-        self.as_requester.set_user_key(user_key.clone());
+    fn request_2nd_as_req(&self, user_key: &Key) -> Result<Credential> {
 
-        match self.as_requester.request()? {
+        match self.as_requester.request(self.username, Some(user_key))? {
             AsReqResponse::KrbError(krb_error) => {
                 return Err(ErrorKind::KrbErrorResponse(krb_error))?;
             },
@@ -140,16 +157,16 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("Mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
         );
 
-        tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
-
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request().unwrap();
+        tgt_request.request(            
+            &AsciiString::from_ascii("Mickey").unwrap(),
+            Some(&Key::Password("Minnie1234".to_string()))
+        ).unwrap();
 
     }
 
@@ -263,16 +280,16 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
         );
 
-        tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
-
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request().unwrap();
+        tgt_request.request(
+            &AsciiString::from_ascii("mickey").unwrap(),
+            Some(&Key::Password("Minnie1234".to_string()))
+        ).unwrap();
 
     }
 
@@ -386,16 +403,16 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
         );
 
-        tgt_request.set_user_key(Key::Password("Incorrect password".to_string()));
-
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request().unwrap();
+        tgt_request.request(
+            &AsciiString::from_ascii("mickey").unwrap(),
+            Some(&Key::Password("Incorrect password".to_string()))
+        ).unwrap();
 
     }
 
@@ -546,16 +563,16 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
         );
 
-        tgt_request.set_user_key(Key::Password("Minnie1234".to_string()));
-
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request().unwrap();
+        tgt_request.request(
+            &AsciiString::from_ascii("mickey").unwrap(),
+            Some(&Key::Password("Minnie1234".to_string()))
+        ).unwrap();
 
     }
 
@@ -600,14 +617,16 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            AsciiString::from_ascii("Mickey").unwrap(),
             IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
             TransportProtocol::TCP,
         );
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
 
-        tgt_request.request().unwrap();
+        tgt_request.request(
+            &AsciiString::from_ascii("Mickey").unwrap(),
+            None
+        ).unwrap();
 
     }
 
