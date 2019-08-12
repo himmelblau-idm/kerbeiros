@@ -16,11 +16,15 @@ pub struct TgtRequester {
 impl TgtRequester {
 
     pub fn new(
-        realm: AsciiString, kdc_address: IpAddr, transport_protocol: TransportProtocol,
+        realm: AsciiString, kdc_address: IpAddr,
     ) -> Self {
         return Self {
-            as_requester: AsRequester::new(realm, kdc_address, transport_protocol),
+            as_requester: AsRequester::new(realm, kdc_address),
         };
+    }
+
+    pub fn set_transport_protocol(&mut self, transport_protocol: TransportProtocol) {
+        self.as_requester.set_transport_protocol(transport_protocol);
     }
 
     #[cfg(test)]
@@ -157,8 +161,7 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-            TransportProtocol::TCP,
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0))
         );
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
@@ -280,8 +283,7 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-            TransportProtocol::TCP,
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0))
         );
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
@@ -403,8 +405,7 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-            TransportProtocol::TCP,
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0))
         );
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
@@ -563,8 +564,7 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-            TransportProtocol::TCP,
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0))
         );
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));
@@ -617,8 +617,7 @@ mod test {
 
         let mut tgt_request = TgtRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-            TransportProtocol::TCP,
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0))
         );
 
         tgt_request.set_transporter(Box::new(FakeTransporter{}));

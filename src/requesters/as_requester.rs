@@ -15,19 +15,25 @@ pub enum AsReqResponse {
 
 /// Send the AS-REQ requests and retrieves the response
 pub struct AsRequester {
+    as_options: AsReqOptions,
     transporter: Box<Transporter>,
-    as_options: AsReqOptions
+    kdc_address: IpAddr
 }
 
 impl AsRequester {
 
     pub fn new(
-        realm: AsciiString, kdc_address: IpAddr, transport_protocol: TransportProtocol 
+        realm: AsciiString, kdc_address: IpAddr,  
     ) -> Self {
         return Self {
-            transporter: new_transporter(kdc_address, transport_protocol),
+            kdc_address: kdc_address.clone(),
+            transporter: new_transporter(kdc_address, TransportProtocol::TCP),
             as_options: AsReqOptions::new(realm)
         };
+    }
+
+    pub fn set_transport_protocol(&mut self, transport_protocol: TransportProtocol) {
+        self.transporter = new_transporter(self.kdc_address, transport_protocol);
     }
 
     #[cfg(test)]
@@ -114,8 +120,7 @@ mod test {
 
         let mut as_requester = AsRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-            TransportProtocol::TCP
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0))
         );
         as_requester.set_transporter(Box::new(FakeTransporter{}));
 
@@ -238,8 +243,7 @@ mod test {
 
         let mut as_requester = AsRequester::new(
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-            TransportProtocol::TCP,
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0))
         );
         as_requester.set_transporter(Box::new(FakeTransporter{}));
 
