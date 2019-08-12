@@ -3,26 +3,30 @@ use crate::constants::kdc_options::*;
 use std::collections::HashSet;
 use crate::error::*;
 use crate::crypter::*;
+use ascii::AsciiString;
 
 #[derive(Debug, PartialEq)]
 pub struct AsReqOptions {
+    realm: AsciiString, 
     etypes: HashSet<i32>,
     kdc_options: u32,
     pac: bool,
 
 }
 
-impl Default for AsReqOptions {
-    fn default() -> Self {
+impl AsReqOptions {
+    pub fn new(realm: AsciiString) -> Self {
         return Self {
+            realm,
             kdc_options: FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK,
             etypes: [ AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC ].iter().cloned().collect(),
             pac: true
-        }
+        };
     }
-}
 
-impl AsReqOptions {
+    pub fn get_realm(&self) -> &AsciiString {
+        return &self.realm;
+    }
 
     pub fn get_etypes(&self) -> &HashSet<i32> {
         return &self.etypes;
@@ -83,22 +87,8 @@ mod test {
     use super::*;
 
     #[test]
-    fn create_default() {
-
-        assert_eq!(
-            AsReqOptions {
-                kdc_options: FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK,
-                etypes: [ AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC ].iter().cloned().collect(),
-                pac: true
-            },
-            AsReqOptions::default()
-        );
-
-    }
-
-    #[test]
     fn get_default_etypes() {
-        let options = AsReqOptions::default();
+        let options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
         let etypes: HashSet<i32> = [ AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC ].iter().cloned().collect();
 
         assert_eq!(
@@ -110,7 +100,7 @@ mod test {
 
     #[test]
     fn get_default_kdc_options() {
-        let options = AsReqOptions::default();
+        let options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
         assert_eq!(
             FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK,
@@ -120,7 +110,7 @@ mod test {
 
     #[test]
     fn set_etypes() {
-        let mut options = AsReqOptions::default();
+        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
         let etypes: HashSet<i32> = [ RC4_HMAC ].iter().cloned().collect();
 
@@ -137,7 +127,7 @@ mod test {
     #[test]
     fn error_setting_unsupported_etypes() {
 
-        let mut options = AsReqOptions::default();
+        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
         let etypes: HashSet<i32> = [ RC4_HMAC, DES_CBC_MD5 ].iter().cloned().collect();
 
@@ -146,7 +136,7 @@ mod test {
 
     #[test]
     fn get_sorted_etypes_by_strength() {
-        let mut options = AsReqOptions::default();
+        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
         assert_eq!(
             vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC],

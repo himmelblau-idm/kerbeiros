@@ -16,7 +16,6 @@ pub enum AsReqResponse {
 /// Send the AS-REQ requests and retrieves the response
 pub struct AsRequester {
     transporter: Box<Transporter>,
-    realm: AsciiString,
     as_options: AsReqOptions
 }
 
@@ -27,8 +26,7 @@ impl AsRequester {
     ) -> Self {
         return Self {
             transporter: new_transporter(kdc_address, transport_protocol),
-            realm,
-            as_options: AsReqOptions::default()
+            as_options: AsReqOptions::new(realm)
         };
     }
 
@@ -38,7 +36,7 @@ impl AsRequester {
     }
 
     pub fn request(&self, username: &AsciiString, user_key: Option<&Key>) -> Result<AsReqResponse> {
-        return AsRequest::request(&self.realm, username, user_key, &self.as_options, &self.transporter);
+        return AsRequest::request(username, user_key, &self.as_options, &self.transporter);
     }
 
 }
@@ -49,12 +47,11 @@ struct AsRequest {}
 impl AsRequest {
 
     pub fn request(
-        realm: &AsciiString,
         username: &AsciiString,
         user_key: Option< &Key>,
         options: &AsReqOptions,
         transporter: &Box<Transporter>) -> Result<AsReqResponse> {
-        let raw_as_req = AsReqBuilder::build_as_req(realm, username, user_key, options).unwrap();
+        let raw_as_req = AsReqBuilder::build_as_req(username, user_key, options).unwrap();
         let raw_response = transporter.request_and_response(&raw_as_req)?;
         return Self::parse_as_request_response(&raw_response);
     }

@@ -6,7 +6,6 @@ use super::options::AsReqOptions;
 use super::timestampcrypter::*;
 
 pub struct AsReqBuilder<'a>{
-    realm: &'a AsciiString,
     username: &'a AsciiString, 
     user_key: Option<&'a Key>,
     options: &'a AsReqOptions
@@ -16,27 +15,25 @@ pub struct AsReqBuilder<'a>{
 impl<'a> AsReqBuilder<'a> {
 
     fn new(
-        realm: &'a AsciiString,
         username: &'a AsciiString, 
         user_key: Option<&'a Key>,
         options: &'a AsReqOptions
     ) -> Self {
-        return Self { realm, username, user_key, options };
+        return Self { username, user_key, options };
     }
 
     pub fn build_as_req(
-        realm: &'a AsciiString,
         username: &'a AsciiString, 
         user_key: Option<&'a Key>,
         options: &'a AsReqOptions
     ) -> Result<Vec<u8>> {
-        let builder = Self::new(realm, username, user_key, options);
+        let builder = Self::new(username, user_key, options);
         let as_req = builder.create_as_req_struct()?;
         return Ok(as_req.build());
     }
 
     fn create_as_req_struct(&self) -> Result<structs_asn1::AsReq> {
-        let mut as_req = structs_asn1::AsReq::new(self.realm.clone(), self.username.clone());
+        let mut as_req = structs_asn1::AsReq::new(self.options.get_realm().clone(), self.username.clone());
         as_req.set_kdc_options(self.options.get_kdc_options());
 
         if self.options.should_be_pac_included() {
@@ -59,7 +56,7 @@ impl<'a> AsReqBuilder<'a> {
 
     fn produce_encrypted_timestamp(&self, user_key: &Key) -> Result<(i32, Vec<u8>)>{
         return AsReqTimestampCrypter::build_encrypted_timestamp(
-            &self.realm,
+            self.options.get_realm(),
             &self.username,
             user_key,
             &self.options.get_sorted_etypes()
@@ -122,11 +119,9 @@ mod test {
     }
 
     fn create_as_req_struct_with_key(user_key: Option<&Key>) -> structs_asn1::AsReq {
-        let realm = AsciiString::from_ascii("KINGDOM.HEARTS").unwrap();
         let username = AsciiString::from_ascii("Mickey").unwrap();
-        let options = AsReqOptions::default();
+        let options = AsReqOptions::new(AsciiString::from_ascii("KINGDOM.HEARTS").unwrap());
         let builder = AsReqBuilder::new(
-            &realm, 
             &username,
             user_key,
             &options
