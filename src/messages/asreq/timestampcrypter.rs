@@ -1,5 +1,5 @@
 use crate::constants::*;
-use crate::structs::structs_asn1;
+use crate::structs::asn1;
 use crate::error::*;
 use chrono::Utc;
 use crate::crypter::*;
@@ -38,7 +38,7 @@ impl<'a> AsReqTimestampCrypter<'a> {
     }
 
     fn produce_raw_timestamp() -> Vec<u8> {
-        let timestamp = structs_asn1::PaEncTsEnc::from_datetime(Utc::now()).unwrap();
+        let timestamp = asn1::PaEncTsEnc::from_datetime(Utc::now()).unwrap();
         return timestamp.build();
     }
 

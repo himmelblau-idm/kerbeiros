@@ -1,4 +1,4 @@
-use crate::structs::structs_asn1::EncryptionKey;
+use crate::structs::asn1::EncryptionKey;
 use crate::structs::ccache::KeyBlock;
 
 pub struct KeyBlockMapper{}

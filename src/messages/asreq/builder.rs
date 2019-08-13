@@ -1,6 +1,6 @@
 use ascii::AsciiString;
 use crate::key::Key;
-use crate::structs::structs_asn1;
+use crate::structs::asn1;
 use crate::error::*;
 use super::options::AsReqOptions;
 use super::timestampcrypter::*;
@@ -32,8 +32,8 @@ impl<'a> AsReqBuilder<'a> {
         return Ok(as_req.build());
     }
 
-    fn create_as_req_struct(&self) -> Result<structs_asn1::AsReq> {
-        let mut as_req = structs_asn1::AsReq::new(self.options.get_realm().clone(), self.username.clone());
+    fn create_as_req_struct(&self) -> Result<asn1::AsReq> {
+        let mut as_req = asn1::AsReq::new(self.options.get_realm().clone(), self.username.clone());
         as_req.set_kdc_options(self.options.get_kdc_options());
 
         if self.options.should_be_pac_included() {
@@ -118,7 +118,7 @@ mod test {
 
     }
 
-    fn create_as_req_struct_with_key(user_key: Option<&Key>) -> structs_asn1::AsReq {
+    fn create_as_req_struct_with_key(user_key: Option<&Key>) -> asn1::AsReq {
         let username = AsciiString::from_ascii("Mickey").unwrap();
         let options = AsReqOptions::new(AsciiString::from_ascii("KINGDOM.HEARTS").unwrap());
         let builder = AsReqBuilder::new(
