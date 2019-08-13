@@ -22,7 +22,7 @@ impl LastReqEntry {
 
 
 #[derive(Sequence, Default, Debug, PartialEq)]
-pub struct LastReqEntryAsn1 {
+pub(crate) struct LastReqEntryAsn1 {
     #[seq_field(context_tag = 0)]
     lr_type: SeqField<Int32Asn1>,
     #[seq_field(context_tag = 1)]

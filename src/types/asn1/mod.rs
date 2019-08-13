@@ -53,7 +53,7 @@ mod enckdcreppart;
 pub use enckdcreppart::*;
 
 mod lastreq;
-pub use lastreq::{LastReq,LastReqEntry};
+pub use lastreq::*;
 
 mod kdcreqbody;
 pub use kdcreqbody::{Etype, KdcReqBody, SeqOfEtype};

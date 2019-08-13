@@ -22,7 +22,7 @@ impl DerefMut for LastReq {
 }
 
 #[derive(Default, Debug, PartialEq)]
-pub struct LastReqAsn1 {
+pub(crate) struct LastReqAsn1 {
     subtype: SequenceOf<LastReqEntryAsn1>
 }
 
