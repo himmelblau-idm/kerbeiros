@@ -29,7 +29,7 @@ impl PacRequest {
 
 
 #[derive(Sequence)]
-pub struct PacRequestAsn1 {
+pub(crate) struct PacRequestAsn1 {
     #[seq_field(context_tag = 0)]
     include_pac: SeqField<Boolean>
 }

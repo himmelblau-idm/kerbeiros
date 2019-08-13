@@ -4,7 +4,7 @@ use super::padata::*;
 use crate::error::Result;
 
 pub type MethodData = SeqOfPaData;
-pub type MethodDataAsn1 = SeqOfPaDataAsn1;
+pub(crate) type MethodDataAsn1 = SeqOfPaDataAsn1;
 
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct SeqOfPaData {
@@ -39,7 +39,7 @@ impl SeqOfPaData {
 }
 
 #[derive(Default, Debug, PartialEq)]
-pub struct SeqOfPaDataAsn1 {
+pub(crate) struct SeqOfPaDataAsn1 {
     subtype: SequenceOf<PaDataAsn1>
 }
 

@@ -49,7 +49,7 @@ impl EtypeInfo2Entry {
 }
 
 #[derive(Sequence, Debug, Default, PartialEq)]
-pub struct EtypeInfo2EntryAsn1{
+pub(crate) struct EtypeInfo2EntryAsn1{
     #[seq_field(context_tag = 0)]
     etype: SeqField<Int32Asn1>,
     #[seq_field(context_tag = 1, optional)]

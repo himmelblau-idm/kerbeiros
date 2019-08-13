@@ -37,7 +37,7 @@ impl EtypeInfo2 {
 }
 
 
-pub struct EtypeInfo2Asn1 {
+pub(crate) struct EtypeInfo2Asn1 {
     subtype: SequenceOf<EtypeInfo2EntryAsn1>
 }
 

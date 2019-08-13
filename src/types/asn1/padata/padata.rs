@@ -42,7 +42,7 @@ impl PaData {
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
-pub struct PaDataAsn1 {
+pub(crate) struct PaDataAsn1 {
     #[seq_field(context_tag = 1)]
     padata_type: SeqField<Int32Asn1>,
     #[seq_field(context_tag = 2)]

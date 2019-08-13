@@ -49,7 +49,7 @@ impl From<DateTime<Utc>> for PaEncTsEnc {
 
 
 #[derive(Sequence)]
-pub struct PaEncTsEncAsn1 {
+pub(crate) struct PaEncTsEncAsn1 {
     #[seq_field(context_tag = 0)]
     patimestamp: SeqField<KerberosTimeAsn1>,
     #[seq_field(context_tag = 1, optional)]
