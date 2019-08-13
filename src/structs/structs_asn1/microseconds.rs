@@ -21,7 +21,8 @@ impl Microseconds {
         return self.value;
     }
 
-    fn _set(&mut self, x: u32) -> Result<()> {
+    #[cfg(test)]
+    fn set(&mut self, x: u32) -> Result<()> {
         if x > 999999 {
             return Err(ErrorKind::InvalidMicroseconds(x))?;
         }
@@ -116,7 +117,7 @@ mod test {
     fn test_setting_microseconds() {
         let mut mic = Microseconds::new(0).unwrap();
         for i in 0..1000000 {
-            mic._set(i).unwrap();
+            mic.set(i).unwrap();
             assert_eq!(i, mic.get());
         }
     }
@@ -125,7 +126,7 @@ mod test {
     #[test]
     fn test_set_too_high_microseconds() {
         let mut mic = Microseconds::new(0).unwrap();
-        mic._set(1000000).unwrap();
+        mic.set(1000000).unwrap();
     }
 
 
