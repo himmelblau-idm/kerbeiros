@@ -1,5 +1,5 @@
 use red_asn1::*;
-pub use super::super::int32::{Int32, Int32Asn1};
+use super::super::int32::*;
 use crate::error::{ErrorKind, Result};
 use crate::constants::address_type;
 

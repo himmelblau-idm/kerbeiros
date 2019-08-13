@@ -1,5 +1,5 @@
 mod int32;
-pub use int32::Int32;
+pub use int32::*;
 
 mod uint32;
 pub use uint32::UInt32;

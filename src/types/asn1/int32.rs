@@ -4,7 +4,7 @@ use crate::error::{ErrorKind, Result};
 pub type Int32 = i32;
 
 #[derive(Default, Debug, PartialEq)]
-pub struct Int32Asn1 {
+pub(crate) struct Int32Asn1 {
     subtype: Integer
 }
 
