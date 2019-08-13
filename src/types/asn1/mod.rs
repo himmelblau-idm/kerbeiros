@@ -50,7 +50,7 @@ mod kdcrep;
 pub use kdcrep::*;
 
 mod enckdcreppart;
-pub use enckdcreppart::EncKdcRepPart;
+pub use enckdcreppart::*;
 
 mod lastreq;
 pub use lastreq::{LastReq,LastReqEntry};

@@ -148,7 +148,7 @@ impl EncKdcRepPart {
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 25)]
-struct EncAsRepPartAsn1 {
+pub(crate) struct EncAsRepPartAsn1 {
     #[seq_field(context_tag = 0)]
     key: SeqField<EncryptionKeyAsn1>,
     #[seq_field(context_tag = 1)]
