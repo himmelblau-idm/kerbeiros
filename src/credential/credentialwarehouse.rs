@@ -1,6 +1,6 @@
 use super::credential::*;
 use super::mappers::*;
-use crate::structs::*;
+use crate::types::*;
 use crate::error::*;
 use super::file::*;
 

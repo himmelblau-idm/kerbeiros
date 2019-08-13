@@ -38,7 +38,7 @@
 
 
 
-mod structs;
+mod types;
 mod byteparser;
 mod crypter;
 mod transporter;

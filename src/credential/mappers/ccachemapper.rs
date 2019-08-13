@@ -1,4 +1,4 @@
-use crate::structs::*;
+use crate::types::*;
 use super::*;
 use super::super::*;
 

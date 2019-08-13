@@ -1,5 +1,5 @@
 use crate::constants::*;
-use crate::structs::asn1;
+use crate::types::asn1;
 use crate::error::*;
 use chrono::Utc;
 use crate::crypter::*;

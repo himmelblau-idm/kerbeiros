@@ -1,4 +1,4 @@
-use crate::structs::*;
+use crate::types::*;
 use crate::error::*;
 use super::credentialwarehouse::*;
 

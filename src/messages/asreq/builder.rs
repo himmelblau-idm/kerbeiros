@@ -1,6 +1,6 @@
 use ascii::AsciiString;
 use crate::key::Key;
-use crate::structs::asn1;
+use crate::types::asn1;
 use crate::error::*;
 use super::options::AsReqOptions;
 use super::timestampcrypter::*;

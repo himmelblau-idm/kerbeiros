@@ -1,4 +1,4 @@
-use crate::structs::*;
+use crate::types::*;
 use super::super::credential::*;
 use crate::crypter::*;
 use crate::constants::*;
