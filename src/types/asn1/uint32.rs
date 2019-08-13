@@ -5,7 +5,7 @@ pub type UInt32 = u32;
 
 
 #[derive(Default, Debug, PartialEq)]
-pub struct UInt32Asn1 {
+pub(crate) struct UInt32Asn1 {
     subtype: Integer
 }
 

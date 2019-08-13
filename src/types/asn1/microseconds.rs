@@ -37,7 +37,7 @@ impl Microseconds {
 }
 
 #[derive(Default, Debug, PartialEq)]
-pub struct MicrosecondsAsn1 {
+pub(crate) struct MicrosecondsAsn1 {
     subtype: Integer
 }
 

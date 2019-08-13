@@ -2,7 +2,7 @@ mod int32;
 pub use int32::*;
 
 mod uint32;
-pub use uint32::UInt32;
+pub use uint32::*;
 
 mod microseconds;
 pub use microseconds::Microseconds;
