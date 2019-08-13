@@ -49,11 +49,11 @@ pub struct HostAddressesAsn1 {
 impl HostAddressesAsn1 {
     fn new(host_addresses: &HostAddresses) -> HostAddressesAsn1 {
         return HostAddressesAsn1 {
-            subtype: HostAddressesAsn1::_seq_of_host_address(host_addresses)
+            subtype: HostAddressesAsn1::seq_of_host_address(host_addresses)
         }
     }
 
-    fn _seq_of_host_address(host_addresses: &HostAddresses) -> SequenceOf<HostAddressAsn1> {
+    fn seq_of_host_address(host_addresses: &HostAddresses) -> SequenceOf<HostAddressAsn1> {
         let mut seq_of_host_addresses: SequenceOf<HostAddressAsn1> = SequenceOf::default();
 
         for host_address in host_addresses.addresses.iter() {

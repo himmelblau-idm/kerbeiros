@@ -1,14 +1,14 @@
 use red_asn1::*;
-use super::uint32::{UInt32, UInt32Asn1};
+use super::uint32::*;
 use super::kerberosstring::*;
 use super::realm::{Realm, RealmAsn1};
-use super::kdcoptions::{KdcOptions, KdcOptionsAsn1};
+use super::kdcoptions::*;
 use super::principalname::*;
 use crate::error::{ErrorKind, Result};
 use crate::constants::principal_name_types::*;
-use super::kerberostime::{KerberosTime, KerberosTimeAsn1};
-use super::hostaddress::{HostAddresses, HostAddressesAsn1, HostAddress};
-use super::encrypteddata::{EncryptedData, EncryptedDataAsn1};
+use super::kerberostime::*;
+use super::hostaddress::*;
+use super::encrypteddata::*;
 use super::ticket::*;
 pub use super::etype::*;
 use rand::Rng;
@@ -74,7 +74,8 @@ impl KdcReqBody {
         unreachable!()
     }
 
-    pub fn _set_till(&mut self, date: DateTime<Utc>) {
+    #[cfg(test)]
+    pub fn set_till(&mut self, date: DateTime<Utc>) {
         self.till = date;
     }
 
@@ -82,7 +83,8 @@ impl KdcReqBody {
         self.rtime = Some(date);
     }
 
-    pub fn _set_nonce(&mut self, nonce: u32) {
+    #[cfg(test)]
+    pub fn set_nonce(&mut self, nonce: u32) {
         self.nonce = nonce;
     }
 
@@ -90,11 +92,13 @@ impl KdcReqBody {
         self.etypes.push(etype);
     }
 
-    pub fn _get_etypes(&self) -> &SeqOfEtype {
+    #[cfg(test)]
+    pub fn get_etypes(&self) -> &SeqOfEtype {
         return &self.etypes;
     }
 
-    pub fn _set_address(&mut self, address: HostAddress) {
+    #[cfg(test)]
+    pub fn set_address(&mut self, address: HostAddress) {
         self.addresses = Some(HostAddresses::new(address));
     }
 
@@ -190,7 +194,6 @@ impl KdcReqBodyAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
-    use chrono::*;
 
     #[test]
     fn create_default_kdc_req_body_asn1() {
@@ -220,16 +223,16 @@ mod test {
         kdc_req_body.set_cname(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
         kdc_req_body.set_sname(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         kdc_req_body.push_sname(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap()).unwrap();
-        kdc_req_body._set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
+        kdc_req_body.set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         kdc_req_body.set_rtime(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
-        kdc_req_body._set_nonce(101225910);
+        kdc_req_body.set_nonce(101225910);
         kdc_req_body.push_etype(AES256_CTS_HMAC_SHA1_96);
         kdc_req_body.push_etype(AES128_CTS_HMAC_SHA1_96);
         kdc_req_body.push_etype(RC4_HMAC);
         kdc_req_body.push_etype(RC4_HMAC_EXP);
         kdc_req_body.push_etype(RC4_HMAC_OLD_EXP);
         kdc_req_body.push_etype(DES_CBC_MD5);
-        kdc_req_body._set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
+        kdc_req_body.set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
 
         let kdc_req_body_asn1 = kdc_req_body.asn1_type();
 

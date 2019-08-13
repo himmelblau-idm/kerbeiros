@@ -78,7 +78,7 @@ impl AsReq {
 
     #[cfg(test)]
     fn set_till(&mut self, date: DateTime<Utc>) {
-        self.req_body._set_till(date);
+        self.req_body.set_till(date);
     }
 
     pub fn set_default_rtime(&mut self) {
@@ -91,7 +91,7 @@ impl AsReq {
 
     #[cfg(test)]
     fn set_nonce(&mut self, nonce: u32) {
-        self.req_body._set_nonce(nonce);
+        self.req_body.set_nonce(nonce);
     }
 
     pub fn push_etype(&mut self, etype: i32) {
@@ -100,12 +100,12 @@ impl AsReq {
 
     #[cfg(test)]
     pub fn get_etypes(&self) -> &SeqOfEtype {
-        return self.req_body._get_etypes();
+        return self.req_body.get_etypes();
     }
 
     #[cfg(test)]
     fn set_address(&mut self, address: HostAddress) {
-        self.req_body._set_address(address);
+        self.req_body.set_address(address);
     }
 
     pub fn build(&self) -> Vec<u8> {
