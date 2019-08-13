@@ -29,6 +29,7 @@ mod etype;
 pub use etype::*;
 
 mod kerberosflags;
+pub use kerberosflags::*;
 
 mod encrypteddata;
 pub use encrypteddata::EncryptedData;

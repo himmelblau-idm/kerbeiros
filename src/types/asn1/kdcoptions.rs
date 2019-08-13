@@ -1,7 +1,7 @@
 use super::kerberosflags::{KerberosFlags, KerberosFlagsAsn1};
 
 pub type KdcOptions = KerberosFlags;
-pub type KdcOptionsAsn1 = KerberosFlagsAsn1;
+pub(crate) type KdcOptionsAsn1 = KerberosFlagsAsn1;
 
 #[cfg(test)]
 mod tests {
