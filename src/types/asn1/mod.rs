@@ -32,7 +32,7 @@ mod kerberosflags;
 pub use kerberosflags::*;
 
 mod encrypteddata;
-pub use encrypteddata::EncryptedData;
+pub use encrypteddata::*;
 
 mod encryptionkey;
 pub use encryptionkey::EncryptionKey;

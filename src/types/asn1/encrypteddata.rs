@@ -40,7 +40,7 @@ impl EncryptedData {
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
-pub struct EncryptedDataAsn1 {
+pub(crate) struct EncryptedDataAsn1 {
     #[seq_field(context_tag = 0)]
     etype: SeqField<Int32Asn1>,
     #[seq_field(context_tag = 1, optional)]
