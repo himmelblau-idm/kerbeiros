@@ -46,7 +46,7 @@ impl EtypeInfo2Asn1 {
     fn new(seq_of_padatas: &EtypeInfo2) -> Self {
         let mut seq_padatas_asn1 = Self::default();
 
-        seq_padatas_asn1._set_asn1_values(seq_of_padatas);
+        seq_padatas_asn1.set_asn1_values(seq_of_padatas);
         return seq_padatas_asn1;
     }
 
@@ -56,7 +56,7 @@ impl EtypeInfo2Asn1 {
         };
     }
 
-    fn _set_asn1_values(&mut self, seq_of_padatas: &EtypeInfo2) {
+    fn set_asn1_values(&mut self, seq_of_padatas: &EtypeInfo2) {
         for padata in seq_of_padatas.iter() {
             self.subtype.push(padata.asn1_type());
         }
