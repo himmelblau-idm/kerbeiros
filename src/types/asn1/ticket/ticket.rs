@@ -23,17 +23,28 @@ impl Ticket {
         };
     }
 
-    pub fn set_tkt_vno(&mut self, tkt_vno: i8) {
-        self.tkt_vno = tkt_vno;
+    
+
+    pub fn get_enc_part(&self) -> &EncryptedData {
+        return &self.enc_part;
     }
 
     pub fn get_sname(&self) -> &PrincipalName {
         return &self.sname;
     }
 
-    pub fn get_encrypted_data(&self) -> &EncryptedData {
-        return &self.enc_part;
+    pub fn get_realm(&self) -> &Realm {
+        return &self.realm;
     }
+
+    pub fn get_tkt_vno(&self) -> i8 {
+        return self.tkt_vno;
+    }
+
+    pub fn set_tkt_vno(&mut self, tkt_vno: i8) {
+        self.tkt_vno = tkt_vno;
+    }
+    
 
     pub(crate) fn asn1_type(&self) -> TicketAsn1 {
         return TicketAsn1::new(self);
@@ -64,10 +75,10 @@ impl TicketAsn1 {
     fn new(ticket: &Ticket) -> TicketAsn1 {
         let mut ticket_asn1 = Self::default();
 
-        ticket_asn1.set_tkt_vno(Integer::from(ticket.tkt_vno as i64));
-        ticket_asn1.set_realm(RealmAsn1::new(ticket.realm.clone()));
+        ticket_asn1.set_tkt_vno(Integer::from(ticket.get_tkt_vno() as i64));
+        ticket_asn1.set_realm(ticket.get_realm().into());
         ticket_asn1.set_sname(ticket.get_sname().into());
-        ticket_asn1.set_enc_part(ticket.enc_part.asn1_type());
+        ticket_asn1.set_enc_part(ticket.get_enc_part().asn1_type());
 
         return ticket_asn1;
     }

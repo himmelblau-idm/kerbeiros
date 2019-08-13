@@ -1,4 +1,4 @@
-use ascii::*;
+use ascii::AsciiString;
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
@@ -10,11 +10,6 @@ pub(crate) struct KerberosStringAsn1 {
 }
 
 impl KerberosStringAsn1 {
-    pub fn new(value: AsciiString) -> KerberosStringAsn1 {
-        return KerberosStringAsn1 {
-            subtype: IA5String::from(value),
-        }
-    }
 
     pub fn no_asn1_type(&self) -> Result<KerberosString> {
         let ascii_string = self.subtype.value().ok_or_else(|| 
@@ -23,6 +18,20 @@ impl KerberosStringAsn1 {
         return Ok(ascii_string.clone());
     }
 
+}
+
+impl From<KerberosString> for KerberosStringAsn1 {
+    fn from(value: KerberosString) -> Self {
+        return KerberosStringAsn1 {
+            subtype: IA5String::from(value),
+        }
+    }
+}
+
+impl From<&KerberosString> for KerberosStringAsn1 {
+    fn from(value: &KerberosString) -> Self {
+        return Self::from(value.clone());
+    }
 }
 
 impl Asn1Object for KerberosStringAsn1 {
@@ -68,7 +77,7 @@ mod tests {
 
         assert_eq!(vec![0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 
                         0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53],
-                   KerberosStringAsn1::new(kerberos_string).encode().unwrap());
+                   KerberosStringAsn1::from(kerberos_string).encode().unwrap());
     }
 
     #[test]

@@ -4,7 +4,7 @@ use super::super::super::kerberosstring::*;
 use crate::error::{ErrorKind, Result};
 
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct EtypeInfo2Entry {
     etype: Int32,
     salt: Option<KerberosString>,
@@ -22,6 +22,14 @@ impl EtypeInfo2Entry {
         };
     }
 
+    pub fn get_etype(&self) -> Int32 {
+        return self.etype;
+    }
+
+    pub fn get_salt(&self) -> &Option<KerberosString> {
+        return &self.salt;
+    }
+
     #[cfg(test)]
     pub fn set_salt(&mut self, salt: KerberosString) {
         self.salt = Some(salt);
@@ -34,12 +42,8 @@ impl EtypeInfo2Entry {
         return Vec::new();
     }
 
-    fn default() -> Self {
-        return Self {
-            etype: 0,
-            salt: None,
-            s2kparams: None
-        };
+    pub fn get_s2kparams(&self) -> &Option<Vec<u8>> {
+        return &self.s2kparams;
     }
 
     pub(crate) fn asn1_type(&self) -> EtypeInfo2EntryAsn1 {
@@ -64,13 +68,13 @@ impl EtypeInfo2EntryAsn1 {
     fn new(entry: &EtypeInfo2Entry) -> Self {
         let mut entry_asn1 = Self::default();
 
-        entry_asn1.set_etype(Int32Asn1::new(entry.etype));
+        entry_asn1.set_etype(Int32Asn1::new(entry.get_etype()));
         
-        if let Some(salt) = &entry.salt {
-            entry_asn1.set_salt(KerberosStringAsn1::new(salt.clone()));
+        if let Some(salt) = entry.get_salt() {
+            entry_asn1.set_salt(salt.into());
         }
 
-        if let Some(s2kparams) = &entry.s2kparams {
+        if let Some(s2kparams) = entry.get_s2kparams() {
             entry_asn1.set_s2kparams(OctetString::from(s2kparams.clone()));
         }
 

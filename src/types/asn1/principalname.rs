@@ -52,15 +52,15 @@ pub(crate) struct PrincipalNameAsn1 {
 impl PrincipalNameAsn1 {
 
     fn set_asn1_values(&mut self, principal_name: &PrincipalName) {
-        self.set_name_type(Int32Asn1::new(principal_name.name_type));
+        self.set_name_type(Int32Asn1::new(principal_name.get_name_type()));
         self.set_name_string(self.seq_of_kerberos_strings(principal_name));
     }
 
     fn seq_of_kerberos_strings(&self, principal_name: &PrincipalName) -> SequenceOf<KerberosStringAsn1> {
         let mut seq_of_kerberos_strings: SequenceOf<KerberosStringAsn1> = SequenceOf::default();
 
-        for kerb_string in principal_name.name_string.iter() {
-            seq_of_kerberos_strings.push(KerberosStringAsn1::new(kerb_string.clone()));
+        for kerb_string in principal_name.get_name_string().iter() {
+            seq_of_kerberos_strings.push(kerb_string.into());
         }
 
         return seq_of_kerberos_strings;

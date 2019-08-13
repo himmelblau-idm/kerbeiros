@@ -133,7 +133,7 @@ impl KrbCredInfoAsn1 {
         krb_cred_info_asn1.set_key(krb_cred_info.key.asn1_type());
 
         if let Some(prealm) = &krb_cred_info.prealm {
-            krb_cred_info_asn1.set_prealm(RealmAsn1::new(prealm.clone()));
+            krb_cred_info_asn1.set_prealm(prealm.into());
         }
 
         if let Some(pname) = &krb_cred_info.pname {
@@ -161,7 +161,7 @@ impl KrbCredInfoAsn1 {
         }
 
         if let Some(srealm) = &krb_cred_info.srealm {
-            krb_cred_info_asn1.set_srealm(RealmAsn1::new(srealm.clone()));
+            krb_cred_info_asn1.set_srealm(srealm.into());
         }
         if let Some(sname) = &krb_cred_info.sname {
             krb_cred_info_asn1.set_sname(sname.into());

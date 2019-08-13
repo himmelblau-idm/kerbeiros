@@ -13,7 +13,7 @@ use super::ticket::*;
 use super::etype::*;
 use rand::Rng;
 
-use chrono::{Duration, Utc, DateTime};
+use chrono::{Duration, Utc};
 
 pub struct KdcReqBody {
     kdc_options: KdcOptions,
@@ -49,12 +49,74 @@ impl KdcReqBody {
         };
     }
 
-    pub fn set_kdc_options(&mut self, options: u32) {
-        self.kdc_options.set_flags(options);
+    pub fn get_additional_tickets(&self) -> &Option<SeqOfTickets> {
+        return &self.additional_tickets;
+    }
+
+    pub fn get_addresses(&self) -> &Option<HostAddresses> {
+        return &self.addresses;
+    }
+
+    #[cfg(test)]
+    pub fn set_address(&mut self, address: HostAddress) {
+        self.addresses = Some(HostAddresses::new(address));
+    }
+
+    pub fn get_cname(&self) -> &Option<PrincipalName> {
+        return &self.cname;
     }
 
     pub fn set_cname(&mut self, name_type: i32, name_string: KerberosString) {
         self.cname = Some(PrincipalName::new(name_type, name_string));
+    }
+
+    pub fn get_enc_authorization_data(&self) -> &Option<EncryptedData> {
+        return &self.enc_authorization_data;
+    }
+
+    pub fn push_etype(&mut self, etype: i32) {
+        self.etypes.push(etype);
+    }
+
+    pub fn get_etypes(&self) -> &SeqOfEtype {
+        return &self.etypes;
+    }
+
+    pub fn get_from(&self) -> &Option<KerberosTime> {
+        return &self.from;
+    }
+
+    pub fn set_kdc_options(&mut self, options: u32) {
+        self.kdc_options.set_flags(options);
+    }
+
+    pub fn get_kdc_options(&self) -> &KdcOptions {
+        return &self.kdc_options;
+    }
+
+    pub fn get_nonce(&self) -> UInt32 {
+        return self.nonce;
+    }
+
+    #[cfg(test)]
+    pub fn set_nonce(&mut self, nonce: UInt32) {
+        self.nonce = nonce;
+    }
+
+    pub fn get_realm(&self) -> &Realm {
+        return &self.realm;
+    }
+
+    pub fn get_rtime(&self) -> &Option<KerberosTime> {
+        return &self.rtime;
+    }
+
+    pub fn set_rtime(&mut self, rtime: KerberosTime) {
+        self.rtime = Some(rtime);
+    }
+
+    pub fn get_sname(&self) -> &Option<PrincipalName> {
+        return &self.sname;
     }
 
     pub fn set_sname(&mut self, name_type: i32, name_string: KerberosString) {
@@ -74,32 +136,13 @@ impl KdcReqBody {
         unreachable!()
     }
 
-    #[cfg(test)]
-    pub fn set_till(&mut self, date: DateTime<Utc>) {
-        self.till = date;
-    }
-
-    pub fn set_rtime(&mut self, date: DateTime<Utc>) {
-        self.rtime = Some(date);
+    pub fn get_till(&self) -> &KerberosTime {
+        return &self.till;
     }
 
     #[cfg(test)]
-    pub fn set_nonce(&mut self, nonce: u32) {
-        self.nonce = nonce;
-    }
-
-    pub fn push_etype(&mut self, etype: i32) {
-        self.etypes.push(etype);
-    }
-
-    #[cfg(test)]
-    pub fn get_etypes(&self) -> &SeqOfEtype {
-        return &self.etypes;
-    }
-
-    #[cfg(test)]
-    pub fn set_address(&mut self, address: HostAddress) {
-        self.addresses = Some(HostAddresses::new(address));
+    pub fn set_till(&mut self, till: KerberosTime) {
+        self.till = till;
     }
 
     pub fn set_username(&mut self, username: KerberosString) {
@@ -149,39 +192,39 @@ impl KdcReqBodyAsn1 {
     }
 
     fn set_asn1_values(&mut self, kdc_body: &KdcReqBody) {
-        self.set_kdc_options(kdc_body.kdc_options.asn1_type());
+        self.set_kdc_options(kdc_body.get_kdc_options().asn1_type());
 
-        if let Some(cname) = &kdc_body.cname {
+        if let Some(cname) = kdc_body.get_cname() {
             self.set_cname(cname.into());
         }
 
-        self.set_realm(RealmAsn1::new(kdc_body.realm.clone()));
+        self.set_realm(kdc_body.get_realm().into());
         
-        if let Some(sname) = &kdc_body.sname {
+        if let Some(sname) = kdc_body.get_sname() {
             self.set_sname(sname.into());
         }
         
-        if let Some(from) = &kdc_body.from {
+        if let Some(from) = kdc_body.get_from() {
             self.set_from(from.clone().into());
         }
         
-        self.set_till(kdc_body.till.clone().into());
+        self.set_till(kdc_body.get_till().clone().into());
 
-        if let Some(rtime) = &kdc_body.rtime {
+        if let Some(rtime) = kdc_body.get_rtime() {
             self.set_rtime(rtime.clone().into());
         }
 
-        self.set_nonce(kdc_body.nonce.into());
-        self.set_etype(kdc_body.etypes.asn1_type());
+        self.set_nonce(kdc_body.get_nonce().into());
+        self.set_etype(kdc_body.get_etypes().asn1_type());
 
-        if let Some(addresses) = &kdc_body.addresses {
+        if let Some(addresses) = kdc_body.get_addresses() {
             self.set_addresses(addresses.asn1_type());
         }
-        if let Some(enc_authorization_data) = &kdc_body.enc_authorization_data {
+        if let Some(enc_authorization_data) = kdc_body.get_enc_authorization_data() {
             self.set_enc_authorization_data(enc_authorization_data.asn1_type());
         }
         
-        if let Some(tickets) = &kdc_body.additional_tickets {
+        if let Some(tickets) = kdc_body.get_additional_tickets() {
             self.set_additional_tickets(tickets.asn1_type());
         }
     }
