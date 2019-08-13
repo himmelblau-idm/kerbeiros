@@ -41,10 +41,10 @@ mod ticket;
 pub use ticket::*;
 
 mod ticketflags;
-pub use ticketflags::TicketFlags;
+pub use ticketflags::*;
 
 mod asreq;
-pub use asreq::AsReq;
+pub use asreq::*;
 
 mod asrep;
 pub use asrep::KdcRep;

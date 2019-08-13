@@ -120,7 +120,7 @@ impl AsReq {
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 10)]
-pub struct AsReqAsn1 {
+pub(crate) struct AsReqAsn1 {
     #[seq_field(context_tag = 1)]
     pvno: SeqField<Integer>,
     #[seq_field(context_tag = 2)]
