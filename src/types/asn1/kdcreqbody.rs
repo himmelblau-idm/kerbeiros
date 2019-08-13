@@ -32,11 +32,11 @@ pub struct KdcReqBody {
 
 impl KdcReqBody {
 
-    pub fn new(domain: Realm) -> KdcReqBody {
+    pub fn new(realm: Realm) -> KdcReqBody {
         return KdcReqBody{
             kdc_options: KdcOptions::default(),
             cname: None,
-            realm: domain,
+            realm,
             sname: None,
             from: None,
             till: Utc::now().checked_add_signed(Duration::weeks(20 * 52)).unwrap(),
@@ -102,9 +102,8 @@ impl KdcReqBody {
         self.addresses = Some(HostAddresses::new(address));
     }
 
-    pub fn set_username(&mut self, username: AsciiString) {
-        let kerberos_str = username;
-        self.set_cname(NT_PRINCIPAL, kerberos_str);
+    pub fn set_username(&mut self, username: KerberosString) {
+        self.set_cname(NT_PRINCIPAL, username);
     }
 
     pub(crate) fn asn1_type(&self) -> KdcReqBodyAsn1 {

@@ -42,18 +42,6 @@ impl PrincipalName {
         self.name_string.push(string);
     }
 
-    pub fn to_ascii_string(&self) -> AsciiString {
-
-        let mut string = self.name_string[0].to_ascii_string();
-
-        for name_string in self.name_string[1..].iter() {
-            string.push(AsciiChar::from('/').unwrap());
-            string.push_str(&name_string.to_ascii_string());
-        }
-
-        return string;
-    }
-
 }
 
 
@@ -186,33 +174,6 @@ mod tests {
 
         assert_eq!(principal_name, 
                    principal_name_asn1.no_asn1_type().unwrap());
-    }
-
-    #[test]
-    fn test_principal_name_with_multiple_names_to_string() {
-        let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
-        principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
-
-        assert_eq!("krbtgt/KINGDOM.HEARTS", principal_name.to_ascii_string())
-    }
-
-    #[test]
-    fn test_principal_name_with_single_name_to_string() {
-        let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
-        assert_eq!("mickey", principal_name.to_ascii_string())
-    }
-
-    #[test]
-    fn test_principal_name_with_empty_name_to_string() {
-        let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("").unwrap());
-        assert_eq!("", principal_name.to_ascii_string())
-    }
-
-    #[should_panic(expected="index out of bounds: the len is 0 but the index is 0")]
-    #[test]
-    fn test_principal_name_with_no_name_to_string() {
-        let principal_name = PrincipalName{name_type: NT_PRINCIPAL, name_string: Vec::new()};
-        assert_eq!("", principal_name.to_ascii_string())
     }
  
 

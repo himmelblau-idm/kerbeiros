@@ -27,14 +27,6 @@ impl Ticket {
         self.tkt_vno = tkt_vno;
     }
 
-    pub fn get_realm_ascii_string(&self) -> AsciiString {
-        return self.realm.to_ascii_string();
-    }
-
-    pub fn get_sname_ascii_string(&self) -> AsciiString {
-        return self.sname.to_ascii_string();
-    }
-
     pub fn get_encrypted_data(&self) -> &EncryptedData {
         return &self.enc_part;
     }

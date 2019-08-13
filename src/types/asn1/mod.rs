@@ -8,7 +8,7 @@ mod microseconds;
 pub use microseconds::Microseconds;
 
 mod kerberosstring;
-pub use kerberosstring::KerberosString;
+pub use kerberosstring::*;
 
 mod realm;
 pub use realm::Realm;

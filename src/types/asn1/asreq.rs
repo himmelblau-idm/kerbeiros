@@ -19,18 +19,18 @@ pub struct AsReq {
 
 impl AsReq {
 
-    pub fn new(domain: AsciiString, username: AsciiString) -> AsReq {
+    pub fn new(realm: KerberosString, username: KerberosString) -> AsReq {
         let mut as_req = AsReq{
             pvno: 5,
             msg_type: 10,
             padata: None,
-            req_body: KdcReqBody::new(domain.clone())
+            req_body: KdcReqBody::new(realm.clone())
         };
 
         as_req.set_username(username);
 
         as_req.set_sname(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
-        as_req.push_sname(domain).unwrap();
+        as_req.push_sname(realm).unwrap();
 
         as_req.set_default_rtime();
 
@@ -58,7 +58,7 @@ impl AsReq {
         };
     }
 
-    fn set_username(&mut self, username: AsciiString) {
+    fn set_username(&mut self, username: KerberosString) {
         return self.req_body.set_username(username);
     }
 
@@ -159,6 +159,7 @@ impl AsReqAsn1 {
 mod test {
     use super::*;
     use chrono::*;
+    use ascii::AsciiString;
 
     #[test]
     fn create_default_as_req() {

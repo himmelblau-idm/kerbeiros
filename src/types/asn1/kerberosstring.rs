@@ -1,11 +1,11 @@
-pub use ascii::*;
+use ascii::*;
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
 pub type KerberosString = AsciiString;
 
 #[derive(Default, Debug, PartialEq)]
-pub struct KerberosStringAsn1 {
+pub(crate) struct KerberosStringAsn1 {
     subtype: IA5String
 }
 
