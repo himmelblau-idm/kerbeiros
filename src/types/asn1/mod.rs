@@ -65,10 +65,10 @@ mod krbcred;
 pub use krbcred::*;
 
 mod enckrbcredpart;
-pub use enckrbcredpart::EncKrbCredPart;
+pub use enckrbcredpart::*;
 
 mod krbcredinfo;
-pub use krbcredinfo::{KrbCredInfo,SeqOfKrbCredInfo};
+pub use krbcredinfo::*;
 
 mod krberror;
-pub use krberror::KrbError;
+pub use krberror::*;

@@ -61,7 +61,7 @@ impl KrbError {
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 30)]
-struct KrbErrorAsn1 {
+pub(crate) struct KrbErrorAsn1 {
     #[seq_field(context_tag = 0)]
     pvno: SeqField<Integer>,
     #[seq_field(context_tag = 1)]

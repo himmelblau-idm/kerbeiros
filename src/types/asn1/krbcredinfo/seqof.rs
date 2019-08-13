@@ -39,7 +39,7 @@ impl SeqOfKrbCredInfo {
 }
 
 #[derive(Default, Debug, PartialEq)]
-pub struct SeqOfKrbCredInfoAsn1 {
+pub(crate) struct SeqOfKrbCredInfoAsn1 {
     subtype: SequenceOf<KrbCredInfoAsn1>
 }
 

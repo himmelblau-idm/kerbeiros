@@ -73,7 +73,7 @@ impl EncKrbCredPart {
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 29)]
-pub struct EncKrbCredPartAsn1 {
+pub(crate) struct EncKrbCredPartAsn1 {
     #[seq_field(context_tag = 0)]
     ticket_info: SeqField<SeqOfKrbCredInfoAsn1>,
     #[seq_field(context_tag = 1, optional)]

@@ -90,7 +90,7 @@ impl KrbCredInfo {
 
 
 #[derive(Sequence, Default, Debug, PartialEq)]
-pub struct KrbCredInfoAsn1 {
+pub(crate) struct KrbCredInfoAsn1 {
     #[seq_field(context_tag = 0)]
     key: SeqField<EncryptionKeyAsn1>,
     
