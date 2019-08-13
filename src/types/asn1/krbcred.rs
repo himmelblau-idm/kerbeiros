@@ -21,12 +21,8 @@ impl KrbCred {
         };
     }
 
-    fn asn1_type(&self) -> KrbCredAsn1 {
-        return KrbCredAsn1::new(self);
-    }
-
     pub fn build(&self) -> Vec<u8> {
-        return self.asn1_type().encode().unwrap();
+        return KrbCredAsn1::from(self).encode().unwrap();
     }
 
 }
@@ -44,9 +40,9 @@ pub(crate) struct KrbCredAsn1 {
     enc_part: SeqField<EncryptedDataAsn1>,
 }
 
-impl KrbCredAsn1 {
+impl From<&KrbCred> for KrbCredAsn1 {
 
-    fn new(krb_cred: &KrbCred) -> Self {
+    fn from(krb_cred: &KrbCred) -> Self {
         let mut krb_cred_asn1 = Self::default();
 
         krb_cred_asn1.set_pvno(Integer::from(krb_cred.pvno as i64));
@@ -127,7 +123,7 @@ mod test {
                         0x4e
         ];
 
-        assert_eq!(raw, krb_cred.asn1_type().encode().unwrap());
+        assert_eq!(raw, krb_cred.build());
 
     }
 
