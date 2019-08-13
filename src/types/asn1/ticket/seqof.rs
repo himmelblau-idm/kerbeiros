@@ -36,7 +36,7 @@ impl SeqOfTickets {
 }
 
 #[derive(Default, Debug, PartialEq)]
-pub struct SeqOfTicketsAsn1 {
+pub(crate) struct SeqOfTicketsAsn1 {
     subtype: SequenceOf<TicketAsn1>
 }
 

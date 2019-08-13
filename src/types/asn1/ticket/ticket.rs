@@ -43,7 +43,7 @@ impl Ticket {
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 1)]
-pub struct TicketAsn1 {
+pub(crate) struct TicketAsn1 {
     #[seq_field(context_tag = 0)]
     tkt_vno: SeqField<Integer>,
     #[seq_field(context_tag = 1)]
