@@ -23,7 +23,7 @@ impl TCPTransporter {
         
         let mut tcp_stream = TcpStream::connect_timeout(&self.dst_addr, Duration::new(5, 0))?;
 
-        let raw_sized_request = Self::_set_size_header_to_request(raw_request);
+        let raw_sized_request = Self::set_size_header_to_request(raw_request);
         tcp_stream.write(&raw_sized_request)?;
 
         let mut len_data_bytes = [0 as u8; 4];
@@ -36,7 +36,7 @@ impl TCPTransporter {
         return Ok(raw_response);
     }
 
-    fn _set_size_header_to_request(raw_request: &[u8]) -> Vec<u8> {
+    fn set_size_header_to_request(raw_request: &[u8]) -> Vec<u8> {
         let request_length = raw_request.len() as u32;
         let mut raw_sized_request: Vec<u8> = request_length.to_be_bytes().to_vec();
         raw_sized_request.append(&mut raw_request.to_vec());
