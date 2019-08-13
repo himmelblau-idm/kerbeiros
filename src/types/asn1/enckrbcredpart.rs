@@ -98,7 +98,7 @@ impl EncKrbCredPartAsn1 {
         enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.ticket_info.asn1_type());
 
         if let Some(nonce) = enc_krb_cred_part.nonce {
-            enc_krb_cred_part_asn1.set_nonce(UInt32Asn1::new(nonce));
+            enc_krb_cred_part_asn1.set_nonce(nonce.into());
         }
         if let Some(timestamp) = &enc_krb_cred_part.timestamp {
             enc_krb_cred_part_asn1.set_timestamp(KerberosTimeAsn1::new(timestamp.clone()));

@@ -171,7 +171,7 @@ impl KdcReqBodyAsn1 {
             self.set_rtime(KerberosTimeAsn1::new(rtime.clone()));
         }
 
-        self.set_nonce(UInt32Asn1::new(kdc_body.nonce));
+        self.set_nonce(kdc_body.nonce.into());
         self.set_etype(kdc_body.etypes.asn1_type());
 
         if let Some(addresses) = &kdc_body.addresses {
