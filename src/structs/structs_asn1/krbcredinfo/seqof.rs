@@ -25,7 +25,8 @@ impl DerefMut for SeqOfKrbCredInfo {
 
 impl SeqOfKrbCredInfo {
 
-    pub fn _new(mut items: Vec<KrbCredInfo>) -> Self {
+    #[cfg(test)]
+    pub fn new(mut items: Vec<KrbCredInfo>) -> Self {
         let mut seq_of = Self::default();
         seq_of.append(&mut items);
         return seq_of;
@@ -46,11 +47,11 @@ impl SeqOfKrbCredInfoAsn1 {
 
     fn new(seq_of_krb_cred_info: &SeqOfKrbCredInfo) -> Self {
         let mut seq_of_krb_cred_info_asn1 = Self::default();
-        seq_of_krb_cred_info_asn1._set_asn1_values(seq_of_krb_cred_info);
+        seq_of_krb_cred_info_asn1.set_asn1_values(seq_of_krb_cred_info);
         return seq_of_krb_cred_info_asn1;
     }
 
-    fn _set_asn1_values(&mut self, seq_of_krb_cred_info: &SeqOfKrbCredInfo) {
+    fn set_asn1_values(&mut self, seq_of_krb_cred_info: &SeqOfKrbCredInfo) {
         for krb_cred_info in seq_of_krb_cred_info.iter() {
             self.subtype.push(krb_cred_info.asn1_type());
         }

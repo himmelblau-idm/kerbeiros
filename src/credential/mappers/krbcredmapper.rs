@@ -88,7 +88,7 @@ mod test {
             auth_time.clone(), starttime.clone(), endtime.clone(), renew_till.clone(), 
             realm.clone(), sname.clone(), caddr.clone()
         );
-        let seq_of_krb_cred_info = SeqOfKrbCredInfo::_new(vec![krb_cred_info]);
+        let seq_of_krb_cred_info = SeqOfKrbCredInfo::new(vec![krb_cred_info]);
 
         let ticket = create_ticket(realm.clone(), sname.clone());
         let seq_of_tickets = SeqOfTickets::_new(vec![ticket]);
