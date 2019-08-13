@@ -3,9 +3,12 @@ use super::super::cryptography::*;
 use super::super::rc4hmacmd5::*;
 
 pub struct RC4Crypter {
+
+    #[cfg(test)]
     preamble: Option<Vec<u8>>
 }
 
+#[cfg(test)]
 impl RC4Crypter {
 
     pub fn new() -> Self {
@@ -14,16 +17,29 @@ impl RC4Crypter {
         };
     }
 
-    fn _set_preamble(&mut self, preamble: &[u8;8]) {
+    fn set_preamble(&mut self, preamble: &[u8;8]) {
         self.preamble = Some(preamble.to_vec());
     }
 
-    fn _get_preamble(&self) -> Vec<u8> {
+    fn get_preamble(&self) -> Vec<u8> {
         if let Some(self_preamble) = &self.preamble {
             return self_preamble.clone(); 
         }else {
             return random_bytes(8);
         }
+    }
+
+}
+
+#[cfg(not(test))]
+impl RC4Crypter {
+
+    pub fn new() -> Self {
+        return Self {};
+    }
+
+    fn get_preamble(&self) -> Vec<u8> {
+        return random_bytes(8);
     }
 
 }
@@ -51,7 +67,7 @@ impl KerberosCrypter for RC4Crypter {
     }
 
     fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8> {
-        let preamble = self._get_preamble();
+        let preamble = self.get_preamble();
         let real_key_usage;
         if key_usage == 3 {
             real_key_usage = 8; // RFC 4757 rules
@@ -73,7 +89,7 @@ mod test {
     #[test]
     fn test_encrypt_rc4_hmac_md5() {
         let mut rc4_crypter = RC4Crypter::new();
-        rc4_crypter._set_preamble(&[0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38]);
+        rc4_crypter.set_preamble(&[0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38]);
 
         assert_eq!(
             vec![0x9d, 0xc2, 0x47, 0x87, 0xcb, 0x4f, 0xea, 0x59, 0x67, 0xac, 0x2b, 0x7f, 0x2e, 0x39, 0xb6, 0x2a, 0xea, 0x6f, 0xfe, 0xf2, 0x08, 0xcf, 0x5d, 0x6e, 0xf4, 0x2b, 0xb9, 0x29, 0x4a, 0x6c, 0xc2, 0xea, 0xa4, 0xf9, 0x0b, 0xc9, 0x14, 0x5a, 0x18, 0x8c, 0x85, 0xed, 0x0b, 0xfa, 0x0f, 0x00], 
@@ -140,7 +156,7 @@ mod test {
     #[test]
     fn test_decrypt_rc4_hmac_md5() {
         let mut rc4_crypter = RC4Crypter::new();
-        rc4_crypter._set_preamble(&[0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38]);
+        rc4_crypter.set_preamble(&[0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38]);
 
         assert_eq!(
             vec![0x5a, 0x67, 0x65, 0x59, 0x30, 0x5a, 0x49, 0x65, 0x41, 0x64, 0x56, 0x75, 0x72, 0x54, 0x4b, 0x39, 0x62, 0x73, 0x35, 0x6b, 0x62, 0x47], 
