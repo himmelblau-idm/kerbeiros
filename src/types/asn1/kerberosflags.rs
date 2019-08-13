@@ -32,7 +32,7 @@ impl KerberosFlags {
         return self.flags;
     }
 
-    pub fn asn1_type(&self) -> KerberosFlagsAsn1 {
+    pub(crate) fn asn1_type(&self) -> KerberosFlagsAsn1 {
         return KerberosFlagsAsn1::new(self.flags);
     }
 

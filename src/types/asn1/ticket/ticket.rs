@@ -39,7 +39,7 @@ impl Ticket {
         return &self.enc_part;
     }
 
-    pub fn asn1_type(&self) -> TicketAsn1 {
+    pub(crate) fn asn1_type(&self) -> TicketAsn1 {
         return TicketAsn1::new(self);
     }
 

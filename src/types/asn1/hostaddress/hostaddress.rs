@@ -56,7 +56,7 @@ impl HostAddress {
         }
     }
 
-    pub fn asn1_type(&self) -> HostAddressAsn1 {
+    pub(crate) fn asn1_type(&self) -> HostAddressAsn1 {
         return HostAddressAsn1::new(self);
     }
 

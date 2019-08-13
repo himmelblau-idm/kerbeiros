@@ -82,7 +82,7 @@ impl KrbCredInfo {
         self.caddr = Some(caddr);
     }
 
-    pub fn asn1_type(&self) -> KrbCredInfoAsn1 {
+    pub(crate) fn asn1_type(&self) -> KrbCredInfoAsn1 {
         return KrbCredInfoAsn1::new(self);
     }
 

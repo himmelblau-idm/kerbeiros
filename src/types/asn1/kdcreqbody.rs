@@ -107,7 +107,7 @@ impl KdcReqBody {
         self.set_cname(NT_PRINCIPAL, kerberos_str);
     }
 
-    pub fn asn1_type(&self) -> KdcReqBodyAsn1 {
+    pub(crate) fn asn1_type(&self) -> KdcReqBodyAsn1 {
         return KdcReqBodyAsn1::new(&self);
     }
 

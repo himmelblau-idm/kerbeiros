@@ -35,7 +35,7 @@ impl PaData {
         }
     }
 
-    pub fn asn1_type(&self) -> PaDataAsn1 {
+    pub(crate) fn asn1_type(&self) -> PaDataAsn1 {
         return PaDataAsn1::new(self);
     }
 

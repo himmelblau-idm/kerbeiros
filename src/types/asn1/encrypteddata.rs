@@ -33,7 +33,7 @@ impl EncryptedData {
         return &self.cipher;
     }
 
-    pub fn asn1_type(&self) -> EncryptedDataAsn1 {
+    pub(crate) fn asn1_type(&self) -> EncryptedDataAsn1 {
         return EncryptedDataAsn1::new(self);
     }
 

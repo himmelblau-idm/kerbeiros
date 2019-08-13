@@ -22,7 +22,7 @@ impl HostAddresses {
         };
     }
 
-    pub fn asn1_type(&self) -> HostAddressesAsn1 {
+    pub(crate) fn asn1_type(&self) -> HostAddressesAsn1 {
         return HostAddressesAsn1::new(self);
     }
 

@@ -29,7 +29,7 @@ impl SeqOfTickets {
         return seq_of;
     }
 
-    pub fn asn1_type(&self) -> SeqOfTicketsAsn1 {
+    pub(crate) fn asn1_type(&self) -> SeqOfTicketsAsn1 {
         return SeqOfTicketsAsn1::new(self);
     }
 

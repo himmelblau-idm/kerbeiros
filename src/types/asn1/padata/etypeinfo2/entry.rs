@@ -42,7 +42,7 @@ impl EtypeInfo2Entry {
         };
     }
 
-    pub fn asn1_type(&self) -> EtypeInfo2EntryAsn1 {
+    pub(crate) fn asn1_type(&self) -> EtypeInfo2EntryAsn1 {
         return EtypeInfo2EntryAsn1::new(self);
     }
 

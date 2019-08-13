@@ -26,7 +26,7 @@ impl EncryptionKey {
         return &self.keyvalue;
     }
 
-    pub fn asn1_type(&self) -> EncryptionKeyAsn1 {
+    pub(crate) fn asn1_type(&self) -> EncryptionKeyAsn1 {
         return EncryptionKeyAsn1::new(self);
     }
 

@@ -28,7 +28,7 @@ impl SeqOfEtype {
         };
     }
 
-    pub fn asn1_type(&self) -> SeqOfEtypeAsn1 {
+    pub(crate) fn asn1_type(&self) -> SeqOfEtypeAsn1 {
         return SeqOfEtypeAsn1::new(self);
     }
 

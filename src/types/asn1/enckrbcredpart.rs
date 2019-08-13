@@ -57,7 +57,7 @@ impl EncKrbCredPart {
         self.r_address = Some(r_address);
     }
 
-    pub fn asn1_type(&self) -> EncKrbCredPartAsn1 {
+    pub(crate) fn asn1_type(&self) -> EncKrbCredPartAsn1 {
         return EncKrbCredPartAsn1::new(self);
     }
 

@@ -26,7 +26,7 @@ impl DerefMut for SeqOfPaData {
 
 impl SeqOfPaData {
 
-    pub fn asn1_type(&self) -> SeqOfPaDataAsn1 {
+    pub(crate) fn asn1_type(&self) -> SeqOfPaDataAsn1 {
         return SeqOfPaDataAsn1::new(self);
     }
 

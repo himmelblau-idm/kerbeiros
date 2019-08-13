@@ -34,7 +34,7 @@ impl PrincipalName {
         return &self.name_string[0];
     }
 
-    pub fn asn1_type(&self) -> PrincipalNameAsn1 {
+    pub(crate) fn asn1_type(&self) -> PrincipalNameAsn1 {
         return PrincipalNameAsn1::new(&self);
     }
 

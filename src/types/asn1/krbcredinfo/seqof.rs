@@ -32,7 +32,7 @@ impl SeqOfKrbCredInfo {
         return seq_of;
     }
 
-    pub fn asn1_type(&self) -> SeqOfKrbCredInfoAsn1 {
+    pub(crate) fn asn1_type(&self) -> SeqOfKrbCredInfoAsn1 {
         return SeqOfKrbCredInfoAsn1::new(self);
     }
 

@@ -112,7 +112,7 @@ impl AsReq {
         return self.asn1_type().encode().unwrap();
     }
 
-    pub fn asn1_type(&self) -> AsReqAsn1 {
+    pub(crate) fn asn1_type(&self) -> AsReqAsn1 {
         return AsReqAsn1::new(self);
     }
 

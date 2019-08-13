@@ -14,7 +14,7 @@ impl PacRequest {
         };
     }
 
-    pub fn asn1_type(&self) -> PacRequestAsn1 {
+    pub(crate) fn asn1_type(&self) -> PacRequestAsn1 {
         return PacRequestAsn1::new(&self);
     }
 

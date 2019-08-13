@@ -33,7 +33,7 @@ impl PaEncTsEnc {
         return self.asn1_type().encode().unwrap();
     }
 
-    pub fn asn1_type(&self) -> PaEncTsEncAsn1 {
+    pub(crate) fn asn1_type(&self) -> PaEncTsEncAsn1 {
         return PaEncTsEncAsn1::new(self);
     }
 

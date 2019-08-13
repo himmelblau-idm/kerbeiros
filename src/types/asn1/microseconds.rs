@@ -31,7 +31,7 @@ impl Microseconds {
         return Ok(());
     }
 
-    pub fn asn1_type(&self) -> MicrosecondsAsn1 {
+    pub(crate) fn asn1_type(&self) -> MicrosecondsAsn1 {
         return MicrosecondsAsn1::new(self);
     }
 }

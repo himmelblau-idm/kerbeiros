@@ -24,7 +24,7 @@ impl DerefMut for EtypeInfo2 {
 
 impl EtypeInfo2 {
 
-    pub fn asn1_type(&self) -> EtypeInfo2Asn1 {
+    pub(crate) fn asn1_type(&self) -> EtypeInfo2Asn1 {
         return EtypeInfo2Asn1::new(self);
     }
 
