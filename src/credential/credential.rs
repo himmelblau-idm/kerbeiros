@@ -2,6 +2,12 @@ use crate::structs::*;
 use crate::error::*;
 use super::credentialwarehouse::*;
 
+
+/// Represents a Kerberos credential, which includes one Ticket and session information.
+/// 
+/// Session information includes data such as session key, client name, realm, ticket flags and ticket expiration time.
+/// 
+/// It can be saved converted and save into Windows or Linux credential formats.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Credential {
     crealm: Realm,
