@@ -61,7 +61,7 @@ impl PaEncTsEncAsn1 {
     fn new(pa_enc_ts_enc: &PaEncTsEnc) -> Self {
         let mut pa_enc_ts_enc_asn1 = Self::default();
 
-        pa_enc_ts_enc_asn1.set_patimestamp(KerberosTimeAsn1::new(pa_enc_ts_enc.patimestamp.clone()));
+        pa_enc_ts_enc_asn1.set_patimestamp(pa_enc_ts_enc.patimestamp.clone().into());
 
         if let Some(pausec) = &pa_enc_ts_enc.pausec {
             pa_enc_ts_enc_asn1.set_pausec(pausec.asn1_type());

@@ -101,7 +101,7 @@ impl EncKrbCredPartAsn1 {
             enc_krb_cred_part_asn1.set_nonce(nonce.into());
         }
         if let Some(timestamp) = &enc_krb_cred_part.timestamp {
-            enc_krb_cred_part_asn1.set_timestamp(KerberosTimeAsn1::new(timestamp.clone()));
+            enc_krb_cred_part_asn1.set_timestamp(timestamp.clone().into());
         }
         if let Some(usec) = &enc_krb_cred_part.usec {
             enc_krb_cred_part_asn1.set_usec(usec.asn1_type());

@@ -12,15 +12,6 @@ pub(crate) struct KerberosTimeAsn1 {
 
 impl KerberosTimeAsn1 {
 
-    pub fn new(date: KerberosTime) -> KerberosTimeAsn1 {
-        let mut generalized_time = GeneralizedTime::from(date);
-        generalized_time.set_format(TimeFormat::YYYYmmddHHMMSSZ);
-
-        return KerberosTimeAsn1{
-            subtype: generalized_time
-        }
-    }
-
     pub fn no_asn1_type(&self) -> Result<KerberosTime> {
         let time = self.subtype.value().ok_or_else(|| 
             ErrorKind::NotAvailableData("KerberosTime".to_string())
@@ -28,6 +19,17 @@ impl KerberosTimeAsn1 {
         return Ok(time.clone());
     }
 
+}
+
+impl From<KerberosTime> for KerberosTimeAsn1 {
+    fn from(date: KerberosTime) -> Self {
+        let mut generalized_time = GeneralizedTime::from(date);
+        generalized_time.set_format(TimeFormat::YYYYmmddHHMMSSZ);
+
+        return Self{
+            subtype: generalized_time
+        }
+    }
 }
 
 
@@ -58,7 +60,7 @@ mod tests {
     #[test]
     fn test_encode_kerberos_time() {
         assert_eq!(vec![0x18 ,0x0f ,0x32 ,0x30 ,0x33 ,0x37 ,0x30 ,0x39 ,0x31 ,0x33 ,0x30 ,0x32 ,0x34 ,0x38 ,0x30 ,0x35 ,0x5a],
-        KerberosTimeAsn1::new(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5)).encode().unwrap());
+        KerberosTimeAsn1::from(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5)).encode().unwrap());
     }
 
     #[test]

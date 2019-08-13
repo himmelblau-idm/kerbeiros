@@ -145,19 +145,19 @@ impl KrbCredInfoAsn1 {
         }
         
         if let Some(authtime) = &krb_cred_info.authtime {
-            krb_cred_info_asn1.set_authtime(KerberosTimeAsn1::new(authtime.clone()));
+            krb_cred_info_asn1.set_authtime(authtime.clone().into());
         }
 
         if let Some(starttime) = &krb_cred_info.starttime {
-            krb_cred_info_asn1.set_starttime(KerberosTimeAsn1::new(starttime.clone()));
+            krb_cred_info_asn1.set_starttime(starttime.clone().into());
         }
 
         if let Some(endtime) = &krb_cred_info.endtime {
-            krb_cred_info_asn1.set_endtime(KerberosTimeAsn1::new(endtime.clone()));
+            krb_cred_info_asn1.set_endtime(endtime.clone().into());
         }
         
         if let Some(renew_till) = &krb_cred_info.renew_till {
-            krb_cred_info_asn1.set_renew_till(KerberosTimeAsn1::new(renew_till.clone()));
+            krb_cred_info_asn1.set_renew_till(renew_till.clone().into());
         }
 
         if let Some(srealm) = &krb_cred_info.srealm {

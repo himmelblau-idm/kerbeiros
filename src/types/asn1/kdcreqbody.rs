@@ -162,13 +162,13 @@ impl KdcReqBodyAsn1 {
         }
         
         if let Some(from) = &kdc_body.from {
-            self.set_from(KerberosTimeAsn1::new(from.clone()));
+            self.set_from(from.clone().into());
         }
         
-        self.set_till(KerberosTimeAsn1::new(kdc_body.till.clone()));
+        self.set_till(kdc_body.till.clone().into());
 
         if let Some(rtime) = &kdc_body.rtime {
-            self.set_rtime(KerberosTimeAsn1::new(rtime.clone()));
+            self.set_rtime(rtime.clone().into());
         }
 
         self.set_nonce(kdc_body.nonce.into());
