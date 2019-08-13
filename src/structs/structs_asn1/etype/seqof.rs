@@ -44,11 +44,11 @@ impl SeqOfEtypeAsn1 {
     fn new(seq_of_etype: &SeqOfEtype) -> SeqOfEtypeAsn1 {
         let mut seq_etype_asn1 = Self::default();
 
-        seq_etype_asn1._set_asn1_values(seq_of_etype);
+        seq_etype_asn1.set_asn1_values(seq_of_etype);
         return seq_etype_asn1;
     }
 
-    fn _set_asn1_values(&mut self, seq_of_etype: &SeqOfEtype) {
+    fn set_asn1_values(&mut self, seq_of_etype: &SeqOfEtype) {
         for etype in seq_of_etype.iter() {
             self.subtype.push(EtypeAsn1::new(*etype));
         }
