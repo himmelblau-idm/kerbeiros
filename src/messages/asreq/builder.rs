@@ -73,7 +73,7 @@ mod test {
     #[test]
     fn as_req_with_supported_rc4_and_aes_by_default() {
         let as_req_struct = create_as_req_struct_with_key(None);
-        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC], **as_req_struct._get_etypes());
+        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC], **as_req_struct.get_etypes());
     }
 
     #[test]
@@ -85,7 +85,7 @@ mod test {
 
         let as_req_struct = create_as_req_struct_with_key(Some(&Key::NTLM(key)));
 
-        assert_eq!(vec![RC4_HMAC], **as_req_struct._get_etypes());
+        assert_eq!(vec![RC4_HMAC], **as_req_struct.get_etypes());
     }
 
 
@@ -98,7 +98,7 @@ mod test {
 
         let as_req_struct = create_as_req_struct_with_key(Some(&Key::AES128Key(key)));
 
-        assert_eq!(vec![AES128_CTS_HMAC_SHA1_96], **as_req_struct._get_etypes());
+        assert_eq!(vec![AES128_CTS_HMAC_SHA1_96], **as_req_struct.get_etypes());
 
     }
 
@@ -114,7 +114,7 @@ mod test {
 
         let as_req_struct = create_as_req_struct_with_key(Some(&Key::AES256Key(key)));
 
-        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96], **as_req_struct._get_etypes());
+        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96], **as_req_struct.get_etypes());
 
     }
 

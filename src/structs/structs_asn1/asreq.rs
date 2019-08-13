@@ -4,9 +4,11 @@ use crate::error::Result;
 use super::padata::*;
 use super::kdcreqbody::*;
 use super::kerberosstring::*;
-use super::hostaddress::HostAddress;
 use super::encrypteddata::*;
 use crate::constants::*;
+
+#[cfg(test)]
+use super::hostaddress::HostAddress;
 
 pub struct AsReq {
     pvno: i8,
@@ -74,7 +76,8 @@ impl AsReq {
         return self.req_body.push_sname(name_string);
     }
 
-    fn _set_till(&mut self, date: DateTime<Utc>) {
+    #[cfg(test)]
+    fn set_till(&mut self, date: DateTime<Utc>) {
         self.req_body._set_till(date);
     }
 
@@ -86,7 +89,8 @@ impl AsReq {
         self.req_body.set_rtime(date);
     }
 
-    fn _set_nonce(&mut self, nonce: u32) {
+    #[cfg(test)]
+    fn set_nonce(&mut self, nonce: u32) {
         self.req_body._set_nonce(nonce);
     }
 
@@ -94,11 +98,13 @@ impl AsReq {
         self.req_body.push_etype(etype);
     }
 
-    pub fn _get_etypes(&self) -> &SeqOfEtype {
+    #[cfg(test)]
+    pub fn get_etypes(&self) -> &SeqOfEtype {
         return self.req_body._get_etypes();
     }
 
-    fn _set_address(&mut self, address: HostAddress) {
+    #[cfg(test)]
+    fn set_address(&mut self, address: HostAddress) {
         self.req_body._set_address(address);
     }
 
@@ -131,11 +137,11 @@ impl AsReqAsn1 {
     fn new(as_req: &AsReq) -> Self {
         let mut as_req_asn1 = Self::default();
 
-        as_req_asn1._set_asn1_values(as_req);
+        as_req_asn1.set_asn1_values(as_req);
         return as_req_asn1;
     }
 
-    fn _set_asn1_values(&mut self, as_req: &AsReq) {
+    fn set_asn1_values(&mut self, as_req: &AsReq) {
         self.set_pvno(Integer::from(as_req.pvno as i64));
         self.set_msg_type(Integer::from(as_req.msg_type as i64));
 
@@ -173,7 +179,7 @@ mod test {
             AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(), 
             AsciiString::from_ascii("mickey").unwrap(), 
         );
-        as_req._set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
+        as_req.set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
         as_req.set_kdc_options(FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK);
         as_req.include_pac();
         as_req.push_etype(AES256_CTS_HMAC_SHA1_96);
@@ -182,9 +188,9 @@ mod test {
         as_req.push_etype(RC4_HMAC_EXP);
         as_req.push_etype(RC4_HMAC_OLD_EXP);
         as_req.push_etype(DES_CBC_MD5);
-        as_req._set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
+        as_req.set_till(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
         as_req.set_rtime(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5));
-        as_req._set_nonce(101225910);
+        as_req.set_nonce(101225910);
 
         assert_eq!(vec![0x6a, 0x81, 0xe3, 0x30, 0x81, 0xe0, 
                         0xa1, 0x03, 0x02, 0x01, 0x05, 
