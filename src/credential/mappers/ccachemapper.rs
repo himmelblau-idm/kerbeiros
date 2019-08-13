@@ -429,7 +429,7 @@ mod test {
 
         let ccache = CCache::new(ccache_header, client_principal, vec![ccache_credential]);
 
-        assert_eq!(ccache, credential_warehouse.to_ccache());
+        assert_eq!(ccache, credential_warehouse.into_ccache());
     }
 
 }

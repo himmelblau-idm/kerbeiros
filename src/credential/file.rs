@@ -45,12 +45,12 @@ impl<'a> CredentialFileConverter<'a> {
     }
 
     fn build_krb_cred(&self) -> Vec<u8> {
-        return self.credentials.to_krb_cred().build();
+        return self.credentials.into_krb_cred().build();
     }
 
     
     fn build_ccache(&self) -> Vec<u8> {
-        return self.credentials.to_ccache().build();
+        return self.credentials.into_ccache().build();
     }
 
 }
