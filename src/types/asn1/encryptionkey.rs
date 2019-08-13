@@ -1,6 +1,5 @@
 use red_asn1::*;
-pub use super::int32::*;
-pub use red_asn1::OctetString;
+use super::int32::*;
 use crate::error::{ErrorKind, Result};
 
 #[derive(Debug, PartialEq, Clone)]

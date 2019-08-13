@@ -10,6 +10,9 @@ use crate::constants::*;
 #[cfg(test)]
 use super::hostaddress::HostAddress;
 
+#[cfg(test)]
+use super::etype::*;
+
 pub struct AsReq {
     pvno: i8,
     msg_type: i8,
