@@ -59,10 +59,10 @@ mod kdcreqbody;
 pub use kdcreqbody::*;
 
 mod kdcoptions;
-pub use kdcoptions::KdcOptions;
+pub use kdcoptions::*;
 
 mod krbcred;
-pub use krbcred::KrbCred;
+pub use krbcred::*;
 
 mod enckrbcredpart;
 pub use enckrbcredpart::EncKrbCredPart;
