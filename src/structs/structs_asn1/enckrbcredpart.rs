@@ -32,23 +32,28 @@ impl EncKrbCredPart {
         };
     }
 
-    pub fn _set_nonce(&mut self, nonce: UInt32) {
+    #[cfg(test)]
+    fn set_nonce(&mut self, nonce: UInt32) {
         self.nonce = Some(nonce);
     }
 
-    fn _set_timestamp(&mut self, timestamp: KerberosTime) {
+    #[cfg(test)]
+    fn set_timestamp(&mut self, timestamp: KerberosTime) {
         self.timestamp = Some(timestamp);
     }
 
-    fn _set_usec(&mut self, usec: Microseconds) {
+    #[cfg(test)]
+    fn set_usec(&mut self, usec: Microseconds) {
         self.usec = Some(usec);
     }
 
-    fn _set_s_address(&mut self, s_address: HostAddress) {
+    #[cfg(test)]
+    fn set_s_address(&mut self, s_address: HostAddress) {
         self.s_address = Some(s_address);
     }
 
-    fn _set_r_address(&mut self, r_address: HostAddress) {
+    #[cfg(test)]
+    fn set_r_address(&mut self, r_address: HostAddress) {
         self.r_address = Some(r_address);
     }
 
@@ -62,6 +67,9 @@ impl EncKrbCredPart {
 
 }
 
+impl EncKrbCredPart {
+    
+}
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 29)]
@@ -117,23 +125,23 @@ impl EncKrbCredPartAsn1 {
         let mut enc_krb_cred_part = EncKrbCredPart::new(ticket_info.no_asn1_type()?);
 
         if let Some(nonce) = self.get_nonce() {
-            enc_krb_cred_part._set_nonce(nonce.no_asn1_type()?);
+            enc_krb_cred_part.set_nonce(nonce.no_asn1_type()?);
         }
 
         if let Some(timestamp) = self.get_timestamp() {
-            enc_krb_cred_part._set_timestamp(timestamp.no_asn1_type()?);
+            enc_krb_cred_part.set_timestamp(timestamp.no_asn1_type()?);
         }
 
         if let Some(usec) = self.get_usec() {
-            enc_krb_cred_part._set_usec(usec.no_asn1_type()?);
+            enc_krb_cred_part.set_usec(usec.no_asn1_type()?);
         }
 
         if let Some(s_address) = self.get_s_address() {
-            enc_krb_cred_part._set_s_address(s_address.no_asn1_type()?);
+            enc_krb_cred_part.set_s_address(s_address.no_asn1_type()?);
         }
 
         if let Some(r_address) = self.get_r_address() {
-            enc_krb_cred_part._set_r_address(r_address.no_asn1_type()?);
+            enc_krb_cred_part.set_r_address(r_address.no_asn1_type()?);
         }
 
         return Ok(enc_krb_cred_part);
