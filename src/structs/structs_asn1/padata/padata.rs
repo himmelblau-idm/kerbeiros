@@ -53,11 +53,11 @@ impl PaDataAsn1 {
 
     fn new(pa_data: &PaData) -> PaDataAsn1 {
         let mut pa_data_asn1 = Self::default();
-        pa_data_asn1._set_asn1_values(pa_data);
+        pa_data_asn1.set_asn1_values(pa_data);
         return pa_data_asn1;
     }
 
-    fn _set_asn1_values(&mut self, pa_data: &PaData) {
+    fn set_asn1_values(&mut self, pa_data: &PaData) {
         self.set_padata_type(Int32Asn1::new(pa_data.get_padata_type()));
         self.set_padata_value(OctetString::from(pa_data.get_padata_value_as_bytes()));
     }
