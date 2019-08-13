@@ -10,7 +10,7 @@ use super::kerberostime::*;
 use super::hostaddress::*;
 use super::encrypteddata::*;
 use super::ticket::*;
-pub use super::etype::*;
+use super::etype::*;
 use rand::Rng;
 
 use chrono::{Duration, Utc, DateTime};
@@ -113,7 +113,7 @@ impl KdcReqBody {
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
-pub struct KdcReqBodyAsn1 {
+pub(crate) struct KdcReqBodyAsn1 {
     #[seq_field(context_tag = 0)]
     kdc_options: SeqField<KdcOptionsAsn1>,
     #[seq_field(context_tag = 1, optional)]

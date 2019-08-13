@@ -56,7 +56,7 @@ mod lastreq;
 pub use lastreq::*;
 
 mod kdcreqbody;
-pub use kdcreqbody::{Etype, KdcReqBody, SeqOfEtype};
+pub use kdcreqbody::*;
 
 mod kdcoptions;
 pub use kdcoptions::KdcOptions;
