@@ -35,7 +35,7 @@ mod encrypteddata;
 pub use encrypteddata::*;
 
 mod encryptionkey;
-pub use encryptionkey::EncryptionKey;
+pub use encryptionkey::*;
 
 mod ticket;
 pub use ticket::{Ticket,SeqOfTickets};
