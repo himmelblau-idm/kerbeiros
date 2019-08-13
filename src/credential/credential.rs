@@ -83,10 +83,12 @@ impl Credential {
         return self.client_part.get_encrypted_pa_data();
     }
 
+    /// Saves the credential into a file by using the ccache format, used by Linux.
     pub fn save_into_ccache_file(&self, path: &str) -> Result<()> {
         return CredentialWarehouse::new(self.clone()).save_into_ccache_file(path);
     }
 
+    /// Saves the credential into a file by using the KRB-CRED format, used by Windows.
     pub fn save_into_krb_cred_file(&self, path: &str) -> Result<()> {
         return CredentialWarehouse::new(self.clone()).save_into_krb_cred_file(path);
     }
