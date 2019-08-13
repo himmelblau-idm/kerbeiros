@@ -27,6 +27,10 @@ impl Ticket {
         self.tkt_vno = tkt_vno;
     }
 
+    pub fn get_sname(&self) -> &PrincipalName {
+        return &self.sname;
+    }
+
     pub fn get_encrypted_data(&self) -> &EncryptedData {
         return &self.enc_part;
     }
@@ -62,7 +66,7 @@ impl TicketAsn1 {
 
         ticket_asn1.set_tkt_vno(Integer::from(ticket.tkt_vno as i64));
         ticket_asn1.set_realm(RealmAsn1::new(ticket.realm.clone()));
-        ticket_asn1.set_sname(ticket.sname.asn1_type());
+        ticket_asn1.set_sname(ticket.get_sname().into());
         ticket_asn1.set_enc_part(ticket.enc_part.asn1_type());
 
         return ticket_asn1;

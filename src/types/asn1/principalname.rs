@@ -34,10 +34,6 @@ impl PrincipalName {
         return &self.name_string[0];
     }
 
-    pub(crate) fn asn1_type(&self) -> PrincipalNameAsn1 {
-        return PrincipalNameAsn1::new(&self);
-    }
-
     pub fn push(&mut self, string: KerberosString) {
         self.name_string.push(string);
     }
@@ -54,13 +50,6 @@ pub(crate) struct PrincipalNameAsn1 {
 }
 
 impl PrincipalNameAsn1 {
-
-    fn new(principal_name: &PrincipalName) -> PrincipalNameAsn1 {
-        let mut asn1_principal_name = Self::default();
-        asn1_principal_name.set_asn1_values(principal_name);
-
-        return asn1_principal_name;
-    }
 
     fn set_asn1_values(&mut self, principal_name: &PrincipalName) {
         self.set_name_type(Int32Asn1::new(principal_name.name_type));
@@ -103,6 +92,14 @@ impl PrincipalNameAsn1 {
 
 }
 
+impl From<&PrincipalName> for PrincipalNameAsn1 {
+    fn from(principal_name: &PrincipalName) -> Self {
+        let mut asn1_principal_name = Self::default();
+        asn1_principal_name.set_asn1_values(principal_name);
+
+        return asn1_principal_name;
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -123,7 +120,7 @@ mod tests {
     #[test]
     fn test_encode_principal_name(){
         let principal_name = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
-        let principal_name_asn1 = principal_name.asn1_type();
+        let principal_name_asn1 = PrincipalNameAsn1::from(&principal_name);
 
         assert_eq!(
             vec![0x30 ,0x11 ,0xa0 ,0x03 ,0x02 ,0x01 ,0x01 ,
@@ -137,7 +134,7 @@ mod tests {
     fn test_encode_many_principal_name_strings(){
         let mut principal_name = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
-        let principal_name_asn1 = principal_name.asn1_type();
+        let principal_name_asn1 = PrincipalNameAsn1::from(&principal_name);
 
         assert_eq!(
             vec![0x30, 0x21, 
