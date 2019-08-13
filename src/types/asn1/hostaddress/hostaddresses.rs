@@ -42,7 +42,7 @@ impl DerefMut for HostAddresses {
 }
 
 #[derive(Default, Debug, PartialEq)]
-pub struct HostAddressesAsn1 {
+pub(crate) struct HostAddressesAsn1 {
     subtype: SequenceOf<HostAddressAsn1>
 }
 

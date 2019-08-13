@@ -20,7 +20,7 @@ mod kerberostime;
 pub use kerberostime::*;
 
 mod hostaddress;
-pub use hostaddress::{HostAddress, HostAddresses};
+pub use hostaddress::*;
 
 mod padata;
 pub use padata::{PaEncTsEnc, PaData, PacRequest, MethodData, SeqOfPaData, EtypeInfo2, EtypeInfo2Entry};
