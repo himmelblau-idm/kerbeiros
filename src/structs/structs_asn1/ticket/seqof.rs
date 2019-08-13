@@ -22,7 +22,8 @@ impl DerefMut for SeqOfTickets {
 
 impl SeqOfTickets {
 
-    pub fn _new(mut items: Vec<Ticket>) -> Self {
+    #[cfg(test)]
+    pub fn new(mut items: Vec<Ticket>) -> Self {
         let mut seq_of = Self::default();
         seq_of.append(&mut items);
         return seq_of;
@@ -44,11 +45,11 @@ impl SeqOfTicketsAsn1 {
     fn new(seq_of_tickets: &SeqOfTickets) -> SeqOfTicketsAsn1 {
         let mut seq_tickets_asn1 = Self::default();
 
-        seq_tickets_asn1._set_asn1_values(seq_of_tickets);
+        seq_tickets_asn1.set_asn1_values(seq_of_tickets);
         return seq_tickets_asn1;
     }
 
-    fn _set_asn1_values(&mut self, seq_of_tickets: &SeqOfTickets) {
+    fn set_asn1_values(&mut self, seq_of_tickets: &SeqOfTickets) {
         for ticket in seq_of_tickets.iter() {
             self.subtype.push(ticket.asn1_type());
         }
