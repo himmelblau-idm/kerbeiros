@@ -5,6 +5,7 @@ mod uint32;
 pub use uint32::UInt32;
 
 mod microseconds;
+pub use microseconds::Microseconds;
 
 mod kerberosstring;
 pub use kerberosstring::KerberosString;
@@ -39,10 +40,10 @@ pub use ticket::{Ticket,SeqOfTickets};
 mod ticketflags;
 pub use ticketflags::TicketFlags;
 
-pub mod asreq;
+mod asreq;
 pub use asreq::AsReq;
 
-pub mod asrep;
+mod asrep;
 pub use asrep::KdcRep;
 
 mod enckdcreppart;
@@ -52,7 +53,10 @@ mod lastreq;
 pub use lastreq::{LastReq,LastReqEntry};
 
 mod kdcreqbody;
+pub use kdcreqbody::{Etype, KdcReqBody, SeqOfEtype};
+
 mod kdcoptions;
+pub use kdcoptions::KdcOptions;
 
 mod krbcred;
 pub use krbcred::KrbCred;
