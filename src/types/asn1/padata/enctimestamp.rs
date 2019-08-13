@@ -1,7 +1,7 @@
 use red_asn1::*;
 use super::super::kerberostime::*;
 use super::super::microseconds::*;
-use crate::error::Result;
+use chrono::prelude::*;
 
 
 pub struct PaEncTsEnc {
@@ -22,13 +22,6 @@ impl PaEncTsEnc {
         self.pausec = Some(pausec);
     }
 
-    pub fn from_datetime(datetime: DateTime<Utc>) -> Result<Self> {
-        let mut pa_enc_ts_enc = Self::new(datetime);
-        pa_enc_ts_enc.set_pausec(Microseconds::new(datetime.timestamp_subsec_micros())?);
-        
-        return Ok(pa_enc_ts_enc);
-    }
-
     pub fn build(&self) -> Vec<u8> {
         return self.asn1_type().encode().unwrap();
     }
@@ -38,6 +31,22 @@ impl PaEncTsEnc {
     }
 
 }
+
+impl From<DateTime<Utc>> for PaEncTsEnc {
+    fn from(datetime: DateTime<Utc>) -> Self {
+        let mut pa_enc_ts_enc = Self::new(datetime);
+
+        let mut microseconds = datetime.timestamp_subsec_micros();
+        if microseconds > MAX_MICROSECONDS {
+            microseconds = MAX_MICROSECONDS;
+        }
+
+        pa_enc_ts_enc.set_pausec(Microseconds::new(microseconds).unwrap());
+        
+        return pa_enc_ts_enc;
+    }
+}
+
 
 #[derive(Sequence)]
 pub struct PaEncTsEncAsn1 {
@@ -79,7 +88,7 @@ mod test {
     fn encode_timestamp() {
         let datetime = Utc.ymd(2019, 6, 4).and_hms_micro(05, 22, 12, 143725);
 
-        let pa_enc_ts_enc = PaEncTsEnc::from_datetime(datetime).unwrap();
+        let pa_enc_ts_enc = PaEncTsEnc::from(datetime);
 
         assert_eq!(vec![0x30, 0x1a, 
                             0xa0, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x36, 

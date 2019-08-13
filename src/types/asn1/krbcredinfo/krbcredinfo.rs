@@ -233,6 +233,7 @@ impl KrbCredInfoAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+    use chrono::prelude::*;
 
     #[test]
     fn create_default_kdc_cred_info_asn1() {

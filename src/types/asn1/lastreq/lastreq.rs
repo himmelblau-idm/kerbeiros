@@ -61,6 +61,7 @@ impl Asn1Object for LastReqAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
+    use chrono::prelude::*;
 
     #[test]
     fn create_default_last_req() {

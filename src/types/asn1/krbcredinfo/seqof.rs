@@ -93,6 +93,7 @@ impl Asn1Object for SeqOfKrbCredInfoAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+    use chrono::prelude::*;
 
     #[test]
     fn create_default_seq_of_krb_cred_info_asn1() {

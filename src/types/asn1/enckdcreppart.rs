@@ -245,6 +245,7 @@ impl EncAsRepPartAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+    use chrono::prelude::*;
 
     #[test]
     fn create_default_enc_as_rep_part_asn1() {

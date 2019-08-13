@@ -38,7 +38,7 @@ impl<'a> AsReqTimestampCrypter<'a> {
     }
 
     fn produce_raw_timestamp() -> Vec<u8> {
-        let timestamp = asn1::PaEncTsEnc::from_datetime(Utc::now()).unwrap();
+        let timestamp = asn1::PaEncTsEnc::from(Utc::now());
         return timestamp.build();
     }
 

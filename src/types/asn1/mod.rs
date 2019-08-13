@@ -17,7 +17,7 @@ mod principalname;
 pub use principalname::*;
 
 mod kerberostime;
-pub use kerberostime::KerberosTime;
+pub use kerberostime::*;
 
 mod hostaddress;
 pub use hostaddress::{HostAddress, HostAddresses};

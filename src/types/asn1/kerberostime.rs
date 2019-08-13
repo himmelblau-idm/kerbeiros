@@ -1,4 +1,4 @@
-pub use chrono::prelude::*;
+use chrono::prelude::*;
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
@@ -6,7 +6,7 @@ use crate::error::{ErrorKind, Result};
 pub type KerberosTime = DateTime<Utc>;
 
 #[derive(Default, Debug, PartialEq)]
-pub struct KerberosTimeAsn1 {
+pub(crate) struct KerberosTimeAsn1 {
     subtype: GeneralizedTime
 }
 

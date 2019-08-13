@@ -53,6 +53,7 @@ impl LastReqEntryAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
+    use chrono::prelude::*;
 
     #[test]
     fn test_decode_last_req_entry() {

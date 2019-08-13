@@ -154,6 +154,7 @@ impl EncKrbCredPartAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+    use chrono::prelude::*;
 
 
     #[test]

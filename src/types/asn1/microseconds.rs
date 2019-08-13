@@ -1,6 +1,9 @@
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
+
+pub(crate) const MAX_MICROSECONDS: u32 = 999999;
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Microseconds{
     value: u32
@@ -9,7 +12,7 @@ pub struct Microseconds{
 
 impl Microseconds {
     pub fn new(x: u32) -> Result<Self> {
-        if x > 999999 {
+        if x > MAX_MICROSECONDS {
             return Err(ErrorKind::InvalidMicroseconds(x))?;
         }
         return Ok(Self{
@@ -23,7 +26,7 @@ impl Microseconds {
 
     #[cfg(test)]
     fn set(&mut self, x: u32) -> Result<()> {
-        if x > 999999 {
+        if x > MAX_MICROSECONDS {
             return Err(ErrorKind::InvalidMicroseconds(x))?;
         }
 
