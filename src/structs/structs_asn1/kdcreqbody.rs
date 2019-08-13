@@ -145,11 +145,11 @@ impl KdcReqBodyAsn1 {
 
     fn new(kdc_body: &KdcReqBody) -> KdcReqBodyAsn1 {
         let mut kdc_body_asn1 = Self::default();
-        kdc_body_asn1._set_asn1_values(kdc_body);
+        kdc_body_asn1.set_asn1_values(kdc_body);
         return kdc_body_asn1;
     }
 
-    fn _set_asn1_values(&mut self, kdc_body: &KdcReqBody) {
+    fn set_asn1_values(&mut self, kdc_body: &KdcReqBody) {
         self.set_kdc_options(kdc_body.kdc_options.asn1_type());
 
         if let Some(cname) = &kdc_body.cname {
