@@ -69,17 +69,17 @@ impl PrincipalNameAsn1 {
 
     fn new(principal_name: &PrincipalName) -> PrincipalNameAsn1 {
         let mut asn1_principal_name = Self::default();
-        asn1_principal_name._set_asn1_values(principal_name);
+        asn1_principal_name.set_asn1_values(principal_name);
 
         return asn1_principal_name;
     }
 
-    fn _set_asn1_values(&mut self, principal_name: &PrincipalName) {
+    fn set_asn1_values(&mut self, principal_name: &PrincipalName) {
         self.set_name_type(Int32Asn1::new(principal_name.name_type));
-        self.set_name_string(self._seq_of_kerberos_strings(principal_name));
+        self.set_name_string(self.seq_of_kerberos_strings(principal_name));
     }
 
-    fn _seq_of_kerberos_strings(&self, principal_name: &PrincipalName) -> SequenceOf<KerberosStringAsn1> {
+    fn seq_of_kerberos_strings(&self, principal_name: &PrincipalName) -> SequenceOf<KerberosStringAsn1> {
         let mut seq_of_kerberos_strings: SequenceOf<KerberosStringAsn1> = SequenceOf::default();
 
         for kerb_string in principal_name.name_string.iter() {
