@@ -16,7 +16,7 @@ impl HostAddress {
     pub fn get_address(&self) -> Vec<u8> {
         match self {
             HostAddress::NetBios(string) => {
-                return HostAddress::_get_padded_netbios_string_bytes(&string);
+                return HostAddress::get_padded_netbios_string_bytes(&string);
             },
             HostAddress::Raw(_, bytes) => {
                 return bytes.clone();
@@ -24,7 +24,7 @@ impl HostAddress {
         }
     }
 
-    fn _get_padded_netbios_string_bytes(string: &String) -> Vec<u8> {
+    fn get_padded_netbios_string_bytes(string: &String) -> Vec<u8> {
         let mut padded_string = string.clone();
         let mut padded_len = padded_string.len() % 16;
 
