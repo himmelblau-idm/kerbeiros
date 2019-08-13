@@ -296,8 +296,8 @@ mod test {
         );
 
         let mut padata = SeqOfPaData::default();
-        let mut entry1 = EtypeInfo2Entry::_new(AES256_CTS_HMAC_SHA1_96);
-        entry1._set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
+        let mut entry1 = EtypeInfo2Entry::new(AES256_CTS_HMAC_SHA1_96);
+        entry1.set_salt(KerberosString::from_ascii("KINGDOM.HEARTSmickey").unwrap());
 
         let mut info2 = EtypeInfo2::default();
         info2.push(entry1);

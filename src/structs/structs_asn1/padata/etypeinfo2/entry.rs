@@ -13,7 +13,8 @@ pub struct EtypeInfo2Entry {
 
 impl EtypeInfo2Entry {
 
-    pub fn _new(etype: i32) -> Self {
+    #[cfg(test)]
+    pub fn new(etype: i32) -> Self {
         return Self {
             etype: etype,
             salt: None,
@@ -21,7 +22,8 @@ impl EtypeInfo2Entry {
         };
     }
 
-    pub fn _set_salt(&mut self, salt: KerberosString) {
+    #[cfg(test)]
+    pub fn set_salt(&mut self, salt: KerberosString) {
         self.salt = Some(salt);
     }
 
