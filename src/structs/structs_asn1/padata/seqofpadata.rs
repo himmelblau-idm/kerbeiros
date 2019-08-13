@@ -48,11 +48,11 @@ impl SeqOfPaDataAsn1 {
     fn new(seq_of_padatas: &SeqOfPaData) -> Self {
         let mut seq_padatas_asn1 = Self::default();
 
-        seq_padatas_asn1._set_asn1_values(seq_of_padatas);
+        seq_padatas_asn1.set_asn1_values(seq_of_padatas);
         return seq_padatas_asn1;
     }
 
-    fn _set_asn1_values(&mut self, seq_of_padatas: &SeqOfPaData) {
+    fn set_asn1_values(&mut self, seq_of_padatas: &SeqOfPaData) {
         for padata in seq_of_padatas.iter() {
             self.subtype.push(padata.asn1_type());
         }
