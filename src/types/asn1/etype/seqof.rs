@@ -35,7 +35,7 @@ impl SeqOfEtype {
 }
 
 #[derive(Default, Debug, PartialEq)]
-pub struct SeqOfEtypeAsn1 {
+pub(crate) struct SeqOfEtypeAsn1 {
     subtype: SequenceOf<EtypeAsn1>
 }
 
