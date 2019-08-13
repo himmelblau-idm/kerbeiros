@@ -5,6 +5,8 @@ use super::padata::*;
 use super::ticket::*;
 use super::encrypteddata::*;
 use crate::error::{ErrorKind, Result};
+use crate::credential::*;
+use crate::key::Key;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct KdcRep {
@@ -82,6 +84,9 @@ impl KdcRep {
         return Vec::new();
     }
 
+    pub fn into_credential(&self, user_key: &Key) -> Result<Credential> {
+        return CredentialKrbInfoMapper::kdc_rep_to_credential(user_key, self);
+    }
 
     pub fn parse(raw: &[u8]) -> Result<Self> {
         let mut as_rep_asn1 = AsRepAsn1::default();

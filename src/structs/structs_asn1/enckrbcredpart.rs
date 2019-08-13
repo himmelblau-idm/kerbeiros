@@ -4,6 +4,8 @@ use super::kerberostime::*;
 use super::krbcredinfo::*;
 use super::hostaddress::*;
 use super::microseconds::*;
+
+#[cfg(test)]
 use crate::error::{ErrorKind, Result};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -106,12 +108,13 @@ impl EncKrbCredPartAsn1 {
         return enc_krb_cred_part_asn1;
     }
 
-    pub fn _no_asn1_type(&self) -> Result<EncKrbCredPart> {
+    #[cfg(test)]
+    pub fn no_asn1_type(&self) -> Result<EncKrbCredPart> {
         let ticket_info = self.get_ticket_info().ok_or_else(|| 
             ErrorKind::NotAvailableData("EncKrbCredPart::ticket_info".to_string())
         )?;
 
-        let mut enc_krb_cred_part = EncKrbCredPart::new(ticket_info._no_asn1_type()?);
+        let mut enc_krb_cred_part = EncKrbCredPart::new(ticket_info.no_asn1_type()?);
 
         if let Some(nonce) = self.get_nonce() {
             enc_krb_cred_part._set_nonce(nonce.no_asn1_type()?);
@@ -320,7 +323,7 @@ mod test {
         let mut enc_krb_cred_part_asn1 = EncKrbCredPartAsn1::default();
         enc_krb_cred_part_asn1.decode(&raw).unwrap();
 
-        assert_eq!(enc_krb_cred_part, enc_krb_cred_part_asn1._no_asn1_type().unwrap());
+        assert_eq!(enc_krb_cred_part, enc_krb_cred_part_asn1.no_asn1_type().unwrap());
     }
 
 }

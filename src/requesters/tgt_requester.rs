@@ -124,7 +124,7 @@ impl<'a> TGTRequest<'a> {
             return Err(ErrorKind::ParseKdcRepError(as_rep, Box::new(ErrorKind::NoKeyProvided)))?;
         }
         
-        match CredentialKrbInfoMapper::kdc_rep_to_credential(user_key, &as_rep) {
+        match as_rep.into_credential(user_key) {
             Ok(credential) => {
                 return Ok(credential);
             },

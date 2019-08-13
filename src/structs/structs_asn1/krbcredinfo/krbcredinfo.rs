@@ -5,6 +5,8 @@ pub use super::super::realm::*;
 pub use super::super::principalname::*;
 pub use super::super::ticketflags::*;
 pub use super::super::hostaddress::*;
+
+#[cfg(test)]
 use crate::error::{ErrorKind, Result};
 
 #[derive(Debug, PartialEq, Clone)]
@@ -171,6 +173,7 @@ impl KrbCredInfoAsn1 {
         return krb_cred_info_asn1;
     }
 
+    #[cfg(test)]
     pub fn no_asn1_type(&self) -> Result<KrbCredInfo> {
         let key = self.get_key().ok_or_else(|| 
             ErrorKind::NotAvailableData("KrbCredInfo::key".to_string())

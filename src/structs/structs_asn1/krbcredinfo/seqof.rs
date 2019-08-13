@@ -1,6 +1,8 @@
 use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::krbcredinfo::*;
+
+#[cfg(test)]
 use crate::error::Result;
 
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -54,7 +56,8 @@ impl SeqOfKrbCredInfoAsn1 {
         }
     }
 
-    pub fn _no_asn1_type(&self) -> Result<SeqOfKrbCredInfo> {
+    #[cfg(test)]
+    pub fn no_asn1_type(&self) -> Result<SeqOfKrbCredInfo> {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         for seq_of_krb_cred_info_asn1 in self.subtype.iter() {
             seq_of_krb_cred_info.push(seq_of_krb_cred_info_asn1.no_asn1_type()?);
@@ -262,7 +265,7 @@ mod test {
         seq_of_krb_cred_info_asn1.decode(&raw).unwrap();
 
 
-        assert_eq!(seq_of_krb_cred_info, seq_of_krb_cred_info_asn1._no_asn1_type().unwrap());
+        assert_eq!(seq_of_krb_cred_info, seq_of_krb_cred_info_asn1.no_asn1_type().unwrap());
     }
 
 }
