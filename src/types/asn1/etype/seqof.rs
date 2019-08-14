@@ -2,6 +2,7 @@ use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::etype::*;
 
+/// Array of [Etype](./type.Etype.html).
 #[derive(Debug, PartialEq, Clone)]
 pub struct SeqOfEtype {
     etypes: Vec<Etype>
