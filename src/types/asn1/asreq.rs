@@ -155,7 +155,7 @@ impl AsReqAsn1 {
         self.set_msg_type(Integer::from(as_req.get_msg_type() as i64));
 
         if let Some(seq_of_padatas) = as_req.get_padata() {
-            self.set_padata(seq_of_padatas.asn1_type());
+            self.set_padata(seq_of_padatas.into());
         }
 
         self.set_req_body(as_req.get_req_body().into());

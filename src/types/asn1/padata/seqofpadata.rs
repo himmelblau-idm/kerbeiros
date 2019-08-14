@@ -26,10 +26,6 @@ impl DerefMut for SeqOfPaData {
 
 impl SeqOfPaData {
 
-    pub(crate) fn asn1_type(&self) -> SeqOfPaDataAsn1 {
-        return SeqOfPaDataAsn1::new(self);
-    }
-
     pub fn parse(raw: &Vec<u8>) -> Result<Self> {
         let mut seq_of_padata_asn1 = SeqOfPaDataAsn1::default();
         seq_of_padata_asn1.decode(raw)?;
@@ -45,13 +41,6 @@ pub(crate) struct SeqOfPaDataAsn1 {
 
 impl SeqOfPaDataAsn1 {
 
-    fn new(seq_of_padatas: &SeqOfPaData) -> Self {
-        let mut seq_padatas_asn1 = Self::default();
-
-        seq_padatas_asn1.set_asn1_values(seq_of_padatas);
-        return seq_padatas_asn1;
-    }
-
     fn set_asn1_values(&mut self, seq_of_padatas: &SeqOfPaData) {
         for padata in seq_of_padatas.iter() {
             self.subtype.push(padata.asn1_type());
@@ -65,6 +54,15 @@ impl SeqOfPaDataAsn1 {
         }
 
         return Ok(seq_of_padata);
+    }
+}
+
+impl From<&SeqOfPaData> for SeqOfPaDataAsn1 {
+    fn from(seq_of_padatas: &SeqOfPaData) -> Self {
+        let mut seq_padatas_asn1 = Self::default();
+
+        seq_padatas_asn1.set_asn1_values(seq_of_padatas);
+        return seq_padatas_asn1;
     }
 }
 
@@ -117,7 +115,7 @@ mod test {
         assert_eq!(vec![0x30, 0x13, 0x30, 0x11, 
                         0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
                         0xa2, 0x09, 0x04, 0x07, 0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff],
-                        seq_of_padatas.asn1_type().encode().unwrap()
+                        SeqOfPaDataAsn1::from(&seq_of_padatas).encode().unwrap()
         );
     }
 
@@ -126,7 +124,7 @@ mod test {
         let seq_of_padatas = SeqOfPaData::default();
 
         assert_eq!(vec![0x30, 0x0],
-                        seq_of_padatas.asn1_type().encode().unwrap()
+                        SeqOfPaDataAsn1::from(&seq_of_padatas).encode().unwrap()
         );
     }
 
