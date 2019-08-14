@@ -145,7 +145,7 @@ impl From<&EncKrbCredPart> for EncKrbCredPartAsn1 {
     fn from(enc_krb_cred_part: &EncKrbCredPart) -> Self {
         let mut enc_krb_cred_part_asn1 = Self::default();
 
-        enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.get_ticket_info().asn1_type());
+        enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.get_ticket_info().into());
 
         if let Some(nonce) = enc_krb_cred_part.get_nonce() {
             enc_krb_cred_part_asn1.set_nonce(nonce.into());

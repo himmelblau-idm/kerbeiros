@@ -32,10 +32,6 @@ impl SeqOfKrbCredInfo {
         return seq_of;
     }
 
-    pub(crate) fn asn1_type(&self) -> SeqOfKrbCredInfoAsn1 {
-        return SeqOfKrbCredInfoAsn1::new(self);
-    }
-
 }
 
 #[derive(Default, Debug, PartialEq)]
@@ -44,12 +40,6 @@ pub(crate) struct SeqOfKrbCredInfoAsn1 {
 }
 
 impl SeqOfKrbCredInfoAsn1 {
-
-    fn new(seq_of_krb_cred_info: &SeqOfKrbCredInfo) -> Self {
-        let mut seq_of_krb_cred_info_asn1 = Self::default();
-        seq_of_krb_cred_info_asn1.set_asn1_values(seq_of_krb_cred_info);
-        return seq_of_krb_cred_info_asn1;
-    }
 
     fn set_asn1_values(&mut self, seq_of_krb_cred_info: &SeqOfKrbCredInfo) {
         for krb_cred_info in seq_of_krb_cred_info.iter() {
@@ -65,6 +55,14 @@ impl SeqOfKrbCredInfoAsn1 {
         }
 
         return Ok(seq_of_krb_cred_info);
+    }
+}
+
+impl From<&SeqOfKrbCredInfo> for SeqOfKrbCredInfoAsn1 {
+    fn from(seq_of_krb_cred_info: &SeqOfKrbCredInfo) -> Self {
+        let mut seq_of_krb_cred_info_asn1 = Self::default();
+        seq_of_krb_cred_info_asn1.set_asn1_values(seq_of_krb_cred_info);
+        return seq_of_krb_cred_info_asn1;
     }
 }
 
@@ -185,7 +183,7 @@ mod test {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
-        assert_eq!(raw, seq_of_krb_cred_info.asn1_type().encode().unwrap());
+        assert_eq!(raw, SeqOfKrbCredInfoAsn1::from(&seq_of_krb_cred_info).encode().unwrap());
     }
 
 
