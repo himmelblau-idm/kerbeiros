@@ -15,6 +15,8 @@ use rand::Rng;
 
 use chrono::{Duration, Utc};
 
+
+/// (*KDC-REQ-BODY*) Holds the most part of data of requests.
 pub struct KdcReqBody {
     kdc_options: KdcOptions,
     cname: Option<PrincipalName>,

@@ -3,6 +3,7 @@ use super::int32::*;
 use super::uint32::*;
 use crate::error::{ErrorKind, Result};
 
+/// (*EncryptedData*) Chunck of data that is encrypted in Kerberos exchanges.
 #[derive(Debug, Clone, PartialEq)]
 pub struct EncryptedData {
     etype: Int32,

@@ -5,6 +5,7 @@ use crate::error::{ErrorKind, Result};
 
 pub type KerberosTime = DateTime<Utc>;
 
+/// (*KerberosTime*) For time representations in Kerberos.
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct KerberosTimeAsn1 {
     subtype: GeneralizedTime

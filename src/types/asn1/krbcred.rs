@@ -2,6 +2,7 @@ use red_asn1::*;
 use super::ticket::*;
 use super::encrypteddata::*;
 
+/// (*KRB-CRED*) Kerberos credential which is returned by the KDC 
 #[derive(Debug,PartialEq,Clone)]
 pub struct KrbCred {
     pvno: i8,

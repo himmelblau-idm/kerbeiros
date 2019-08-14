@@ -8,6 +8,7 @@ use crate::error::{ErrorKind, Result};
 use crate::credential::*;
 use crate::key::Key;
 
+/// (*KDC-REP*) Main structure of the AS-REP and TGS-REP messages.
 #[derive(Debug, Clone, PartialEq)]
 pub struct KdcRep {
     pvno: i8,

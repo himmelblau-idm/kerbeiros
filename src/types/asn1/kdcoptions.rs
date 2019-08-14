@@ -1,5 +1,6 @@
 use super::kerberosflags::{KerberosFlags, KerberosFlagsAsn1};
 
+/// (*KDCOptions*) Options used in Kerberos requests.
 pub type KdcOptions = KerberosFlags;
 pub(crate) type KdcOptionsAsn1 = KerberosFlagsAsn1;
 

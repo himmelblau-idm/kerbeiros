@@ -5,6 +5,7 @@ use crate::constants::address_type;
 
 static NETBIOS_PADDING_CHAR: char = 32 as char;
 
+/// (*HostAddress*) Different types of addresses.
 #[derive(Debug, PartialEq, Clone)]
 pub enum HostAddress {
     NetBios(String),

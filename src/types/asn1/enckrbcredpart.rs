@@ -8,6 +8,7 @@ use super::microseconds::*;
 #[cfg(test)]
 use crate::error::{ErrorKind, Result};
 
+/// (*EncKrbCredPart*) Holds the data for user in [KrbCred](./struct.KrbCred.html)
 #[derive(Debug, Clone, PartialEq)]
 pub struct EncKrbCredPart {
     ticket_info: SeqOfKrbCredInfo,

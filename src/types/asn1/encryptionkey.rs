@@ -2,6 +2,7 @@ use red_asn1::*;
 use super::int32::*;
 use crate::error::{ErrorKind, Result};
 
+/// (*EncryptionKey*) To represent the key of an encryption algorithm.
 #[derive(Debug, PartialEq, Clone)]
 pub struct EncryptionKey {
     keytype: Int32,

@@ -1,7 +1,7 @@
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
-/// Kerberos i32.
+/// (*Int32*) Kerberos i32.
 pub type Int32 = i32;
 
 #[derive(Default, Debug, PartialEq)]

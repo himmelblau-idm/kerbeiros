@@ -10,6 +10,7 @@ use super::hostaddress::*;
 use super::padata::*;
 use crate::error::{ErrorKind, Result};
 
+/// (*EncKdcRepPart*) Holds the data that is encrypted in [KdcRep](./struct.KdcRep.html)
 #[derive(Debug, PartialEq, Clone)]
 pub struct EncKdcRepPart {
     key: EncryptionKey,

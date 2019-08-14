@@ -4,7 +4,7 @@ use super::int32::{Int32,Int32Asn1};
 use crate::error::{ErrorKind, Result};
 
 
-/// Name of some Kerberos entity.
+/// (*PrincipalName*) Name of some Kerberos entity.
 /// 
 /// Used for client name and service name.
 #[derive(Debug, Clone, PartialEq)]

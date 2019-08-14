@@ -1,5 +1,5 @@
 use super::kerberosflags::{KerberosFlags, KerberosFlagsAsn1};
 
-/// Flags for tickets.
+/// (*TicketFlags*) Flags for tickets.
 pub type TicketFlags = KerberosFlags;
 pub(crate) type TicketFlagsAsn1 = KerberosFlagsAsn1;

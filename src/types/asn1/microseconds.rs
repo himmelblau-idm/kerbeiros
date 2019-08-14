@@ -4,7 +4,7 @@ use crate::error::{ErrorKind, Result};
 
 pub(crate) const MAX_MICROSECONDS: u32 = 999999;
 
-/// Kerberos Microseconds.
+/// (*Microseconds*) Kerberos Microseconds.
 /// 
 /// The value must be between 0 and 999999.
 #[derive(Debug, Clone, PartialEq)]

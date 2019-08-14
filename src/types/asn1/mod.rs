@@ -1,3 +1,5 @@
+//! Types handled by Kerberos that are defined in [RFC 4120](https://tools.ietf.org/html/rfc4120)
+
 mod int32;
 pub use int32::*;
 

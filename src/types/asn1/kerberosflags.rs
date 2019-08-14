@@ -1,6 +1,8 @@
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
+
+/// (*KerberosFlags*) Flags used for different entities.
 #[derive(Debug, PartialEq, Clone, Default)]
 pub struct KerberosFlags {
     flags: u32

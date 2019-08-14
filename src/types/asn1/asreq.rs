@@ -13,6 +13,7 @@ use super::hostaddress::HostAddress;
 #[cfg(test)]
 use super::etype::*;
 
+/// (*AS-REQ*) Message used to request a TGT.
 pub struct AsReq {
     pvno: i8,
     msg_type: i8,

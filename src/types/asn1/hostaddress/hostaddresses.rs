@@ -3,6 +3,7 @@ use super::hostaddress::*;
 use crate::error::Result;
 use std::ops::{Deref, DerefMut};
 
+/// (*HostAddresses*) Array of [HostAddress](./enum.HostAddress.html)
 #[derive(Debug, PartialEq, Clone)]
 pub struct HostAddresses {
     addresses: Vec<HostAddress>

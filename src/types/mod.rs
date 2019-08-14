@@ -1,3 +1,5 @@
+//! Types of data used in Kerberos protocol and implementations
+
 pub mod asn1;
 pub use asn1::*;
 
