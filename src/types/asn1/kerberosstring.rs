@@ -2,9 +2,9 @@ use ascii::AsciiString;
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
+/// (*KerberosString*) String used in Kerberos.
 pub type KerberosString = AsciiString;
 
-/// (*KerberosString*) String used in Kerberos.
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct KerberosStringAsn1 {
     subtype: IA5String
