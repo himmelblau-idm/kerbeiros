@@ -2,10 +2,9 @@ use chrono::prelude::*;
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
-
+/// (*KerberosTime*) For time representations in Kerberos.
 pub type KerberosTime = DateTime<Utc>;
 
-/// (*KerberosTime*) For time representations in Kerberos.
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct KerberosTimeAsn1 {
     subtype: GeneralizedTime

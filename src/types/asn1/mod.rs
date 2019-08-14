@@ -27,9 +27,6 @@ pub use hostaddress::*;
 mod padata;
 pub use padata::*;
 
-mod etype;
-pub use etype::*;
-
 mod kerberosflags;
 pub use kerberosflags::*;
 

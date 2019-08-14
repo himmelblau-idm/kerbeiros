@@ -11,7 +11,7 @@ use crate::constants::*;
 use super::hostaddress::HostAddress;
 
 #[cfg(test)]
-use super::etype::*;
+use super::int32::*;
 
 /// (*AS-REQ*) Message used to request a TGT.
 pub struct AsReq {
@@ -120,7 +120,7 @@ impl AsReq {
     }
 
     #[cfg(test)]
-    pub fn get_etypes(&self) -> &SeqOfEtype {
+    pub fn get_etypes(&self) -> &SeqOfInt32 {
         return self.req_body.get_etypes();
     }
 

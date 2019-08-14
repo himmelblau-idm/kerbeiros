@@ -10,7 +10,7 @@ use super::kerberostime::*;
 use super::hostaddress::*;
 use super::encrypteddata::*;
 use super::ticket::*;
-use super::etype::*;
+use super::int32::*;
 use rand::Rng;
 
 use chrono::{Duration, Utc};
@@ -26,7 +26,7 @@ pub struct KdcReqBody {
     till: KerberosTime,
     rtime: Option<KerberosTime>,
     nonce: UInt32,
-    etypes: SeqOfEtype,
+    etypes: SeqOfInt32,
     addresses: Option<HostAddresses>,
     enc_authorization_data: Option<EncryptedData>,
     additional_tickets: Option<SeqOfTickets>
@@ -44,7 +44,7 @@ impl KdcReqBody {
             till: Utc::now().checked_add_signed(Duration::weeks(20 * 52)).unwrap(),
             rtime: None,
             nonce: rand::thread_rng().gen::<u32>(),
-            etypes: SeqOfEtype::new(),
+            etypes: SeqOfInt32::new(),
             addresses: None,
             enc_authorization_data: None,
             additional_tickets: None
@@ -80,7 +80,7 @@ impl KdcReqBody {
         self.etypes.push(etype);
     }
 
-    pub fn get_etypes(&self) -> &SeqOfEtype {
+    pub fn get_etypes(&self) -> &SeqOfInt32 {
         return &self.etypes;
     }
 
@@ -172,7 +172,7 @@ pub(crate) struct KdcReqBodyAsn1 {
     #[seq_field(context_tag = 7)]
     nonce: SeqField<UInt32Asn1>,
     #[seq_field(context_tag = 8)]
-    etype: SeqField<SeqOfEtypeAsn1>,
+    etype: SeqField<SeqOfInt32Asn1>,
     #[seq_field(context_tag = 9, optional)]
     addresses: SeqField<HostAddressesAsn1>,
     #[seq_field(context_tag = 10, optional)]
