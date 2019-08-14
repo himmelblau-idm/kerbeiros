@@ -2,6 +2,8 @@ use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::ticket::*;
 
+
+/// (*SEQUENCE OF Ticket*) Array of [Ticket](./struct.Ticket.html).
 #[derive(Debug,PartialEq,Clone, Default)]
 pub struct SeqOfTickets {
     tickets: Vec<Ticket>

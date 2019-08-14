@@ -1,4 +1,4 @@
-//! Types handled by Kerberos that are defined in [RFC 4120](https://tools.ietf.org/html/rfc4120)
+//! Types handled by Kerberos that are defined in [RFC 4120](https://tools.ietf.org/html/rfc4120) and [MS-KILE](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-kile).
 
 mod int32;
 pub use int32::*;

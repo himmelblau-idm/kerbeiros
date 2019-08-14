@@ -4,6 +4,7 @@ use super::super::realm::*;
 use super::super::principalname::*;
 use super::super::encrypteddata::*;
 
+/// (*Ticket*) Represents a Kerberos ticket.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Ticket {
     tkt_vno: i8,

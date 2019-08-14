@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use crate::error::Result;
 use super::entry::*;
 
-
+/// (*ETYPE-INFO2*) Array of [EtypeInfo2Entry](./struct.EtypeInfo2Entry.html) that indicates the available encryption algorithms.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct EtypeInfo2 {
     entries: Vec<EtypeInfo2Entry>

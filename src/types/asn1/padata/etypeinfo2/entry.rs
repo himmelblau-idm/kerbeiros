@@ -3,7 +3,7 @@ use super::super::super::int32::*;
 use super::super::super::kerberosstring::*;
 use crate::error::{ErrorKind, Result};
 
-
+/// (*ETYPE-INFO2-ENTRY*) Give information about an encryption algorithm.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct EtypeInfo2Entry {
     etype: Int32,

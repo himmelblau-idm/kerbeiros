@@ -3,7 +3,7 @@ use super::super::kerberostime::*;
 use super::super::microseconds::*;
 use chrono::prelude::*;
 
-
+/// (*PA-ENC-TS-ENC*) Timestamp that is encrypted with client [Key](../../key/enum.Key.html).
 pub struct PaEncTsEnc {
     patimestamp: KerberosTime,
     pausec: Option<Microseconds>

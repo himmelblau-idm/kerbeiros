@@ -1,6 +1,7 @@
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
+/// (*KERB-PA-PAC-REQUEST*) To indicate if PAC should be included in response.
 #[derive(Debug, Clone, PartialEq)]
 pub struct PacRequest {
     include_pac: bool

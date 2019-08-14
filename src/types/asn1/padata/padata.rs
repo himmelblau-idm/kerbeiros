@@ -6,7 +6,7 @@ use crate::error::{ErrorKind, Result};
 use super::super::encrypteddata::*;
 use crate::constants::pa_data_types::*;
 
-
+/// (*PA-DATA*) Container that encapsules different types of preauthentication data structures.
 #[derive(Debug, Clone, PartialEq)]
 pub enum PaData {
     Raw(Int32, Vec<u8>),

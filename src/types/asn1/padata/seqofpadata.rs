@@ -3,9 +3,11 @@ use std::ops::{Deref, DerefMut};
 use super::padata::*;
 use crate::error::Result;
 
+/// (*METHOD-DATA*) Array of [PaData](./enum.PaData.html).
 pub type MethodData = SeqOfPaData;
 pub(crate) type MethodDataAsn1 = SeqOfPaDataAsn1;
 
+/// (*SEQUENCE OF PA-DATA*) Array of [PaData](./enum.PaData.html).
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct SeqOfPaData {
     padatas: Vec<PaData>
