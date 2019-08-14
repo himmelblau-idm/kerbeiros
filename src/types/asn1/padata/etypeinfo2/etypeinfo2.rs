@@ -24,10 +24,6 @@ impl DerefMut for EtypeInfo2 {
 
 impl EtypeInfo2 {
 
-    pub(crate) fn asn1_type(&self) -> EtypeInfo2Asn1 {
-        return EtypeInfo2Asn1::new(self);
-    }
-
     pub fn parse(raw: &Vec<u8>) -> Result<Self> {
         let mut seq_of_padata_asn1 = EtypeInfo2Asn1::default();
         seq_of_padata_asn1.decode(raw)?;
@@ -42,13 +38,6 @@ pub(crate) struct EtypeInfo2Asn1 {
 }
 
 impl EtypeInfo2Asn1 {
-
-    fn new(seq_of_padatas: &EtypeInfo2) -> Self {
-        let mut seq_padatas_asn1 = Self::default();
-
-        seq_padatas_asn1.set_asn1_values(seq_of_padatas);
-        return seq_padatas_asn1;
-    }
 
     fn default() -> Self {
         return Self{
@@ -69,6 +58,15 @@ impl EtypeInfo2Asn1 {
         }
 
         return Ok(seq_of_padata);
+    }
+}
+
+impl From<&EtypeInfo2> for EtypeInfo2Asn1 {
+    fn from(seq_of_padatas: &EtypeInfo2) -> Self {
+        let mut seq_padatas_asn1 = Self::default();
+
+        seq_padatas_asn1.set_asn1_values(seq_of_padatas);
+        return seq_padatas_asn1;
     }
 }
 
