@@ -32,24 +32,17 @@ impl EncKrbCredPart {
         };
     }
 
+    pub fn get_nonce(&self) -> Option<UInt32> {
+        return self.nonce;
+    }
+
     #[cfg(test)]
     fn set_nonce(&mut self, nonce: UInt32) {
         self.nonce = Some(nonce);
     }
 
-    #[cfg(test)]
-    fn set_timestamp(&mut self, timestamp: KerberosTime) {
-        self.timestamp = Some(timestamp);
-    }
-
-    #[cfg(test)]
-    fn set_usec(&mut self, usec: Microseconds) {
-        self.usec = Some(usec);
-    }
-
-    #[cfg(test)]
-    fn set_s_address(&mut self, s_address: HostAddress) {
-        self.s_address = Some(s_address);
+    pub fn get_r_address(&self) -> &Option<HostAddress> {
+        return &self.r_address;
     }
 
     #[cfg(test)]
@@ -57,18 +50,41 @@ impl EncKrbCredPart {
         self.r_address = Some(r_address);
     }
 
-    pub(crate) fn asn1_type(&self) -> EncKrbCredPartAsn1 {
-        return EncKrbCredPartAsn1::new(self);
+    pub fn get_s_address(&self)  -> &Option<HostAddress> {
+        return &self.s_address;
+    }
+
+    #[cfg(test)]
+    fn set_s_address(&mut self, s_address: HostAddress) {
+        self.s_address = Some(s_address);
+    }
+
+    pub fn get_ticket_info(&self) -> &SeqOfKrbCredInfo{
+        return &self.ticket_info;
+    }
+
+    pub fn get_timestamp(&self) -> &Option<KerberosTime> {
+        return &self.timestamp;
+    }
+
+    #[cfg(test)]
+    fn set_timestamp(&mut self, timestamp: KerberosTime) {
+        self.timestamp = Some(timestamp);
+    }
+
+    pub fn get_usec(&self) -> &Option<Microseconds> {
+        return &self.usec;
+    }
+
+    #[cfg(test)]
+    fn set_usec(&mut self, usec: Microseconds) {
+        self.usec = Some(usec);
     }
 
     pub fn build(&self) -> Vec<u8> {
-        return self.asn1_type().encode().unwrap();
+        return EncKrbCredPartAsn1::from(self).encode().unwrap();
     }
 
-}
-
-impl EncKrbCredPart {
-    
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
@@ -91,30 +107,6 @@ pub(crate) struct EncKrbCredPartAsn1 {
 
 
 impl EncKrbCredPartAsn1 {
-
-    pub fn new(enc_krb_cred_part: &EncKrbCredPart) -> Self {
-        let mut enc_krb_cred_part_asn1 = Self::default();
-
-        enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.ticket_info.asn1_type());
-
-        if let Some(nonce) = enc_krb_cred_part.nonce {
-            enc_krb_cred_part_asn1.set_nonce(nonce.into());
-        }
-        if let Some(timestamp) = &enc_krb_cred_part.timestamp {
-            enc_krb_cred_part_asn1.set_timestamp(timestamp.clone().into());
-        }
-        if let Some(usec) = &enc_krb_cred_part.usec {
-            enc_krb_cred_part_asn1.set_usec(usec.asn1_type());
-        }
-        if let Some(s_address) = &enc_krb_cred_part.s_address {
-            enc_krb_cred_part_asn1.set_s_address(s_address.asn1_type());
-        }
-        if let Some(r_address) = &enc_krb_cred_part.r_address {
-            enc_krb_cred_part_asn1.set_r_address(r_address.asn1_type());
-        }
-
-        return enc_krb_cred_part_asn1;
-    }
 
     #[cfg(test)]
     pub fn no_asn1_type(&self) -> Result<EncKrbCredPart> {
@@ -147,6 +139,32 @@ impl EncKrbCredPartAsn1 {
         return Ok(enc_krb_cred_part);
     }
 
+}
+
+impl From<&EncKrbCredPart> for EncKrbCredPartAsn1 {
+    fn from(enc_krb_cred_part: &EncKrbCredPart) -> Self {
+        let mut enc_krb_cred_part_asn1 = Self::default();
+
+        enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.get_ticket_info().asn1_type());
+
+        if let Some(nonce) = enc_krb_cred_part.get_nonce() {
+            enc_krb_cred_part_asn1.set_nonce(nonce.into());
+        }
+        if let Some(timestamp) = enc_krb_cred_part.get_timestamp() {
+            enc_krb_cred_part_asn1.set_timestamp(timestamp.clone().into());
+        }
+        if let Some(usec) = enc_krb_cred_part.get_usec() {
+            enc_krb_cred_part_asn1.set_usec(usec.asn1_type());
+        }
+        if let Some(s_address) = enc_krb_cred_part.get_s_address() {
+            enc_krb_cred_part_asn1.set_s_address(s_address.asn1_type());
+        }
+        if let Some(r_address) = enc_krb_cred_part.get_r_address() {
+            enc_krb_cred_part_asn1.set_r_address(r_address.asn1_type());
+        }
+
+        return enc_krb_cred_part_asn1;
+    }
 }
 
 
@@ -249,7 +267,7 @@ mod test {
 
         let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
 
-        assert_eq!(raw, enc_krb_cred_part.asn1_type().encode().unwrap());
+        assert_eq!(raw, EncKrbCredPartAsn1::from(&enc_krb_cred_part).encode().unwrap());
     }
 
     #[test]
