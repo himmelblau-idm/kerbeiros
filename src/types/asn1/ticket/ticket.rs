@@ -44,14 +44,9 @@ impl Ticket {
     pub fn set_tkt_vno(&mut self, tkt_vno: i8) {
         self.tkt_vno = tkt_vno;
     }
-    
-
-    pub(crate) fn asn1_type(&self) -> TicketAsn1 {
-        return TicketAsn1::new(self);
-    }
 
     pub fn build(&self) -> Vec<u8> {
-        return self.asn1_type().encode().unwrap();
+        return TicketAsn1::from(self).encode().unwrap();
     }
 
 }
@@ -71,17 +66,6 @@ pub(crate) struct TicketAsn1 {
 }
 
 impl TicketAsn1 {
-
-    fn new(ticket: &Ticket) -> TicketAsn1 {
-        let mut ticket_asn1 = Self::default();
-
-        ticket_asn1.set_tkt_vno(Integer::from(ticket.get_tkt_vno() as i64));
-        ticket_asn1.set_realm(ticket.get_realm().into());
-        ticket_asn1.set_sname(ticket.get_sname().into());
-        ticket_asn1.set_enc_part(ticket.get_enc_part().into());
-
-        return ticket_asn1;
-    }
 
     pub fn no_asn1_type(&self) -> Result<Ticket> {
         let tkt_vno = self.get_tkt_vno().ok_or_else(||
@@ -113,6 +97,19 @@ impl TicketAsn1 {
 
     }
 
+}
+
+impl From<&Ticket> for TicketAsn1 {
+    fn from(ticket: &Ticket) -> TicketAsn1 {
+        let mut ticket_asn1 = Self::default();
+
+        ticket_asn1.set_tkt_vno(Integer::from(ticket.get_tkt_vno() as i64));
+        ticket_asn1.set_realm(ticket.get_realm().into());
+        ticket_asn1.set_sname(ticket.get_sname().into());
+        ticket_asn1.set_enc_part(ticket.get_enc_part().into());
+
+        return ticket_asn1;
+    }
 }
 
 #[cfg(test)]

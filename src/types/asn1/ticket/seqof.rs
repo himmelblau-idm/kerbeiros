@@ -51,7 +51,7 @@ impl SeqOfTicketsAsn1 {
 
     fn set_asn1_values(&mut self, seq_of_tickets: &SeqOfTickets) {
         for ticket in seq_of_tickets.iter() {
-            self.subtype.push(ticket.asn1_type());
+            self.subtype.push(ticket.into());
         }
     }
 }
