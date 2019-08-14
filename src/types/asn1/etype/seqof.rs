@@ -28,10 +28,6 @@ impl SeqOfEtype {
         };
     }
 
-    pub(crate) fn asn1_type(&self) -> SeqOfEtypeAsn1 {
-        return SeqOfEtypeAsn1::new(self);
-    }
-
 }
 
 #[derive(Default, Debug, PartialEq)]
@@ -41,17 +37,19 @@ pub(crate) struct SeqOfEtypeAsn1 {
 
 impl SeqOfEtypeAsn1 {
 
-    fn new(seq_of_etype: &SeqOfEtype) -> SeqOfEtypeAsn1 {
-        let mut seq_etype_asn1 = Self::default();
-
-        seq_etype_asn1.set_asn1_values(seq_of_etype);
-        return seq_etype_asn1;
-    }
-
     fn set_asn1_values(&mut self, seq_of_etype: &SeqOfEtype) {
         for etype in seq_of_etype.iter() {
             self.subtype.push((*etype).into());
         }
+    }
+}
+
+impl From<&SeqOfEtype> for SeqOfEtypeAsn1 {
+    fn from(seq_of_etype: &SeqOfEtype) -> SeqOfEtypeAsn1 {
+        let mut seq_etype_asn1 = Self::default();
+
+        seq_etype_asn1.set_asn1_values(seq_of_etype);
+        return seq_etype_asn1;
     }
 }
 
@@ -110,6 +108,6 @@ mod test {
                         0x02, 0x01, 0x03,
                         0x02, 0x01, 0x01,
                         0x02, 0x02, 0xff, 0x79,],
-                        seq_etypes.asn1_type().encode().unwrap());
+                        SeqOfEtypeAsn1::from(&seq_etypes).encode().unwrap());
     }
 } 

@@ -205,7 +205,7 @@ impl KdcReqBodyAsn1 {
         }
 
         self.set_nonce(kdc_body.get_nonce().into());
-        self.set_etype(kdc_body.get_etypes().asn1_type());
+        self.set_etype(kdc_body.get_etypes().into());
 
         if let Some(addresses) = kdc_body.get_addresses() {
             self.set_addresses(addresses.into());
