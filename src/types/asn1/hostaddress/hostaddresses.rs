@@ -48,7 +48,7 @@ impl HostAddressesAsn1 {
         let mut seq_of_host_addresses: SequenceOf<HostAddressAsn1> = SequenceOf::default();
 
         for host_address in host_addresses.addresses.iter() {
-            seq_of_host_addresses.push(host_address.asn1_type());
+            seq_of_host_addresses.push(host_address.into());
         }
 
         return seq_of_host_addresses;

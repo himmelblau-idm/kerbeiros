@@ -56,10 +56,6 @@ impl HostAddress {
         }
     }
 
-    pub(crate) fn asn1_type(&self) -> HostAddressAsn1 {
-        return HostAddressAsn1::new(self);
-    }
-
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
@@ -71,15 +67,6 @@ pub(crate) struct HostAddressAsn1 {
 }
 
 impl HostAddressAsn1 {
-
-    fn new(host_address: &HostAddress) -> HostAddressAsn1 {
-        let mut host_address_asn1 = Self::default();
-
-        host_address_asn1.set_addr_type(host_address.get_addr_type().into());
-        host_address_asn1.set_address(host_address.get_address().into());
-    
-        return host_address_asn1;
-    }
 
     pub fn no_asn1_type(&self) -> Result<HostAddress> {
         let addr_type_asn1 = self.get_addr_type().ok_or_else(|| 
@@ -108,6 +95,17 @@ impl HostAddressAsn1 {
 
 }
 
+impl From<&HostAddress> for HostAddressAsn1 {
+    fn from(host_address: &HostAddress) -> HostAddressAsn1 {
+        let mut host_address_asn1 = Self::default();
+
+        host_address_asn1.set_addr_type(host_address.get_addr_type().into());
+        host_address_asn1.set_address(host_address.get_address().into());
+    
+        return host_address_asn1;
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -130,7 +128,7 @@ mod tests {
         assert_eq!(vec![0x30, 0x19, 0xa0, 0x03, 0x02, 0x01, 0x14, 
                         0xa1, 0x12, 0x04, 0x10, 0x48, 0x4f, 0x4c, 0x4c, 0x4f, 0x57, 
                         0x42, 0x41, 0x53, 0x54, 0x49, 0x4f, 0x4e, 0x20, 0x20, 0x20],
-                   netbios_address.asn1_type().encode().unwrap());
+                   HostAddressAsn1::from(&netbios_address).encode().unwrap());
     }
 
     #[test]

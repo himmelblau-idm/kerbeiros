@@ -157,10 +157,10 @@ impl From<&EncKrbCredPart> for EncKrbCredPartAsn1 {
             enc_krb_cred_part_asn1.set_usec(usec.into());
         }
         if let Some(s_address) = enc_krb_cred_part.get_s_address() {
-            enc_krb_cred_part_asn1.set_s_address(s_address.asn1_type());
+            enc_krb_cred_part_asn1.set_s_address(s_address.into());
         }
         if let Some(r_address) = enc_krb_cred_part.get_r_address() {
-            enc_krb_cred_part_asn1.set_r_address(r_address.asn1_type());
+            enc_krb_cred_part_asn1.set_r_address(r_address.into());
         }
 
         return enc_krb_cred_part_asn1;
