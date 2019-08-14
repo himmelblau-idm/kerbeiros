@@ -63,7 +63,7 @@ impl From<&KrbCred> for KrbCredAsn1 {
 
         krb_cred_asn1.set_pvno(Integer::from(krb_cred.get_pvno() as i64));
         krb_cred_asn1.set_msg_type(Integer::from(krb_cred.get_msg_type() as i64));
-        krb_cred_asn1.set_tickets(krb_cred.get_tickets().asn1_type());
+        krb_cred_asn1.set_tickets(krb_cred.get_tickets().into());
         krb_cred_asn1.set_enc_part(krb_cred.get_enc_part().into());
 
         return krb_cred_asn1;

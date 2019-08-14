@@ -29,10 +29,6 @@ impl SeqOfTickets {
         return seq_of;
     }
 
-    pub(crate) fn asn1_type(&self) -> SeqOfTicketsAsn1 {
-        return SeqOfTicketsAsn1::new(self);
-    }
-
 }
 
 #[derive(Default, Debug, PartialEq)]
@@ -42,19 +38,23 @@ pub(crate) struct SeqOfTicketsAsn1 {
 
 impl SeqOfTicketsAsn1 {
 
-    fn new(seq_of_tickets: &SeqOfTickets) -> SeqOfTicketsAsn1 {
-        let mut seq_tickets_asn1 = Self::default();
-
-        seq_tickets_asn1.set_asn1_values(seq_of_tickets);
-        return seq_tickets_asn1;
-    }
-
     fn set_asn1_values(&mut self, seq_of_tickets: &SeqOfTickets) {
         for ticket in seq_of_tickets.iter() {
             self.subtype.push(ticket.into());
         }
     }
 }
+
+impl From<&SeqOfTickets> for SeqOfTicketsAsn1 {
+    fn from(seq_of_tickets: &SeqOfTickets) -> SeqOfTicketsAsn1 {
+        let mut seq_tickets_asn1 = Self::default();
+
+        seq_tickets_asn1.set_asn1_values(seq_of_tickets);
+        return seq_tickets_asn1;
+    }
+
+}
+
 
 impl Asn1Object for SeqOfTicketsAsn1 {
 
