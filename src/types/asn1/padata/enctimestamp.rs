@@ -64,7 +64,7 @@ impl PaEncTsEncAsn1 {
         pa_enc_ts_enc_asn1.set_patimestamp(pa_enc_ts_enc.patimestamp.clone().into());
 
         if let Some(pausec) = &pa_enc_ts_enc.pausec {
-            pa_enc_ts_enc_asn1.set_pausec(pausec.asn1_type());
+            pa_enc_ts_enc_asn1.set_pausec(pausec.into());
         }
 
         return pa_enc_ts_enc_asn1;

@@ -154,7 +154,7 @@ impl From<&EncKrbCredPart> for EncKrbCredPartAsn1 {
             enc_krb_cred_part_asn1.set_timestamp(timestamp.clone().into());
         }
         if let Some(usec) = enc_krb_cred_part.get_usec() {
-            enc_krb_cred_part_asn1.set_usec(usec.asn1_type());
+            enc_krb_cred_part_asn1.set_usec(usec.into());
         }
         if let Some(s_address) = enc_krb_cred_part.get_s_address() {
             enc_krb_cred_part_asn1.set_s_address(s_address.asn1_type());

@@ -34,9 +34,6 @@ impl Microseconds {
         return Ok(());
     }
 
-    pub(crate) fn asn1_type(&self) -> MicrosecondsAsn1 {
-        return MicrosecondsAsn1::new(self);
-    }
 }
 
 #[derive(Default, Debug, PartialEq)]
@@ -45,12 +42,6 @@ pub(crate) struct MicrosecondsAsn1 {
 }
 
 impl MicrosecondsAsn1 {
-    
-    fn new(value: &Microseconds) -> Self {
-        return Self{
-            subtype: Integer::from(value.get() as i64)
-        };
-    }
 
     pub fn no_asn1_type(&self) -> Result<Microseconds> {
         let value = self.subtype.value().ok_or_else(|| 
@@ -59,6 +50,14 @@ impl MicrosecondsAsn1 {
         return Microseconds::new(value as u32);
     }
 
+}
+
+impl From<&Microseconds> for MicrosecondsAsn1 {
+    fn from(value: &Microseconds) -> Self {
+        return Self{
+            subtype: Integer::from(value.get() as i64)
+        };
+    }
 }
 
 impl Asn1Object for MicrosecondsAsn1 {
@@ -136,7 +135,7 @@ mod test {
     #[test]
     fn test_encode_microseconds() {
         assert_eq!(vec![0x02, 0x03, 0x05, 0x34, 0x2f],
-            Microseconds::new(341039).unwrap().asn1_type().encode().unwrap()
+            MicrosecondsAsn1::from(&Microseconds::new(341039).unwrap()).encode().unwrap()
         );
     }
 
