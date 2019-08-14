@@ -1,6 +1,7 @@
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 
+/// Kerberos u32.
 pub type UInt32 = u32;
 
 
