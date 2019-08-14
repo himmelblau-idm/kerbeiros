@@ -32,6 +32,12 @@ impl From<KerberosTime> for KerberosTimeAsn1 {
     }
 }
 
+impl From<&KerberosTime> for KerberosTimeAsn1 {
+    fn from(date: &KerberosTime) -> Self {
+        return Self::from(date.clone());
+    }
+}
+
 
 impl Asn1Object for KerberosTimeAsn1 {
 

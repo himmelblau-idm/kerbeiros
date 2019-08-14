@@ -32,10 +32,6 @@ impl KerberosFlags {
         return self.flags;
     }
 
-    pub(crate) fn asn1_type(&self) -> KerberosFlagsAsn1 {
-        return KerberosFlagsAsn1::new(self.flags);
-    }
-
 }
 
 #[derive(Default, Debug, PartialEq)]
@@ -44,13 +40,6 @@ pub(crate) struct KerberosFlagsAsn1 {
 }
 
 impl KerberosFlagsAsn1 {
-    fn new(flags: u32) -> KerberosFlagsAsn1 {
-        let flags_bytes: Vec<u8> = flags.to_be_bytes().to_vec();
-
-        return KerberosFlagsAsn1{
-            subtype: BitSring::new(flags_bytes, 0)
-        };
-    }
 
     pub fn no_asn1_type(&self) -> Result<KerberosFlags> {
         let value = self.subtype.value().ok_or_else(|| 
@@ -76,8 +65,22 @@ impl KerberosFlagsAsn1 {
         return Ok(flags);
     }
 
-    
- 
+}
+
+impl From<u32> for KerberosFlagsAsn1 {
+    fn from(flags: u32) -> Self {
+        let flags_bytes: Vec<u8> = flags.to_be_bytes().to_vec();
+
+        return KerberosFlagsAsn1{
+            subtype: BitSring::new(flags_bytes, 0)
+        };
+    }
+}
+
+impl From<&KerberosFlags> for KerberosFlagsAsn1 {
+    fn from(flags: &KerberosFlags) -> Self {
+        return Self::from(flags.get_flags());
+    }
 }
 
 impl Asn1Object for KerberosFlagsAsn1 {
@@ -113,16 +116,16 @@ mod tests {
 
     #[test]
     fn test_convert_flags_to_bit_string() {
-        let kdc_flags = KerberosFlagsAsn1::new(0x40000000);
+        let kdc_flags = KerberosFlagsAsn1::from(0x40000000);
         assert_eq!(vec![BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x40,0x0,0x0,0x0], kdc_flags.encode().unwrap());
 
-        let kdc_flags = KerberosFlagsAsn1::new(0x01);
+        let kdc_flags = KerberosFlagsAsn1::from(0x01);
         assert_eq!(vec![BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0,0x0,0x0,0x1], kdc_flags.encode().unwrap()); 
 
-        let kdc_flags = KerberosFlagsAsn1::new(0x0000800002);
+        let kdc_flags = KerberosFlagsAsn1::from(0x0000800002);
         assert_eq!(vec![BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0, 0x80,0x0,0x2], kdc_flags.encode().unwrap()); 
 
-        let kdc_flags = KerberosFlagsAsn1::new(0x0028144812);
+        let kdc_flags = KerberosFlagsAsn1::from(0x0028144812);
         assert_eq!(vec![BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x28,0x14,0x48,0x12], kdc_flags.encode().unwrap()); 
     }
 

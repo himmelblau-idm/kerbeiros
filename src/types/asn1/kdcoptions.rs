@@ -60,7 +60,7 @@ mod tests {
         let mut kdc_options = KdcOptions::default();
         kdc_options.set_flags(FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK);
         assert_eq!(vec![0x03, 0x05, 0x0, 0x40, 0x81, 0x00, 0x10],
-        kdc_options.asn1_type().encode().unwrap())
+        KdcOptionsAsn1::from(&kdc_options).encode().unwrap())
     }
 
 }

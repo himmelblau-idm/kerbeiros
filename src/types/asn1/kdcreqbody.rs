@@ -192,7 +192,7 @@ impl KdcReqBodyAsn1 {
     }
 
     fn set_asn1_values(&mut self, kdc_body: &KdcReqBody) {
-        self.set_kdc_options(kdc_body.get_kdc_options().asn1_type());
+        self.set_kdc_options(kdc_body.get_kdc_options().into());
 
         if let Some(cname) = kdc_body.get_cname() {
             self.set_cname(cname.into());
@@ -205,13 +205,13 @@ impl KdcReqBodyAsn1 {
         }
         
         if let Some(from) = kdc_body.get_from() {
-            self.set_from(from.clone().into());
+            self.set_from(from.into());
         }
         
-        self.set_till(kdc_body.get_till().clone().into());
+        self.set_till(kdc_body.get_till().into());
 
         if let Some(rtime) = kdc_body.get_rtime() {
-            self.set_rtime(rtime.clone().into());
+            self.set_rtime(rtime.into());
         }
 
         self.set_nonce(kdc_body.get_nonce().into());

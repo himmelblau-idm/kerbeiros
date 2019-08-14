@@ -42,44 +42,88 @@ impl KrbCredInfo {
         };
     }
 
-    pub fn set_prealm(&mut self, prealm: Realm) {
-        self.prealm = Some(prealm);
-    }
-
-    pub fn set_pname(&mut self, pname: PrincipalName) {
-        self.pname = Some(pname);
-    }
-
-    pub fn set_flags(&mut self, flags: TicketFlags) {
-        self.flags = Some(flags);
+    pub fn get_authtime(&self) -> &Option<KerberosTime> {
+        return &self.authtime;
     }
 
     pub fn set_authtime(&mut self, authtime: KerberosTime) {
         self.authtime = Some(authtime);
     }
 
-    pub fn set_starttime(&mut self, starttime: KerberosTime) {
-        self.starttime = Some(starttime);
+    pub fn get_caddr(&self) -> &Option<HostAddresses> {
+        return &self.caddr;
+    }
+
+    pub fn set_caddr(&mut self, caddr: HostAddresses) {
+        self.caddr = Some(caddr);
+    }
+
+    pub fn get_endtime(&self) -> &Option<KerberosTime> {
+        return &self.endtime;
     }
 
     pub fn set_endtime(&mut self, endtime: KerberosTime) {
         self.endtime = Some(endtime);
     }
 
+    pub fn get_flags(&self) -> &Option<TicketFlags> {
+        return &self.flags;
+    }
+
+    pub fn set_flags(&mut self, flags: TicketFlags) {
+        self.flags = Some(flags);
+    }
+
+    pub fn get_key(&self) -> &EncryptionKey {
+        return &self.key;
+    }
+
+    pub fn get_prealm(&self) -> &Option<Realm> {
+        return &self.prealm;
+    }
+
+    pub fn set_prealm(&mut self, prealm: Realm) {
+        self.prealm = Some(prealm);
+    }
+
+    pub fn get_pname(&self) -> &Option<PrincipalName> {
+        return &self.pname;
+    }
+
+    pub fn set_pname(&mut self, pname: PrincipalName) {
+        self.pname = Some(pname);
+    }
+
+    pub fn get_renew_till(&self) -> &Option<KerberosTime> {
+        return &self.renew_till;
+    }
+
     pub fn set_renew_till(&mut self, renew_till: KerberosTime) {
         self.renew_till = Some(renew_till);
     }
 
-    pub fn set_srealm(&mut self, srealm: Realm) {
-        self.srealm = Some(srealm);
+    pub fn get_sname(&self) -> &Option<PrincipalName> {
+        return &self.sname;
     }
 
     pub fn set_sname(&mut self, sname: PrincipalName) {
         self.sname = Some(sname);
     }
 
-    pub fn set_caddr(&mut self, caddr: HostAddresses) {
-        self.caddr = Some(caddr);
+    pub fn get_srealm(&self) -> &Option<Realm> {
+        return &self.srealm;
+    }
+
+    pub fn set_srealm(&mut self, srealm: Realm) {
+        self.srealm = Some(srealm);
+    }
+
+    pub fn get_starttime(&self) -> &Option<KerberosTime> {
+        return &self.starttime;
+    }
+
+    pub fn set_starttime(&mut self, starttime: KerberosTime) {
+        self.starttime = Some(starttime);
     }
 
     pub(crate) fn asn1_type(&self) -> KrbCredInfoAsn1 {
@@ -130,43 +174,43 @@ impl KrbCredInfoAsn1 {
     fn new(krb_cred_info: &KrbCredInfo) -> Self {
         let mut krb_cred_info_asn1 = Self::default();
 
-        krb_cred_info_asn1.set_key(krb_cred_info.key.asn1_type());
+        krb_cred_info_asn1.set_key(krb_cred_info.get_key().asn1_type());
 
-        if let Some(prealm) = &krb_cred_info.prealm {
+        if let Some(prealm) = krb_cred_info.get_prealm() {
             krb_cred_info_asn1.set_prealm(prealm.into());
         }
 
-        if let Some(pname) = &krb_cred_info.pname {
+        if let Some(pname) = krb_cred_info.get_pname() {
             krb_cred_info_asn1.set_pname(pname.into());
         }
 
-        if let Some(flags) = &krb_cred_info.flags {
-            krb_cred_info_asn1.set_flags(flags.asn1_type());
+        if let Some(flags) = krb_cred_info.get_flags() {
+            krb_cred_info_asn1.set_flags(flags.into());
         }
         
-        if let Some(authtime) = &krb_cred_info.authtime {
-            krb_cred_info_asn1.set_authtime(authtime.clone().into());
+        if let Some(authtime) = krb_cred_info.get_authtime() {
+            krb_cred_info_asn1.set_authtime(authtime.into());
         }
 
-        if let Some(starttime) = &krb_cred_info.starttime {
-            krb_cred_info_asn1.set_starttime(starttime.clone().into());
+        if let Some(starttime) = krb_cred_info.get_starttime() {
+            krb_cred_info_asn1.set_starttime(starttime.into());
         }
 
-        if let Some(endtime) = &krb_cred_info.endtime {
-            krb_cred_info_asn1.set_endtime(endtime.clone().into());
+        if let Some(endtime) = krb_cred_info.get_endtime() {
+            krb_cred_info_asn1.set_endtime(endtime.into());
         }
         
-        if let Some(renew_till) = &krb_cred_info.renew_till {
-            krb_cred_info_asn1.set_renew_till(renew_till.clone().into());
+        if let Some(renew_till) = krb_cred_info.get_renew_till() {
+            krb_cred_info_asn1.set_renew_till(renew_till.into());
         }
 
-        if let Some(srealm) = &krb_cred_info.srealm {
+        if let Some(srealm) = krb_cred_info.get_srealm() {
             krb_cred_info_asn1.set_srealm(srealm.into());
         }
-        if let Some(sname) = &krb_cred_info.sname {
+        if let Some(sname) = krb_cred_info.get_sname() {
             krb_cred_info_asn1.set_sname(sname.into());
         }
-        if let Some(caddr) = &krb_cred_info.caddr {
+        if let Some(caddr) = krb_cred_info.get_caddr() {
             krb_cred_info_asn1.set_caddr(caddr.asn1_type());
         }
 
