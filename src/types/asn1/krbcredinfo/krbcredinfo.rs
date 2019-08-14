@@ -174,7 +174,7 @@ impl KrbCredInfoAsn1 {
     fn new(krb_cred_info: &KrbCredInfo) -> Self {
         let mut krb_cred_info_asn1 = Self::default();
 
-        krb_cred_info_asn1.set_key(krb_cred_info.get_key().asn1_type());
+        krb_cred_info_asn1.set_key(krb_cred_info.get_key().into());
 
         if let Some(prealm) = krb_cred_info.get_prealm() {
             krb_cred_info_asn1.set_prealm(prealm.into());

@@ -25,10 +25,6 @@ impl EncryptionKey {
         return &self.keyvalue;
     }
 
-    pub(crate) fn asn1_type(&self) -> EncryptionKeyAsn1 {
-        return EncryptionKeyAsn1::new(self);
-    }
-
 }
 
 
@@ -42,13 +38,6 @@ pub(crate) struct EncryptionKeyAsn1 {
 
 
 impl EncryptionKeyAsn1 {
-
-    fn new(encryption_key: &EncryptionKey) -> Self {
-        let mut  encryption_key_asn1 = Self::default();
-        encryption_key_asn1.set_keytype(encryption_key.get_keytype().into());
-        encryption_key_asn1.set_keyvalue(encryption_key.get_keyvalue().clone().into());
-        return encryption_key_asn1;
-    }
 
     pub fn no_asn1_type(&self) -> Result<EncryptionKey> {
         let keytype = self.get_keytype().ok_or_else(|| 
@@ -69,6 +58,15 @@ impl EncryptionKeyAsn1 {
         return Ok(encryption_key);
     }
 
+}
+
+impl From<&EncryptionKey> for EncryptionKeyAsn1 {
+    fn from(encryption_key: &EncryptionKey) -> Self {
+        let mut  encryption_key_asn1 = Self::default();
+        encryption_key_asn1.set_keytype(encryption_key.get_keytype().into());
+        encryption_key_asn1.set_keyvalue(encryption_key.get_keyvalue().clone().into());
+        return encryption_key_asn1;
+    }
 }
 
 
