@@ -10,7 +10,7 @@ use super::edata::Edata;
 use crate::constants::error_codes::*;
 use super::super::padata::*;
 
-
+/// (*KRB-ERROR*) Message used to indicate an error.
 #[derive(Debug, Clone, PartialEq)]
 pub struct KrbError {
     pvno: i8,
