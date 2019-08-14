@@ -9,6 +9,8 @@ pub use super::super::hostaddress::*;
 #[cfg(test)]
 use crate::error::{ErrorKind, Result};
 
+
+/// (*KrbCredInfo*) Gives information about user and client for a [EncKrbCredPart](./struct.EncKrbCredPart.html).
 #[derive(Debug, PartialEq, Clone)]
 pub struct KrbCredInfo {
     key: EncryptionKey,

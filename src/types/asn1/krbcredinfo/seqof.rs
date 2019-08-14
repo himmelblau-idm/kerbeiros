@@ -5,6 +5,7 @@ use super::krbcredinfo::*;
 #[cfg(test)]
 use crate::error::Result;
 
+/// (*SEQUENCE OF KrbCredInfo*) Array of [KrbCredInfo](./struct.KrbCredInfo.html).
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct SeqOfKrbCredInfo {
     entries: Vec<KrbCredInfo>
