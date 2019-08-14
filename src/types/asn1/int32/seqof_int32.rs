@@ -2,7 +2,7 @@ use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 use super::super::int32::*;
 
-/// Array of [Etype](./type.Etype.html).
+/// (*SEQUENCE OF Int32*)Array of [Int32](./type.Int32.html).
 #[derive(Debug, PartialEq, Clone)]
 pub struct SeqOfInt32 {
     etypes: Vec<Int32>
