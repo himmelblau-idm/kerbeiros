@@ -126,10 +126,6 @@ impl KrbCredInfo {
         self.starttime = Some(starttime);
     }
 
-    pub(crate) fn asn1_type(&self) -> KrbCredInfoAsn1 {
-        return KrbCredInfoAsn1::new(self);
-    }
-
 }
 
 
@@ -170,52 +166,6 @@ pub(crate) struct KrbCredInfoAsn1 {
 }
 
 impl KrbCredInfoAsn1 {
-
-    fn new(krb_cred_info: &KrbCredInfo) -> Self {
-        let mut krb_cred_info_asn1 = Self::default();
-
-        krb_cred_info_asn1.set_key(krb_cred_info.get_key().into());
-
-        if let Some(prealm) = krb_cred_info.get_prealm() {
-            krb_cred_info_asn1.set_prealm(prealm.into());
-        }
-
-        if let Some(pname) = krb_cred_info.get_pname() {
-            krb_cred_info_asn1.set_pname(pname.into());
-        }
-
-        if let Some(flags) = krb_cred_info.get_flags() {
-            krb_cred_info_asn1.set_flags(flags.into());
-        }
-        
-        if let Some(authtime) = krb_cred_info.get_authtime() {
-            krb_cred_info_asn1.set_authtime(authtime.into());
-        }
-
-        if let Some(starttime) = krb_cred_info.get_starttime() {
-            krb_cred_info_asn1.set_starttime(starttime.into());
-        }
-
-        if let Some(endtime) = krb_cred_info.get_endtime() {
-            krb_cred_info_asn1.set_endtime(endtime.into());
-        }
-        
-        if let Some(renew_till) = krb_cred_info.get_renew_till() {
-            krb_cred_info_asn1.set_renew_till(renew_till.into());
-        }
-
-        if let Some(srealm) = krb_cred_info.get_srealm() {
-            krb_cred_info_asn1.set_srealm(srealm.into());
-        }
-        if let Some(sname) = krb_cred_info.get_sname() {
-            krb_cred_info_asn1.set_sname(sname.into());
-        }
-        if let Some(caddr) = krb_cred_info.get_caddr() {
-            krb_cred_info_asn1.set_caddr(caddr.asn1_type());
-        }
-
-        return krb_cred_info_asn1;
-    }
 
     #[cfg(test)]
     pub fn no_asn1_type(&self) -> Result<KrbCredInfo> {
@@ -271,6 +221,54 @@ impl KrbCredInfoAsn1 {
 
     }
 
+}
+
+impl From<&KrbCredInfo> for KrbCredInfoAsn1 {
+    fn from(krb_cred_info: &KrbCredInfo) -> Self {
+        let mut krb_cred_info_asn1 = Self::default();
+
+        krb_cred_info_asn1.set_key(krb_cred_info.get_key().into());
+
+        if let Some(prealm) = krb_cred_info.get_prealm() {
+            krb_cred_info_asn1.set_prealm(prealm.into());
+        }
+
+        if let Some(pname) = krb_cred_info.get_pname() {
+            krb_cred_info_asn1.set_pname(pname.into());
+        }
+
+        if let Some(flags) = krb_cred_info.get_flags() {
+            krb_cred_info_asn1.set_flags(flags.into());
+        }
+        
+        if let Some(authtime) = krb_cred_info.get_authtime() {
+            krb_cred_info_asn1.set_authtime(authtime.into());
+        }
+
+        if let Some(starttime) = krb_cred_info.get_starttime() {
+            krb_cred_info_asn1.set_starttime(starttime.into());
+        }
+
+        if let Some(endtime) = krb_cred_info.get_endtime() {
+            krb_cred_info_asn1.set_endtime(endtime.into());
+        }
+        
+        if let Some(renew_till) = krb_cred_info.get_renew_till() {
+            krb_cred_info_asn1.set_renew_till(renew_till.into());
+        }
+
+        if let Some(srealm) = krb_cred_info.get_srealm() {
+            krb_cred_info_asn1.set_srealm(srealm.into());
+        }
+        if let Some(sname) = krb_cred_info.get_sname() {
+            krb_cred_info_asn1.set_sname(sname.into());
+        }
+        if let Some(caddr) = krb_cred_info.get_caddr() {
+            krb_cred_info_asn1.set_caddr(caddr.asn1_type());
+        }
+
+        return krb_cred_info_asn1;
+    }
 }
 
 #[cfg(test)]
@@ -368,7 +366,7 @@ mod test {
         krb_cred_info.set_srealm(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
         krb_cred_info.set_sname(sname);
 
-        assert_eq!(raw, krb_cred_info.asn1_type().encode().unwrap());
+        assert_eq!(raw, KrbCredInfoAsn1::from(&krb_cred_info).encode().unwrap());
 
     }
 

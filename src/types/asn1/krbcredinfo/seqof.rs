@@ -43,7 +43,7 @@ impl SeqOfKrbCredInfoAsn1 {
 
     fn set_asn1_values(&mut self, seq_of_krb_cred_info: &SeqOfKrbCredInfo) {
         for krb_cred_info in seq_of_krb_cred_info.iter() {
-            self.subtype.push(krb_cred_info.asn1_type());
+            self.subtype.push(krb_cred_info.into());
         }
     }
 
