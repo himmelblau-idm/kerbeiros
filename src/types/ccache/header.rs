@@ -1,5 +1,6 @@
 pub use super::deltatime::*;
 
+/// Header of [CCache](./struct.CCache.html).
 #[derive(Debug, PartialEq, Clone)]
 pub enum Header {
     DeltaTime(DeltaTime)

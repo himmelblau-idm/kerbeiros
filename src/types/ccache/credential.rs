@@ -5,6 +5,7 @@ pub use super::address::*;
 pub use super::authdata::*;
 pub use super::countedoctetstring::*;
 
+/// Represents a credential stored in ccache.
 #[derive(Debug, PartialEq, Clone)]
 pub struct CredentialEntry {
     client: Principal,

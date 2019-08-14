@@ -1,5 +1,6 @@
 use super::countedoctetstring::*;
 
+/// Name of some Kerberos entity.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Principal {
     name_type: u32,

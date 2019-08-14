@@ -1,6 +1,7 @@
 use super::header::*;
 use super::credential::*;
 
+/// To store an array of credentials.
 #[derive(Debug, PartialEq, Clone)]
 pub struct CCache {
     file_format_version: u16,

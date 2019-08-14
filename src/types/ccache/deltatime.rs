@@ -1,4 +1,6 @@
 
+
+/// Type of [Header](./struct.Header.html).
 #[derive(Debug, PartialEq, Clone)]
 pub struct DeltaTime {
     time_offset: u32,

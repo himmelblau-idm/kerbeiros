@@ -1,4 +1,5 @@
 
+/// Represents the session key.
 #[derive(Debug, PartialEq, Clone)]
 pub struct KeyBlock {
     keytype: u16,

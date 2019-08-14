@@ -1,5 +1,6 @@
 use super::countedoctetstring::*;
 
+/// Represent addresses of Kerberos actors.
 #[derive(Debug, PartialEq, Clone)]
 pub struct Address {
     addrtype: u16,

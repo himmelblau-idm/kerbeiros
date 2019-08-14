@@ -1,3 +1,5 @@
+
+/// Holds the differents timestamps handled by Kerberos.
 #[derive(Debug, PartialEq, Clone)]
 pub struct Times {
     authtime: u32,

@@ -1,6 +1,7 @@
 use std::convert::From;
 use crate::types::KerberosString;
 
+/// String used by ccache.
 #[derive(Debug, PartialEq, Clone, Default)]
 pub struct CountedOctetString {
     data: Vec<u8>
