@@ -1,5 +1,5 @@
 use red_asn1::*;
-use super::pacrequest::PacRequest;
+use super::pacrequest::*;
 use super::etypeinfo2::*;
 use super::super::int32::*;
 use crate::error::{ErrorKind, Result};
@@ -29,7 +29,7 @@ impl PaData {
     pub fn get_padata_value_as_bytes(&self) -> Vec<u8> {
         match self {
             PaData::Raw(_, padata_value) => padata_value.clone(),
-            PaData::PacRequest(pac_request) => pac_request.asn1_type().encode().unwrap(),
+            PaData::PacRequest(pac_request) => PacRequestAsn1::from(pac_request).encode().unwrap(),
             PaData::EtypeInfo2(etype_info2) => etype_info2.asn1_type().encode().unwrap(),
             PaData::EncTimestamp(enc_data) => EncryptedDataAsn1::from(enc_data).encode().unwrap(),
         }

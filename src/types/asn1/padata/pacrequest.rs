@@ -14,10 +14,6 @@ impl PacRequest {
         };
     }
 
-    pub(crate) fn asn1_type(&self) -> PacRequestAsn1 {
-        return PacRequestAsn1::new(&self);
-    }
-
     pub fn parse(raw: &[u8]) -> Result<Self> {
         let mut pac_request_asn1 = PacRequestAsn1::default();
         pac_request_asn1.decode(raw)?;
@@ -35,14 +31,6 @@ pub(crate) struct PacRequestAsn1 {
 }
 
 impl PacRequestAsn1 {
-
-    fn new(pac_request: &PacRequest) -> PacRequestAsn1 {
-        let mut pac_request_asn1 = Self::default();
-        
-        pac_request_asn1.set_include_pac(Boolean::from(pac_request.include_pac));
-
-        return pac_request_asn1;
-    }
 
     fn default() -> Self {
         return Self{
@@ -63,6 +51,16 @@ impl PacRequestAsn1 {
 
 }
 
+impl From<&PacRequest> for PacRequestAsn1 {
+    fn from(pac_request: &PacRequest) -> Self {
+        let mut pac_request_asn1 = Self::default();
+        
+        pac_request_asn1.set_include_pac(Boolean::from(pac_request.include_pac));
+
+        return pac_request_asn1;
+    }
+}
+
 
 #[cfg(test)]
 mod test{
@@ -71,13 +69,13 @@ mod test{
     #[test]
     fn test_encode_pac_request_true() {
         assert_eq!(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff],
-        PacRequest::new(true).asn1_type().encode().unwrap());
+        PacRequestAsn1::from(&PacRequest::new(true)).encode().unwrap());
     }
 
     #[test]
     fn test_encode_pac_request_false() {
         assert_eq!(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0x00],
-        PacRequest::new(false).asn1_type().encode().unwrap());
+        PacRequestAsn1::from(&PacRequest::new(false)).encode().unwrap());
     }
 
 
