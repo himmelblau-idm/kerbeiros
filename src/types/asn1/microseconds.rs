@@ -12,19 +12,16 @@ pub struct Microseconds{
 
 impl Microseconds {
     pub fn new(x: u32) -> Result<Self> {
-        if x > MAX_MICROSECONDS {
-            return Err(ErrorKind::InvalidMicroseconds(x))?;
-        }
-        return Ok(Self{
-            value: x
-        });
+        let mut microseconds = Self {value: 0};
+        microseconds.set(x)?;
+
+        return Ok(microseconds);
     }
 
     pub fn get(&self) -> u32 {
         return self.value;
     }
 
-    #[cfg(test)]
     fn set(&mut self, x: u32) -> Result<()> {
         if x > MAX_MICROSECONDS {
             return Err(ErrorKind::InvalidMicroseconds(x))?;
