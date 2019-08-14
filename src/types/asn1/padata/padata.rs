@@ -35,10 +35,6 @@ impl PaData {
         }
     }
 
-    pub(crate) fn asn1_type(&self) -> PaDataAsn1 {
-        return PaDataAsn1::new(self);
-    }
-
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
@@ -50,12 +46,6 @@ pub(crate) struct PaDataAsn1 {
 }
 
 impl PaDataAsn1 {
-
-    fn new(pa_data: &PaData) -> PaDataAsn1 {
-        let mut pa_data_asn1 = Self::default();
-        pa_data_asn1.set_asn1_values(pa_data);
-        return pa_data_asn1;
-    }
 
     fn set_asn1_values(&mut self, pa_data: &PaData) {
         self.set_padata_type(pa_data.get_padata_type().into());
@@ -106,6 +96,13 @@ impl PaDataAsn1 {
 
 }
 
+impl From<&PaData> for PaDataAsn1 {
+    fn from(pa_data: &PaData) -> PaDataAsn1 {
+        let mut pa_data_asn1 = Self::default();
+        pa_data_asn1.set_asn1_values(pa_data);
+        return pa_data_asn1;
+    }
+}
 
 #[cfg(test)]
 mod test {
@@ -127,12 +124,12 @@ mod test {
         assert_eq!(vec![0x30, 0x11, 
                         0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
                         0xa2, 0x09, 0x04, 0x07, 0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff],
-                        PaData::PacRequest(PacRequest::new(true)).asn1_type().encode().unwrap()
+                        PaDataAsn1::from(&PaData::PacRequest(PacRequest::new(true))).encode().unwrap()
         );
         assert_eq!(vec![0x30, 0x11, 
                         0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
                         0xa2, 0x09, 0x04, 0x07, 0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0x00],
-                        PaData::PacRequest(PacRequest::new(false)).asn1_type().encode().unwrap()
+                        PaDataAsn1::from(&PaData::PacRequest(PacRequest::new(false))).encode().unwrap()
         );
     }
 
