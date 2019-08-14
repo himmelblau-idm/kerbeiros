@@ -7,12 +7,12 @@ impl PrincipalMapper {
     pub fn realm_and_principal_name_to_principal(realm: &Realm, principal_name: &PrincipalName) -> Principal {
         let mut components = Vec::new();
 
-        for name in principal_name.get_name_string().iter() {
+        for name in principal_name.name_string().iter() {
             components.push(CountedOctetString::from(name));
         }
 
         return Principal::new(
-            principal_name.get_name_type() as u32, 
+            principal_name.name_type() as u32, 
             CountedOctetString::from(realm),
             components
         )

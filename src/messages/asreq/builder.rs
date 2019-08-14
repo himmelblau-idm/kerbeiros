@@ -33,8 +33,8 @@ impl<'a> AsReqBuilder<'a> {
     }
 
     fn create_as_req_struct(&self) -> Result<asn1::AsReq> {
-        let mut as_req = asn1::AsReq::new(self.options.get_realm().clone(), self.username.clone());
-        as_req.set_kdc_options(self.options.get_kdc_options());
+        let mut as_req = asn1::AsReq::new(self.options.realm().clone(), self.username.clone());
+        as_req.set_kdc_options(self.options.kdc_options());
 
         if self.options.should_be_pac_included() {
             as_req.include_pac();
@@ -45,7 +45,7 @@ impl<'a> AsReqBuilder<'a> {
             as_req.set_encrypted_timestamp(etype, encrypted_data);
             as_req.push_etype(etype);
         } else {
-            for etype in self.options.get_sorted_etypes().iter() {
+            for etype in self.options.sorted_etypes().iter() {
                 as_req.push_etype(*etype);
             }
         }
@@ -56,10 +56,10 @@ impl<'a> AsReqBuilder<'a> {
 
     fn produce_encrypted_timestamp(&self, user_key: &Key) -> Result<(i32, Vec<u8>)>{
         return AsReqTimestampCrypter::build_encrypted_timestamp(
-            self.options.get_realm(),
+            self.options.realm(),
             &self.username,
             user_key,
-            &self.options.get_sorted_etypes()
+            &self.options.sorted_etypes()
         );
     }
 
@@ -73,7 +73,7 @@ mod test {
     #[test]
     fn as_req_with_supported_rc4_and_aes_by_default() {
         let as_req_struct = create_as_req_struct_with_key(None);
-        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC], **as_req_struct.get_etypes());
+        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC], **as_req_struct.etypes());
     }
 
     #[test]
@@ -85,7 +85,7 @@ mod test {
 
         let as_req_struct = create_as_req_struct_with_key(Some(&Key::NTLM(key)));
 
-        assert_eq!(vec![RC4_HMAC], **as_req_struct.get_etypes());
+        assert_eq!(vec![RC4_HMAC], **as_req_struct.etypes());
     }
 
 
@@ -98,7 +98,7 @@ mod test {
 
         let as_req_struct = create_as_req_struct_with_key(Some(&Key::AES128Key(key)));
 
-        assert_eq!(vec![AES128_CTS_HMAC_SHA1_96], **as_req_struct.get_etypes());
+        assert_eq!(vec![AES128_CTS_HMAC_SHA1_96], **as_req_struct.etypes());
 
     }
 
@@ -114,7 +114,7 @@ mod test {
 
         let as_req_struct = create_as_req_struct_with_key(Some(&Key::AES256Key(key)));
 
-        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96], **as_req_struct.get_etypes());
+        assert_eq!(vec![AES256_CTS_HMAC_SHA1_96], **as_req_struct.etypes());
 
     }
 

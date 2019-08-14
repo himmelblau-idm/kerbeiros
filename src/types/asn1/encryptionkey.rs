@@ -18,11 +18,11 @@ impl EncryptionKey {
         };
     }
 
-    pub fn get_keytype(&self) -> Int32 {
+    pub fn keytype(&self) -> Int32 {
         return self.keytype;
     }
 
-    pub fn get_keyvalue(&self) -> &Vec<u8> {
+    pub fn keyvalue(&self) -> &Vec<u8> {
         return &self.keyvalue;
     }
 
@@ -64,8 +64,8 @@ impl EncryptionKeyAsn1 {
 impl From<&EncryptionKey> for EncryptionKeyAsn1 {
     fn from(encryption_key: &EncryptionKey) -> Self {
         let mut  encryption_key_asn1 = Self::default();
-        encryption_key_asn1.set_keytype(encryption_key.get_keytype().into());
-        encryption_key_asn1.set_keyvalue(encryption_key.get_keyvalue().clone().into());
+        encryption_key_asn1.set_keytype(encryption_key.keytype().into());
+        encryption_key_asn1.set_keyvalue(encryption_key.keyvalue().clone().into());
         return encryption_key_asn1;
     }
 }

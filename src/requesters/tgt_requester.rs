@@ -28,8 +28,8 @@ impl TgtRequester {
         return TGTRequest::request(username, user_key, &self.as_requester);
     }
 
-    pub fn get_etypes(&self) -> &HashSet<i32> {
-        return self.as_requester.get_etypes();
+    pub fn etypes(&self) -> &HashSet<i32> {
+        return self.as_requester.etypes();
     }
 
     pub fn set_etype(&mut self, etype: i32) -> Result<()> {
@@ -40,12 +40,12 @@ impl TgtRequester {
         return self.as_requester.set_etypes(etypes);
     }
 
-    pub fn get_kdc_options(&self) -> u32 {
-        return self.as_requester.get_kdc_options();
+    pub fn kdc_options(&self) -> u32 {
+        return self.as_requester.kdc_options();
     }
 
-    pub fn get_realm(&self) -> &AsciiString {
-        return self.as_requester.get_realm();
+    pub fn realm(&self) -> &AsciiString {
+        return self.as_requester.realm();
     }
 
     pub fn set_transport_protocol(&mut self, transport_protocol: TransportProtocol) {

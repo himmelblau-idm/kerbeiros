@@ -51,11 +51,11 @@ impl KdcReqBody {
         };
     }
 
-    pub fn get_additional_tickets(&self) -> &Option<SeqOfTickets> {
+    pub fn additional_tickets(&self) -> &Option<SeqOfTickets> {
         return &self.additional_tickets;
     }
 
-    pub fn get_addresses(&self) -> &Option<HostAddresses> {
+    pub fn addresses(&self) -> &Option<HostAddresses> {
         return &self.addresses;
     }
 
@@ -64,7 +64,7 @@ impl KdcReqBody {
         self.addresses = Some(HostAddresses::new(address));
     }
 
-    pub fn get_cname(&self) -> &Option<PrincipalName> {
+    pub fn cname(&self) -> &Option<PrincipalName> {
         return &self.cname;
     }
 
@@ -72,7 +72,7 @@ impl KdcReqBody {
         self.cname = Some(PrincipalName::new(name_type, name_string));
     }
 
-    pub fn get_enc_authorization_data(&self) -> &Option<EncryptedData> {
+    pub fn enc_authorization_data(&self) -> &Option<EncryptedData> {
         return &self.enc_authorization_data;
     }
 
@@ -80,11 +80,11 @@ impl KdcReqBody {
         self.etypes.push(etype);
     }
 
-    pub fn get_etypes(&self) -> &SeqOfInt32 {
+    pub fn etypes(&self) -> &SeqOfInt32 {
         return &self.etypes;
     }
 
-    pub fn get_from(&self) -> &Option<KerberosTime> {
+    pub fn from(&self) -> &Option<KerberosTime> {
         return &self.from;
     }
 
@@ -92,11 +92,11 @@ impl KdcReqBody {
         self.kdc_options.set_flags(options);
     }
 
-    pub fn get_kdc_options(&self) -> &KdcOptions {
+    pub fn kdc_options(&self) -> &KdcOptions {
         return &self.kdc_options;
     }
 
-    pub fn get_nonce(&self) -> UInt32 {
+    pub fn nonce(&self) -> UInt32 {
         return self.nonce;
     }
 
@@ -105,11 +105,11 @@ impl KdcReqBody {
         self.nonce = nonce;
     }
 
-    pub fn get_realm(&self) -> &Realm {
+    pub fn realm(&self) -> &Realm {
         return &self.realm;
     }
 
-    pub fn get_rtime(&self) -> &Option<KerberosTime> {
+    pub fn rtime(&self) -> &Option<KerberosTime> {
         return &self.rtime;
     }
 
@@ -117,7 +117,7 @@ impl KdcReqBody {
         self.rtime = Some(rtime);
     }
 
-    pub fn get_sname(&self) -> &Option<PrincipalName> {
+    pub fn sname(&self) -> &Option<PrincipalName> {
         return &self.sname;
     }
 
@@ -138,7 +138,7 @@ impl KdcReqBody {
         unreachable!()
     }
 
-    pub fn get_till(&self) -> &KerberosTime {
+    pub fn till(&self) -> &KerberosTime {
         return &self.till;
     }
 
@@ -184,39 +184,39 @@ pub(crate) struct KdcReqBodyAsn1 {
 impl KdcReqBodyAsn1 {
 
     fn set_asn1_values(&mut self, kdc_body: &KdcReqBody) {
-        self.set_kdc_options(kdc_body.get_kdc_options().into());
+        self.set_kdc_options(kdc_body.kdc_options().into());
 
-        if let Some(cname) = kdc_body.get_cname() {
+        if let Some(cname) = kdc_body.cname() {
             self.set_cname(cname.into());
         }
 
-        self.set_realm(kdc_body.get_realm().into());
+        self.set_realm(kdc_body.realm().into());
         
-        if let Some(sname) = kdc_body.get_sname() {
+        if let Some(sname) = kdc_body.sname() {
             self.set_sname(sname.into());
         }
         
-        if let Some(from) = kdc_body.get_from() {
+        if let Some(from) = kdc_body.from() {
             self.set_from(from.into());
         }
         
-        self.set_till(kdc_body.get_till().into());
+        self.set_till(kdc_body.till().into());
 
-        if let Some(rtime) = kdc_body.get_rtime() {
+        if let Some(rtime) = kdc_body.rtime() {
             self.set_rtime(rtime.into());
         }
 
-        self.set_nonce(kdc_body.get_nonce().into());
-        self.set_etype(kdc_body.get_etypes().into());
+        self.set_nonce(kdc_body.nonce().into());
+        self.set_etype(kdc_body.etypes().into());
 
-        if let Some(addresses) = kdc_body.get_addresses() {
+        if let Some(addresses) = kdc_body.addresses() {
             self.set_addresses(addresses.into());
         }
-        if let Some(enc_authorization_data) = kdc_body.get_enc_authorization_data() {
+        if let Some(enc_authorization_data) = kdc_body.enc_authorization_data() {
             self.set_enc_authorization_data(enc_authorization_data.into());
         }
         
-        if let Some(tickets) = kdc_body.get_additional_tickets() {
+        if let Some(tickets) = kdc_body.additional_tickets() {
             self.set_additional_tickets(tickets.into());
         }
     }

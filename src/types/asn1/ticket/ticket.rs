@@ -26,19 +26,19 @@ impl Ticket {
 
     
 
-    pub fn get_enc_part(&self) -> &EncryptedData {
+    pub fn enc_part(&self) -> &EncryptedData {
         return &self.enc_part;
     }
 
-    pub fn get_sname(&self) -> &PrincipalName {
+    pub fn sname(&self) -> &PrincipalName {
         return &self.sname;
     }
 
-    pub fn get_realm(&self) -> &Realm {
+    pub fn realm(&self) -> &Realm {
         return &self.realm;
     }
 
-    pub fn get_tkt_vno(&self) -> i8 {
+    pub fn tkt_vno(&self) -> i8 {
         return self.tkt_vno;
     }
 
@@ -104,10 +104,10 @@ impl From<&Ticket> for TicketAsn1 {
     fn from(ticket: &Ticket) -> TicketAsn1 {
         let mut ticket_asn1 = Self::default();
 
-        ticket_asn1.set_tkt_vno(Integer::from(ticket.get_tkt_vno() as i64));
-        ticket_asn1.set_realm(ticket.get_realm().into());
-        ticket_asn1.set_sname(ticket.get_sname().into());
-        ticket_asn1.set_enc_part(ticket.get_enc_part().into());
+        ticket_asn1.set_tkt_vno(Integer::from(ticket.tkt_vno() as i64));
+        ticket_asn1.set_realm(ticket.realm().into());
+        ticket_asn1.set_sname(ticket.sname().into());
+        ticket_asn1.set_enc_part(ticket.enc_part().into());
 
         return ticket_asn1;
     }

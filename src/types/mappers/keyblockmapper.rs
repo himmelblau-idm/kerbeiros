@@ -7,8 +7,8 @@ impl KeyBlockMapper {
 
     pub fn encryption_key_to_keyblock(encryption_key: &EncryptionKey) -> KeyBlock {
         return KeyBlock::new(
-            encryption_key.get_keytype() as u16,
-            encryption_key.get_keyvalue().clone()
+            encryption_key.keytype() as u16,
+            encryption_key.keyvalue().clone()
         );
     }
 

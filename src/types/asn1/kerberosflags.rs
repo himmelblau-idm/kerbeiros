@@ -30,7 +30,7 @@ impl KerberosFlags {
         self.flags &= !flags;
     }
 
-    pub fn get_flags(&self) -> u32 {
+    pub fn flags(&self) -> u32 {
         return self.flags;
     }
 
@@ -81,7 +81,7 @@ impl From<u32> for KerberosFlagsAsn1 {
 
 impl From<&KerberosFlags> for KerberosFlagsAsn1 {
     fn from(flags: &KerberosFlags) -> Self {
-        return Self::from(flags.get_flags());
+        return Self::from(flags.flags());
     }
 }
 

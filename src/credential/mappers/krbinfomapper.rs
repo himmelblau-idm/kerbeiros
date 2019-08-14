@@ -11,30 +11,30 @@ impl CredentialKrbInfoMapper {
 
     pub fn credential_to_krb_info_and_ticket(credential: &Credential) -> (KrbCredInfo,Ticket) {
 
-        let mut krb_cred_info = KrbCredInfo::new(credential.get_key().clone());
+        let mut krb_cred_info = KrbCredInfo::new(credential.key().clone());
 
-        krb_cred_info.set_flags(credential.get_flags().clone());
-        krb_cred_info.set_authtime(credential.get_authtime().clone());
+        krb_cred_info.set_flags(credential.flags().clone());
+        krb_cred_info.set_authtime(credential.authtime().clone());
         
-        if let Some(starttime) = credential.get_starttime() {
+        if let Some(starttime) = credential.starttime() {
             krb_cred_info.set_starttime(starttime.clone());
         }
-        krb_cred_info.set_endtime(credential.get_endtime().clone());
+        krb_cred_info.set_endtime(credential.endtime().clone());
 
-        if let Some(renew_till) = credential.get_renew_till() {
+        if let Some(renew_till) = credential.renew_till() {
             krb_cred_info.set_renew_till(renew_till.clone());
         }
 
-        krb_cred_info.set_srealm(credential.get_srealm().clone());
-        krb_cred_info.set_sname(credential.get_sname().clone());
+        krb_cred_info.set_srealm(credential.srealm().clone());
+        krb_cred_info.set_sname(credential.sname().clone());
 
-        if let Some(caddr) = credential.get_caddr() {
+        if let Some(caddr) = credential.caddr() {
             krb_cred_info.set_caddr(caddr.clone());
         }
 
-        krb_cred_info.set_prealm(credential.get_crealm().clone());
-        krb_cred_info.set_pname(credential.get_cname().clone());
-        return (krb_cred_info, credential.get_ticket().clone());
+        krb_cred_info.set_prealm(credential.crealm().clone());
+        krb_cred_info.set_pname(credential.cname().clone());
+        return (krb_cred_info, credential.ticket().clone());
     }
 
     pub fn kdc_rep_to_credential(key: &Key, kdc_rep: &KdcRep) -> Result<Credential> {
@@ -51,30 +51,30 @@ impl CredentialKrbInfoMapper {
         let enc_kdc_rep_part = EncKdcRepPart::parse(&plaintext)?;
 
         return Ok(Credential::new(
-            kdc_rep.get_crealm().clone(),
-            kdc_rep.get_cname().clone(),
-            kdc_rep.get_ticket().clone(),
+            kdc_rep.crealm().clone(),
+            kdc_rep.cname().clone(),
+            kdc_rep.ticket().clone(),
             enc_kdc_rep_part
         ));
     }
 
     fn decrypt_enc_kdc_rep_part_with_password(password: &str, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
-        let crypter = new_kerberos_crypter(kdc_rep.get_enc_part_etype())?;
+        let crypter = new_kerberos_crypter(kdc_rep.enc_part_etype())?;
         return crypter.generate_key_from_password_and_decrypt(
             password, 
-            &kdc_rep.get_encryption_salt(),
+            &kdc_rep.encryption_salt(),
             KEY_USAGE_AS_REP_ENC_PART, 
-            kdc_rep.get_enc_part_cipher()
+            kdc_rep.enc_part_cipher()
         );
     }
 
     fn decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
         match Self::try_decrypt_enc_kdc_rep_part_with_cipher_key(key, kdc_rep) {
             Err(error) => {
-                if key.get_etype() != kdc_rep.get_enc_part_etype() {
+                if key.etype() != kdc_rep.enc_part_etype() {
                     return Err(CryptographyErrorKind::DecryptionError(
                         format!("Key etype = {} doesn't match with message etype = {}", 
-                            key.get_etype(), kdc_rep.get_enc_part_etype())
+                            key.etype(), kdc_rep.enc_part_etype())
                     ))?;
                 }
 
@@ -85,11 +85,11 @@ impl CredentialKrbInfoMapper {
     }
 
     fn try_decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
-        let crypter = new_kerberos_crypter(key.get_etype()).unwrap();
+        let crypter = new_kerberos_crypter(key.etype()).unwrap();
         return crypter.decrypt(
             key.as_bytes(),
             KEY_USAGE_AS_REP_ENC_PART, 
-            kdc_rep.get_enc_part_cipher()
+            kdc_rep.enc_part_cipher()
         );
     }
 

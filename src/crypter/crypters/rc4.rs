@@ -21,7 +21,7 @@ impl RC4Crypter {
         self.preamble = Some(preamble.to_vec());
     }
 
-    fn get_preamble(&self) -> Vec<u8> {
+    fn preamble(&self) -> Vec<u8> {
         if let Some(self_preamble) = &self.preamble {
             return self_preamble.clone(); 
         }else {
@@ -38,7 +38,7 @@ impl RC4Crypter {
         return Self {};
     }
 
-    fn get_preamble(&self) -> Vec<u8> {
+    fn preamble(&self) -> Vec<u8> {
         return random_bytes(8);
     }
 
@@ -67,7 +67,7 @@ impl KerberosCrypter for RC4Crypter {
     }
 
     fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8> {
-        let preamble = self.get_preamble();
+        let preamble = self.preamble();
         let real_key_usage;
         if key_usage == 3 {
             real_key_usage = 8; // RFC 4757 rules

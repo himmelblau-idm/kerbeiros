@@ -41,19 +41,19 @@ impl AsReq {
         return as_req;
     }
 
-    pub fn get_req_body(&self) -> &KdcReqBody {
+    pub fn req_body(&self) -> &KdcReqBody {
         return &self.req_body;
     }
 
-    pub fn get_msg_type(&self) -> i8 {
+    pub fn msg_type(&self) -> i8 {
         return self.msg_type;
     }
 
-    pub fn get_padata(&self) -> &Option<SeqOfPaData> {
+    pub fn padata(&self) -> &Option<SeqOfPaData> {
         return &self.padata;
     }
 
-    pub fn get_pvno(&self) -> i8 {
+    pub fn pvno(&self) -> i8 {
         return self.pvno;
     }
 
@@ -120,8 +120,8 @@ impl AsReq {
     }
 
     #[cfg(test)]
-    pub fn get_etypes(&self) -> &SeqOfInt32 {
-        return self.req_body.get_etypes();
+    pub fn etypes(&self) -> &SeqOfInt32 {
+        return self.req_body.etypes();
     }
 
     #[cfg(test)]
@@ -152,14 +152,14 @@ pub(crate) struct AsReqAsn1 {
 impl AsReqAsn1 {
 
     fn set_asn1_values(&mut self, as_req: &AsReq) {
-        self.set_pvno(Integer::from(as_req.get_pvno() as i64));
-        self.set_msg_type(Integer::from(as_req.get_msg_type() as i64));
+        self.set_pvno(Integer::from(as_req.pvno() as i64));
+        self.set_msg_type(Integer::from(as_req.msg_type() as i64));
 
-        if let Some(seq_of_padatas) = as_req.get_padata() {
+        if let Some(seq_of_padatas) = as_req.padata() {
             self.set_padata(seq_of_padatas.into());
         }
 
-        self.set_req_body(as_req.get_req_body().into());
+        self.set_req_body(as_req.req_body().into());
     }
 
 }

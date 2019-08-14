@@ -37,8 +37,8 @@ impl AsRequester {
         return AsRequest::request(username, user_key, &self.as_options, &self.transporter);
     }
 
-    pub fn get_etypes(&self) -> &HashSet<i32> {
-        return self.as_options.get_etypes();
+    pub fn etypes(&self) -> &HashSet<i32> {
+        return self.as_options.etypes();
     }
 
     pub fn set_etype(&mut self, etype: i32) -> Result<()> {
@@ -49,12 +49,12 @@ impl AsRequester {
         return self.as_options.set_etypes(etypes);
     }
 
-    pub fn get_kdc_options(&self) -> u32 {
-        return self.as_options.get_kdc_options();
+    pub fn kdc_options(&self) -> u32 {
+        return self.as_options.kdc_options();
     }
 
-    pub fn get_realm(&self) -> &AsciiString {
-        return self.as_options.get_realm();
+    pub fn realm(&self) -> &AsciiString {
+        return self.as_options.realm();
     }
 
     pub fn set_transport_protocol(&mut self, transport_protocol: TransportProtocol) {

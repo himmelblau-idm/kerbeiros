@@ -22,11 +22,11 @@ impl EtypeInfo2Entry {
         };
     }
 
-    pub fn get_etype(&self) -> Int32 {
+    pub fn etype(&self) -> Int32 {
         return self.etype;
     }
 
-    pub fn get_salt(&self) -> &Option<KerberosString> {
+    pub fn salt(&self) -> &Option<KerberosString> {
         return &self.salt;
     }
 
@@ -35,14 +35,14 @@ impl EtypeInfo2Entry {
         self.salt = Some(salt);
     }
 
-    pub fn get_salt_bytes(&self) -> Vec<u8> {
+    pub fn salt_bytes(&self) -> Vec<u8> {
         if let Some(salt) = &self.salt {
             return salt.as_bytes().to_vec();
         }
         return Vec::new();
     }
 
-    pub fn get_s2kparams(&self) -> &Option<Vec<u8>> {
+    pub fn s2kparams(&self) -> &Option<Vec<u8>> {
         return &self.s2kparams;
     }
 
@@ -89,13 +89,13 @@ impl From<&EtypeInfo2Entry> for EtypeInfo2EntryAsn1 {
     fn from(entry: &EtypeInfo2Entry) -> Self {
         let mut entry_asn1 = Self::default();
 
-        entry_asn1.set_etype(entry.get_etype().into());
+        entry_asn1.set_etype(entry.etype().into());
         
-        if let Some(salt) = entry.get_salt() {
+        if let Some(salt) = entry.salt() {
             entry_asn1.set_salt(salt.into());
         }
 
-        if let Some(s2kparams) = entry.get_s2kparams() {
+        if let Some(s2kparams) = entry.s2kparams() {
             entry_asn1.set_s2kparams(OctetString::from(s2kparams.clone()));
         }
 

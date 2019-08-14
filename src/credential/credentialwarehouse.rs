@@ -16,21 +16,21 @@ impl CredentialWarehouse {
 
     pub fn new(credential: Credential) -> Self {
         return Self {
-            realm: credential.get_crealm().clone(),
-            client: credential.get_cname().clone(),
+            realm: credential.crealm().clone(),
+            client: credential.cname().clone(),
             credentials: vec![credential],
         }
     }
 
-    pub fn get_realm(&self) -> &Realm {
+    pub fn realm(&self) -> &Realm {
         return &self.realm;
     }
 
-    pub fn get_credentials(&self) -> &Vec<Credential> {
+    pub fn credentials(&self) -> &Vec<Credential> {
         return &self.credentials;
     }
 
-    pub fn get_client(&self) -> &PrincipalName {
+    pub fn client(&self) -> &PrincipalName {
         return &self.client;
     }
 

@@ -22,7 +22,7 @@ impl EncryptedData {
         };
     }
 
-    pub fn get_kvno(&self) -> Option<UInt32> {
+    pub fn kvno(&self) -> Option<UInt32> {
         return self.kvno;
     }
 
@@ -30,11 +30,11 @@ impl EncryptedData {
         self.kvno = Some(kvno);
     }
 
-    pub fn get_etype(&self) -> i32 {
+    pub fn etype(&self) -> i32 {
         return self.etype;
     }
 
-    pub fn get_cipher(&self) -> &Vec<u8> {
+    pub fn cipher(&self) -> &Vec<u8> {
         return &self.cipher;
     }
 
@@ -78,10 +78,10 @@ impl From<&EncryptedData> for EncryptedDataAsn1 {
     fn from(enc_data: &EncryptedData) -> EncryptedDataAsn1 {
         let mut enc_data_asn1 = Self::default();
 
-        enc_data_asn1.set_etype(enc_data.get_etype().into());
+        enc_data_asn1.set_etype(enc_data.etype().into());
         enc_data_asn1.set_cipher(enc_data.cipher.clone().into());
 
-        if let Some(kvno) = enc_data.get_kvno() {
+        if let Some(kvno) = enc_data.kvno() {
             enc_data_asn1.set_kvno(kvno.into());
         }
 

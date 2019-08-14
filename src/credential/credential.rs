@@ -31,56 +31,56 @@ impl Credential {
         };
     }
 
-    pub fn get_crealm(&self) -> &Realm {
+    pub fn crealm(&self) -> &Realm {
         return &self.crealm;
     }
 
-    pub fn get_cname(&self) -> &PrincipalName {
+    pub fn cname(&self) -> &PrincipalName {
         return &self.cname;
     }
  
-    pub fn get_ticket(&self) -> &Ticket {
+    pub fn ticket(&self) -> &Ticket {
         return &self.ticket;
     }
 
-    pub fn get_authtime(&self) -> &KerberosTime {
-        return self.client_part.get_authtime();
+    pub fn authtime(&self) -> &KerberosTime {
+        return self.client_part.authtime();
     }
 
-    pub fn get_starttime(&self) -> Option<&KerberosTime> {
-        return self.client_part.get_starttime();
+    pub fn starttime(&self) -> Option<&KerberosTime> {
+        return self.client_part.starttime();
     }
 
-    pub fn get_endtime(&self) -> &KerberosTime {
-        return self.client_part.get_endtime();
+    pub fn endtime(&self) -> &KerberosTime {
+        return self.client_part.endtime();
     }
 
-    pub fn get_renew_till(&self) -> Option<&KerberosTime> {
-        return self.client_part.get_renew_till();
+    pub fn renew_till(&self) -> Option<&KerberosTime> {
+        return self.client_part.renew_till();
     }
 
-    pub fn get_flags(&self) -> &TicketFlags {
-        return self.client_part.get_flags();
+    pub fn flags(&self) -> &TicketFlags {
+        return self.client_part.flags();
     }
 
-    pub fn get_key(&self) -> &EncryptionKey {
-        return self.client_part.get_key();
+    pub fn key(&self) -> &EncryptionKey {
+        return self.client_part.key();
     }
 
-    pub fn get_srealm(&self) -> &KerberosString {
-        return self.client_part.get_srealm();
+    pub fn srealm(&self) -> &KerberosString {
+        return self.client_part.srealm();
     }
 
-    pub fn get_sname(&self) -> &PrincipalName {
-        return self.client_part.get_sname();
+    pub fn sname(&self) -> &PrincipalName {
+        return self.client_part.sname();
     }
 
-    pub fn get_caddr(&self) -> Option<&HostAddresses> {
-        return self.client_part.get_caddr();
+    pub fn caddr(&self) -> Option<&HostAddresses> {
+        return self.client_part.caddr();
     }
    
-    pub fn get_encrypted_pa_data(&self) -> Option<&MethodData> {
-        return self.client_part.get_encrypted_pa_data();
+    pub fn encrypted_pa_data(&self) -> Option<&MethodData> {
+        return self.client_part.encrypted_pa_data();
     }
 
     /// Saves the credential into a file by using the ccache format, used by Linux.

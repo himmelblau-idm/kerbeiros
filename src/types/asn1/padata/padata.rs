@@ -17,7 +17,7 @@ pub enum PaData {
 
 impl PaData {
 
-    pub fn get_padata_type(&self) -> Int32 {
+    pub fn padata_type(&self) -> Int32 {
         match self {
             PaData::Raw(padata_type,_) => *padata_type,
             PaData::PacRequest(_) => PA_PAC_REQUEST,
@@ -26,7 +26,7 @@ impl PaData {
         }
     } 
 
-    pub fn get_padata_value_as_bytes(&self) -> Vec<u8> {
+    pub fn padata_value_as_bytes(&self) -> Vec<u8> {
         match self {
             PaData::Raw(_, padata_value) => padata_value.clone(),
             PaData::PacRequest(pac_request) => PacRequestAsn1::from(pac_request).encode().unwrap(),
@@ -48,8 +48,8 @@ pub(crate) struct PaDataAsn1 {
 impl PaDataAsn1 {
 
     fn set_asn1_values(&mut self, pa_data: &PaData) {
-        self.set_padata_type(pa_data.get_padata_type().into());
-        self.set_padata_value(pa_data.get_padata_value_as_bytes().into());
+        self.set_padata_type(pa_data.padata_type().into());
+        self.set_padata_value(pa_data.padata_value_as_bytes().into());
     }
 
     pub fn no_asn1_type(&self) -> Result<PaData> {

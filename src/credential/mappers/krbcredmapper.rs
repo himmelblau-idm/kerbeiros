@@ -9,7 +9,7 @@ pub struct CredentialWarehouseKrbCredMapper{}
 impl CredentialWarehouseKrbCredMapper {
 
     pub fn credential_warehouse_to_krb_cred(warehouse: &CredentialWarehouse) -> KrbCred {
-        let credentials = warehouse.get_credentials();
+        let credentials = warehouse.credentials();
         let mut seq_of_tickets = SeqOfTickets::default();
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
 

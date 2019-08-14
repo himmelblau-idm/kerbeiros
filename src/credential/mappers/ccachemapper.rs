@@ -9,9 +9,9 @@ impl CredentialWarehouseCCacheMapper {
 
     pub fn credential_warehouse_to_ccache(warehouse: &CredentialWarehouse) -> CCache {
         let header = ccache::Header::new_default();
-        let primary_principal = PrincipalMapper::realm_and_principal_name_to_principal(warehouse.get_realm(), warehouse.get_client());
+        let primary_principal = PrincipalMapper::realm_and_principal_name_to_principal(warehouse.realm(), warehouse.client());
 
-        let credentials = warehouse.get_credentials();
+        let credentials = warehouse.credentials();
 
         let mut ccache_credentials = Vec::with_capacity(credentials.len());
 

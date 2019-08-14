@@ -47,36 +47,36 @@ impl KdcRep {
         self.padata = Some(padata);
     }
 
-    pub fn get_padata(&self) -> &Option<SeqOfPaData> {
+    pub fn padata(&self) -> &Option<SeqOfPaData> {
         return &self.padata;
     }
 
-    pub fn get_crealm(&self) -> &Realm {
+    pub fn crealm(&self) -> &Realm {
         return &self.crealm;
     }
 
-    pub fn get_cname(&self) -> &PrincipalName {
+    pub fn cname(&self) -> &PrincipalName {
         return &self.cname;
     }
 
-    pub fn get_ticket(&self) -> &Ticket {
+    pub fn ticket(&self) -> &Ticket {
         return &self.ticket;
     }
 
-    pub fn get_enc_part_etype(&self) -> i32 {
-        return self.enc_part.get_etype();
+    pub fn enc_part_etype(&self) -> i32 {
+        return self.enc_part.etype();
     }
 
-    pub fn get_enc_part_cipher(&self) -> &Vec<u8> {
-        return self.enc_part.get_cipher();
+    pub fn enc_part_cipher(&self) -> &Vec<u8> {
+        return self.enc_part.cipher();
     }
 
-    pub fn get_encryption_salt(&self) -> Vec<u8> {
+    pub fn encryption_salt(&self) -> Vec<u8> {
         if let Some(padata) = &self.padata {
             for entry_data in padata.iter() {
                 if let PaData::EtypeInfo2(etype_info2) = entry_data {
                     for info2_entry in etype_info2.iter() {
-                        return info2_entry.get_salt_bytes();
+                        return info2_entry.salt_bytes();
                     }
                 }
             }

@@ -7,8 +7,8 @@ impl AddressMapper {
 
     pub fn host_address_to_address(host_address: &HostAddress) -> Address {
         return Address::new(
-            host_address.get_addr_type() as u16,
-            CountedOctetString::new(host_address.get_address_without_modifications())
+            host_address.addr_type() as u16,
+            CountedOctetString::new(host_address.address_without_modifications())
         )
     }
 

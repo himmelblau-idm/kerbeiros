@@ -39,12 +39,12 @@ impl Key {
     /// use kerbeiros::key;
     /// use kerbeiros::constants;
     /// 
-    /// assert_eq!(0, key::Key::Password("".to_string()).get_etype());
-    /// assert_eq!(constants::etypes::RC4_HMAC, key::Key::NTLM([0; key::NTLM_SIZE]).get_etype());
-    /// assert_eq!(constants::etypes::AES128_CTS_HMAC_SHA1_96, key::Key::AES128Key([0; key::AES128_KEY_SIZE]).get_etype());
-    /// assert_eq!(constants::etypes::AES256_CTS_HMAC_SHA1_96, key::Key::AES256Key([0; key::AES256_KEY_SIZE]).get_etype());
+    /// assert_eq!(0, key::Key::Password("".to_string()).etype());
+    /// assert_eq!(constants::etypes::RC4_HMAC, key::Key::NTLM([0; key::NTLM_SIZE]).etype());
+    /// assert_eq!(constants::etypes::AES128_CTS_HMAC_SHA1_96, key::Key::AES128Key([0; key::AES128_KEY_SIZE]).etype());
+    /// assert_eq!(constants::etypes::AES256_CTS_HMAC_SHA1_96, key::Key::AES256Key([0; key::AES256_KEY_SIZE]).etype());
     /// ```
-    pub fn get_etype(&self) -> i32 {
+    pub fn etype(&self) -> i32 {
         match self {
             Key::Password(_) => 0,
             Key::NTLM(_) => RC4_HMAC,

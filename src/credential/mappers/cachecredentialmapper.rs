@@ -11,21 +11,21 @@ impl CredentialCCacheMapper {
         let is_skey = 0;
 
         let time = TimesMapper::authtime_starttime_endtime_renew_till_to_times(
-            credential.get_authtime(),
-            credential.get_starttime(),
-            credential.get_endtime(),
-            credential.get_renew_till(),
+            credential.authtime(),
+            credential.starttime(),
+            credential.endtime(),
+            credential.renew_till(),
         );
 
-        let tktflags = TicketFlagsMapper::ticket_flags_to_tktflags(credential.get_flags());
-        let key = KeyBlockMapper::encryption_key_to_keyblock(credential.get_key());
+        let tktflags = TicketFlagsMapper::ticket_flags_to_tktflags(credential.flags());
+        let key = KeyBlockMapper::encryption_key_to_keyblock(credential.key());
 
-        let ticket = ccache::CountedOctetString::new(credential.get_ticket().build());
+        let ticket = ccache::CountedOctetString::new(credential.ticket().build());
 
-        let client = PrincipalMapper::realm_and_principal_name_to_principal(credential.get_crealm(), credential.get_cname());
+        let client = PrincipalMapper::realm_and_principal_name_to_principal(credential.crealm(), credential.cname());
         let server = PrincipalMapper::realm_and_principal_name_to_principal(
-            credential.get_srealm(), 
-            credential.get_sname(),
+            credential.srealm(), 
+            credential.sname(),
         );
 
         let mut ccache_credential = ccache::CredentialEntry::new(
@@ -38,13 +38,13 @@ impl CredentialCCacheMapper {
             ticket
         );
 
-        if let Some(caddr) = credential.get_caddr() {
+        if let Some(caddr) = credential.caddr() {
             ccache_credential.set_addrs(
                 AddressMapper::host_addresses_to_address_vector(caddr)
             );
         }
 
-        if let Some(encrypted_pa_data) = credential.get_encrypted_pa_data() {
+        if let Some(encrypted_pa_data) = credential.encrypted_pa_data() {
             ccache_credential.set_authdata(
                 AuthDataMapper::method_data_to_auth_data_vector(encrypted_pa_data)
             );

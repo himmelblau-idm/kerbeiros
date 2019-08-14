@@ -33,7 +33,7 @@ impl EncKrbCredPart {
         };
     }
 
-    pub fn get_nonce(&self) -> Option<UInt32> {
+    pub fn nonce(&self) -> Option<UInt32> {
         return self.nonce;
     }
 
@@ -42,7 +42,7 @@ impl EncKrbCredPart {
         self.nonce = Some(nonce);
     }
 
-    pub fn get_r_address(&self) -> &Option<HostAddress> {
+    pub fn r_address(&self) -> &Option<HostAddress> {
         return &self.r_address;
     }
 
@@ -51,7 +51,7 @@ impl EncKrbCredPart {
         self.r_address = Some(r_address);
     }
 
-    pub fn get_s_address(&self)  -> &Option<HostAddress> {
+    pub fn s_address(&self)  -> &Option<HostAddress> {
         return &self.s_address;
     }
 
@@ -60,11 +60,11 @@ impl EncKrbCredPart {
         self.s_address = Some(s_address);
     }
 
-    pub fn get_ticket_info(&self) -> &SeqOfKrbCredInfo{
+    pub fn ticket_info(&self) -> &SeqOfKrbCredInfo{
         return &self.ticket_info;
     }
 
-    pub fn get_timestamp(&self) -> &Option<KerberosTime> {
+    pub fn timestamp(&self) -> &Option<KerberosTime> {
         return &self.timestamp;
     }
 
@@ -73,7 +73,7 @@ impl EncKrbCredPart {
         self.timestamp = Some(timestamp);
     }
 
-    pub fn get_usec(&self) -> &Option<Microseconds> {
+    pub fn usec(&self) -> &Option<Microseconds> {
         return &self.usec;
     }
 
@@ -146,21 +146,21 @@ impl From<&EncKrbCredPart> for EncKrbCredPartAsn1 {
     fn from(enc_krb_cred_part: &EncKrbCredPart) -> Self {
         let mut enc_krb_cred_part_asn1 = Self::default();
 
-        enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.get_ticket_info().into());
+        enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.ticket_info().into());
 
-        if let Some(nonce) = enc_krb_cred_part.get_nonce() {
+        if let Some(nonce) = enc_krb_cred_part.nonce() {
             enc_krb_cred_part_asn1.set_nonce(nonce.into());
         }
-        if let Some(timestamp) = enc_krb_cred_part.get_timestamp() {
+        if let Some(timestamp) = enc_krb_cred_part.timestamp() {
             enc_krb_cred_part_asn1.set_timestamp(timestamp.clone().into());
         }
-        if let Some(usec) = enc_krb_cred_part.get_usec() {
+        if let Some(usec) = enc_krb_cred_part.usec() {
             enc_krb_cred_part_asn1.set_usec(usec.into());
         }
-        if let Some(s_address) = enc_krb_cred_part.get_s_address() {
+        if let Some(s_address) = enc_krb_cred_part.s_address() {
             enc_krb_cred_part_asn1.set_s_address(s_address.into());
         }
-        if let Some(r_address) = enc_krb_cred_part.get_r_address() {
+        if let Some(r_address) = enc_krb_cred_part.r_address() {
             enc_krb_cred_part_asn1.set_r_address(r_address.into());
         }
 

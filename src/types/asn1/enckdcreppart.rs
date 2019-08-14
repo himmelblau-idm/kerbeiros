@@ -52,7 +52,7 @@ impl EncKdcRepPart {
         };
     }
 
-    pub fn get_key(&self) -> &EncryptionKey {
+    pub fn key(&self) -> &EncryptionKey {
         return &self.key;
     }
 
@@ -60,15 +60,15 @@ impl EncKdcRepPart {
         self.key_expiration = Some(key_expiration);
     }
 
-    pub fn get_flags(&self) -> &TicketFlags {
+    pub fn flags(&self) -> &TicketFlags {
         return &self.flags;
     }
 
-    pub fn get_authtime(&self) -> &KerberosTime {
+    pub fn authtime(&self) -> &KerberosTime {
         return &self.authtime;
     }
 
-    pub fn get_starttime(&self) -> Option<&KerberosTime> {
+    pub fn starttime(&self) -> Option<&KerberosTime> {
         match &self.starttime {
             Some(starttime) => {
                 return Some(starttime);
@@ -83,11 +83,11 @@ impl EncKdcRepPart {
         self.starttime = Some(starttime);
     }
 
-    pub fn get_endtime(&self) -> &KerberosTime {
+    pub fn endtime(&self) -> &KerberosTime {
         return &self.endtime;
     }
 
-    pub fn get_renew_till(&self) -> Option<&KerberosTime> {
+    pub fn renew_till(&self) -> Option<&KerberosTime> {
         match &self.renew_till {
             Some(renew_till) => {
                 return Some(renew_till);
@@ -102,15 +102,15 @@ impl EncKdcRepPart {
         self.renew_till = Some(renew_till);
     }
 
-    pub fn get_srealm(&self) -> &Realm {
+    pub fn srealm(&self) -> &Realm {
         return &self.srealm;
     }
 
-    pub fn get_sname(&self) -> &PrincipalName {
+    pub fn sname(&self) -> &PrincipalName {
         return &self.sname;
     }
 
-    pub fn get_caddr(&self) -> Option<&HostAddresses> {
+    pub fn caddr(&self) -> Option<&HostAddresses> {
         match &self.caddr {
             Some(caddr) => {
                 return Some(caddr);
@@ -125,7 +125,7 @@ impl EncKdcRepPart {
         self.caddr = Some(caddr);
     }
 
-    pub fn get_encrypted_pa_data(&self) -> Option<&MethodData> {
+    pub fn encrypted_pa_data(&self) -> Option<&MethodData> {
         match &self.encrypted_pa_data {
             Some(encrypted_pa_data) => {
                 return Some(encrypted_pa_data);

@@ -5,7 +5,7 @@ pub struct TicketFlagsMapper{}
 impl TicketFlagsMapper {
 
     pub fn ticket_flags_to_tktflags(ticket_flags: &TicketFlags) -> u32 {
-        return ticket_flags.get_flags();
+        return ticket_flags.flags();
     }
 
 }

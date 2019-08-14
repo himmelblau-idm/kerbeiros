@@ -14,10 +14,10 @@ pub enum HostAddress {
 
 impl HostAddress {
 
-    pub fn get_address(&self) -> Vec<u8> {
+    pub fn address(&self) -> Vec<u8> {
         match self {
             HostAddress::NetBios(string) => {
-                return HostAddress::get_padded_netbios_string_bytes(&string);
+                return HostAddress::padded_netbios_string_bytes(&string);
             },
             HostAddress::Raw(_, bytes) => {
                 return bytes.clone();
@@ -25,7 +25,7 @@ impl HostAddress {
         }
     }
 
-    fn get_padded_netbios_string_bytes(string: &String) -> Vec<u8> {
+    fn padded_netbios_string_bytes(string: &String) -> Vec<u8> {
         let mut padded_string = string.clone();
         let mut padded_len = padded_string.len() % 16;
 
@@ -39,7 +39,7 @@ impl HostAddress {
         return padded_string.into_bytes();
     }
 
-    pub fn get_address_without_modifications(&self) -> Vec<u8> {
+    pub fn address_without_modifications(&self) -> Vec<u8> {
         match self {
             HostAddress::NetBios(string) => {
                 return string.as_bytes().to_vec();
@@ -50,7 +50,7 @@ impl HostAddress {
         }
     }
 
-    pub fn get_addr_type(&self) -> i32 {
+    pub fn addr_type(&self) -> i32 {
         match self {
             HostAddress::NetBios(_) => address_type::NETBIOS,
             HostAddress::Raw(kind,_) => *kind
@@ -100,8 +100,8 @@ impl From<&HostAddress> for HostAddressAsn1 {
     fn from(host_address: &HostAddress) -> HostAddressAsn1 {
         let mut host_address_asn1 = Self::default();
 
-        host_address_asn1.set_addr_type(host_address.get_addr_type().into());
-        host_address_asn1.set_address(host_address.get_address().into());
+        host_address_asn1.set_addr_type(host_address.addr_type().into());
+        host_address_asn1.set_address(host_address.address().into());
     
         return host_address_asn1;
     }
@@ -135,29 +135,29 @@ mod tests {
     #[test]
     fn test_netbios_padding() {
         let mut host_address = HostAddress::NetBios("".to_string());
-        assert_eq!(Vec::<u8>::new(), host_address.get_address());
+        assert_eq!(Vec::<u8>::new(), host_address.address());
 
         host_address = HostAddress::NetBios("1".to_string());
         assert_eq!(vec![0x31, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 
                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20], 
-                    host_address.get_address());
+                    host_address.address());
         
         host_address = HostAddress::NetBios("12345".to_string());
         assert_eq!(vec![0x31, 0x32, 0x33, 0x34, 0x35, 0x20, 0x20, 0x20, 
                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20], 
-                    host_address.get_address());
+                    host_address.address());
 
         host_address = HostAddress::NetBios("1234567890123456".to_string());
         assert_eq!(vec![0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 
                         0x39, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36], 
-                    host_address.get_address());
+                    host_address.address());
         
         host_address = HostAddress::NetBios("12345678901234567".to_string());
         assert_eq!(vec![0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 
                         0x39, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
                         0x37, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 
                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20], 
-                    host_address.get_address());
+                    host_address.address());
     }
 
     #[test]

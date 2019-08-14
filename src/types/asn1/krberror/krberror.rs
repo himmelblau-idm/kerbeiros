@@ -365,7 +365,7 @@ mod test {
     }
 
     #[test]
-    fn get_krb_error_fields() {
+    fn krb_error_fields() {
 
         let error_code = KDC_ERR_PREAUTH_REQUIRED;
         let stime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);

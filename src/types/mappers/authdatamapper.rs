@@ -7,8 +7,8 @@ impl AuthDataMapper {
 
     pub fn padata_to_auth_data(padata: &PaData) -> AuthData {
         return AuthData::new(
-            padata.get_padata_type() as u16,
-            CountedOctetString::new(padata.get_padata_value_as_bytes())
+            padata.padata_type() as u16,
+            CountedOctetString::new(padata.padata_value_as_bytes())
         )
     }
 

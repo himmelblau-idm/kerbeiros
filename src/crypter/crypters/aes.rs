@@ -23,7 +23,7 @@ impl AESCrypter {
         self.preamble = Some(preamble.to_vec());
     }
 
-    fn get_preamble(&self) -> Vec<u8> {
+    fn preamble(&self) -> Vec<u8> {
         if let Some(self_preamble) = &self.preamble {
             return self_preamble.clone(); 
         }else {
@@ -42,7 +42,7 @@ impl AESCrypter {
         };
     }
 
-    fn get_preamble(&self) -> Vec<u8> {
+    fn preamble(&self) -> Vec<u8> {
         return random_bytes(self.aes_sizes.block_size());
     }
 
@@ -63,7 +63,7 @@ impl KerberosCrypter for AESCrypter {
     }
 
     fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8> {
-        let preamble = self.get_preamble();
+        let preamble = self.preamble();
         return aes_hmac_sha1_encrypt(key, key_usage, plaintext, &preamble, &self.aes_sizes);
     }
 
