@@ -50,7 +50,7 @@ impl SeqOfEtypeAsn1 {
 
     fn set_asn1_values(&mut self, seq_of_etype: &SeqOfEtype) {
         for etype in seq_of_etype.iter() {
-            self.subtype.push(EtypeAsn1::new(*etype));
+            self.subtype.push((*etype).into());
         }
     }
 }

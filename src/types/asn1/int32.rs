@@ -9,11 +9,6 @@ pub(crate) struct Int32Asn1 {
 }
 
 impl Int32Asn1 {
-    pub fn new(value: Int32) -> Int32Asn1 {
-        return Int32Asn1{
-            subtype: Integer::from(value as i64)
-        };
-    }
 
     pub fn no_asn1_type(&self) -> Result<Int32> {
         let value = self.subtype.value().ok_or_else(|| 
@@ -22,6 +17,14 @@ impl Int32Asn1 {
         return Ok(value as Int32);
     }
 
+}
+
+impl From<Int32> for Int32Asn1 {
+    fn from(value: Int32) -> Int32Asn1 {
+        return Int32Asn1{
+            subtype: Integer::from(value as i64)
+        };
+    }
 }
 
 impl Asn1Object for Int32Asn1 {
@@ -71,11 +74,11 @@ mod test {
     #[test]
     fn test_encode_int32() {
         assert_eq!(vec![0x02, 0x02, 0xff, 0x79],
-            Int32Asn1::new(-135).encode().unwrap()
+            Int32Asn1::from(-135).encode().unwrap()
         );
 
         assert_eq!(vec![0x02, 0x01, 0x03],
-            Int32Asn1::new(3).encode().unwrap()
+            Int32Asn1::from(3).encode().unwrap()
         );
     }
 

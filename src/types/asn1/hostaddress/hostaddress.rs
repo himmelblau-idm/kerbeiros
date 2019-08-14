@@ -75,8 +75,8 @@ impl HostAddressAsn1 {
     fn new(host_address: &HostAddress) -> HostAddressAsn1 {
         let mut host_address_asn1 = Self::default();
 
-        host_address_asn1.set_addr_type(Int32Asn1::new(host_address.get_addr_type()));
-        host_address_asn1.set_address(OctetString::from(host_address.get_address()));
+        host_address_asn1.set_addr_type(host_address.get_addr_type().into());
+        host_address_asn1.set_address(host_address.get_address().into());
     
         return host_address_asn1;
     }

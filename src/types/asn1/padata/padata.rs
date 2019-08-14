@@ -58,8 +58,8 @@ impl PaDataAsn1 {
     }
 
     fn set_asn1_values(&mut self, pa_data: &PaData) {
-        self.set_padata_type(Int32Asn1::new(pa_data.get_padata_type()));
-        self.set_padata_value(OctetString::from(pa_data.get_padata_value_as_bytes()));
+        self.set_padata_type(pa_data.get_padata_type().into());
+        self.set_padata_value(pa_data.get_padata_value_as_bytes().into());
     }
 
     pub fn no_asn1_type(&self) -> Result<PaData> {

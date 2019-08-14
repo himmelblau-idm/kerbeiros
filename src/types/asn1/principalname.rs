@@ -52,7 +52,7 @@ pub(crate) struct PrincipalNameAsn1 {
 impl PrincipalNameAsn1 {
 
     fn set_asn1_values(&mut self, principal_name: &PrincipalName) {
-        self.set_name_type(Int32Asn1::new(principal_name.get_name_type()));
+        self.set_name_type(principal_name.get_name_type().into());
         self.set_name_string(self.seq_of_kerberos_strings(principal_name));
     }
 

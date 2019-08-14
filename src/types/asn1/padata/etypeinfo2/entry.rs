@@ -68,7 +68,7 @@ impl EtypeInfo2EntryAsn1 {
     fn new(entry: &EtypeInfo2Entry) -> Self {
         let mut entry_asn1 = Self::default();
 
-        entry_asn1.set_etype(Int32Asn1::new(entry.get_etype()));
+        entry_asn1.set_etype(entry.get_etype().into());
         
         if let Some(salt) = entry.get_salt() {
             entry_asn1.set_salt(salt.into());

@@ -45,8 +45,8 @@ impl EncryptionKeyAsn1 {
 
     fn new(encryption_key: &EncryptionKey) -> Self {
         let mut  encryption_key_asn1 = Self::default();
-        encryption_key_asn1.set_keytype(Int32Asn1::new(encryption_key.keytype));
-        encryption_key_asn1.set_keyvalue(OctetString::from(encryption_key.keyvalue.clone()));
+        encryption_key_asn1.set_keytype(encryption_key.get_keytype().into());
+        encryption_key_asn1.set_keyvalue(encryption_key.get_keyvalue().clone().into());
         return encryption_key_asn1;
     }
 
