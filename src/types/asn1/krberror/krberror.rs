@@ -53,7 +53,7 @@ impl KrbError {
         }
     }
 
-    pub fn get_pvno(&self) -> i8 {
+    pub fn pvno(&self) -> i8 {
         return self.pvno;
     }
 
@@ -61,7 +61,7 @@ impl KrbError {
         self.pvno = pvno;
     }
 
-    pub fn get_msg_type(&self) -> i8 {
+    pub fn msg_type(&self) -> i8 {
         return self.msg_type;
     }
 
@@ -69,7 +69,7 @@ impl KrbError {
         self.msg_type = msg_type;
     }
 
-    pub fn get_ctime(&self) -> &Option<KerberosTime> {
+    pub fn ctime(&self) -> &Option<KerberosTime> {
         return &self.ctime;
     }
 
@@ -77,7 +77,7 @@ impl KrbError {
         self.ctime = Some(ctime);
     } 
 
-    pub fn get_cusec(&self) -> &Option<Microseconds> {
+    pub fn cusec(&self) -> &Option<Microseconds> {
         return &self.cusec;
     }
 
@@ -85,19 +85,19 @@ impl KrbError {
         self.cusec = Some(cusec);
     }
 
-    pub fn get_stime(&self) -> &KerberosTime {
+    pub fn stime(&self) -> &KerberosTime {
         return &self.stime;
     }
 
-    pub fn get_susec(&self) -> &Microseconds {
+    pub fn susec(&self) -> &Microseconds {
         return &self.susec;
     }
 
-    pub fn get_error_code(&self) -> i32 {
+    pub fn error_code(&self) -> i32 {
         return self.error_code;
     }
 
-    pub fn get_crealm(&self) -> &Option<Realm> {
+    pub fn crealm(&self) -> &Option<Realm> {
         return &self.crealm;
     }
 
@@ -105,7 +105,7 @@ impl KrbError {
         self.crealm = Some(crealm);
     }
 
-    pub fn get_cname(&self) -> &Option<PrincipalName> {
+    pub fn cname(&self) -> &Option<PrincipalName> {
         return &self.cname;
     }
 
@@ -113,15 +113,15 @@ impl KrbError {
         self.cname = Some(cname);
     }
 
-    pub fn get_realm(&self) -> &Realm {
+    pub fn realm(&self) -> &Realm {
         return &self.realm;
     }
 
-    pub fn get_sname(&self) -> &PrincipalName {
+    pub fn sname(&self) -> &PrincipalName {
         return &self.sname;
     }
 
-    pub fn get_e_text(&self) -> &Option<KerberosString> {
+    pub fn e_text(&self) -> &Option<KerberosString> {
         return &self.e_text;
     }
 
@@ -129,7 +129,7 @@ impl KrbError {
         self.e_text = Some(e_text);
     }
 
-    pub fn get_e_data(&self) -> &Option<Edata> {
+    pub fn e_data(&self) -> &Option<Edata> {
         return &self.e_data;
     }
 
@@ -272,7 +272,7 @@ impl KrbErrorAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use chrono::offset::TimeZone;
+    use chrono::prelude::*;
     use crate::constants::*;
 
     #[test]
@@ -401,19 +401,19 @@ mod test {
 
         krb_error.set_e_data(e_data.clone());
 
-        assert_eq!(5, krb_error.get_pvno());
-        assert_eq!(30, krb_error.get_msg_type());
-        assert_eq!(&None, krb_error.get_ctime());
-        assert_eq!(&None, krb_error.get_cusec());
-        assert_eq!(&stime, krb_error.get_stime());
-        assert_eq!(&susec, krb_error.get_susec());
-        assert_eq!(error_code, krb_error.get_error_code());
-        assert_eq!(&None, krb_error.get_crealm());
-        assert_eq!(&None, krb_error.get_cname());
-        assert_eq!(&realm, krb_error.get_realm());
-        assert_eq!(&sname, krb_error.get_sname());
-        assert_eq!(&None, krb_error.get_e_text());
-        assert_eq!(&Some(e_data), krb_error.get_e_data());
+        assert_eq!(5, krb_error.pvno());
+        assert_eq!(30, krb_error.msg_type());
+        assert_eq!(&None, krb_error.ctime());
+        assert_eq!(&None, krb_error.cusec());
+        assert_eq!(&stime, krb_error.stime());
+        assert_eq!(&susec, krb_error.susec());
+        assert_eq!(error_code, krb_error.error_code());
+        assert_eq!(&None, krb_error.crealm());
+        assert_eq!(&None, krb_error.cname());
+        assert_eq!(&realm, krb_error.realm());
+        assert_eq!(&sname, krb_error.sname());
+        assert_eq!(&None, krb_error.e_text());
+        assert_eq!(&Some(e_data), krb_error.e_data());
     }
 
 }
