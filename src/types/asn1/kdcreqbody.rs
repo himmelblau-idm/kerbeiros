@@ -149,10 +149,6 @@ impl KdcReqBody {
         self.set_cname(NT_PRINCIPAL, username);
     }
 
-    pub(crate) fn asn1_type(&self) -> KdcReqBodyAsn1 {
-        return KdcReqBodyAsn1::new(&self);
-    }
-
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
@@ -184,12 +180,6 @@ pub(crate) struct KdcReqBodyAsn1 {
 }
 
 impl KdcReqBodyAsn1 {
-
-    fn new(kdc_body: &KdcReqBody) -> KdcReqBodyAsn1 {
-        let mut kdc_body_asn1 = Self::default();
-        kdc_body_asn1.set_asn1_values(kdc_body);
-        return kdc_body_asn1;
-    }
 
     fn set_asn1_values(&mut self, kdc_body: &KdcReqBody) {
         self.set_kdc_options(kdc_body.get_kdc_options().into());
@@ -229,6 +219,14 @@ impl KdcReqBodyAsn1 {
         }
     }
 
+}
+
+impl From<&KdcReqBody> for KdcReqBodyAsn1 {
+    fn from(kdc_body: &KdcReqBody) -> Self {
+        let mut kdc_body_asn1 = Self::default();
+        kdc_body_asn1.set_asn1_values(kdc_body);
+        return kdc_body_asn1;
+    }
 }
 
 
@@ -277,7 +275,7 @@ mod test {
         kdc_req_body.push_etype(DES_CBC_MD5);
         kdc_req_body.set_address(HostAddress::NetBios("HOLLOWBASTION".to_string()));
 
-        let kdc_req_body_asn1 = kdc_req_body.asn1_type();
+        let kdc_req_body_asn1 = KdcReqBodyAsn1::from(&kdc_req_body);
 
         assert_eq!(vec![0x30, 0x81, 0xb9, 
                             0xa0, 0x07, 0x03, 0x05, 0x00, 0x40, 0x81, 0x00, 0x10, 
