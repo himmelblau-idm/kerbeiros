@@ -3,6 +3,7 @@ use super::lastreqentry::*;
 use crate::error::Result;
 use std::ops::{Deref, DerefMut};
 
+/// (*LastReq*) Times of the last Kerberos requests. Array of [LastReqEntry](./struct.LastReqEntry.html).
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct LastReq {
     entries: Vec<LastReqEntry>

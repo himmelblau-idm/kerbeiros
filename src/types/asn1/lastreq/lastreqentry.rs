@@ -3,6 +3,7 @@ pub use super::super::int32::*;
 pub use super::super::kerberostime::*;
 use crate::error::{ErrorKind, Result};
 
+/// Register of time of a request to KDC.
 #[derive(Debug, PartialEq, Clone)]
 pub struct LastReqEntry {
     lr_type: Int32,
