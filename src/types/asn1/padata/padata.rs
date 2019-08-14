@@ -3,7 +3,7 @@ use super::pacrequest::PacRequest;
 use super::etypeinfo2::*;
 use super::super::int32::*;
 use crate::error::{ErrorKind, Result};
-use super::super::encrypteddata::EncryptedData;
+use super::super::encrypteddata::*;
 use crate::constants::pa_data_types::*;
 
 
@@ -31,7 +31,7 @@ impl PaData {
             PaData::Raw(_, padata_value) => padata_value.clone(),
             PaData::PacRequest(pac_request) => pac_request.asn1_type().encode().unwrap(),
             PaData::EtypeInfo2(etype_info2) => etype_info2.asn1_type().encode().unwrap(),
-            PaData::EncTimestamp(enc_data) => enc_data.asn1_type().encode().unwrap(),
+            PaData::EncTimestamp(enc_data) => EncryptedDataAsn1::from(enc_data).encode().unwrap(),
         }
     }
 

@@ -211,7 +211,7 @@ impl KdcReqBodyAsn1 {
             self.set_addresses(addresses.asn1_type());
         }
         if let Some(enc_authorization_data) = kdc_body.get_enc_authorization_data() {
-            self.set_enc_authorization_data(enc_authorization_data.asn1_type());
+            self.set_enc_authorization_data(enc_authorization_data.into());
         }
         
         if let Some(tickets) = kdc_body.get_additional_tickets() {

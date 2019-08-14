@@ -21,6 +21,22 @@ impl KrbCred {
         };
     }
 
+    pub fn get_pvno(&self) -> i8 {
+        return self.pvno;
+    }
+
+    pub fn get_msg_type(&self) -> i8 {
+        return self.msg_type;
+    }
+
+    pub fn get_tickets(&self) -> &SeqOfTickets {
+        return &self.tickets;
+    }
+
+    pub fn get_enc_part(&self) -> &EncryptedData {
+        return &self.enc_part;
+    }
+
     pub fn build(&self) -> Vec<u8> {
         return KrbCredAsn1::from(self).encode().unwrap();
     }
@@ -45,10 +61,10 @@ impl From<&KrbCred> for KrbCredAsn1 {
     fn from(krb_cred: &KrbCred) -> Self {
         let mut krb_cred_asn1 = Self::default();
 
-        krb_cred_asn1.set_pvno(Integer::from(krb_cred.pvno as i64));
-        krb_cred_asn1.set_msg_type(Integer::from(krb_cred.msg_type as i64));
-        krb_cred_asn1.set_tickets(krb_cred.tickets.asn1_type());
-        krb_cred_asn1.set_enc_part(krb_cred.enc_part.asn1_type());
+        krb_cred_asn1.set_pvno(Integer::from(krb_cred.get_pvno() as i64));
+        krb_cred_asn1.set_msg_type(Integer::from(krb_cred.get_msg_type() as i64));
+        krb_cred_asn1.set_tickets(krb_cred.get_tickets().asn1_type());
+        krb_cred_asn1.set_enc_part(krb_cred.get_enc_part().into());
 
         return krb_cred_asn1;
     }

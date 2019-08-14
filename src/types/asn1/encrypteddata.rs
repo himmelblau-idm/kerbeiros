@@ -37,10 +37,6 @@ impl EncryptedData {
         return &self.cipher;
     }
 
-    pub(crate) fn asn1_type(&self) -> EncryptedDataAsn1 {
-        return EncryptedDataAsn1::new(self);
-    }
-
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
@@ -54,19 +50,6 @@ pub(crate) struct EncryptedDataAsn1 {
 }
 
 impl EncryptedDataAsn1 {
-
-    fn new(enc_data: &EncryptedData) -> EncryptedDataAsn1 {
-        let mut enc_data_asn1 = Self::default();
-
-        enc_data_asn1.set_etype(enc_data.get_etype().into());
-        enc_data_asn1.set_cipher(enc_data.cipher.clone().into());
-
-        if let Some(kvno) = enc_data.get_kvno() {
-            enc_data_asn1.set_kvno(kvno.into());
-        }
-
-        return enc_data_asn1;
-    }
 
     pub fn no_asn1_type(&self) -> Result<EncryptedData> {
         let etype = self.get_etype().ok_or_else(|| 
@@ -88,6 +71,21 @@ impl EncryptedDataAsn1 {
         return Ok(enc_data);
     }
 
+}
+
+impl From<&EncryptedData> for EncryptedDataAsn1 {
+    fn from(enc_data: &EncryptedData) -> EncryptedDataAsn1 {
+        let mut enc_data_asn1 = Self::default();
+
+        enc_data_asn1.set_etype(enc_data.get_etype().into());
+        enc_data_asn1.set_cipher(enc_data.cipher.clone().into());
+
+        if let Some(kvno) = enc_data.get_kvno() {
+            enc_data_asn1.set_kvno(kvno.into());
+        }
+
+        return enc_data_asn1;
+    }
 }
 
 #[cfg(test)]
@@ -128,7 +126,7 @@ mod test {
                         0x67, 0x29, 0x16, 0x9a, 0x54, 0xbc, 0x66, 0xae, 0x29, 
                         0x9d, 0xd1, 0xec, 0x62, 0xbc, 0x99, 0xce, 0x2c, 0x9f, 
                         0x6a, 0x4e, 0xf1, 0xf0, 0x25, 0xf9, 0x9e, 0x13, 0xa5, 
-                        0x94, 0xa2, 0x39, 0x80, 0x7f, 0xdf], enc_data.asn1_type().encode().unwrap());
+                        0x94, 0xa2, 0x39, 0x80, 0x7f, 0xdf], EncryptedDataAsn1::from(&enc_data).encode().unwrap());
     }
 
     #[test]

@@ -78,7 +78,7 @@ impl TicketAsn1 {
         ticket_asn1.set_tkt_vno(Integer::from(ticket.get_tkt_vno() as i64));
         ticket_asn1.set_realm(ticket.get_realm().into());
         ticket_asn1.set_sname(ticket.get_sname().into());
-        ticket_asn1.set_enc_part(ticket.get_enc_part().asn1_type());
+        ticket_asn1.set_enc_part(ticket.get_enc_part().into());
 
         return ticket_asn1;
     }
