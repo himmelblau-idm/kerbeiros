@@ -46,10 +46,6 @@ impl EtypeInfo2Entry {
         return &self.s2kparams;
     }
 
-    pub(crate) fn asn1_type(&self) -> EtypeInfo2EntryAsn1 {
-        return EtypeInfo2EntryAsn1::new(self);
-    }
-
 }
 
 #[derive(Sequence, Debug, Default, PartialEq)]
@@ -64,22 +60,6 @@ pub(crate) struct EtypeInfo2EntryAsn1{
 
 
 impl EtypeInfo2EntryAsn1 {
-
-    fn new(entry: &EtypeInfo2Entry) -> Self {
-        let mut entry_asn1 = Self::default();
-
-        entry_asn1.set_etype(entry.get_etype().into());
-        
-        if let Some(salt) = entry.get_salt() {
-            entry_asn1.set_salt(salt.into());
-        }
-
-        if let Some(s2kparams) = entry.get_s2kparams() {
-            entry_asn1.set_s2kparams(OctetString::from(s2kparams.clone()));
-        }
-
-        return entry_asn1;
-    }
 
     pub fn no_asn1_type(&self) -> Result<EtypeInfo2Entry> {
         let mut entry = EtypeInfo2Entry::default();
@@ -103,6 +83,24 @@ impl EtypeInfo2EntryAsn1 {
         return Ok(entry);
     }
 
+}
+
+impl From<&EtypeInfo2Entry> for EtypeInfo2EntryAsn1 {
+    fn from(entry: &EtypeInfo2Entry) -> Self {
+        let mut entry_asn1 = Self::default();
+
+        entry_asn1.set_etype(entry.get_etype().into());
+        
+        if let Some(salt) = entry.get_salt() {
+            entry_asn1.set_salt(salt.into());
+        }
+
+        if let Some(s2kparams) = entry.get_s2kparams() {
+            entry_asn1.set_s2kparams(OctetString::from(s2kparams.clone()));
+        }
+
+        return entry_asn1;
+    }
 }
 
 

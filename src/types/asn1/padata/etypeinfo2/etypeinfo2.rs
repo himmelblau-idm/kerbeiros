@@ -47,7 +47,7 @@ impl EtypeInfo2Asn1 {
 
     fn set_asn1_values(&mut self, seq_of_padatas: &EtypeInfo2) {
         for padata in seq_of_padatas.iter() {
-            self.subtype.push(padata.asn1_type());
+            self.subtype.push(padata.into());
         }
     }
 
