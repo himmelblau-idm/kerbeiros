@@ -129,11 +129,7 @@ impl AsReq {
     }
 
     pub fn build(&self) -> Vec<u8> {
-        return self.asn1_type().encode().unwrap();
-    }
-
-    pub(crate) fn asn1_type(&self) -> AsReqAsn1 {
-        return AsReqAsn1::new(self);
+        return AsReqAsn1::from(self).encode().unwrap();
     }
 
 }
@@ -154,13 +150,6 @@ pub(crate) struct AsReqAsn1 {
 
 impl AsReqAsn1 {
 
-    fn new(as_req: &AsReq) -> Self {
-        let mut as_req_asn1 = Self::default();
-
-        as_req_asn1.set_asn1_values(as_req);
-        return as_req_asn1;
-    }
-
     fn set_asn1_values(&mut self, as_req: &AsReq) {
         self.set_pvno(Integer::from(as_req.get_pvno() as i64));
         self.set_msg_type(Integer::from(as_req.get_msg_type() as i64));
@@ -172,6 +161,15 @@ impl AsReqAsn1 {
         self.set_req_body(as_req.get_req_body().into());
     }
 
+}
+
+impl From<&AsReq> for AsReqAsn1 {
+    fn from(as_req: &AsReq) -> Self {
+        let mut as_req_asn1 = Self::default();
+
+        as_req_asn1.set_asn1_values(as_req);
+        return as_req_asn1;
+    }
 }
 
 
