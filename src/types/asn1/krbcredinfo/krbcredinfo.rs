@@ -264,7 +264,7 @@ impl From<&KrbCredInfo> for KrbCredInfoAsn1 {
             krb_cred_info_asn1.set_sname(sname.into());
         }
         if let Some(caddr) = krb_cred_info.get_caddr() {
-            krb_cred_info_asn1.set_caddr(caddr.asn1_type());
+            krb_cred_info_asn1.set_caddr(caddr.into());
         }
 
         return krb_cred_info_asn1;

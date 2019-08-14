@@ -208,7 +208,7 @@ impl KdcReqBodyAsn1 {
         self.set_etype(kdc_body.get_etypes().asn1_type());
 
         if let Some(addresses) = kdc_body.get_addresses() {
-            self.set_addresses(addresses.asn1_type());
+            self.set_addresses(addresses.into());
         }
         if let Some(enc_authorization_data) = kdc_body.get_enc_authorization_data() {
             self.set_enc_authorization_data(enc_authorization_data.into());

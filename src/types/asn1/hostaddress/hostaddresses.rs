@@ -22,10 +22,6 @@ impl HostAddresses {
         };
     }
 
-    pub(crate) fn asn1_type(&self) -> HostAddressesAsn1 {
-        return HostAddressesAsn1::new(self);
-    }
-
 }
 
 impl Deref for HostAddresses {
@@ -47,11 +43,6 @@ pub(crate) struct HostAddressesAsn1 {
 }
 
 impl HostAddressesAsn1 {
-    fn new(host_addresses: &HostAddresses) -> HostAddressesAsn1 {
-        return HostAddressesAsn1 {
-            subtype: HostAddressesAsn1::seq_of_host_address(host_addresses)
-        }
-    }
 
     fn seq_of_host_address(host_addresses: &HostAddresses) -> SequenceOf<HostAddressAsn1> {
         let mut seq_of_host_addresses: SequenceOf<HostAddressAsn1> = SequenceOf::default();
@@ -70,6 +61,14 @@ impl HostAddressesAsn1 {
         }
 
         return Ok(host_addresses);
+    }
+}
+
+impl From<&HostAddresses> for HostAddressesAsn1 {
+    fn from(host_addresses: &HostAddresses) -> HostAddressesAsn1 {
+        return HostAddressesAsn1 {
+            subtype: HostAddressesAsn1::seq_of_host_address(host_addresses)
+        }
     }
 }
 
@@ -106,7 +105,7 @@ mod tests {
                         0x30, 0x19, 0xa0, 0x03, 0x02, 0x01, 0x14, 
                         0xa1, 0x12, 0x04, 0x10, 0x48, 0x4f, 0x4c, 0x4c, 0x4f, 0x57, 
                         0x42, 0x41, 0x53, 0x54, 0x49, 0x4f, 0x4e, 0x20, 0x20, 0x20],
-                   addresses.asn1_type().encode().unwrap());
+                   HostAddressesAsn1::from(&addresses).encode().unwrap());
     }
 
     #[test]
