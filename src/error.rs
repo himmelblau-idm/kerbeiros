@@ -41,7 +41,7 @@ pub enum ErrorKind {
     IOError,
 
     /// Received KRB-ERROR response.
-    #[fail (display = "Received KRB-ERROR response")]
+    #[fail (display = "Received {}", _0)]
     KrbErrorResponse(KrbError),
 
     /// Error resolving name.

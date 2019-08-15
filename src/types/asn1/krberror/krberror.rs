@@ -9,6 +9,8 @@ use super::edata::Edata;
 use crate::constants::error_codes::*;
 use super::super::padata::*;
 
+use std::fmt;
+
 /// (*KRB-ERROR*) Message used to indicate an error.
 #[derive(Debug, Clone, PartialEq)]
 pub struct KrbError {
@@ -97,6 +99,10 @@ impl KrbError {
         return self.error_code;
     }
 
+    pub fn error_code_message(&self) -> String {
+        return error_code_to_string(self.error_code);
+    }
+
     pub fn crealm(&self) -> &Option<Realm> {
         return &self.crealm;
     }
@@ -143,6 +149,13 @@ impl KrbError {
         return Ok(krb_error_asn1.no_asn1_type().unwrap());
     }
 }
+
+impl fmt::Display for KrbError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "KRB-ERROR [{}] {}", self.error_code(), self.error_code_message())
+    }
+}
+
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 30)]

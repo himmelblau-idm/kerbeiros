@@ -142,7 +142,7 @@ mod test {
     use super::*;
     use std::net::Ipv4Addr;
 
-    #[should_panic(expected="Received KRB-ERROR response")]
+    #[should_panic(expected="Received KRB-ERROR")]
     #[test]
     fn request_tgt_receiving_krb_error() {
 
@@ -598,7 +598,7 @@ mod test {
     }
 
 
-    #[should_panic(expected="Received KRB-ERROR response")]
+    #[should_panic(expected="Received KRB-ERROR")]
     #[test]
     fn request_tgt_without_user_key() {
 
