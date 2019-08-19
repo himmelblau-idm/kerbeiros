@@ -77,13 +77,13 @@ mod test {
     }
 
     #[test]
-    fn as_req_with_only_supported_rc4_when_ntlm_is_provided() {
+    fn as_req_with_only_supported_rc4_when_rc4_key_is_provided() {
         let key = [
             0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31,
             0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0, 0x89, 0xc0
         ];
 
-        let as_req_struct = create_as_req_struct_with_key(Some(&Key::NTLM(key)));
+        let as_req_struct = create_as_req_struct_with_key(Some(&Key::RC4Key(key)));
 
         assert_eq!(vec![RC4_HMAC], **as_req_struct.etypes());
     }

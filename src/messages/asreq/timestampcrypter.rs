@@ -47,14 +47,14 @@ impl<'a> AsReqTimestampCrypter<'a> {
             Key::Password(password) => {
                 return self.encrypt_timestamp_with_best_cipher_and_password(password);
             }
-            Key::NTLM(ntlm) => {
-                return self.encrypt_timestamp_with_cipher_and_key(RC4_HMAC, ntlm);
+            Key::RC4Key(rc4_key) => {
+                return self.encrypt_timestamp_with_cipher_and_key(RC4_HMAC, rc4_key);
             },
-            Key::AES128Key(key_128) => {
-                return self.encrypt_timestamp_with_cipher_and_key(AES128_CTS_HMAC_SHA1_96, key_128); 
+            Key::AES128Key(aes_key_128) => {
+                return self.encrypt_timestamp_with_cipher_and_key(AES128_CTS_HMAC_SHA1_96, aes_key_128); 
             },
-            Key::AES256Key(key_256) => {
-                return self.encrypt_timestamp_with_cipher_and_key(AES256_CTS_HMAC_SHA1_96, key_256);
+            Key::AES256Key(aes_key_256) => {
+                return self.encrypt_timestamp_with_cipher_and_key(AES256_CTS_HMAC_SHA1_96, aes_key_256);
             }
         }
     }
@@ -119,7 +119,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn produce_encrypted_timestamp_with_ntlm() {
+    fn produce_encrypted_timestamp_with_rc4_key() {
         let etypes = vec![RC4_HMAC];
         let key = [
             0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31,
@@ -129,7 +129,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::NTLM(key.clone()),
+            &Key::RC4Key(key.clone()),
             &etypes
         ).unwrap();
 
@@ -179,7 +179,7 @@ mod test {
     }
     
     #[test]
-    fn produce_encrypted_timestamp_with_ntlm_without_specify_any_cipher() {
+    fn produce_encrypted_timestamp_with_rc4_key_without_specify_any_cipher() {
         let etypes = vec![];
         let key = [
             0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31,
@@ -189,7 +189,7 @@ mod test {
         let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::NTLM(key.clone()),
+            &Key::RC4Key(key.clone()),
             &etypes
         ).unwrap();
 
