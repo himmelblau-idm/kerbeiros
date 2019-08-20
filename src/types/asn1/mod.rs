@@ -48,8 +48,8 @@ pub use as_req::*;
 mod kdcrep;
 pub use kdcrep::*;
 
-mod enckdcreppart;
-pub use enckdcreppart::*;
+mod enc_kdc_rep_part;
+pub use enc_kdc_rep_part::*;
 
 mod lastreq;
 pub use lastreq::*;
