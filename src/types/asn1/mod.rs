@@ -15,9 +15,6 @@ pub use kdc_rep::*;
 mod enc_krb_cred_part;
 pub use enc_krb_cred_part::*;
 
-mod lastreq;
-pub use lastreq::*;
-
 mod krbcred;
 pub use krbcred::*;
 

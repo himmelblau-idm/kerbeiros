@@ -1,5 +1,5 @@
 use red_asn1::*;
-use super::lastreqentry::*;
+use super::last_req_entry::*;
 use crate::error::Result;
 use std::ops::{Deref, DerefMut};
 

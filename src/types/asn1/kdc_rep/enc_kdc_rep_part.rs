@@ -1,6 +1,6 @@
 use red_asn1::*;
 use super::super::basics::*;
-use super::super::lastreq::*;
+use super::last_req::*;
 use super::super::ticket::ticket_flags::*;
 use crate::error::{ErrorKind, Result};
 
