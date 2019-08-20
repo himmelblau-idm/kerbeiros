@@ -1,7 +1,7 @@
 use red_asn1::*;
-use super::basics::*;
-use super::lastreq::*;
-use super::ticket::ticket_flags::*;
+use super::super::basics::*;
+use super::super::lastreq::*;
+use super::super::ticket::ticket_flags::*;
 use crate::error::{ErrorKind, Result};
 
 /// (*EncKdcRepPart*) Holds the data that is encrypted in [KdcRep](./struct.KdcRep.html)

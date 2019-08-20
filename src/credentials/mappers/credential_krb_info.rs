@@ -100,6 +100,7 @@ impl CredentialKrbInfoMapper {
 mod test {
     use super::*;
     use chrono::prelude::*;
+    use crate::constants::ticket_flags;
 
     #[test]
     fn convert_to_krb_info() {

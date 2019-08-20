@@ -36,6 +36,7 @@ impl CredentialWarehouseKrbCredMapper {
 mod test {
     use super::*;
     use chrono::prelude::*;
+    use crate::constants::ticket_flags;
 
     #[test]
     fn credential_warehouse_to_krb_cred() {

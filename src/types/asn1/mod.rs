@@ -12,9 +12,6 @@ pub use ticket::*;
 mod kdc_rep;
 pub use kdc_rep::*;
 
-mod enc_kdc_rep_part;
-pub use enc_kdc_rep_part::*;
-
 mod enc_krb_cred_part;
 pub use enc_krb_cred_part::*;
 

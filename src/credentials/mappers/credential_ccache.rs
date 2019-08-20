@@ -60,6 +60,7 @@ mod test {
     use super::*;
     use chrono::prelude::*;
     use crate::constants::*;
+    use crate::constants::ticket_flags;
 
     fn create_credential(
         encryption_key: EncryptionKey, prealm: Realm, pname: PrincipalName, ticket_flags: TicketFlags,
