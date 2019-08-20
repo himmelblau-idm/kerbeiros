@@ -40,7 +40,7 @@
 
 pub mod types;
 mod byteparser;
-mod crypter;
+mod ciphers;
 mod transporter;
 
 pub mod error;

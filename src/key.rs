@@ -1,16 +1,16 @@
 //! Exports the types of user keys available for this implementation.
 
-use crate::crypter;
+use crate::ciphers;
 use crate::constants::*;
 
 /// Size of [`Key::RC4Key`](./enum.Key.html#variant.RC4Key).
-pub const RC4_KEY_SIZE: usize = crypter::RC4_KEY_SIZE;
+pub const RC4_KEY_SIZE: usize = ciphers::RC4_KEY_SIZE;
 
 /// Size of [`Key::AES128Key`](./enum.Key.html#variant.AES128Key).
-pub const AES128_KEY_SIZE: usize = crypter::AES128_KEY_SIZE;
+pub const AES128_KEY_SIZE: usize = ciphers::AES128_KEY_SIZE;
 
 /// Size of [`Key::AES256Key`](./enum.Key.html#variant.AES256Key).
-pub const AES256_KEY_SIZE: usize = crypter::AES256_KEY_SIZE;
+pub const AES256_KEY_SIZE: usize = ciphers::AES256_KEY_SIZE;
 
 /// Encapsules the possible keys used by this Kerberos implementation.
 /// Each key can be used by a different cryptographic algorithm.
