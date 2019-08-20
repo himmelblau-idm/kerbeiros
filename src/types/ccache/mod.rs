@@ -13,8 +13,8 @@ pub use counted_octet_string::*;
 mod principal;
 pub use principal::*;
 
-mod keyblock;
-pub use keyblock::*;
+mod key_block;
+pub use key_block::*;
 
 mod times;
 pub use times::*;
