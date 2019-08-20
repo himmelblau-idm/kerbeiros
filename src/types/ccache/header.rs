@@ -1,4 +1,4 @@
-pub use super::deltatime::*;
+pub use super::delta_time::*;
 
 /// Header of [CCache](./struct.CCache.html).
 #[derive(Debug, PartialEq, Clone)]

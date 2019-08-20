@@ -4,8 +4,8 @@
 //! * [ccache definition](https://web.mit.edu/kerberos/krb5-1.12/doc/basic/ccache_def.html)
 //! * [ccache types definition](https://repo.or.cz/w/krb5dissect.git/blob_plain/HEAD:/ccache.txt)
 
-mod deltatime;
-pub use deltatime::*;
+mod delta_time;
+pub use delta_time::*;
 
 mod header;
 pub use header::*;
