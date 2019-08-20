@@ -4,7 +4,7 @@ use super::super::basics::kerberos_time::*;
 use super::super::realm::*;
 use super::super::principalname::*;
 use super::super::ticketflags::*;
-use super::super::hostaddress::*;
+use super::super::host_address::*;
 
 #[cfg(test)]
 use crate::error::{ErrorKind, Result};

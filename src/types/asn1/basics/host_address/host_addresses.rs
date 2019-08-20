@@ -1,5 +1,5 @@
 use red_asn1::*;
-use super::hostaddress::*;
+use super::host_address::*;
 use crate::error::Result;
 use std::ops::{Deref, DerefMut};
 

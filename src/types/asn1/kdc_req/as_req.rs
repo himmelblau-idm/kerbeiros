@@ -8,7 +8,7 @@ use super::super::encrypted_data::*;
 use crate::constants::*;
 
 #[cfg(test)]
-use super::super::hostaddress::HostAddress;
+use super::super::host_address::HostAddress;
 
 #[cfg(test)]
 use super::super::int32::*;
