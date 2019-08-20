@@ -1,6 +1,6 @@
 use red_asn1::*;
-use super::pacrequest::*;
-use super::etypeinfo2::*;
+use super::pac_request::*;
+use super::etype_info_2::*;
 use super::super::int32::*;
 use crate::error::{ErrorKind, Result};
 use super::super::encrypted_data::*;

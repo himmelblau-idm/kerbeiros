@@ -1,6 +1,6 @@
 use red_asn1::*;
 use std::ops::{Deref, DerefMut};
-use super::padata::*;
+use super::pa_data::*;
 use crate::error::Result;
 
 /// (*METHOD-DATA*) Array of [PaData](./enum.PaData.html).
@@ -91,7 +91,7 @@ impl Asn1Object for SeqOfPaDataAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::pacrequest::PacRequest;
+    use super::super::pac_request::PacRequest;
 
     #[test]
     fn create_default_seq_of_padatas_asn1() {
