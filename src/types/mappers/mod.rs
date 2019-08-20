@@ -1,18 +1,18 @@
-mod keyblockmapper;
-pub use keyblockmapper::*;
+mod key_block_mapper;
+pub use key_block_mapper::*;
 
-mod principalmapper;
-pub use principalmapper::*;
+mod principal_mapper;
+pub use principal_mapper::*;
 
-mod timesmapper;
-pub use timesmapper::*;
+mod times_mapper;
+pub use times_mapper::*;
 
-mod ticketflagsmapper;
-pub use ticketflagsmapper::*;
+mod ticket_flags_mapper;
+pub use ticket_flags_mapper::*;
 
 
-mod addressmapper;
-pub use addressmapper::*;
+mod address_mapper;
+pub use address_mapper::*;
 
-mod authdatamapper;
-pub use authdatamapper::*;
+mod auth_data_mapper;
+pub use auth_data_mapper::*;
