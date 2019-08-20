@@ -1,4 +1,4 @@
-pub mod krb_cred;
+pub(crate) mod krb_cred;
 pub use krb_cred::*;
 
 mod enc_krb_cred_part;
