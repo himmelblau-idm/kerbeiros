@@ -33,8 +33,8 @@ pub use kerberosflags::*;
 mod encrypted_data;
 pub use encrypted_data::*;
 
-mod encryptionkey;
-pub use encryptionkey::*;
+mod encryption_key;
+pub use encryption_key::*;
 
 mod ticket;
 pub use ticket::*;

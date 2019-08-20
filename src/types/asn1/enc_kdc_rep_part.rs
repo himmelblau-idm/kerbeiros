@@ -1,5 +1,5 @@
 use red_asn1::*;
-use super::encryptionkey::*;
+use super::encryption_key::*;
 use super::uint32::*;
 use super::lastreq::*;
 use super::kerberostime::*;
