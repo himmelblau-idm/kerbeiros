@@ -1,4 +1,4 @@
-use super::countedoctetstring::*;
+use super::counted_octet_string::*;
 
 /// Name of some Kerberos entity.
 #[derive(Debug, Clone, PartialEq)]

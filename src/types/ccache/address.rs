@@ -1,4 +1,4 @@
-use super::countedoctetstring::*;
+use super::counted_octet_string::*;
 
 /// Represent addresses of Kerberos actors.
 #[derive(Debug, PartialEq, Clone)]

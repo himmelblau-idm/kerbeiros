@@ -1,5 +1,6 @@
 use super::header::*;
 use super::credential::*;
+use super::principal::*;
 
 /// To store an array of credentials.
 #[derive(Debug, PartialEq, Clone)]
@@ -49,6 +50,7 @@ mod test {
     use super::*;
     use crate::constants::*;
     use chrono::prelude::*;
+    use super::super::*;
 
     #[test]
     fn build_ccache() {

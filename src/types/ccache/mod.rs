@@ -10,8 +10,8 @@ pub use deltatime::*;
 mod header;
 pub use header::*;
 
-mod countedoctetstring;
-pub use countedoctetstring::*;
+mod counted_octet_string;
+pub use counted_octet_string::*;
 
 mod principal;
 pub use principal::*;
