@@ -83,14 +83,14 @@ impl<'a> AsReqTimestampCipher<'a> {
     }
 
     fn encrypt_timestamp_with_cipher_and_key(&self, etype: i32, key: &[u8]) -> Result<(i32, Vec<u8>)> {
-        let crypter = new_kerberos_cipher(etype)?;
-        return Ok((etype, crypter.encrypt(key, KEY_USAGE_AS_REQ_TIMESTAMP, &self.raw_timestamp))); 
+        let cipher = new_kerberos_cipher(etype)?;
+        return Ok((etype, cipher.encrypt(key, KEY_USAGE_AS_REQ_TIMESTAMP, &self.raw_timestamp))); 
     }
 
     fn encrypt_timestamp_with_cipher_and_password(&self, etype: i32, password: &str, salt: &[u8]
         ) -> Result<(i32, Vec<u8>)> {
-        let crypter = new_kerberos_cipher(etype)?;
-        return Ok((etype, crypter.generate_key_from_password_and_encrypt(
+        let cipher = new_kerberos_cipher(etype)?;
+        return Ok((etype, cipher.generate_key_from_password_and_encrypt(
                                 password,
                                 salt, 
                                 KEY_USAGE_AS_REQ_TIMESTAMP, 
