@@ -1,5 +1,5 @@
-mod krbinfomapper;
-pub use krbinfomapper::*;
+mod credential_krb_info;
+pub use credential_krb_info::*;
 
 mod credential_ccache;
 pub use credential_ccache::*;
