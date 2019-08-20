@@ -76,8 +76,29 @@ impl Key {
         }
     }
 
-
+    /// Get a RC4 key from a hexdump of a NTLM hash.
+    /// # Example
+    /// 
+    /// ```
+    /// use kerbeiros::Key;
+    /// assert_eq!(
+    ///     Key::RC4Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]), 
+    ///     Key::from_ntlm_string("0123456789ABCDEF0123456789abcdef").unwrap()
+    /// );
+    /// 
+    /// # Errors
+    /// An error if raised if the argument string has any non hexadecimal character or size is different from 32.
+    /// ```
     pub fn from_ntlm_string(hex_str: &str) -> Result<Self> {
+        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, RC4_KEY_SIZE, "NTLM")?;
+
+        let mut key: [u8; RC4_KEY_SIZE] = [0; RC4_KEY_SIZE];
+        key.copy_from_slice(&ntlm[0..RC4_KEY_SIZE]);
+
+        return Ok(Key::RC4Key(key));
+    }
+
+    pub fn from_rc4_key_string(hex_str: &str) -> Result<Self> {
         let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, RC4_KEY_SIZE, "NTLM")?;
 
         let mut key: [u8; RC4_KEY_SIZE] = [0; RC4_KEY_SIZE];
