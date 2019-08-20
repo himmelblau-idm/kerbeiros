@@ -1,7 +1,6 @@
 use red_asn1::*;
 use super::basics::*;
 use super::krbcredinfo::*;
-use super::hostaddress::*;
 
 #[cfg(test)]
 use crate::error::{ErrorKind, Result};

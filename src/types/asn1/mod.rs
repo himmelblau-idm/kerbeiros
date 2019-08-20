@@ -12,9 +12,6 @@ pub use realm::*;
 mod principalname;
 pub use principalname::*;
 
-mod hostaddress;
-pub use hostaddress::*;
-
 mod padata;
 pub use padata::*;
 

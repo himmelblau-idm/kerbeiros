@@ -5,7 +5,6 @@ use super::kdc_options::*;
 use super::super::principalname::*;
 use crate::error::{ErrorKind, Result};
 use crate::constants::principal_name_types::*;
-use super::super::hostaddress::*;
 use super::super::encrypted_data::*;
 use super::super::ticket::*;
 use rand::Rng;
