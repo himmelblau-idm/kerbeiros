@@ -173,6 +173,7 @@ impl KdcRepAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+    use super::super::kerberos_string::*;
 
     #[test]
     fn create_default_as_rep_asn1() {

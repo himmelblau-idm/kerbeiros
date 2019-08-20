@@ -1,7 +1,6 @@
 use red_asn1::*;
 use super::super::basics::*;
 use crate::error::{ErrorKind, Result};
-use super::super::realm::*;
 use super::super::principalname::*;
 use super::edata::Edata;
 use crate::constants::error_codes::*;

@@ -278,6 +278,7 @@ mod test {
     use super::*;
     use crate::constants::*;
     use chrono::prelude::*;
+    use super::super::super::kerberos_string::*;
 
     #[test]
     fn create_default_kdc_cred_info_asn1() {

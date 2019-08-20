@@ -3,7 +3,6 @@ use super::basics::*;
 use super::encryption_key::*;
 use super::lastreq::*;
 use super::ticketflags::*;
-use super::realm::*;
 use super::principalname::*;
 use super::padata::*;
 use crate::error::{ErrorKind, Result};

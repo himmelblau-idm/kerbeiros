@@ -118,6 +118,7 @@ impl From<&Ticket> for TicketAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
+    use super::super::super::kerberos_string::*;
 
     #[test]
     fn create_default_ticket_asn1() {
