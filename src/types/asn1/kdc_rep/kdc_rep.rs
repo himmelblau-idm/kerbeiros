@@ -1,6 +1,6 @@
 use red_asn1::*;
-use super::basics::*;
-use super::ticket::*;
+use super::super::basics::*;
+use super::super::ticket::*;
 use crate::error::{ErrorKind, Result};
 use crate::credentials::*;
 use crate::key::Key;
