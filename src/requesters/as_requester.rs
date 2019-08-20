@@ -16,7 +16,8 @@ pub enum AsReqResponse {
 
 /// Send the AS-REQ requests and retrieves the response
 /// 
-/// # Example
+/// # Examples
+/// 
 /// ```no_run
 /// use kerbeiros::*;
 /// use ascii::AsciiString;
@@ -41,7 +42,7 @@ pub enum AsReqResponse {
 ///     }
 ///     AsReqResponse::AsRep(as_rep) => {
 ///         let ticket = as_rep.ticket();
-///         println!("Get ticket for service {}", ticket.sname());
+///         println!("Ticket obtained for service {}", ticket.sname());
 ///     }
 /// }
 /// ```

@@ -10,6 +10,30 @@ use super::as_requester::*;
 use std::collections::HashSet;
 
 /// Gets a TGT from KDC by sending one or more AS-REQ requests
+/// # Examples
+/// 
+/// ```no_run
+/// use kerbeiros::*;
+/// use ascii::AsciiString;
+/// use std::net::*;
+/// 
+/// // Prepare the arguments
+/// let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();
+/// let kdc_address = IpAddr::V4(Ipv4Addr::new(192, 168, 0, 1));
+/// let username = AsciiString::from_ascii("Bob").unwrap();
+/// let user_key = Key::Password("S3cr3t".to_string());
+/// 
+/// // Request the TGT
+/// let mut tgt_requester = TgtRequester::new(realm, kdc_address);
+/// let credential = tgt_requester.request(&username, Some(&user_key)).unwrap();
+/// 
+/// // Save the ticket into a Windows format file
+/// credential.save_into_krb_cred_file("bob_tgt.krb");
+/// 
+/// // Save the ticket into a Linux format file
+/// credential.save_into_ccache_file("bob_tgt.ccache");
+/// ```
+///
 pub struct TgtRequester {
     as_requester: AsRequester
 }
