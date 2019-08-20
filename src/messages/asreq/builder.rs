@@ -3,7 +3,7 @@ use crate::key::Key;
 use crate::types::asn1;
 use crate::error::*;
 use super::options::AsReqOptions;
-use super::timestampcrypter::*;
+use super::timestamp_cipher::*;
 
 pub(crate) struct AsReqBuilder<'a>{
     username: &'a AsciiString, 
@@ -55,7 +55,7 @@ impl<'a> AsReqBuilder<'a> {
 
 
     fn produce_encrypted_timestamp(&self, user_key: &Key) -> Result<(i32, Vec<u8>)>{
-        return AsReqTimestampCrypter::build_encrypted_timestamp(
+        return AsReqTimestampCipher::build_encrypted_timestamp(
             self.options.realm(),
             &self.username,
             user_key,

@@ -6,7 +6,7 @@ use crate::ciphers::*;
 use ascii::AsciiString;
 use crate::key::Key;
 
-pub struct AsReqTimestampCrypter<'a> {
+pub struct AsReqTimestampCipher<'a> {
     realm: &'a AsciiString,
     username: &'a AsciiString,
     user_key: &'a Key,
@@ -14,7 +14,7 @@ pub struct AsReqTimestampCrypter<'a> {
     raw_timestamp: Vec<u8>
 }
 
-impl<'a> AsReqTimestampCrypter<'a> {
+impl<'a> AsReqTimestampCipher<'a> {
 
     pub fn build_encrypted_timestamp(
         realm: &'a AsciiString, username: &'a AsciiString, 
@@ -126,7 +126,7 @@ mod test {
             0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0, 0x89, 0xc0
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::RC4Key(key.clone()),
@@ -145,7 +145,7 @@ mod test {
             0x9a, 0x1c, 0x39, 0xbf, 0x83, 0x23, 0x56, 0x09
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::AES128Key(key.clone()),
@@ -167,7 +167,7 @@ mod test {
             0xe1, 0x46, 0x16, 0xaa, 0xca, 0xb5, 0x49, 0xfd
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::AES256Key(key.clone()),
@@ -186,7 +186,7 @@ mod test {
             0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0, 0x89, 0xc0
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::RC4Key(key.clone()),
@@ -205,7 +205,7 @@ mod test {
             0x9a, 0x1c, 0x39, 0xbf, 0x83, 0x23, 0x56, 0x09
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::AES128Key(key.clone()),
@@ -227,7 +227,7 @@ mod test {
             0xe1, 0x46, 0x16, 0xaa, 0xca, 0xb5, 0x49, 0xfd
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::AES256Key(key.clone()),
@@ -242,7 +242,7 @@ mod test {
     #[test]
     fn error_using_password_without_any_cipher_algorithm() {
         let etypes = Vec::new();
-        AsReqTimestampCrypter::build_encrypted_timestamp(
+        AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::Password("password".to_string()),
@@ -256,7 +256,7 @@ mod test {
         let etypes = vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC];
         let password = "password";
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::Password(password.to_string()),
@@ -277,7 +277,7 @@ mod test {
         let etypes = vec![AES128_CTS_HMAC_SHA1_96, RC4_HMAC];
         let password = "password";
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::Password(password.to_string()),
@@ -298,7 +298,7 @@ mod test {
         let etypes = vec![RC4_HMAC];
         let password = "password";
 
-        let (result_etype, timestamp) = AsReqTimestampCrypter::build_encrypted_timestamp(
+        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
             &Key::Password(password.to_string()),
