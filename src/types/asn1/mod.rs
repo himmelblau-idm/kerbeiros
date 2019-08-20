@@ -21,5 +21,5 @@ pub use krbcred::*;
 mod krbcredinfo;
 pub use krbcredinfo::*;
 
-mod krberror;
-pub use krberror::*;
+mod krb_error;
+pub use krb_error::*;
