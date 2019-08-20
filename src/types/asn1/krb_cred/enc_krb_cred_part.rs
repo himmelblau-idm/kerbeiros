@@ -1,91 +1,169 @@
 use red_asn1::*;
-use std::ops::{Deref, DerefMut};
-use super::krbcredinfo::*;
+use super::super::basics::*;
+use super::krb_cred_info::*;
 
 #[cfg(test)]
-use crate::error::Result;
+use crate::error::{ErrorKind, Result};
 
-/// (*SEQUENCE OF KrbCredInfo*) Array of [KrbCredInfo](./struct.KrbCredInfo.html).
-#[derive(Debug, Clone, PartialEq, Default)]
-pub struct SeqOfKrbCredInfo {
-    entries: Vec<KrbCredInfo>
+/// (*EncKrbCredPart*) Holds the data for user in [KrbCred](./struct.KrbCred.html)
+#[derive(Debug, Clone, PartialEq)]
+pub struct EncKrbCredPart {
+    ticket_info: SeqOfKrbCredInfo,
+    nonce: Option<UInt32>,
+    timestamp: Option<KerberosTime>,
+    usec: Option<Microseconds>,
+    s_address: Option<HostAddress>,
+    r_address: Option<HostAddress>
 }
 
-impl Deref for SeqOfKrbCredInfo {
-    type Target = Vec<KrbCredInfo>;
-    fn deref(&self) -> &Vec<KrbCredInfo> {
-        &self.entries
-    }
-}
 
-impl DerefMut for SeqOfKrbCredInfo {
-    fn deref_mut(&mut self) -> &mut Vec<KrbCredInfo> {
-        &mut self.entries
-    }
-}
+impl EncKrbCredPart {
 
-impl SeqOfKrbCredInfo {
-
-    #[cfg(test)]
-    pub fn new(mut items: Vec<KrbCredInfo>) -> Self {
-        let mut seq_of = Self::default();
-        seq_of.append(&mut items);
-        return seq_of;
+    pub fn new(ticket_info: SeqOfKrbCredInfo) -> Self {
+        return Self {
+            ticket_info,
+            nonce: None,
+            timestamp: None,
+            usec: None,
+            s_address: None,
+            r_address: None
+        };
     }
 
-}
-
-#[derive(Default, Debug, PartialEq)]
-pub(crate) struct SeqOfKrbCredInfoAsn1 {
-    subtype: SequenceOf<KrbCredInfoAsn1>
-}
-
-impl SeqOfKrbCredInfoAsn1 {
-
-    fn set_asn1_values(&mut self, seq_of_krb_cred_info: &SeqOfKrbCredInfo) {
-        for krb_cred_info in seq_of_krb_cred_info.iter() {
-            self.subtype.push(krb_cred_info.into());
-        }
+    pub fn nonce(&self) -> Option<UInt32> {
+        return self.nonce;
     }
 
     #[cfg(test)]
-    pub fn no_asn1_type(&self) -> Result<SeqOfKrbCredInfo> {
-        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
-        for seq_of_krb_cred_info_asn1 in self.subtype.iter() {
-            seq_of_krb_cred_info.push(seq_of_krb_cred_info_asn1.no_asn1_type()?);
+    fn set_nonce(&mut self, nonce: UInt32) {
+        self.nonce = Some(nonce);
+    }
+
+    pub fn r_address(&self) -> &Option<HostAddress> {
+        return &self.r_address;
+    }
+
+    #[cfg(test)]
+    fn set_r_address(&mut self, r_address: HostAddress) {
+        self.r_address = Some(r_address);
+    }
+
+    pub fn s_address(&self)  -> &Option<HostAddress> {
+        return &self.s_address;
+    }
+
+    #[cfg(test)]
+    fn set_s_address(&mut self, s_address: HostAddress) {
+        self.s_address = Some(s_address);
+    }
+
+    pub fn ticket_info(&self) -> &SeqOfKrbCredInfo{
+        return &self.ticket_info;
+    }
+
+    pub fn timestamp(&self) -> &Option<KerberosTime> {
+        return &self.timestamp;
+    }
+
+    #[cfg(test)]
+    fn set_timestamp(&mut self, timestamp: KerberosTime) {
+        self.timestamp = Some(timestamp);
+    }
+
+    pub fn usec(&self) -> &Option<Microseconds> {
+        return &self.usec;
+    }
+
+    #[cfg(test)]
+    fn set_usec(&mut self, usec: Microseconds) {
+        self.usec = Some(usec);
+    }
+
+    pub fn build(&self) -> Vec<u8> {
+        return EncKrbCredPartAsn1::from(self).encode().unwrap();
+    }
+
+}
+
+#[derive(Sequence, Default, Debug, PartialEq)]
+#[seq(application_tag = 29)]
+pub(crate) struct EncKrbCredPartAsn1 {
+    #[seq_field(context_tag = 0)]
+    ticket_info: SeqField<SeqOfKrbCredInfoAsn1>,
+    #[seq_field(context_tag = 1, optional)]
+    nonce: SeqField<UInt32Asn1>,
+    #[seq_field(context_tag = 2, optional)]
+    timestamp: SeqField<KerberosTimeAsn1>,
+    #[seq_field(context_tag = 3, optional)]
+    usec: SeqField<MicrosecondsAsn1>,
+    #[seq_field(context_tag = 4, optional)]
+    s_address: SeqField<HostAddressAsn1>,
+    #[seq_field(context_tag = 5, optional)]
+    r_address: SeqField<HostAddressAsn1>,
+    
+}
+
+
+impl EncKrbCredPartAsn1 {
+
+    #[cfg(test)]
+    pub fn no_asn1_type(&self) -> Result<EncKrbCredPart> {
+        let ticket_info = self.get_ticket_info().ok_or_else(|| 
+            ErrorKind::NotAvailableData("EncKrbCredPart::ticket_info".to_string())
+        )?;
+
+        let mut enc_krb_cred_part = EncKrbCredPart::new(ticket_info.no_asn1_type()?);
+
+        if let Some(nonce) = self.get_nonce() {
+            enc_krb_cred_part.set_nonce(nonce.no_asn1_type()?);
         }
 
-        return Ok(seq_of_krb_cred_info);
+        if let Some(timestamp) = self.get_timestamp() {
+            enc_krb_cred_part.set_timestamp(timestamp.no_asn1_type()?);
+        }
+
+        if let Some(usec) = self.get_usec() {
+            enc_krb_cred_part.set_usec(usec.no_asn1_type()?);
+        }
+
+        if let Some(s_address) = self.get_s_address() {
+            enc_krb_cred_part.set_s_address(s_address.no_asn1_type()?);
+        }
+
+        if let Some(r_address) = self.get_r_address() {
+            enc_krb_cred_part.set_r_address(r_address.no_asn1_type()?);
+        }
+
+        return Ok(enc_krb_cred_part);
     }
+
 }
 
-impl From<&SeqOfKrbCredInfo> for SeqOfKrbCredInfoAsn1 {
-    fn from(seq_of_krb_cred_info: &SeqOfKrbCredInfo) -> Self {
-        let mut seq_of_krb_cred_info_asn1 = Self::default();
-        seq_of_krb_cred_info_asn1.set_asn1_values(seq_of_krb_cred_info);
-        return seq_of_krb_cred_info_asn1;
+impl From<&EncKrbCredPart> for EncKrbCredPartAsn1 {
+    fn from(enc_krb_cred_part: &EncKrbCredPart) -> Self {
+        let mut enc_krb_cred_part_asn1 = Self::default();
+
+        enc_krb_cred_part_asn1.set_ticket_info(enc_krb_cred_part.ticket_info().into());
+
+        if let Some(nonce) = enc_krb_cred_part.nonce() {
+            enc_krb_cred_part_asn1.set_nonce(nonce.into());
+        }
+        if let Some(timestamp) = enc_krb_cred_part.timestamp() {
+            enc_krb_cred_part_asn1.set_timestamp(timestamp.clone().into());
+        }
+        if let Some(usec) = enc_krb_cred_part.usec() {
+            enc_krb_cred_part_asn1.set_usec(usec.into());
+        }
+        if let Some(s_address) = enc_krb_cred_part.s_address() {
+            enc_krb_cred_part_asn1.set_s_address(s_address.into());
+        }
+        if let Some(r_address) = enc_krb_cred_part.r_address() {
+            enc_krb_cred_part_asn1.set_r_address(r_address.into());
+        }
+
+        return enc_krb_cred_part_asn1;
     }
 }
-
-impl Asn1Object for SeqOfKrbCredInfoAsn1 {
-
-    fn tag(&self) -> Tag {
-        return self.subtype.tag();
-    }
-
-    fn encode_value(&self) -> red_asn1::Result<Vec<u8>> {
-        return self.subtype.encode_value();
-    }
-
-    fn decode_value(&mut self, raw: &[u8]) -> red_asn1::Result<()> {
-        return self.subtype.decode_value(raw);
-    }
-
-    fn unset_value(&mut self) {
-        return self.subtype.unset_value();
-    }
-}
-
 
 
 #[cfg(test)]
@@ -95,26 +173,27 @@ mod test {
     use chrono::prelude::*;
     use super::super::super::*;
 
+
     #[test]
-    fn create_default_seq_of_krb_cred_info_asn1() {
+    fn create_default_enc_krb_cred_part_asn1() {
         assert_eq!(
-            SeqOfKrbCredInfoAsn1 {
-                subtype: SequenceOf::default()
+            EncKrbCredPartAsn1 {
+                ticket_info: SeqField::default(),
+                nonce: SeqField::default(),
+                timestamp: SeqField::default(),
+                usec: SeqField::default(),
+                s_address: SeqField::default(),
+                r_address: SeqField::default()
             },
-            SeqOfKrbCredInfoAsn1::default()
-        )
+            EncKrbCredPartAsn1::default()
+        );
     }
 
     #[test]
-    fn create_seq_of_krb_cred_info() {
-        let seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
-        assert_eq!(Vec::<KrbCredInfo>::new(), seq_of_krb_cred_info.entries);
-    }
-
-    #[test]
-    fn test_encode_seq_of_krb_cred_info() {
+    fn decode_enc_krb_cred_part() {
         let raw: Vec<u8> = vec![
-            0x30, 0x81, 0xd0,
+            0x7d, 0x81, 0xd9, 0x30, 0x81, 0xd6, 
+            0xa0, 0x81, 0xd3, 0x30, 0x81, 0xd0,
             0x30, 0x81, 0xcd, 
                 0xa0, 0x2b, 0x30, 0x29, 
                     0xa0, 0x3, 0x2, 0x1, 0x12, 
@@ -185,14 +264,16 @@ mod test {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
-        assert_eq!(raw, SeqOfKrbCredInfoAsn1::from(&seq_of_krb_cred_info).encode().unwrap());
+        let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
+
+        assert_eq!(raw, EncKrbCredPartAsn1::from(&enc_krb_cred_part).encode().unwrap());
     }
 
-
     #[test]
-    fn test_decode_seq_of_entries(){
+    fn encode_enc_krb_cred_part() {
         let raw: Vec<u8> = vec![
-            0x30, 0x81, 0xd0,
+            0x7d, 0x81, 0xd9, 0x30, 0x81, 0xd6, 
+            0xa0, 0x81, 0xd3, 0x30, 0x81, 0xd0,
             0x30, 0x81, 0xcd, 
                 0xa0, 0x2b, 0x30, 0x29, 
                     0xa0, 0x3, 0x2, 0x1, 0x12, 
@@ -263,11 +344,12 @@ mod test {
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
-        let mut seq_of_krb_cred_info_asn1 = SeqOfKrbCredInfoAsn1::default();
-        seq_of_krb_cred_info_asn1.decode(&raw).unwrap();
+        let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
 
+        let mut enc_krb_cred_part_asn1 = EncKrbCredPartAsn1::default();
+        enc_krb_cred_part_asn1.decode(&raw).unwrap();
 
-        assert_eq!(seq_of_krb_cred_info, seq_of_krb_cred_info_asn1.no_asn1_type().unwrap());
+        assert_eq!(enc_krb_cred_part, enc_krb_cred_part_asn1.no_asn1_type().unwrap());
     }
 
 }

@@ -12,14 +12,8 @@ pub use ticket::*;
 mod kdc_rep;
 pub use kdc_rep::*;
 
-mod enc_krb_cred_part;
-pub use enc_krb_cred_part::*;
-
-mod krbcred;
-pub use krbcred::*;
-
-mod krbcredinfo;
-pub use krbcredinfo::*;
+mod krb_cred;
+pub use krb_cred::*;
 
 mod krb_error;
 pub use krb_error::*;

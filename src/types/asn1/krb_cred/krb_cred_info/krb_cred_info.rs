@@ -1,6 +1,6 @@
 use red_asn1::*;
-use super::super::basics::*;
-use super::super::ticket::ticket_flags::*;
+use super::super::super::basics::*;
+use super::super::super::ticket::ticket_flags::*;
 
 #[cfg(test)]
 use crate::error::{ErrorKind, Result};

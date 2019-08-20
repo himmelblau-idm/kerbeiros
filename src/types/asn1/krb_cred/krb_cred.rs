@@ -1,6 +1,6 @@
 use red_asn1::*;
-use super::ticket::*;
-use super::encrypted_data::*;
+use super::super::ticket::*;
+use super::super::encrypted_data::*;
 
 /// (*KRB-CRED*) Kerberos credential which is returned by the KDC 
 #[derive(Debug,PartialEq,Clone)]
@@ -76,7 +76,7 @@ impl From<&KrbCred> for KrbCredAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::basics::*;
+    use super::super::super::basics::*;
     use crate::constants::*;
 
     #[test]
