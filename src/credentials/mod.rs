@@ -8,8 +8,8 @@ mod file;
 mod credential;
 pub use credential::*;
 
-mod credentialwarehouse;
-pub use credentialwarehouse::*;
+mod credential_warehouse;
+pub use credential_warehouse::*;
 
 mod mappers;
 pub(crate) use mappers::CredentialKrbInfoMapper;

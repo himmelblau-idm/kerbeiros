@@ -1,6 +1,6 @@
 use crate::types::*;
 use crate::error::*;
-use super::credentialwarehouse::*;
+use super::credential_warehouse::*;
 
 
 /// Represents a Kerberos credential, which includes one Ticket and session information.

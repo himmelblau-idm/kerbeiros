@@ -1,4 +1,4 @@
-use super::credentialwarehouse::*;
+use super::credential_warehouse::*;
 use crate::error::*;
 use std::fs::File;
 use failure::ResultExt;
