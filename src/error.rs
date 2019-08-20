@@ -41,8 +41,12 @@ pub enum ErrorKind {
     IOError,
 
     /// Invalid key
-    #[fail (display = "Invalid key: {}", _0)] 
-    InvalidKey(String),
+    #[fail (display = "Invalid key: Only hexadecimal characters are allowed [1234567890abcdefABCDEF]")] 
+    InvalidKeyCharset,
+
+    /// Invalid key
+    #[fail (display = "Invalid key: Length should be {}", _0)] 
+    InvalidKeyLength(usize),
 
     /// Received KRB-ERROR response.
     #[fail (display = "Received {}", _0)]

@@ -76,26 +76,48 @@ impl Key {
         }
     }
 
-    /// Get a RC4 key from a hexdump of a NTLM hash.
+    /// Get a RC4 key from a hexdump.
     /// # Example
     /// 
     /// ```
     /// use kerbeiros::Key;
     /// assert_eq!(
     ///     Key::RC4Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]), 
-    ///     Key::from_ntlm_string("0123456789ABCDEF0123456789abcdef").unwrap()
+    ///     Key::from_rc4_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
     /// );
     /// ```
     /// # Errors
     /// An error if raised if the argument string has any non hexadecimal character or size is different from 32.
     /// 
-    pub fn from_ntlm_string(hex_str: &str) -> Result<Self> {
-        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, RC4_KEY_SIZE, "NTLM")?;
+    pub fn from_rc4_key_string(hex_str: &str) -> Result<Self> {
+        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, RC4_KEY_SIZE)?;
 
         let mut key = [0; RC4_KEY_SIZE];
         key.copy_from_slice(&ntlm[0..RC4_KEY_SIZE]);
 
         return Ok(Key::RC4Key(key));
+    }
+
+    /// Get a AES-128 key from a hexdump.
+    /// # Example
+    /// 
+    /// ```
+    /// use kerbeiros::Key;
+    /// assert_eq!(
+    ///     Key::AES128Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]), 
+    ///     Key::from_aes_128_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
+    /// );
+    /// ```
+    /// # Errors
+    /// An error if raised if the argument string has any non hexadecimal character or size is different from 32.
+    /// 
+    pub fn from_aes_128_key_string(hex_str: &str) -> Result<Self> {
+        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, AES128_KEY_SIZE)?;
+
+        let mut key = [0; AES128_KEY_SIZE];
+        key.copy_from_slice(&ntlm[0..AES128_KEY_SIZE]);
+
+        return Ok(Key::AES128Key(key));
     }
 
     /// Get a AES-256 key from a hexdump.
@@ -115,7 +137,7 @@ impl Key {
     /// An error if raised if the argument string has any non hexadecimal character or size is different from 64.
     /// 
     pub fn from_aes_256_key_string(hex_str: &str) -> Result<Self> {
-        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, AES256_KEY_SIZE, "AES-256 key")?;
+        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, AES256_KEY_SIZE)?;
 
         let mut key = [0; AES256_KEY_SIZE];
         key.copy_from_slice(&ntlm[0..AES256_KEY_SIZE]);
@@ -123,13 +145,13 @@ impl Key {
         return Ok(Key::AES256Key(key));
     }
 
-    fn check_size_and_convert_in_byte_array(hex_str: &str, size: usize, string_name: &'static str) -> Result<Vec<u8>> {
+    fn check_size_and_convert_in_byte_array(hex_str: &str, size: usize) -> Result<Vec<u8>> {
         if hex_str.len() != size * 2 {
-            return Err(ErrorKind::InvalidKey(format!("Invalid {} string. Length should be {}.",string_name, size * 2)))?;
+            return Err(ErrorKind::InvalidKeyLength(size * 2))?;
         }
 
         return Ok(Self::convert_hex_string_into_byte_array(hex_str).map_err(|_|
-            ErrorKind::InvalidKey(format!("Invalid {} string. Only hexadecimal characters are allowed [1234567890abcdefABCDEF].", string_name))
+            ErrorKind::InvalidKeyCharset
         )?);
     }
 
@@ -151,24 +173,45 @@ mod test {
     use super::*;
 
     #[test]
-    fn ntlm_string_to_rc4_key() {
-        assert_eq!(Key::RC4Key([0; RC4_KEY_SIZE]), Key::from_ntlm_string("00000000000000000000000000000000").unwrap());
+    fn hex_string_to_rc4_key() {
+        assert_eq!(Key::RC4Key([0; RC4_KEY_SIZE]), Key::from_rc4_key_string("00000000000000000000000000000000").unwrap());
         assert_eq!(
             Key::RC4Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]), 
-            Key::from_ntlm_string("0123456789ABCDEF0123456789abcdef").unwrap()
+            Key::from_rc4_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
         );
     }
 
-    #[should_panic(expected="Invalid NTLM string. Length should be 32.")]
+    #[should_panic(expected="Invalid key: Length should be 32")]
     #[test]
-    fn invalid_length_hex_string_to_ntlm() {
-        Key::from_ntlm_string("0").unwrap();
+    fn invalid_length_hex_string_to_rc4_key() {
+        Key::from_rc4_key_string("0").unwrap();
     }
 
-    #[should_panic(expected="Invalid NTLM string. Only hexadecimal characters are allowed [1234567890abcdefABCDEF].")]
+    #[should_panic(expected="Invalid key: Only hexadecimal characters are allowed [1234567890abcdefABCDEF]")]
     #[test]
-    fn invalid_chars_hex_string_to_ntlm() {
-        Key::from_ntlm_string("ERROR_0123456789ABCDEF0123456789").unwrap();
+    fn invalid_chars_hex_string_to_rc4_key() {
+        Key::from_rc4_key_string("ERROR_0123456789ABCDEF0123456789").unwrap();
+    }
+
+    #[test]
+    fn hex_string_to_aes_128_key() {
+        assert_eq!(Key::AES128Key([0; AES128_KEY_SIZE]), Key::from_aes_128_key_string("00000000000000000000000000000000").unwrap());
+        assert_eq!(
+            Key::AES128Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]), 
+            Key::from_aes_128_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
+        );
+    }
+
+    #[should_panic(expected="Invalid key: Length should be 32")]
+    #[test]
+    fn invalid_length_hex_string_to_aes_128_key() {
+        Key::from_aes_128_key_string("0").unwrap();
+    }
+
+    #[should_panic(expected="Invalid key: Only hexadecimal characters are allowed [1234567890abcdefABCDEF]")]
+    #[test]
+    fn invalid_chars_hex_string_to_aes_128_key() {
+        Key::from_aes_128_key_string("ERROR_0123456789ABCDEF0123456789").unwrap();
     }
 
 
@@ -187,13 +230,13 @@ mod test {
         );
     }
 
-    #[should_panic(expected="Invalid AES-256 key string. Length should be 64.")]
+    #[should_panic(expected="Invalid key: Length should be 64")]
     #[test]
     fn invalid_length_hex_string_to_aes_256_key() {
         Key::from_aes_256_key_string("0").unwrap();;
     }
 
-    #[should_panic(expected="Invalid AES-256 key string. Only hexadecimal characters are allowed [1234567890abcdefABCDEF].")]
+    #[should_panic(expected="Invalid key: Only hexadecimal characters are allowed [1234567890abcdefABCDEF]")]
     #[test]
     fn invalid_chars_hex_string_to_aes_256_key() {
         Key::from_aes_256_key_string("ERROR_0123456789ABCDEF0123456789ERROR_0123456789ABCDEF0123456789").unwrap();;
