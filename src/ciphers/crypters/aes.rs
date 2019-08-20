@@ -1,5 +1,5 @@
 use super::cryptertrait::*;
-use super::super::aeshmacsha1::*;
+use super::super::aes_hmac_sha1::*;
 pub use super::super::cryptography::*;
 
 pub struct AESCrypter {
