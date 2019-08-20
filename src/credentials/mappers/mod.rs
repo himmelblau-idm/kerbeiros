@@ -1,8 +1,8 @@
 mod krbinfomapper;
 pub use krbinfomapper::*;
 
-mod cachecredentialmapper;
-pub use cachecredentialmapper::*;
+mod credential_ccache;
+pub use credential_ccache::*;
 
 mod ccachemapper;
 pub use ccachemapper::*;
