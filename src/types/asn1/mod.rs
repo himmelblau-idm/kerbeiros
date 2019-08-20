@@ -57,8 +57,8 @@ pub use enc_krb_cred_part::*;
 mod lastreq;
 pub use lastreq::*;
 
-mod kdcreqbody;
-pub use kdcreqbody::*;
+mod kdc_req_body;
+pub use kdc_req_body::*;
 
 mod kdc_options;
 pub use kdc_options::*;

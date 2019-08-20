@@ -2,7 +2,7 @@ use chrono::{Utc, DateTime, Duration};
 use red_asn1::*;
 use crate::error::Result;
 use super::padata::*;
-use super::kdcreqbody::*;
+use super::kdc_req_body::*;
 use super::kerberosstring::*;
 use super::encrypted_data::*;
 use crate::constants::*;
