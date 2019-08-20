@@ -45,8 +45,8 @@ pub use ticketflags::*;
 mod as_req;
 pub use as_req::*;
 
-mod kdcrep;
-pub use kdcrep::*;
+mod kdc_rep;
+pub use kdc_rep::*;
 
 mod enc_kdc_rep_part;
 pub use enc_kdc_rep_part::*;
