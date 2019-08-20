@@ -3,7 +3,7 @@ use red_asn1::*;
 use crate::error::Result;
 use super::padata::*;
 use super::kdc_req_body::*;
-use super::kerberosstring::*;
+use super::basics::kerberos_string::*;
 use super::encrypted_data::*;
 use crate::constants::*;
 

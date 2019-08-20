@@ -1,4 +1,4 @@
-pub use super::kerberosstring::*;
+pub use super::basics::kerberos_string::*;
 
 /// (*Realm*) Kerberos realm.
 pub type Realm = KerberosString;

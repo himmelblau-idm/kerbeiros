@@ -1,6 +1,6 @@
 use red_asn1::*;
 pub use super::super::int32::*;
-pub use super::super::kerberostime::*;
+pub use super::super::basics::kerberos_time::*;
 use crate::error::{ErrorKind, Result};
 
 /// Register of time of a request to KDC.

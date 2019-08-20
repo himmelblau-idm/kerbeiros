@@ -1,4 +1,4 @@
-use super::kerberosflags::{KerberosFlags, KerberosFlagsAsn1};
+use super::basics::kerberos_flags::*;
 
 /// (*TicketFlags*) Flags for tickets.
 pub type TicketFlags = KerberosFlags;

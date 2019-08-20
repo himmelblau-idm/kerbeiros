@@ -1,4 +1,4 @@
-use super::kerberosstring::*;
+use super::basics::kerberos_string::*;
 use red_asn1::*;
 use super::int32::{Int32,Int32Asn1};
 use crate::error::{ErrorKind, Result};

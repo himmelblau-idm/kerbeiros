@@ -1,5 +1,5 @@
 use red_asn1::*;
-use super::super::kerberostime::*;
+use super::super::basics::kerberos_time::*;
 use super::super::microseconds::*;
 use chrono::prelude::*;
 

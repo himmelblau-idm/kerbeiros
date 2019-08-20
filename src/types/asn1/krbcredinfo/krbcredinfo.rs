@@ -1,6 +1,6 @@
 use red_asn1::*;
 use super::super::encryption_key::*;
-use super::super::kerberostime::*;
+use super::super::basics::kerberos_time::*;
 use super::super::realm::*;
 use super::super::principalname::*;
 use super::super::ticketflags::*;

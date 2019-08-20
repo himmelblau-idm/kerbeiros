@@ -1,9 +1,7 @@
 use red_asn1::*;
-use super::uint32::*;
-use super::kerberostime::*;
+use super::basics::*;
 use super::krbcredinfo::*;
 use super::hostaddress::*;
-use super::microseconds::*;
 
 #[cfg(test)]
 use crate::error::{ErrorKind, Result};
