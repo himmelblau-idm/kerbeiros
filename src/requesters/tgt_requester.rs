@@ -4,7 +4,7 @@ use crate::transporter::*;
 use crate::messages::*;
 use crate::error::*;
 use crate::constants::*;
-use crate::credential::*;
+use crate::credentials::*;
 use crate::key::Key;
 use super::as_requester::*;
 use std::collections::HashSet;

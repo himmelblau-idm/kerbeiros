@@ -5,7 +5,7 @@ use super::padata::*;
 use super::ticket::*;
 use super::encrypteddata::*;
 use crate::error::{ErrorKind, Result};
-use crate::credential::*;
+use crate::credentials::*;
 use crate::key::Key;
 
 /// (*AS-REP*) Message returned by KDC in response to AS-REQ.

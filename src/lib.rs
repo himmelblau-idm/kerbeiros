@@ -53,8 +53,8 @@ pub use messages::*;
 pub mod constants;
 pub use constants::*;
 
-pub mod credential;
-pub use credential::*;
+pub mod credentials;
+pub use credentials::*;
 
 pub mod key;
 pub use key::*;
