@@ -2,6 +2,7 @@ use super::primitives::kerberos_string::*;
 use red_asn1::*;
 use super::int32::{Int32,Int32Asn1};
 use crate::error::{ErrorKind, Result};
+use std::fmt;
 
 
 /// (*PrincipalName*) Name of some Kerberos entity.
@@ -42,8 +43,23 @@ impl PrincipalName {
         self.name_string.push(string);
     }
 
+    pub fn to_string(&self) -> String {
+        let mut names = self.main_name().to_string();
+
+        for name in self.name_string[1..].iter() {
+            names += &format!("/{}", name);
+        }
+
+        return names;
+    }
+
 }
 
+impl fmt::Display for PrincipalName {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.to_string())
+    }
+}
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 pub(crate) struct PrincipalNameAsn1 {
@@ -200,6 +216,25 @@ mod tests {
             &main_name,
             principal_name.main_name()
         )
+
+    }
+
+    #[test]
+    fn principal_name_to_string_with_one_string(){
+        let main_name = KerberosString::from_ascii("krbtgt").unwrap();
+        let principal_name = PrincipalName::new(NT_SRV_INST, main_name.clone());
+
+        assert_eq!("krbtgt".to_string(), principal_name.to_string())
+
+    }
+
+    #[test]
+    fn principal_name_to_string_with_many_strings(){
+        let main_name = KerberosString::from_ascii("krbtgt").unwrap();
+        let mut principal_name = PrincipalName::new(NT_SRV_INST, main_name.clone());
+        principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
+
+        assert_eq!("krbtgt/KINGDOM.HEARTS".to_string(), principal_name.to_string())
 
     }
 

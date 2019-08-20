@@ -15,6 +15,37 @@ pub enum AsReqResponse {
 }
 
 /// Send the AS-REQ requests and retrieves the response
+/// 
+/// # Example
+/// ```no_run
+/// use kerbeiros::*;
+/// use ascii::AsciiString;
+/// use std::net::*;
+/// 
+/// // Prepare the arguments
+/// let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();
+/// let kdc_address = IpAddr::V4(Ipv4Addr::new(192, 168, 0, 1));
+/// let username = AsciiString::from_ascii("Bob").unwrap();
+/// let user_key = Key::Password("S3cr3t".to_string());
+/// 
+/// let mut as_requester = kerbeiros::AsRequester::new(realm, kdc_address);
+/// 
+/// // Use AES-256 cipher
+/// as_requester.set_etype(AES256_CTS_HMAC_SHA1_96).unwrap();
+/// 
+/// let response = as_requester.request(&username, Some(&user_key)).unwrap();
+/// 
+/// match response {
+///     AsReqResponse::KrbError(krb_error) => {
+///         println!("KRB-ERROR with error code = {}", krb_error.error_code());
+///     }
+///     AsReqResponse::AsRep(as_rep) => {
+///         let ticket = as_rep.ticket();
+///         println!("Get ticket for service {}", ticket.sname());
+///     }
+/// }
+/// ```
+/// 
 pub struct AsRequester {
     as_options: AsReqOptions,
     transporter: Box<Transporter>,
