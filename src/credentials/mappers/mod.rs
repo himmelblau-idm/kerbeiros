@@ -7,5 +7,5 @@ pub use credential_ccache::*;
 mod credential_warehouse_ccache;
 pub use credential_warehouse_ccache::*;
 
-mod krbcredmapper;
-pub use krbcredmapper::*;
+mod credential_warehouse_krb_cred;
+pub use credential_warehouse_krb_cred::*;
