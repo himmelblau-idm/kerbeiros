@@ -1,5 +1,5 @@
 mod cryptography;
-mod rc4hmacmd5;
+mod rc4_hmac_md5;
 mod aeshmacsha1;
 
 mod crypters;

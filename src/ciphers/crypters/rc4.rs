@@ -1,6 +1,6 @@
 use super::cryptertrait::*;
 use super::super::cryptography::*;
-use super::super::rc4hmacmd5::*;
+use super::super::rc4_hmac_md5::*;
 
 pub struct RC4Crypter {
 
