@@ -76,9 +76,7 @@ impl From<&KrbCred> for KrbCredAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::principalname::*;
-    use super::super::basics::kerberos_string::*;
-    use super::super::realm::*;
+    use super::super::basics::*;
     use crate::constants::*;
 
     #[test]

@@ -1,6 +1,5 @@
 use red_asn1::*;
-use super::principalname::*;
-use super::realm::*;
+use super::basics::*;
 use super::padata::*;
 use super::ticket::*;
 use super::encrypted_data::*;
@@ -173,7 +172,6 @@ impl KdcRepAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
-    use super::super::kerberos_string::*;
 
     #[test]
     fn create_default_as_rep_asn1() {

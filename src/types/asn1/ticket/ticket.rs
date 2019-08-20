@@ -1,7 +1,6 @@
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
-use super::super::realm::*;
-use super::super::principalname::*;
+use super::super::basics::*;
 use super::super::encrypted_data::*;
 
 /// (*Ticket*) Represents a Kerberos ticket.
@@ -118,7 +117,6 @@ impl From<&Ticket> for TicketAsn1 {
 mod test {
     use super::*;
     use crate::constants::*;
-    use super::super::super::kerberos_string::*;
 
     #[test]
     fn create_default_ticket_asn1() {

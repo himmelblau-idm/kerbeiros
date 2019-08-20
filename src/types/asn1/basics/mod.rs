@@ -6,3 +6,6 @@ pub use host_address::*;
 
 pub mod realm;
 pub use realm::*;
+
+pub mod principal_name;
+pub use principal_name::*;

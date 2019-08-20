@@ -2,7 +2,6 @@ use red_asn1::*;
 use super::super::basics::*;
 use super::super::realm::{Realm, RealmAsn1};
 use super::kdc_options::*;
-use super::super::principalname::*;
 use crate::error::{ErrorKind, Result};
 use crate::constants::principal_name_types::*;
 use super::super::encrypted_data::*;
