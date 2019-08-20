@@ -3,6 +3,9 @@
 use crate::ciphers;
 use crate::constants::*;
 
+use crate::error::*;
+use std::result;
+
 /// Size of [`Key::RC4Key`](./enum.Key.html#variant.RC4Key).
 pub const RC4_KEY_SIZE: usize = ciphers::RC4_KEY_SIZE;
 
@@ -71,6 +74,64 @@ impl Key {
             Key::AES128Key(ref aeskey) => aeskey,
             Key::AES256Key(ref aeskey) => aeskey
         }
+    }
+
+
+    pub fn from_ntlm_string(hex_str: &str) -> Result<Self> {
+        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, RC4_KEY_SIZE, "NTLM")?;
+
+        let mut key: [u8; RC4_KEY_SIZE] = [0; RC4_KEY_SIZE];
+        key.copy_from_slice(&ntlm[0..RC4_KEY_SIZE]);
+
+        return Ok(Key::RC4Key(key));
+    }
+
+    fn check_size_and_convert_in_byte_array(hex_str: &str, size: usize, string_name: &'static str) -> Result<Vec<u8>> {
+        if hex_str.len() != size * 2 {
+            return Err(ErrorKind::InvalidKey(format!("Invalid {} string. Length should be {}.",string_name, size * 2)))?;
+        }
+
+        return Ok(Self::convert_hex_string_into_byte_array(hex_str).map_err(|_|
+            ErrorKind::InvalidKey(format!("Invalid {} string. Only hexadecimal characters are allowed [1234567890abcdefABCDEF].", string_name))
+        )?);
+    }
+
+    fn convert_hex_string_into_byte_array(hex_str: &str) -> result::Result<Vec<u8>, std::num::ParseIntError> {
+        let key_size = hex_str.len()/2;
+        let mut bytes =  Vec::with_capacity(key_size);
+        for i in 0..key_size {
+            let str_index = i * 2;
+            bytes.push(u8::from_str_radix(&hex_str[str_index..str_index+2], 16)?);
+        }
+
+        return Ok(bytes);
+    }
+
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn ntlm_string_to_rc4_key() {
+        assert_eq!(Key::RC4Key([0; RC4_KEY_SIZE]), Key::from_ntlm_string("00000000000000000000000000000000").unwrap());
+        assert_eq!(
+            Key::RC4Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]), 
+            Key::from_ntlm_string("0123456789ABCDEF0123456789abcdef").unwrap()
+        );
+    }
+
+    #[should_panic(expected="Invalid NTLM string. Length should be 32.")]
+    #[test]
+    fn invalid_length_hex_string_to_ntlm() {
+        Key::from_ntlm_string("0").unwrap();
+    }
+
+    #[should_panic(expected="Invalid NTLM string. Only hexadecimal characters are allowed [1234567890abcdefABCDEF].")]
+    #[test]
+    fn invalid_chars_hex_string_to_ntlm() {
+        Key::from_ntlm_string("ERROR_0123456789ABCDEF0123456789").unwrap();
     }
 
 }

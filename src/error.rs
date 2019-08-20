@@ -40,6 +40,10 @@ pub enum ErrorKind {
     #[fail (display = "Error in i/o operation")]
     IOError,
 
+    /// Invalid key
+    #[fail (display = "Invalid key: {}", _0)] 
+    InvalidKey(String),
+
     /// Received KRB-ERROR response.
     #[fail (display = "Received {}", _0)]
     KrbErrorResponse(KrbError),
