@@ -60,8 +60,8 @@ pub use lastreq::*;
 mod kdcreqbody;
 pub use kdcreqbody::*;
 
-mod kdcoptions;
-pub use kdcoptions::*;
+mod kdc_options;
+pub use kdc_options::*;
 
 mod krbcred;
 pub use krbcred::*;
