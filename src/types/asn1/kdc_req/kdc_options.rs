@@ -1,4 +1,4 @@
-use super::basics::kerberos_flags::{KerberosFlags, KerberosFlagsAsn1};
+use super::super::basics::kerberos_flags::*;
 
 /// (*KDCOptions*) Options used in Kerberos requests.
 pub type KdcOptions = KerberosFlags;

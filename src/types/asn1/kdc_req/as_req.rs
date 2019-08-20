@@ -1,17 +1,17 @@
 use chrono::{Utc, DateTime, Duration};
 use red_asn1::*;
 use crate::error::Result;
-use super::padata::*;
+use super::super::padata::*;
 use super::kdc_req_body::*;
-use super::basics::kerberos_string::*;
-use super::encrypted_data::*;
+use super::super::basics::kerberos_string::*;
+use super::super::encrypted_data::*;
 use crate::constants::*;
 
 #[cfg(test)]
-use super::hostaddress::HostAddress;
+use super::super::hostaddress::HostAddress;
 
 #[cfg(test)]
-use super::int32::*;
+use super::super::int32::*;
 
 /// (*AS-REQ*) Message used to request a TGT.
 pub struct AsReq {

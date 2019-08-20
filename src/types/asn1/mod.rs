@@ -3,6 +3,9 @@
 mod basics;
 pub use basics::*;
 
+mod kdc_req;
+pub use kdc_req::*;
+
 mod realm;
 pub use realm::*;
 
@@ -27,9 +30,6 @@ pub use ticket::*;
 mod ticketflags;
 pub use ticketflags::*;
 
-mod as_req;
-pub use as_req::*;
-
 mod kdc_rep;
 pub use kdc_rep::*;
 
@@ -41,12 +41,6 @@ pub use enc_krb_cred_part::*;
 
 mod lastreq;
 pub use lastreq::*;
-
-mod kdc_req_body;
-pub use kdc_req_body::*;
-
-mod kdc_options;
-pub use kdc_options::*;
 
 mod krbcred;
 pub use krbcred::*;
