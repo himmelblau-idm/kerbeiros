@@ -2,7 +2,6 @@ use red_asn1::*;
 use super::basics::*;
 use super::lastreq::*;
 use super::ticketflags::*;
-use super::padata::*;
 use crate::error::{ErrorKind, Result};
 
 /// (*EncKdcRepPart*) Holds the data that is encrypted in [KdcRep](./struct.KdcRep.html)

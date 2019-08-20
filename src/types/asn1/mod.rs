@@ -6,9 +6,6 @@ pub use basics::*;
 mod kdc_req;
 pub use kdc_req::*;
 
-mod padata;
-pub use padata::*;
-
 mod ticket;
 pub use ticket::*;
 

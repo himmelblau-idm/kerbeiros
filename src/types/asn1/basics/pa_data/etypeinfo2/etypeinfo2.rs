@@ -94,7 +94,7 @@ impl Asn1Object for EtypeInfo2Asn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::super::super::super::basics::kerberos_string::*;
+    use super::super::super::super::kerberos_string::*;
     use crate::constants::etypes::*;
 
     #[test]

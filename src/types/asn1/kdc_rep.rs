@@ -1,6 +1,5 @@
 use red_asn1::*;
 use super::basics::*;
-use super::padata::*;
 use super::ticket::*;
 use crate::error::{ErrorKind, Result};
 use crate::credentials::*;
