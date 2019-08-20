@@ -1,6 +1,6 @@
 use red_asn1::*;
 use super::ticket::*;
-use super::encrypteddata::*;
+use super::encrypted_data::*;
 
 /// (*KRB-CRED*) Kerberos credential which is returned by the KDC 
 #[derive(Debug,PartialEq,Clone)]

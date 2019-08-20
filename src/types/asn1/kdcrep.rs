@@ -3,7 +3,7 @@ use super::principalname::*;
 use super::realm::*;
 use super::padata::*;
 use super::ticket::*;
-use super::encrypteddata::*;
+use super::encrypted_data::*;
 use crate::error::{ErrorKind, Result};
 use crate::credentials::*;
 use crate::key::Key;

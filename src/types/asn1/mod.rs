@@ -30,8 +30,8 @@ pub use padata::*;
 mod kerberosflags;
 pub use kerberosflags::*;
 
-mod encrypteddata;
-pub use encrypteddata::*;
+mod encrypted_data;
+pub use encrypted_data::*;
 
 mod encryptionkey;
 pub use encryptionkey::*;

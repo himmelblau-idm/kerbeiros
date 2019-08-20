@@ -4,7 +4,7 @@ use crate::error::Result;
 use super::padata::*;
 use super::kdcreqbody::*;
 use super::kerberosstring::*;
-use super::encrypteddata::*;
+use super::encrypted_data::*;
 use crate::constants::*;
 
 #[cfg(test)]

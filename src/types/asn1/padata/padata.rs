@@ -3,7 +3,7 @@ use super::pacrequest::*;
 use super::etypeinfo2::*;
 use super::super::int32::*;
 use crate::error::{ErrorKind, Result};
-use super::super::encrypteddata::*;
+use super::super::encrypted_data::*;
 use crate::constants::pa_data_types::*;
 
 /// (*PA-DATA*) Container that encapsules different types of preauthentication data structures.

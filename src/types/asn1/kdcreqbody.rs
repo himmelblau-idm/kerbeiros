@@ -8,7 +8,7 @@ use crate::error::{ErrorKind, Result};
 use crate::constants::principal_name_types::*;
 use super::kerberostime::*;
 use super::hostaddress::*;
-use super::encrypteddata::*;
+use super::encrypted_data::*;
 use super::ticket::*;
 use super::int32::*;
 use rand::Rng;
