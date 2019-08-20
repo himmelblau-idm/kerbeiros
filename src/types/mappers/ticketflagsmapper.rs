@@ -1,4 +1,4 @@
-use crate::types::*;
+use crate::types::asn1::TicketFlags;
 
 pub struct TicketFlagsMapper{}
 
@@ -13,7 +13,7 @@ impl TicketFlagsMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
+    use crate::constants::ticket_flags;
 
     #[test]
     fn ticket_flags_to_tktflags() {

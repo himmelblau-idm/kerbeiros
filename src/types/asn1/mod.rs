@@ -9,9 +9,6 @@ pub use kdc_req::*;
 mod ticket;
 pub use ticket::*;
 
-mod ticketflags;
-pub use ticketflags::*;
-
 mod kdc_rep;
 pub use kdc_rep::*;
 
