@@ -83,13 +83,13 @@ impl<'a> AsReqTimestampCrypter<'a> {
     }
 
     fn encrypt_timestamp_with_cipher_and_key(&self, etype: i32, key: &[u8]) -> Result<(i32, Vec<u8>)> {
-        let crypter = new_kerberos_crypter(etype)?;
+        let crypter = new_kerberos_cipher(etype)?;
         return Ok((etype, crypter.encrypt(key, KEY_USAGE_AS_REQ_TIMESTAMP, &self.raw_timestamp))); 
     }
 
     fn encrypt_timestamp_with_cipher_and_password(&self, etype: i32, password: &str, salt: &[u8]
         ) -> Result<(i32, Vec<u8>)> {
-        let crypter = new_kerberos_crypter(etype)?;
+        let crypter = new_kerberos_cipher(etype)?;
         return Ok((etype, crypter.generate_key_from_password_and_encrypt(
                                 password,
                                 salt, 
@@ -134,7 +134,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(RC4_HMAC, result_etype);
-        new_kerberos_crypter(RC4_HMAC).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
+        new_kerberos_cipher(RC4_HMAC).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
 
     #[test]
@@ -153,7 +153,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(AES128_CTS_HMAC_SHA1_96, result_etype);
-        new_kerberos_crypter(AES128_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
+        new_kerberos_cipher(AES128_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
 
 
@@ -175,7 +175,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(AES256_CTS_HMAC_SHA1_96, result_etype);
-        new_kerberos_crypter(AES256_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
+        new_kerberos_cipher(AES256_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
     
     #[test]
@@ -194,7 +194,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(RC4_HMAC, result_etype);
-        new_kerberos_crypter(RC4_HMAC).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
+        new_kerberos_cipher(RC4_HMAC).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
 
     #[test]
@@ -213,7 +213,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(AES128_CTS_HMAC_SHA1_96, result_etype);
-        new_kerberos_crypter(AES128_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
+        new_kerberos_cipher(AES128_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
 
 
@@ -235,7 +235,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(AES256_CTS_HMAC_SHA1_96, result_etype);
-        new_kerberos_crypter(AES256_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
+        new_kerberos_cipher(AES256_CTS_HMAC_SHA1_96).unwrap().decrypt(&key, KEY_USAGE_AS_REQ_TIMESTAMP, &timestamp).unwrap();
     }
 
     #[should_panic(expected="None cipher algorithm supported was specified")]
@@ -264,7 +264,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(AES256_CTS_HMAC_SHA1_96, result_etype);
-        new_kerberos_crypter(AES256_CTS_HMAC_SHA1_96).unwrap().generate_key_from_password_and_decrypt(
+        new_kerberos_cipher(AES256_CTS_HMAC_SHA1_96).unwrap().generate_key_from_password_and_decrypt(
             &password, 
             &"KINGDOM.HEARTSmickey".as_bytes(),
             KEY_USAGE_AS_REQ_TIMESTAMP, 
@@ -285,7 +285,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(AES128_CTS_HMAC_SHA1_96, result_etype);
-        new_kerberos_crypter(AES128_CTS_HMAC_SHA1_96).unwrap().generate_key_from_password_and_decrypt(
+        new_kerberos_cipher(AES128_CTS_HMAC_SHA1_96).unwrap().generate_key_from_password_and_decrypt(
             &password, 
             &"KINGDOM.HEARTSmickey".as_bytes(),
             KEY_USAGE_AS_REQ_TIMESTAMP, 
@@ -306,7 +306,7 @@ mod test {
         ).unwrap();
 
         assert_eq!(RC4_HMAC, result_etype);
-        new_kerberos_crypter(RC4_HMAC).unwrap().generate_key_from_password_and_decrypt(
+        new_kerberos_cipher(RC4_HMAC).unwrap().generate_key_from_password_and_decrypt(
             &password, 
             &"".as_bytes(),
             KEY_USAGE_AS_REQ_TIMESTAMP, 

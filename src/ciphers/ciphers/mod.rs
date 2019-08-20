@@ -1,5 +1,5 @@
-mod cryptertrait;
-pub use cryptertrait::*;
+mod cipher_trait;
+pub use cipher_trait::*;
 
 mod aes;
 use aes::*;
@@ -15,17 +15,17 @@ pub const AES128_KEY_SIZE: usize = 16;
 pub const AES256_KEY_SIZE: usize = 32;
 
 
-pub fn new_kerberos_crypter(etype: i32) -> Result<Box<KerberosCrypter>> {
+pub fn new_kerberos_cipher(etype: i32) -> Result<Box<KerberosCipher>> {
 
     match etype {
         AES256_CTS_HMAC_SHA1_96 => {
-            return Ok(Box::new(AESCrypter::new(AesSizes::Aes256)));
+            return Ok(Box::new(AESCipher::new(AesSizes::Aes256)));
         },
         AES128_CTS_HMAC_SHA1_96 => {
-            return Ok(Box::new(AESCrypter::new(AesSizes::Aes128)));
+            return Ok(Box::new(AESCipher::new(AesSizes::Aes128)));
         },
         RC4_HMAC => {
-            return Ok(Box::new(RC4Crypter::new()));
+            return Ok(Box::new(RC4Cipher::new()));
         }
         _ => {
             return Err(CryptographyErrorKind::UnsupportedCipherAlgorithm(etype))?;

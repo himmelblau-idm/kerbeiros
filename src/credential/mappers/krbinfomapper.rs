@@ -59,7 +59,7 @@ impl CredentialKrbInfoMapper {
     }
 
     fn decrypt_enc_kdc_rep_part_with_password(password: &str, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
-        let crypter = new_kerberos_crypter(kdc_rep.enc_part_etype())?;
+        let crypter = new_kerberos_cipher(kdc_rep.enc_part_etype())?;
         return crypter.generate_key_from_password_and_decrypt(
             password, 
             &kdc_rep.encryption_salt(),
@@ -85,7 +85,7 @@ impl CredentialKrbInfoMapper {
     }
 
     fn try_decrypt_enc_kdc_rep_part_with_cipher_key(key: &Key, kdc_rep: &KdcRep) -> Result<Vec<u8>> {
-        let crypter = new_kerberos_crypter(key.etype()).unwrap();
+        let crypter = new_kerberos_cipher(key.etype()).unwrap();
         return crypter.decrypt(
             key.as_bytes(),
             KEY_USAGE_AS_REP_ENC_PART, 
