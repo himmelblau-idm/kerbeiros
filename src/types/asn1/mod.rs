@@ -9,9 +9,6 @@ pub use kdc_req::*;
 mod padata;
 pub use padata::*;
 
-mod encrypted_data;
-pub use encrypted_data::*;
-
 mod encryption_key;
 pub use encryption_key::*;
 

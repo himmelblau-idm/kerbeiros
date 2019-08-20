@@ -9,3 +9,6 @@ pub use realm::*;
 
 pub mod principal_name;
 pub use principal_name::*;
+
+pub mod encrypted_data;
+pub use encrypted_data::*;

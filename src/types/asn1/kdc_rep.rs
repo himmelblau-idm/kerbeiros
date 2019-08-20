@@ -2,7 +2,6 @@ use red_asn1::*;
 use super::basics::*;
 use super::padata::*;
 use super::ticket::*;
-use super::encrypted_data::*;
 use crate::error::{ErrorKind, Result};
 use crate::credentials::*;
 use crate::key::Key;

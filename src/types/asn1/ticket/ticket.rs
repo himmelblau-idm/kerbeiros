@@ -1,7 +1,6 @@
 use red_asn1::*;
 use crate::error::{ErrorKind, Result};
 use super::super::basics::*;
-use super::super::encrypted_data::*;
 
 /// (*Ticket*) Represents a Kerberos ticket.
 #[derive(Debug, Clone, PartialEq)]
