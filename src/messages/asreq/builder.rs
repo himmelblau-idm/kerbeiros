@@ -5,7 +5,7 @@ use crate::error::*;
 use super::options::AsReqOptions;
 use super::timestampcrypter::*;
 
-pub struct AsReqBuilder<'a>{
+pub(crate) struct AsReqBuilder<'a>{
     username: &'a AsciiString, 
     user_key: Option<&'a Key>,
     options: &'a AsReqOptions

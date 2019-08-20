@@ -6,7 +6,7 @@ use crate::crypter::*;
 use ascii::AsciiString;
 
 #[derive(Debug, PartialEq)]
-pub struct AsReqOptions {
+pub(crate) struct AsReqOptions {
     realm: AsciiString, 
     etypes: HashSet<i32>,
     kdc_options: u32,

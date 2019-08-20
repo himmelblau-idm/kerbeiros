@@ -8,6 +8,9 @@ use crate::error::{ErrorKind, Result};
 use crate::credential::*;
 use crate::key::Key;
 
+/// (*AS-REP*) Message returned by KDC in response to AS-REQ.
+pub type AsRep = KdcRep;
+
 /// (*KDC-REP*) Main structure of the AS-REP and TGS-REP messages.
 #[derive(Debug, Clone, PartialEq)]
 pub struct KdcRep {

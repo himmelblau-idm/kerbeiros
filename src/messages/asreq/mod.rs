@@ -1,7 +1,7 @@
 mod builder;
-pub use builder::AsReqBuilder;
+pub(crate) use builder::AsReqBuilder;
 
 mod options;
-pub use options::AsReqOptions;
+pub(crate) use options::AsReqOptions;
 
 mod timestampcrypter;
