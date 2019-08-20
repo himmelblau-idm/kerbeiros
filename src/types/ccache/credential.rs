@@ -2,7 +2,7 @@ pub use super::principal::*;
 pub use super::keyblock::*;
 pub use super::times::*;
 pub use super::address::*;
-pub use super::authdata::*;
+pub use super::auth_data::*;
 pub use super::countedoctetstring::*;
 
 /// Represents a credential stored in ccache.

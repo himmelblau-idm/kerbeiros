@@ -25,8 +25,8 @@ pub use times::*;
 mod address;
 pub use address::*;
 
-mod authdata;
-pub use authdata::*;
+mod auth_data;
+pub use auth_data::*;
 
 mod credential;
 pub use credential::*;
