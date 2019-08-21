@@ -1,8 +1,12 @@
 [package]
 name = "kerbeiros"
-version = "0.1.0"
+description = "Kerberos client library"
+version = "0.0.1"
 authors = ["Zer1t0 <Zer1t0@mail.com>"]
 edition = "2018"
+license = "AGPL-3.0"
+repository = "https://gitlab.com/Zer1t0/kerbeiros"
+
 
 [dependencies]
 red_asn1 = "0.1"
