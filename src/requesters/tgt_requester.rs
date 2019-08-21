@@ -21,7 +21,8 @@ use std::collections::HashSet;
 /// let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();
 /// let kdc_address = IpAddr::V4(Ipv4Addr::new(192, 168, 0, 1));
 /// let username = AsciiString::from_ascii("Bob").unwrap();
-/// let user_key = Key::Password("S3cr3t".to_string());
+/// // Use the NTLM hash of the user password
+/// let user_key = Key::from_rc4_key_string("B11A1D9A93E104CD7A5E256C78273437").unwrap();
 /// 
 /// // Request the TGT
 /// let mut tgt_requester = TgtRequester::new(realm, kdc_address);
