@@ -78,7 +78,7 @@ impl TgtRequester {
     }
 
     #[cfg(test)]
-    fn set_transporter(&mut self, transporter: Box<Transporter>) {
+    fn set_transporter(&mut self, transporter: Box<dyn Transporter>) {
         self.as_requester.set_transporter(transporter);
     }
     

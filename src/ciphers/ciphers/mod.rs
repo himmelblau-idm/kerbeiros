@@ -15,7 +15,7 @@ pub const AES128_KEY_SIZE: usize = 16;
 pub const AES256_KEY_SIZE: usize = 32;
 
 
-pub fn new_kerberos_cipher(etype: i32) -> Result<Box<KerberosCipher>> {
+pub fn new_kerberos_cipher(etype: i32) -> Result<Box<dyn KerberosCipher>> {
 
     match etype {
         AES256_CTS_HMAC_SHA1_96 => {

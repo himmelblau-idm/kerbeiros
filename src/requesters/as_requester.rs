@@ -49,7 +49,7 @@ pub enum AsReqResponse {
 /// 
 pub struct AsRequester {
     as_options: AsReqOptions,
-    transporter: Box<Transporter>,
+    transporter: Box<dyn Transporter>,
     kdc_address: IpAddr
 }
 
@@ -94,7 +94,7 @@ impl AsRequester {
     }
 
     #[cfg(test)]
-    pub fn set_transporter(&mut self, transporter: Box<Transporter>) {
+    pub fn set_transporter(&mut self, transporter: Box<dyn Transporter>) {
         self.transporter = transporter;
     }
 
@@ -109,7 +109,7 @@ impl AsRequest {
         username: &AsciiString,
         user_key: Option< &Key>,
         options: &AsReqOptions,
-        transporter: &Box<Transporter>) -> Result<AsReqResponse> {
+        transporter: &Box<dyn Transporter>) -> Result<AsReqResponse> {
         let raw_as_req = AsReqBuilder::build_as_req(username, user_key, options).unwrap();
         let raw_response = transporter.request_and_response(&raw_as_req)?;
         return Self::parse_as_request_response(&raw_response);

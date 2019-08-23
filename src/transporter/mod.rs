@@ -23,7 +23,7 @@ pub enum TransportProtocol {
 }
 
 /// Generates a transporter given and address and transport protocol
-pub fn new_transporter(host_address: IpAddr, transport_protocol: TransportProtocol) -> Box<Transporter> {
+pub fn new_transporter(host_address: IpAddr, transport_protocol: TransportProtocol) -> Box<dyn Transporter> {
 
     let dst_addr = SocketAddr::new(host_address, DEFAULT_KERBEROS_PORT);
 
