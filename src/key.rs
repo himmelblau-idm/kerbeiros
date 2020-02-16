@@ -233,13 +233,13 @@ mod test {
     #[should_panic(expected="Invalid key: Length should be 64")]
     #[test]
     fn invalid_length_hex_string_to_aes_256_key() {
-        Key::from_aes_256_key_string("0").unwrap();;
+        Key::from_aes_256_key_string("0").unwrap();
     }
 
     #[should_panic(expected="Invalid key: Only hexadecimal characters are allowed [1234567890abcdefABCDEF]")]
     #[test]
     fn invalid_chars_hex_string_to_aes_256_key() {
-        Key::from_aes_256_key_string("ERROR_0123456789ABCDEF0123456789ERROR_0123456789ABCDEF0123456789").unwrap();;
+        Key::from_aes_256_key_string("ERROR_0123456789ABCDEF0123456789ERROR_0123456789ABCDEF0123456789").unwrap();
     }
 
 
