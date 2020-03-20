@@ -1,5 +1,8 @@
-use super::super::credential::*;
-use crate::types::*;
+use super::super::credential::Credential;
+use crate::types::ccache;
+use crate::types::{
+    AddressMapper, AuthDataMapper, KeyBlockMapper, PrincipalMapper, TicketFlagsMapper, TimesMapper,
+};
 
 pub struct CredentialCCacheMapper {}
 
@@ -15,6 +18,7 @@ impl CredentialCCacheMapper {
         );
 
         let tktflags = TicketFlagsMapper::ticket_flags_to_tktflags(credential.flags());
+
         let key = KeyBlockMapper::encryption_key_to_keyblock(credential.key());
 
         let ticket = ccache::CountedOctetString::new(credential.ticket().build());
@@ -23,6 +27,7 @@ impl CredentialCCacheMapper {
             credential.crealm(),
             credential.cname(),
         );
+
         let server = PrincipalMapper::realm_and_principal_name_to_principal(
             credential.srealm(),
             credential.sname(),
@@ -48,8 +53,14 @@ impl CredentialCCacheMapper {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::constants::address_type;
     use crate::constants::ticket_flags;
-    use crate::constants::*;
+    use crate::constants::{AES256_CTS_HMAC_SHA1_96, NT_PRINCIPAL, PA_PAC_REQUEST};
+    use crate::types::{
+        Address, AuthData, CountedOctetString, EncKdcRepPart, EncryptedData, EncryptionKey,
+        HostAddress, HostAddresses, KerberosString, KerberosTime, LastReq, MethodData, PaData,
+        PacRequest, PrincipalName, Realm, Ticket, TicketFlags,
+    };
     use chrono::prelude::*;
 
     fn create_credential(
