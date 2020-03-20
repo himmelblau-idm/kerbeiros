@@ -1,8 +1,8 @@
-use red_asn1::*;
 use super::super::basics::*;
-use crate::error::{ErrorKind, Result};
 use super::edata::Edata;
 use crate::constants::error_codes::*;
+use crate::error::{ErrorKind, Result};
+use red_asn1::*;
 
 use std::fmt;
 
@@ -21,17 +21,16 @@ pub struct KrbError {
     realm: Realm,
     sname: PrincipalName,
     e_text: Option<KerberosString>,
-    e_data: Option<Edata>
+    e_data: Option<Edata>,
 }
 
 impl KrbError {
-
     fn new(
-        stime: KerberosTime, 
+        stime: KerberosTime,
         susec: Microseconds,
         error_code: Int32,
         realm: Realm,
-        sname: PrincipalName
+        sname: PrincipalName,
     ) -> Self {
         return Self {
             pvno: 5,
@@ -46,8 +45,8 @@ impl KrbError {
             realm,
             sname,
             e_text: None,
-            e_data: None
-        }
+            e_data: None,
+        };
     }
 
     pub fn pvno(&self) -> i8 {
@@ -72,7 +71,7 @@ impl KrbError {
 
     fn set_ctime(&mut self, ctime: KerberosTime) {
         self.ctime = Some(ctime);
-    } 
+    }
 
     pub fn cusec(&self) -> &Option<Microseconds> {
         return &self.cusec;
@@ -147,10 +146,14 @@ impl KrbError {
 
 impl fmt::Display for KrbError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "KRB-ERROR [{}] {}", self.error_code(), self.error_code_message())
+        write!(
+            f,
+            "KRB-ERROR [{}] {}",
+            self.error_code(),
+            self.error_code_message()
+        )
     }
 }
-
 
 #[derive(Sequence, Default, Debug, PartialEq)]
 #[seq(application_tag = 30)]
@@ -180,55 +183,53 @@ pub(crate) struct KrbErrorAsn1 {
     #[seq_field(context_tag = 11, optional)]
     e_text: SeqField<KerberosStringAsn1>,
     #[seq_field(context_tag = 12, optional)]
-    e_data: SeqField<OctetString>
+    e_data: SeqField<OctetString>,
 }
 
 impl KrbErrorAsn1 {
-
     fn no_asn1_type(&self) -> Result<KrbError> {
-        
-        let stime = self.get_stime().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::stime".to_string())
-        )?;
+        let stime = self
+            .get_stime()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::stime".to_string()))?;
 
-        let susec = self.get_susec().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::susec".to_string())
-        )?;
+        let susec = self
+            .get_susec()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::susec".to_string()))?;
 
-        let error_code = self.get_error_code().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::error_code".to_string())
-        )?;
+        let error_code = self
+            .get_error_code()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::error_code".to_string()))?;
 
-        let realm = self.get_realm().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::realm".to_string())
-        )?;
+        let realm = self
+            .get_realm()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::realm".to_string()))?;
 
-        let sname = self.get_sname().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::sname".to_string())
-        )?;
+        let sname = self
+            .get_sname()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::sname".to_string()))?;
 
         let mut krb_error = KrbError::new(
-            stime.no_asn1_type()?, 
-            susec.no_asn1_type()?, 
-            error_code.no_asn1_type()?, 
-            realm.no_asn1_type()?, 
-            sname.no_asn1_type()?
+            stime.no_asn1_type()?,
+            susec.no_asn1_type()?,
+            error_code.no_asn1_type()?,
+            realm.no_asn1_type()?,
+            sname.no_asn1_type()?,
         );
 
-        let pvno = self.get_pvno().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::pvno".to_string())
-        )?;
-        let pvno_value = pvno.value().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::pvno".to_string())
-        )?;
+        let pvno = self
+            .get_pvno()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::pvno".to_string()))?;
+        let pvno_value = pvno
+            .value()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::pvno".to_string()))?;
         krb_error.set_pvno(pvno_value as i8);
 
-        let msg_type = self.get_msg_type().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::msg_type".to_string())
-        )?;
-        let msg_type_value = msg_type.value().ok_or_else(|| 
-            ErrorKind::NotAvailableData("KrbError::msg_type".to_string())
-        )?;
+        let msg_type = self
+            .get_msg_type()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::msg_type".to_string()))?;
+        let msg_type_value = msg_type
+            .value()
+            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::msg_type".to_string()))?;
         krb_error.set_msg_type(msg_type_value as i8);
 
         if let Some(ctime) = self.get_ctime() {
@@ -252,36 +253,33 @@ impl KrbErrorAsn1 {
         }
 
         if let Some(e_data) = self.get_e_data() {
-            let e_data_value = e_data.value().ok_or_else(|| 
-                ErrorKind::NotAvailableData("KrbError::e_data".to_string())
-            )?;
-            
+            let e_data_value = e_data
+                .value()
+                .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::e_data".to_string()))?;
+
             if krb_error.error_code == KDC_ERR_PREAUTH_REQUIRED {
                 match MethodData::parse(e_data_value) {
                     Ok(method_data) => {
                         krb_error.set_e_data(Edata::MethodData(method_data));
-                    },
+                    }
                     Err(_) => {
                         krb_error.set_e_data(Edata::Raw(e_data_value.clone()));
                     }
                 }
-            }
-            else {
+            } else {
                 krb_error.set_e_data(Edata::Raw(e_data_value.clone()));
             }
         }
 
         return Ok(krb_error);
     }
-
 }
-
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use chrono::prelude::*;
     use crate::constants::*;
+    use chrono::prelude::*;
 
     #[test]
     fn create_default_krb_error_asn1() {
@@ -308,41 +306,35 @@ mod test {
     #[test]
     fn test_decode_krb_error() {
         let mut krb_error_asn1 = KrbErrorAsn1::default();
-        krb_error_asn1.decode(&[
-            0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 
-            0xa0, 0x03, 0x02, 0x01, 0x05, 
-            0xa1, 0x03, 0x02, 0x01, 0x1e, 
-            0xa4, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x34, 0x31, 0x38, 0x30, 0x36, 0x30, 0x30, 0x33, 0x31, 0x5a, 
-            0xa5, 0x05, 0x02, 0x03, 0x05, 0x34, 0x2f, 
-            0xa6, 0x03, 0x02, 0x01, 0x19, 
-            0xa9, 0x10, 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 
-            0xaa, 0x23, 0x30, 0x21, 
-                0xa0, 0x03, 0x02, 0x01, 0x02, 
-                0xa1, 0x1a, 0x30, 0x18, 0x1b, 0x06, 0x6b, 0x72, 0x62, 0x74, 0x67, 0x74, 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 
-            0xac, 0x77, 0x04, 0x75, 0x30, 0x73, 
-                0x30, 0x50, 
-                    0xa1, 0x03, 0x02, 0x01, 0x13, 
-                    0xa2, 0x49, 0x04, 0x47, 
-                        0x30, 0x45, 0x30, 0x1d, 
-                            0xa0, 0x03, 0x02, 0x01, 0x12, 
-                            0xa1, 0x16, 0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79, 
-                        0x30, 0x05, 
-                            0xa0, 0x03, 0x02, 0x01, 0x17, 
-                        0x30, 0x1d, 
-                            0xa0, 0x03, 0x02, 0x01, 0x03, 
-                            0xa1, 0x16, 0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79, 
-                0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x02, 0xa2, 0x02, 0x04, 0x00, 
-                0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x10, 0xa2, 0x02, 0x04, 0x00, 
-                0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x0f, 0xa2, 0x02, 0x04, 0x00
-        ]).unwrap();
+        krb_error_asn1
+            .decode(&[
+                0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 0xa0, 0x03, 0x02, 0x01, 0x05, 0xa1, 0x03, 0x02,
+                0x01, 0x1e, 0xa4, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x34, 0x31, 0x38,
+                0x30, 0x36, 0x30, 0x30, 0x33, 0x31, 0x5a, 0xa5, 0x05, 0x02, 0x03, 0x05, 0x34, 0x2f,
+                0xa6, 0x03, 0x02, 0x01, 0x19, 0xa9, 0x10, 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44,
+                0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0xaa, 0x23, 0x30, 0x21, 0xa0,
+                0x03, 0x02, 0x01, 0x02, 0xa1, 0x1a, 0x30, 0x18, 0x1b, 0x06, 0x6b, 0x72, 0x62, 0x74,
+                0x67, 0x74, 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45,
+                0x41, 0x52, 0x54, 0x53, 0xac, 0x77, 0x04, 0x75, 0x30, 0x73, 0x30, 0x50, 0xa1, 0x03,
+                0x02, 0x01, 0x13, 0xa2, 0x49, 0x04, 0x47, 0x30, 0x45, 0x30, 0x1d, 0xa0, 0x03, 0x02,
+                0x01, 0x12, 0xa1, 0x16, 0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e,
+                0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79, 0x30, 0x05,
+                0xa0, 0x03, 0x02, 0x01, 0x17, 0x30, 0x1d, 0xa0, 0x03, 0x02, 0x01, 0x03, 0xa1, 0x16,
+                0x1b, 0x14, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52,
+                0x54, 0x53, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79, 0x30, 0x09, 0xa1, 0x03, 0x02, 0x01,
+                0x02, 0xa2, 0x02, 0x04, 0x00, 0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x10, 0xa2, 0x02,
+                0x04, 0x00, 0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x0f, 0xa2, 0x02, 0x04, 0x00,
+            ])
+            .unwrap();
 
         let error_code = KDC_ERR_PREAUTH_REQUIRED;
         let stime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
         let susec = Microseconds::new(341039).unwrap();
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
-        let mut sname = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        let mut sname =
+            PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
-        
+
         let mut krb_error = KrbError::new(stime, susec, error_code, realm, sname);
 
         let mut method_data = MethodData::default();
@@ -374,12 +366,12 @@ mod test {
 
     #[test]
     fn krb_error_fields() {
-
         let error_code = KDC_ERR_PREAUTH_REQUIRED;
         let stime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
         let susec = Microseconds::new(341039).unwrap();
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
-        let mut sname = PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
+        let mut sname =
+            PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
         let mut method_data = MethodData::default();
@@ -405,7 +397,13 @@ mod test {
         method_data.push(PaData::Raw(PA_PK_AS_REP_OLD, vec![]));
         let e_data = Edata::MethodData(method_data);
 
-        let mut krb_error = KrbError::new(stime, susec.clone(), error_code, realm.clone(), sname.clone());
+        let mut krb_error = KrbError::new(
+            stime,
+            susec.clone(),
+            error_code,
+            realm.clone(),
+            sname.clone(),
+        );
 
         krb_error.set_e_data(e_data.clone());
 
@@ -423,5 +421,4 @@ mod test {
         assert_eq!(&None, krb_error.e_text());
         assert_eq!(&Some(e_data), krb_error.e_data());
     }
-
 }

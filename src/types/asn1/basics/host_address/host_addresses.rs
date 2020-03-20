@@ -1,28 +1,26 @@
-use red_asn1::*;
 use super::host_address::*;
 use crate::error::Result;
+use red_asn1::*;
 use std::ops::{Deref, DerefMut};
 
 /// (*HostAddresses*) Array of [HostAddress](./enum.HostAddress.html)
 #[derive(Debug, PartialEq, Clone)]
 pub struct HostAddresses {
-    addresses: Vec<HostAddress>
+    addresses: Vec<HostAddress>,
 }
 
 impl HostAddresses {
-
     fn default() -> Self {
         return Self {
-            addresses: Vec::new()
+            addresses: Vec::new(),
         };
     }
 
     pub fn new(address: HostAddress) -> HostAddresses {
-        return HostAddresses{
-            addresses: vec![address]
+        return HostAddresses {
+            addresses: vec![address],
         };
     }
-
 }
 
 impl Deref for HostAddresses {
@@ -40,11 +38,10 @@ impl DerefMut for HostAddresses {
 
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct HostAddressesAsn1 {
-    subtype: SequenceOf<HostAddressAsn1>
+    subtype: SequenceOf<HostAddressAsn1>,
 }
 
 impl HostAddressesAsn1 {
-
     fn seq_of_host_address(host_addresses: &HostAddresses) -> SequenceOf<HostAddressAsn1> {
         let mut seq_of_host_addresses: SequenceOf<HostAddressAsn1> = SequenceOf::default();
 
@@ -68,13 +65,12 @@ impl HostAddressesAsn1 {
 impl From<&HostAddresses> for HostAddressesAsn1 {
     fn from(host_addresses: &HostAddresses) -> HostAddressesAsn1 {
         return HostAddressesAsn1 {
-            subtype: HostAddressesAsn1::seq_of_host_address(host_addresses)
-        }
+            subtype: HostAddressesAsn1::seq_of_host_address(host_addresses),
+        };
     }
 }
 
 impl Asn1Object for HostAddressesAsn1 {
-
     fn tag(&self) -> Tag {
         return self.subtype.tag();
     }
@@ -90,9 +86,7 @@ impl Asn1Object for HostAddressesAsn1 {
     fn unset_value(&mut self) {
         return self.subtype.unset_value();
     }
-
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -102,23 +96,27 @@ mod tests {
     fn test_encode_netbios_host_addresses() {
         let netbios_address = HostAddress::NetBios("HOLLOWBASTION".to_string());
         let addresses = HostAddresses::new(netbios_address);
-        assert_eq!(vec![0x30, 0x1b, 
-                        0x30, 0x19, 0xa0, 0x03, 0x02, 0x01, 0x14, 
-                        0xa1, 0x12, 0x04, 0x10, 0x48, 0x4f, 0x4c, 0x4c, 0x4f, 0x57, 
-                        0x42, 0x41, 0x53, 0x54, 0x49, 0x4f, 0x4e, 0x20, 0x20, 0x20],
-                   HostAddressesAsn1::from(&addresses).encode().unwrap());
+        assert_eq!(
+            vec![
+                0x30, 0x1b, 0x30, 0x19, 0xa0, 0x03, 0x02, 0x01, 0x14, 0xa1, 0x12, 0x04, 0x10, 0x48,
+                0x4f, 0x4c, 0x4c, 0x4f, 0x57, 0x42, 0x41, 0x53, 0x54, 0x49, 0x4f, 0x4e, 0x20, 0x20,
+                0x20
+            ],
+            HostAddressesAsn1::from(&addresses).encode().unwrap()
+        );
     }
 
     #[test]
     fn test_decode_netbios_host_addresses() {
         let mut host_addresses_asn1 = HostAddressesAsn1::default();
 
-        host_addresses_asn1.decode(&[
-            0x30, 0x1b, 
-            0x30, 0x19, 0xa0, 0x03, 0x02, 0x01, 0x14, 
-            0xa1, 0x12, 0x04, 0x10, 0x48, 0x4f, 0x4c, 0x4c, 0x4f, 0x57, 
-            0x42, 0x41, 0x53, 0x54, 0x49, 0x4f, 0x4e, 0x20, 0x20, 0x20]
-        ).unwrap();
+        host_addresses_asn1
+            .decode(&[
+                0x30, 0x1b, 0x30, 0x19, 0xa0, 0x03, 0x02, 0x01, 0x14, 0xa1, 0x12, 0x04, 0x10, 0x48,
+                0x4f, 0x4c, 0x4c, 0x4f, 0x57, 0x42, 0x41, 0x53, 0x54, 0x49, 0x4f, 0x4e, 0x20, 0x20,
+                0x20,
+            ])
+            .unwrap();
 
         let netbios_address = HostAddress::NetBios("HOLLOWBASTION".to_string());
         let addresses = HostAddresses::new(netbios_address);

@@ -1,9 +1,9 @@
-use super::principal::*;
-use super::key_block::*;
-use super::times::*;
 use super::address::*;
 use super::auth_data::*;
 use super::counted_octet_string::*;
+use super::key_block::*;
+use super::principal::*;
+use super::times::*;
 
 /// Represents a credential stored in ccache.
 #[derive(Debug, PartialEq, Clone)]
@@ -17,16 +17,20 @@ pub struct CredentialEntry {
     addrs: Vec<Address>,
     authdata: Vec<AuthData>,
     ticket: CountedOctetString,
-    second_ticket: CountedOctetString
+    second_ticket: CountedOctetString,
 }
 
 impl CredentialEntry {
-
     pub fn new(
-        client: Principal, server: Principal, key: KeyBlock,
-        time: Times, is_skey: u8, tktflags: u32, ticket: CountedOctetString
-        ) -> Self {
-        return Self{
+        client: Principal,
+        server: Principal,
+        key: KeyBlock,
+        time: Times,
+        is_skey: u8,
+        tktflags: u32,
+        ticket: CountedOctetString,
+    ) -> Self {
+        return Self {
             client,
             server,
             key,
@@ -36,7 +40,7 @@ impl CredentialEntry {
             addrs: Vec::new(),
             authdata: Vec::new(),
             ticket,
-            second_ticket: CountedOctetString::default()
+            second_ticket: CountedOctetString::default(),
         };
     }
 
@@ -77,5 +81,4 @@ impl CredentialEntry {
 
         return bytes;
     }
-
 }

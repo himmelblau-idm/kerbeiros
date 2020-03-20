@@ -1,11 +1,11 @@
+use super::super::int32::*;
 use red_asn1::*;
 use std::ops::{Deref, DerefMut};
-use super::super::int32::*;
 
 /// (*SEQUENCE OF Int32*)Array of [Int32](./type.Int32.html).
 #[derive(Debug, PartialEq, Clone)]
 pub struct SeqOfInt32 {
-    etypes: Vec<Int32>
+    etypes: Vec<Int32>,
 }
 
 impl Deref for SeqOfInt32 {
@@ -22,22 +22,17 @@ impl DerefMut for SeqOfInt32 {
 }
 
 impl SeqOfInt32 {
-
     pub fn new() -> SeqOfInt32 {
-        return SeqOfInt32{
-            etypes: Vec::new()
-        };
+        return SeqOfInt32 { etypes: Vec::new() };
     }
-
 }
 
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct SeqOfInt32Asn1 {
-    subtype: SequenceOf<Int32Asn1>
+    subtype: SequenceOf<Int32Asn1>,
 }
 
 impl SeqOfInt32Asn1 {
-
     fn set_asn1_values(&mut self, seq_of_etype: &SeqOfInt32) {
         for etype in seq_of_etype.iter() {
             self.subtype.push((*etype).into());
@@ -55,7 +50,6 @@ impl From<&SeqOfInt32> for SeqOfInt32Asn1 {
 }
 
 impl Asn1Object for SeqOfInt32Asn1 {
-
     fn tag(&self) -> Tag {
         return self.subtype.tag();
     }
@@ -63,7 +57,7 @@ impl Asn1Object for SeqOfInt32Asn1 {
     fn encode_value(&self) -> red_asn1::Result<Vec<u8>> {
         return self.subtype.encode_value();
     }
-    
+
     fn decode_value(&mut self, raw: &[u8]) -> Result<()> {
         return self.subtype.decode_value(raw);
     }
@@ -71,7 +65,6 @@ impl Asn1Object for SeqOfInt32Asn1 {
     fn unset_value(&mut self) {
         self.subtype.unset_value();
     }
-
 }
 
 #[cfg(test)]
@@ -101,14 +94,12 @@ mod test {
         seq_etypes.push(DES_CBC_CRC);
         seq_etypes.push(RC4_HMAC_OLD_EXP);
 
-        assert_eq!(vec![0x30, 0x16, 
-                        0x02, 0x01, 0x12, 
-                        0x02, 0x01, 0x11, 
-                        0x02, 0x01, 0x17, 
-                        0x02, 0x01, 0x18,
-                        0x02, 0x01, 0x03,
-                        0x02, 0x01, 0x01,
-                        0x02, 0x02, 0xff, 0x79,],
-                        SeqOfInt32Asn1::from(&seq_etypes).encode().unwrap());
+        assert_eq!(
+            vec![
+                0x30, 0x16, 0x02, 0x01, 0x12, 0x02, 0x01, 0x11, 0x02, 0x01, 0x17, 0x02, 0x01, 0x18,
+                0x02, 0x01, 0x03, 0x02, 0x01, 0x01, 0x02, 0x02, 0xff, 0x79,
+            ],
+            SeqOfInt32Asn1::from(&seq_etypes).encode().unwrap()
+        );
     }
-} 
+}

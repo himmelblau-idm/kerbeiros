@@ -1,19 +1,15 @@
-use std::convert::From;
 use crate::types::KerberosString;
+use std::convert::From;
 
 /// String used by ccache.
 #[derive(Debug, PartialEq, Clone, Default)]
 pub struct CountedOctetString {
-    data: Vec<u8>
+    data: Vec<u8>,
 }
 
-
 impl CountedOctetString {
-
     pub fn new(data: Vec<u8>) -> Self {
-        return CountedOctetString{
-            data
-        }
+        return CountedOctetString { data };
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -22,7 +18,6 @@ impl CountedOctetString {
         bytes.append(&mut self.data.clone());
         return bytes;
     }
-
 }
 
 impl From<&KerberosString> for CountedOctetString {
@@ -36,8 +31,6 @@ impl From<&str> for CountedOctetString {
         return Self::new(string.as_bytes().to_vec());
     }
 }
-
-
 
 #[cfg(test)]
 mod test {
@@ -53,11 +46,10 @@ mod test {
     fn counted_octet_string_to_bytes() {
         assert_eq!(
             vec![
-                0x00, 0x00, 0x00, 0x0e, 
-                0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53
+                0x00, 0x00, 0x00, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45,
+                0x41, 0x52, 0x54, 0x53
             ],
             CountedOctetString::from("KINGDOM.HEARTS").to_bytes()
         );
     }
-
 }

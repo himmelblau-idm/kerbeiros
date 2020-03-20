@@ -1,7 +1,7 @@
-use red_asn1::*;
-use std::ops::{Deref, DerefMut};
 use super::pa_data::*;
 use crate::error::Result;
+use red_asn1::*;
+use std::ops::{Deref, DerefMut};
 
 /// (*METHOD-DATA*) Array of [PaData](./enum.PaData.html).
 pub type MethodData = SeqOfPaData;
@@ -10,7 +10,7 @@ pub(crate) type MethodDataAsn1 = SeqOfPaDataAsn1;
 /// (*SEQUENCE OF PA-DATA*) Array of [PaData](./enum.PaData.html).
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct SeqOfPaData {
-    padatas: Vec<PaData>
+    padatas: Vec<PaData>,
 }
 
 impl Deref for SeqOfPaData {
@@ -27,22 +27,19 @@ impl DerefMut for SeqOfPaData {
 }
 
 impl SeqOfPaData {
-
     pub fn parse(raw: &Vec<u8>) -> Result<Self> {
         let mut seq_of_padata_asn1 = SeqOfPaDataAsn1::default();
         seq_of_padata_asn1.decode(raw)?;
         return Ok(seq_of_padata_asn1.no_asn1_type().unwrap());
     }
-
 }
 
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct SeqOfPaDataAsn1 {
-    subtype: SequenceOf<PaDataAsn1>
+    subtype: SequenceOf<PaDataAsn1>,
 }
 
 impl SeqOfPaDataAsn1 {
-
     fn set_asn1_values(&mut self, seq_of_padatas: &SeqOfPaData) {
         for padata in seq_of_padatas.iter() {
             self.subtype.push(padata.into());
@@ -69,7 +66,6 @@ impl From<&SeqOfPaData> for SeqOfPaDataAsn1 {
 }
 
 impl Asn1Object for SeqOfPaDataAsn1 {
-
     fn tag(&self) -> Tag {
         return self.subtype.tag();
     }
@@ -87,16 +83,15 @@ impl Asn1Object for SeqOfPaDataAsn1 {
     }
 }
 
-
 #[cfg(test)]
 mod test {
-    use super::*;
     use super::super::pac_request::PacRequest;
+    use super::*;
 
     #[test]
     fn create_default_seq_of_padatas_asn1() {
         assert_eq!(
-            SeqOfPaDataAsn1{
+            SeqOfPaDataAsn1 {
                 subtype: SequenceOf::default()
             },
             SeqOfPaDataAsn1::default()
@@ -110,39 +105,43 @@ mod test {
     }
 
     #[test]
-    fn test_encode_seq_of_padatas(){
+    fn test_encode_seq_of_padatas() {
         let mut seq_of_padatas = SeqOfPaData::default();
         seq_of_padatas.push(PaData::PacRequest(PacRequest::new(true)));
 
-        assert_eq!(vec![0x30, 0x13, 0x30, 0x11, 
-                        0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
-                        0xa2, 0x09, 0x04, 0x07, 0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff],
-                        SeqOfPaDataAsn1::from(&seq_of_padatas).encode().unwrap()
+        assert_eq!(
+            vec![
+                0x30, 0x13, 0x30, 0x11, 0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 0xa2, 0x09, 0x04, 0x07,
+                0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff
+            ],
+            SeqOfPaDataAsn1::from(&seq_of_padatas).encode().unwrap()
         );
     }
 
     #[test]
-    fn test_encode_empty_seq_of_padatas(){
+    fn test_encode_empty_seq_of_padatas() {
         let seq_of_padatas = SeqOfPaData::default();
 
-        assert_eq!(vec![0x30, 0x0],
-                        SeqOfPaDataAsn1::from(&seq_of_padatas).encode().unwrap()
+        assert_eq!(
+            vec![0x30, 0x0],
+            SeqOfPaDataAsn1::from(&seq_of_padatas).encode().unwrap()
         );
     }
 
     #[test]
-    fn test_decode_seq_of_padatas(){
-
+    fn test_decode_seq_of_padatas() {
         let mut seq_of_padatas_asn1 = SeqOfPaDataAsn1::default();
 
-        seq_of_padatas_asn1.decode(&[0x30, 0x13, 0x30, 0x11, 
-                        0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 
-                        0xa2, 0x09, 0x04, 0x07, 0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff]).unwrap();
+        seq_of_padatas_asn1
+            .decode(&[
+                0x30, 0x13, 0x30, 0x11, 0xa1, 0x04, 0x02, 0x02, 0x00, 0x80, 0xa2, 0x09, 0x04, 0x07,
+                0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff,
+            ])
+            .unwrap();
 
         let mut seq_of_padatas = SeqOfPaData::default();
         seq_of_padatas.push(PaData::PacRequest(PacRequest::new(true)));
 
         assert_eq!(seq_of_padatas, seq_of_padatas_asn1.no_asn1_type().unwrap());
     }
-
 }

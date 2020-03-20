@@ -4,5 +4,5 @@ use super::super::pa_data::MethodData;
 #[derive(Debug, Clone, PartialEq)]
 pub enum Edata {
     Raw(Vec<u8>),
-    MethodData(MethodData)
+    MethodData(MethodData),
 }

@@ -1,21 +1,19 @@
-use red_asn1::*;
 use crate::error::{ErrorKind, Result};
-
+use red_asn1::*;
 
 pub(crate) const MAX_MICROSECONDS: u32 = 999999;
 
 /// (*Microseconds*) Kerberos Microseconds.
-/// 
+///
 /// The value must be between 0 and 999999.
 #[derive(Debug, Clone, PartialEq)]
-pub struct Microseconds{
-    value: u32
+pub struct Microseconds {
+    value: u32,
 }
-
 
 impl Microseconds {
     pub fn new(x: u32) -> Result<Self> {
-        let mut microseconds = Self {value: 0};
+        let mut microseconds = Self { value: 0 };
         microseconds.set(x)?;
 
         return Ok(microseconds);
@@ -33,29 +31,27 @@ impl Microseconds {
         self.value = x;
         return Ok(());
     }
-
 }
 
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct MicrosecondsAsn1 {
-    subtype: Integer
+    subtype: Integer,
 }
 
 impl MicrosecondsAsn1 {
-
     pub fn no_asn1_type(&self) -> Result<Microseconds> {
-        let value = self.subtype.value().ok_or_else(|| 
-            ErrorKind::NotAvailableData("Microseconds".to_string())
-        )?;
+        let value = self
+            .subtype
+            .value()
+            .ok_or_else(|| ErrorKind::NotAvailableData("Microseconds".to_string()))?;
         return Microseconds::new(value as u32);
     }
-
 }
 
 impl From<&Microseconds> for MicrosecondsAsn1 {
     fn from(value: &Microseconds) -> Self {
-        return Self{
-            subtype: Integer::from(value.get() as i64)
+        return Self {
+            subtype: Integer::from(value.get() as i64),
         };
     }
 }
@@ -78,15 +74,16 @@ impl Asn1Object for MicrosecondsAsn1 {
             match previous_value {
                 Some(val) => {
                     self.subtype.set_value(val);
-                },
+                }
                 None => {
                     self.subtype.unset_value();
                 }
             };
 
-            return Err(red_asn1::ValueErrorKind::ConstraintError(
-                        format!("{} is not valid, must be between 0 and 999999", new_value)
-                        ))?; 
+            return Err(red_asn1::ValueErrorKind::ConstraintError(format!(
+                "{} is not valid, must be between 0 and 999999",
+                new_value
+            )))?;
         }
 
         return Ok(());
@@ -96,7 +93,6 @@ impl Asn1Object for MicrosecondsAsn1 {
         return self.subtype.unset_value();
     }
 }
-
 
 #[cfg(test)]
 mod test {
@@ -131,11 +127,13 @@ mod test {
         mic.set(1000000).unwrap();
     }
 
-
     #[test]
     fn test_encode_microseconds() {
-        assert_eq!(vec![0x02, 0x03, 0x05, 0x34, 0x2f],
-            MicrosecondsAsn1::from(&Microseconds::new(341039).unwrap()).encode().unwrap()
+        assert_eq!(
+            vec![0x02, 0x03, 0x05, 0x34, 0x2f],
+            MicrosecondsAsn1::from(&Microseconds::new(341039).unwrap())
+                .encode()
+                .unwrap()
         );
     }
 
@@ -147,20 +145,23 @@ mod test {
         assert_eq!(341039, mic_asn1.no_asn1_type().unwrap().value);
     }
 
-    #[should_panic (expected = "Invalid value")]
+    #[should_panic(expected = "Invalid value")]
     #[test]
     fn test_decode_high_value_of_microseconds() {
         let mut mic_asn1 = MicrosecondsAsn1::default();
-        mic_asn1.decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f]).unwrap();
+        mic_asn1
+            .decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f])
+            .unwrap();
     }
 
-    #[should_panic (expected = "Invalid value")]
+    #[should_panic(expected = "Invalid value")]
     #[test]
     fn test_decode_low_value_of_microseconds() {
         let mut mic_asn1 = MicrosecondsAsn1::default();
-        mic_asn1.decode(&[0x02, 0x04, 0xff, 0x05, 0x34, 0x2f]).unwrap();
+        mic_asn1
+            .decode(&[0x02, 0x04, 0xff, 0x05, 0x34, 0x2f])
+            .unwrap();
     }
-
 
     #[test]
     fn test_decode_not_change_value_after_decode_failure() {
@@ -172,6 +173,4 @@ mod test {
         mic_asn1.decode(&[0x02, 0x04, 0x01, 0x05, 0x34, 0x2f]).err();
         assert_eq!(1, mic_asn1.subtype.value().unwrap());
     }
-
-
 }

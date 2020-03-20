@@ -10,7 +10,6 @@ pub use times_mapper::*;
 mod ticket_flags_mapper;
 pub use ticket_flags_mapper::*;
 
-
 mod address_mapper;
 pub use address_mapper::*;
 

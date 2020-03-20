@@ -3,11 +3,10 @@ pub use super::delta_time::*;
 /// Header of [CCache](./struct.CCache.html).
 #[derive(Debug, PartialEq, Clone)]
 pub enum Header {
-    DeltaTime(DeltaTime)
+    DeltaTime(DeltaTime),
 }
 
 impl Header {
-
     pub fn new_default() -> Self {
         return Header::DeltaTime(DeltaTime::new_default());
     }
@@ -27,10 +26,7 @@ impl Header {
         bytes.append(&mut raw);
         return bytes;
     }
-
 }
-
-
 
 #[cfg(test)]
 mod test {

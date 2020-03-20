@@ -1,15 +1,13 @@
 use crate::types::*;
 
-
-pub struct AddressMapper{}
+pub struct AddressMapper {}
 
 impl AddressMapper {
-
     pub fn host_address_to_address(host_address: &HostAddress) -> Address {
         return Address::new(
             host_address.addr_type() as u16,
-            CountedOctetString::new(host_address.address_without_modifications())
-        )
+            CountedOctetString::new(host_address.address_without_modifications()),
+        );
     }
 
     pub fn host_addresses_to_address_vector(host_addresses: &HostAddresses) -> Vec<Address> {
@@ -19,9 +17,7 @@ impl AddressMapper {
         }
         return addresses;
     }
-
 }
-
 
 #[cfg(test)]
 mod test {
@@ -30,40 +26,38 @@ mod test {
 
     #[test]
     fn host_address_to_address() {
-
         let host_address = HostAddress::NetBios("KINGDOM.HEARTS".to_string());
 
         let address = Address::new(
             address_type::NETBIOS as u16,
-            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
+            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
         );
 
-        assert_eq!(address, AddressMapper::host_address_to_address(&host_address));
+        assert_eq!(
+            address,
+            AddressMapper::host_address_to_address(&host_address)
+        );
     }
-
 
     #[test]
     fn host_addresses_to_address_vector() {
-
         let mut addresses = Vec::new();
-        addresses.push(
-            Address::new(
-                address_type::NETBIOS as u16,
-                CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
-            )
-        );
-        addresses.push(
-            Address::new(
-                7,
-                CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec())
-            )
-        );
+        addresses.push(Address::new(
+            address_type::NETBIOS as u16,
+            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
+        ));
+        addresses.push(Address::new(
+            7,
+            CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
+        ));
 
-        let mut host_addresses = HostAddresses::new(HostAddress::NetBios("KINGDOM.HEARTS".to_string()));
+        let mut host_addresses =
+            HostAddresses::new(HostAddress::NetBios("KINGDOM.HEARTS".to_string()));
         host_addresses.push(HostAddress::Raw(7, "HOLLOWBASTION".as_bytes().to_vec()));
 
-        assert_eq!(addresses, AddressMapper::host_addresses_to_address_vector(&host_addresses));
-
+        assert_eq!(
+            addresses,
+            AddressMapper::host_addresses_to_address_vector(&host_addresses)
+        );
     }
-    
 }

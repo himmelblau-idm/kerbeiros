@@ -1,21 +1,20 @@
-use red_asn1::*;
 use super::super::kerberos_time::*;
 use super::super::microseconds::*;
 use chrono::prelude::*;
+use red_asn1::*;
 
 /// (*PA-ENC-TS-ENC*) Timestamp that is encrypted with client [Key](../../key/enum.Key.html).
 pub struct PaEncTsEnc {
     patimestamp: KerberosTime,
-    pausec: Option<Microseconds>
+    pausec: Option<Microseconds>,
 }
 
 impl PaEncTsEnc {
-
     pub fn new(patimestamp: KerberosTime) -> Self {
         return Self {
             patimestamp,
-            pausec: None
-        }
+            pausec: None,
+        };
     }
 
     pub fn set_pausec(&mut self, pausec: Microseconds) {
@@ -25,7 +24,6 @@ impl PaEncTsEnc {
     pub fn build(&self) -> Vec<u8> {
         return PaEncTsEncAsn1::from(self).encode().unwrap();
     }
-
 }
 
 impl From<DateTime<Utc>> for PaEncTsEnc {
@@ -38,29 +36,26 @@ impl From<DateTime<Utc>> for PaEncTsEnc {
         }
 
         pa_enc_ts_enc.set_pausec(Microseconds::new(microseconds).unwrap());
-        
+
         return pa_enc_ts_enc;
     }
 }
-
 
 #[derive(Sequence)]
 pub(crate) struct PaEncTsEncAsn1 {
     #[seq_field(context_tag = 0)]
     patimestamp: SeqField<KerberosTimeAsn1>,
     #[seq_field(context_tag = 1, optional)]
-    pausec: SeqField<MicrosecondsAsn1>
+    pausec: SeqField<MicrosecondsAsn1>,
 }
 
 impl PaEncTsEncAsn1 {
-
     fn default() -> Self {
         return Self {
             patimestamp: SeqField::default(),
-            pausec: SeqField::default()
-        }
+            pausec: SeqField::default(),
+        };
     }
-
 }
 
 impl From<&PaEncTsEnc> for PaEncTsEncAsn1 {
@@ -88,13 +83,12 @@ mod test {
 
         let pa_enc_ts_enc = PaEncTsEnc::from(datetime);
 
-        assert_eq!(vec![0x30, 0x1a, 
-                            0xa0, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x36, 
-                                0x30, 0x34, 0x30, 0x35, 0x32, 0x32, 0x31, 0x32, 0x5a, 
-                            0xa1, 0x05, 0x02, 0x03, 0x02, 0x31, 0x6d],
-                PaEncTsEncAsn1::from(&pa_enc_ts_enc).encode().unwrap());
-
+        assert_eq!(
+            vec![
+                0x30, 0x1a, 0xa0, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x36, 0x30, 0x34,
+                0x30, 0x35, 0x32, 0x32, 0x31, 0x32, 0x5a, 0xa1, 0x05, 0x02, 0x03, 0x02, 0x31, 0x6d
+            ],
+            PaEncTsEncAsn1::from(&pa_enc_ts_enc).encode().unwrap()
+        );
     }
-
 }
-
