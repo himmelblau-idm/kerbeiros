@@ -1,26 +1,24 @@
-use std::net::*;
-use std::io::{Write, Read};
-use std::io;
-use std::time::Duration;
 use crate::error::*;
 use failure::ResultExt;
+use std::io;
+use std::io::{Read, Write};
+use std::net::*;
+use std::time::Duration;
 
 use super::transporter_trait::*;
 
 /// Send Kerberos messages over TCP
 #[derive(Debug)]
 pub struct TCPTransporter {
-    dst_addr: SocketAddr
+    dst_addr: SocketAddr,
 }
 
 impl TCPTransporter {
-
     pub fn new(dst_addr: SocketAddr) -> Self {
         return Self { dst_addr };
     }
 
     fn request_and_response_tcp(&self, raw_request: &[u8]) -> io::Result<Vec<u8>> {
-        
         let mut tcp_stream = TcpStream::connect_timeout(&self.dst_addr, Duration::new(5, 0))?;
 
         let raw_sized_request = Self::set_size_header_to_request(raw_request);
@@ -43,20 +41,16 @@ impl TCPTransporter {
 
         return raw_sized_request;
     }
-
 }
 
 impl Transporter for TCPTransporter {
-
     fn request_and_response(&self, raw_request: &[u8]) -> Result<Vec<u8>> {
-        let raw_response = self.request_and_response_tcp(raw_request).context(
-            ErrorKind::NetworkError
-        )?;
+        let raw_response = self
+            .request_and_response_tcp(raw_request)
+            .context(ErrorKind::NetworkError)?;
         return Ok(raw_response);
     }
-    
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -65,9 +59,8 @@ mod tests {
     #[should_panic(expected = "Network error")]
     #[test]
     fn test_request_networks_error() {
-        let requester = TCPTransporter::new(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),88));
+        let requester =
+            TCPTransporter::new(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 88));
         requester.request_and_response(&vec![]).unwrap();
     }
-
-
 }

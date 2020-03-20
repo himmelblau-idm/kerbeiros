@@ -1,5 +1,5 @@
 //! Module to provide means to transport Kerberos messages
-//! 
+//!
 
 use std::net::*;
 
@@ -19,21 +19,22 @@ pub const DEFAULT_KERBEROS_PORT: u16 = 88;
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum TransportProtocol {
     TCP,
-    UDP   
+    UDP,
 }
 
 /// Generates a transporter given and address and transport protocol
-pub fn new_transporter(host_address: IpAddr, transport_protocol: TransportProtocol) -> Box<dyn Transporter> {
-
+pub fn new_transporter(
+    host_address: IpAddr,
+    transport_protocol: TransportProtocol,
+) -> Box<dyn Transporter> {
     let dst_addr = SocketAddr::new(host_address, DEFAULT_KERBEROS_PORT);
 
     match transport_protocol {
         TransportProtocol::TCP => {
-            return Box::new(TCPTransporter::new(dst_addr)); 
+            return Box::new(TCPTransporter::new(dst_addr));
         }
         TransportProtocol::UDP => {
             return Box::new(UDPTransporter::new(dst_addr));
         }
     }
-    
 }
