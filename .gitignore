@@ -6,3 +6,4 @@ Cargo.lock
 # Files produced by emacs
 \#*\#
 *~
+.projectile
