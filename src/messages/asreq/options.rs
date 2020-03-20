@@ -1,17 +1,16 @@
+use crate::ciphers::*;
 use crate::constants::etypes::*;
 use crate::constants::kdc_options::*;
-use std::collections::HashSet;
 use crate::error::*;
-use crate::ciphers::*;
 use ascii::AsciiString;
+use std::collections::HashSet;
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct AsReqOptions {
-    realm: AsciiString, 
+    realm: AsciiString,
     etypes: HashSet<i32>,
     kdc_options: u32,
     pac: bool,
-
 }
 
 impl AsReqOptions {
@@ -19,8 +18,11 @@ impl AsReqOptions {
         return Self {
             realm,
             kdc_options: FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK,
-            etypes: [ AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC ].iter().cloned().collect(),
-            pac: true
+            etypes: [AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC]
+                .iter()
+                .cloned()
+                .collect(),
+            pac: true,
         };
     }
 
@@ -33,7 +35,7 @@ impl AsReqOptions {
     }
 
     pub fn set_etype(&mut self, etype: i32) -> Result<()> {
-        return self.set_etypes([ etype ].iter().cloned().collect());
+        return self.set_etypes([etype].iter().cloned().collect());
     }
 
     pub fn set_etypes(&mut self, etypes: HashSet<i32>) -> Result<()> {
@@ -59,20 +61,19 @@ impl AsReqOptions {
     pub fn sorted_etypes(&self) -> Vec<i32> {
         let mut etypes_vec: Vec<i32> = Vec::new();
 
-        if self.etypes.contains(&AES256_CTS_HMAC_SHA1_96){
+        if self.etypes.contains(&AES256_CTS_HMAC_SHA1_96) {
             etypes_vec.push(AES256_CTS_HMAC_SHA1_96);
         }
 
-        if self.etypes.contains(&AES128_CTS_HMAC_SHA1_96){
+        if self.etypes.contains(&AES128_CTS_HMAC_SHA1_96) {
             etypes_vec.push(AES128_CTS_HMAC_SHA1_96);
         }
 
-        if self.etypes.contains(&RC4_HMAC){
+        if self.etypes.contains(&RC4_HMAC) {
             etypes_vec.push(RC4_HMAC);
         }
 
         return etypes_vec;
-
     }
 
     pub fn kdc_options(&self) -> u32 {
@@ -82,9 +83,7 @@ impl AsReqOptions {
     pub fn should_be_pac_included(&self) -> bool {
         return self.pac;
     }
-
 }
-
 
 #[cfg(test)]
 mod test {
@@ -93,13 +92,12 @@ mod test {
     #[test]
     fn default_etypes() {
         let options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
-        let etypes: HashSet<i32> = [ AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC ].iter().cloned().collect();
+        let etypes: HashSet<i32> = [AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC]
+            .iter()
+            .cloned()
+            .collect();
 
-        assert_eq!(
-            &etypes,
-            options.etypes()
-        );
-
+        assert_eq!(&etypes, options.etypes());
     }
 
     #[test]
@@ -116,24 +114,26 @@ mod test {
     fn set_etypes() {
         let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
-        let etypes: HashSet<i32> = [ RC4_HMAC ].iter().cloned().collect();
+        let etypes: HashSet<i32> = [RC4_HMAC].iter().cloned().collect();
 
         options.set_etypes(etypes.clone()).unwrap();
         assert_eq!(&etypes, options.etypes());
 
-        let etypes: HashSet<i32> = [ AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96 ].iter().cloned().collect();
+        let etypes: HashSet<i32> = [AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96]
+            .iter()
+            .cloned()
+            .collect();
 
         options.set_etypes(etypes.clone()).unwrap();
         assert_eq!(&etypes, options.etypes());
     }
 
-    #[should_panic(expected="Cipher algorithm with etype = 3 is not supported")]
+    #[should_panic(expected = "Cipher algorithm with etype = 3 is not supported")]
     #[test]
     fn error_setting_unsupported_etypes() {
-
         let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
-        let etypes: HashSet<i32> = [ RC4_HMAC, DES_CBC_MD5 ].iter().cloned().collect();
+        let etypes: HashSet<i32> = [RC4_HMAC, DES_CBC_MD5].iter().cloned().collect();
 
         options.set_etypes(etypes.clone()).unwrap();
     }
@@ -147,37 +147,42 @@ mod test {
             options.sorted_etypes()
         );
 
-        options.set_etypes([ RC4_HMAC, AES256_CTS_HMAC_SHA1_96 ].iter().cloned().collect()).unwrap();
+        options
+            .set_etypes(
+                [RC4_HMAC, AES256_CTS_HMAC_SHA1_96]
+                    .iter()
+                    .cloned()
+                    .collect(),
+            )
+            .unwrap();
 
         assert_eq!(
             vec![AES256_CTS_HMAC_SHA1_96, RC4_HMAC],
             options.sorted_etypes()
         );
-
     }
 
     #[test]
     fn set_etype() {
         let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
-        let etypes: HashSet<i32> = [ RC4_HMAC ].iter().cloned().collect();
+        let etypes: HashSet<i32> = [RC4_HMAC].iter().cloned().collect();
         options.set_etype(RC4_HMAC).unwrap();
         assert_eq!(&etypes, options.etypes());
 
-        let etypes: HashSet<i32> = [ AES128_CTS_HMAC_SHA1_96 ].iter().cloned().collect();
+        let etypes: HashSet<i32> = [AES128_CTS_HMAC_SHA1_96].iter().cloned().collect();
         options.set_etype(AES128_CTS_HMAC_SHA1_96).unwrap();
         assert_eq!(&etypes, options.etypes());
 
-        let etypes: HashSet<i32> = [ AES256_CTS_HMAC_SHA1_96 ].iter().cloned().collect();
+        let etypes: HashSet<i32> = [AES256_CTS_HMAC_SHA1_96].iter().cloned().collect();
         options.set_etype(AES256_CTS_HMAC_SHA1_96).unwrap();
         assert_eq!(&etypes, options.etypes());
     }
 
-    #[should_panic(expected="Cipher algorithm with etype = 3 is not supported")]
+    #[should_panic(expected = "Cipher algorithm with etype = 3 is not supported")]
     #[test]
     fn error_setting_unsupported_etype() {
         let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
         options.set_etype(DES_CBC_MD5).unwrap();
     }
-
 }
