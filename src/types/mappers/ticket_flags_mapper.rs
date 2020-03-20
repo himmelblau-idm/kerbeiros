@@ -6,6 +6,9 @@ impl TicketFlagsMapper {
     pub fn ticket_flags_to_tktflags(ticket_flags: &TicketFlags) -> u32 {
         return ticket_flags.flags();
     }
+    pub fn tktflags_to_ticket_flags(tktflags: u32) -> TicketFlags {
+        return TicketFlags::from(tktflags);
+    }
 }
 
 #[cfg(test)]
