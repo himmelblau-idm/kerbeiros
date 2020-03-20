@@ -1,7 +1,6 @@
 use crate::ciphers::*;
 use crate::constants::etypes::*;
 use crate::constants::kdc_options::*;
-use crate::error::*;
 use ascii::AsciiString;
 use std::collections::HashSet;
 

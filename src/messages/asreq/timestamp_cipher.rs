@@ -1,6 +1,5 @@
 use crate::ciphers::*;
 use crate::constants::*;
-use crate::error::*;
 use crate::key::Key;
 use crate::types::asn1;
 use ascii::AsciiString;
