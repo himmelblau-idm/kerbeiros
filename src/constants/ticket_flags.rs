@@ -1,5 +1,5 @@
 //! Flags used by `Ticket` in Kerberos protocol.
-//! 
+//!
 //! # References
 //! * RFC 4120, Section 5.3.
 

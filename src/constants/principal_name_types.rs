@@ -1,5 +1,5 @@
 //! Types of names used by Kerberos protocol.
-//! 
+//!
 //! # References
 //! * RFC 4210, Section 6.2.
 
