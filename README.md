@@ -45,10 +45,6 @@ To format code:
 cargo fmt
 ```
 
-However, whenever possible try to:
-
-* Use no more than 80 column lines
-
 ### Test
 To run tests:
 ```
