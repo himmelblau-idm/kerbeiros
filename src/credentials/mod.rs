@@ -1,7 +1,7 @@
 //! Classes that represents the Kerberos credentials
-//! 
+//!
 //! Each credential if composed by a ticket and information related to the Kerberos session, such as client name, realm name or session key.
-//! 
+//!
 
 mod file;
 

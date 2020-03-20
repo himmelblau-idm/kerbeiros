@@ -1,25 +1,23 @@
 use super::credential::*;
-use super::mappers::*;
-use crate::types::*;
-use crate::error::*;
 use super::file::*;
+use super::mappers::*;
+use crate::error::*;
+use crate::types::*;
 
 /// To store several credentials related to the same user and realm
 pub struct CredentialWarehouse {
     credentials: Vec<Credential>,
     realm: Realm,
-    client: PrincipalName
+    client: PrincipalName,
 }
 
-
 impl CredentialWarehouse {
-
     pub fn new(credential: Credential) -> Self {
         return Self {
             realm: credential.crealm().clone(),
             client: credential.cname().clone(),
             credentials: vec![credential],
-        }
+        };
     }
 
     pub fn realm(&self) -> &Realm {
@@ -52,4 +50,3 @@ impl CredentialWarehouse {
         return CredentialFileConverter::save_into_krb_cred_file(self, path);
     }
 }
-

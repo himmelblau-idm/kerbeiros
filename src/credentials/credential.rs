@@ -1,33 +1,32 @@
-use crate::types::*;
-use crate::error::*;
 use super::credential_warehouse::*;
-
+use crate::error::*;
+use crate::types::*;
 
 /// Represents a Kerberos credential, which includes one Ticket and session information.
-/// 
+///
 /// Session information includes data such as session key, client name, realm, ticket flags and ticket expiration time.
-/// 
+///
 /// It can be saved converted and save into Windows or Linux credential formats.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Credential {
     crealm: Realm,
     cname: PrincipalName,
     ticket: Ticket,
-    client_part: EncKdcRepPart
+    client_part: EncKdcRepPart,
 }
 
-
 impl Credential {
-
     pub fn new(
-        crealm: Realm, cname: PrincipalName, 
-        ticket: Ticket, client_part: EncKdcRepPart 
+        crealm: Realm,
+        cname: PrincipalName,
+        ticket: Ticket,
+        client_part: EncKdcRepPart,
     ) -> Self {
-        return Self{
+        return Self {
             crealm,
             cname,
             ticket,
-            client_part
+            client_part,
         };
     }
 
@@ -38,7 +37,7 @@ impl Credential {
     pub fn cname(&self) -> &PrincipalName {
         return &self.cname;
     }
- 
+
     pub fn ticket(&self) -> &Ticket {
         return &self.ticket;
     }
@@ -78,7 +77,7 @@ impl Credential {
     pub fn caddr(&self) -> Option<&HostAddresses> {
         return self.client_part.caddr();
     }
-   
+
     pub fn encrypted_pa_data(&self) -> Option<&MethodData> {
         return self.client_part.encrypted_pa_data();
     }
@@ -92,6 +91,4 @@ impl Credential {
     pub fn save_into_krb_cred_file(&self, path: &str) -> Result<()> {
         return CredentialWarehouse::new(self.clone()).save_into_krb_cred_file(path);
     }
-
 }
-
