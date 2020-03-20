@@ -33,6 +33,29 @@ credential.save_into_krb_cred_file("bob_tgt.krb").unwrap();
 credential.save_into_ccache_file("bob_tgt.ccache").unwrap();
 ```
 
+
+## Development
+
+### Code style
+
+Follow the [rustfmt](https://github.com/rust-lang/rustfmt) code style.
+
+To format code:
+```
+cargo fmt
+```
+
+However, whenever possible try to:
+
+* Use no more than 80 column lines
+
+### Test
+To run tests:
+```
+cargo test
+```
+
+
 ## References
 * [RFC 4120: The Kerberos Network Authentication Service (V5)](https://tools.ietf.org/html/rfc4120)
 * [\[MS-KILE\]: Kerberos Protocol Extensions](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-kile)
