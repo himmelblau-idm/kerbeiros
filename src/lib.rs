@@ -21,14 +21,14 @@
 //! let user_key = Key::Password("S3cr3t".to_string());
 //! 
 //! // Request the TGT
-//! let mut tgt_requester = TgtRequester::new(realm, kdc_address);
+//! let tgt_requester = TgtRequester::new(realm, kdc_address);
 //! let credential = tgt_requester.request(&username, Some(&user_key)).unwrap();
 //! 
 //! // Save the ticket into a Windows format file
-//! credential.save_into_krb_cred_file("bob_tgt.krb");
+//! credential.save_into_krb_cred_file("bob_tgt.krb").unwrap();
 //! 
 //! // Save the ticket into a Linux format file
-//! credential.save_into_ccache_file("bob_tgt.ccache");
+//! credential.save_into_ccache_file("bob_tgt.ccache").unwrap();
 //! ```
 //! 
 //! # Kerberos References
