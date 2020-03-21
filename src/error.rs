@@ -147,6 +147,14 @@ impl From<FromAsciiError<&str>> for Error {
     }
 }
 
+impl From<FromAsciiError<Vec<u8>>> for Error {
+    fn from(_error: FromAsciiError<Vec<u8>>) -> Self {
+        return Error {
+            inner: Context::new(ErrorKind::InvalidAscii),
+        };
+    }
+}
+
 impl From<red_asn1::Error> for Error {
     fn from(error: red_asn1::Error) -> Self {
         return Error {
