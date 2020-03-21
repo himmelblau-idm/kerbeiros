@@ -1,4 +1,4 @@
-use crate::types::*;
+use crate::types::{PaData, AuthData, MethodData, CountedOctetString};
 
 pub struct AuthDataMapper {}
 
@@ -17,12 +17,17 @@ impl AuthDataMapper {
         }
         return auth_data;
     }
+
+    pub fn auth_data_to_padata(auth_data: &AuthData) -> PaData {
+        return PaData::new(auth_data.addrtype() as i32, auth_data.addrdata().clone().data_move());
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
     use crate::constants::*;
+    use crate::types::{PacRequest, Address};
 
     #[test]
     fn padata_to_auth_data() {
