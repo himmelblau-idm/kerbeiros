@@ -7,6 +7,7 @@ use failure_derive::Fail;
 use red_asn1;
 use std::fmt;
 use std::result;
+use std::string::FromUtf8Error;
 
 /// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;
@@ -31,6 +32,10 @@ pub enum ErrorKind {
     /// Invalid ascii string.
     #[fail(display = "Invalid ascii string")]
     InvalidAscii,
+
+    /// Invalid utf8 string.
+    #[fail(display = "Invalid utf-8 string")]
+    InvalidUtf8,
 
     /// Invalid microseconds value. Minimum = 0, Maximum = 999999.
     #[fail(display = "Invalid microseconds value {}. Max is 999999", _0)]
@@ -84,8 +89,7 @@ pub enum ErrorKind {
 
     /// No principal name
     #[fail(display = "No principal name found")]
-    NoPrincipalName
-
+    NoPrincipalName,
 }
 
 /// Types of errors related to data encryption/decryption
@@ -156,6 +160,14 @@ impl From<FromAsciiError<Vec<u8>>> for Error {
     fn from(_error: FromAsciiError<Vec<u8>>) -> Self {
         return Error {
             inner: Context::new(ErrorKind::InvalidAscii),
+        };
+    }
+}
+
+impl From<FromUtf8Error> for Error {
+    fn from(_error: FromUtf8Error) -> Self {
+        return Error {
+            inner: Context::new(ErrorKind::InvalidUtf8),
         };
     }
 }
