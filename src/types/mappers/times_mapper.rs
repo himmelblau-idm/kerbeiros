@@ -133,4 +133,22 @@ mod test {
             TimesMapper::times_to_authtime_starttime_endtime_renew_till(time)
         );
     }
+
+    #[test]
+    fn test_times_to_authtime_endtime() {
+        let authtime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
+        let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
+
+        let time = Times::new(
+            authtime.timestamp() as u32,
+            authtime.timestamp() as u32,
+            endtime.timestamp() as u32,
+            0,
+        );
+
+        assert_eq!(
+            (authtime, None, endtime, None),
+            TimesMapper::times_to_authtime_starttime_endtime_renew_till(time)
+        );
+    }
 }
