@@ -36,7 +36,7 @@ impl TimesMapper {
     }
 
     pub fn times_to_authtime_starttime_endtime_renew_till(
-        times: Times,
+        times: &Times,
     ) -> (
         KerberosTime,
         Option<KerberosTime>,
@@ -130,7 +130,7 @@ mod test {
 
         assert_eq!(
             (authtime, Some(starttime), endtime, Some(renew_till)),
-            TimesMapper::times_to_authtime_starttime_endtime_renew_till(time)
+            TimesMapper::times_to_authtime_starttime_endtime_renew_till(&time)
         );
     }
 
@@ -148,7 +148,7 @@ mod test {
 
         assert_eq!(
             (authtime, None, endtime, None),
-            TimesMapper::times_to_authtime_starttime_endtime_renew_till(time)
+            TimesMapper::times_to_authtime_starttime_endtime_renew_till(&time)
         );
     }
 }
