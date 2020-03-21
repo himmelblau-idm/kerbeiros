@@ -60,4 +60,19 @@ mod test {
             AddressMapper::host_addresses_to_address_vector(&host_addresses)
         );
     }
+
+    #[test]
+    fn address_to_host_address() {
+        let host_address = HostAddress::NetBios("KINGDOM.HEARTS".to_string());
+
+        let address = Address::new(
+            address_type::NETBIOS as u16,
+            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
+        );
+
+        assert_eq!(
+            host_address,
+            AddressMapper::address_to_host_address(&address)
+        );
+    }
 }
