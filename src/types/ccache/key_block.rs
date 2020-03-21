@@ -15,6 +15,15 @@ impl KeyBlock {
         };
     }
 
+    pub fn keytype(&self) -> u16 {
+        return self.keytype;
+    }
+
+
+    pub fn keyvalue_move(self) -> Vec<u8> {
+        return self.keyvalue;
+    }
+
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = self.keytype.to_be_bytes().to_vec();
         bytes.append(&mut self.etype.to_be_bytes().to_vec());

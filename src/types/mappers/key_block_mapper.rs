@@ -10,6 +10,13 @@ impl KeyBlockMapper {
             encryption_key.keyvalue().clone(),
         );
     }
+
+    pub fn keyblock_to_encryption_key(key_block: KeyBlock) -> EncryptionKey {
+        return EncryptionKey::new(
+            key_block.keytype() as i32,
+            key_block.keyvalue_move()
+        );
+    }
 }
 
 #[cfg(test)]
@@ -65,7 +72,7 @@ mod test {
 
         assert_eq!(
             encryption_key,
-            KeyBlockMapper::keyblock_to_encryption_key(&keyblock)
+            KeyBlockMapper::keyblock_to_encryption_key(keyblock)
         );
     }
 }
