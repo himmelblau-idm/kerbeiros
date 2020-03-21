@@ -1,5 +1,6 @@
+use crate::error;
 use crate::types::KerberosString;
-use std::convert::From;
+use std::convert::{From, TryInto};
 
 /// String used by ccache.
 #[derive(Debug, PartialEq, Clone, Default)]
@@ -51,5 +52,19 @@ mod test {
             ],
             CountedOctetString::from("KINGDOM.HEARTS").to_bytes()
         );
+    }
+
+    #[test]
+    fn test_counted_octet_string_to_kerberos_string() {
+        assert_eq!(
+            KerberosString::from_ascii("ABC"),
+            CountedOctetString::from("ABC").try_into().unwrap()
+        )
+    }
+
+    #[test]
+    #[should_panic(expected = "Invalid ascii string")]
+    fn test_counted_octet_string_to_kerberos_string_fail() {
+            CountedOctetString::new(vec![0xff]).try_into().unwrap()
     }
 }
