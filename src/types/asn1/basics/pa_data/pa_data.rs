@@ -1,8 +1,8 @@
-use super::super::encrypted_data::*;
-use super::super::int32::*;
-use super::etype_info_2::*;
-use super::pac_request::*;
-use crate::constants::pa_data_types::*;
+use super::super::encrypted_data::{EncryptedDataAsn1, EncryptedData};
+use super::super::int32::{Int32, Int32Asn1};
+use super::etype_info_2::{EtypeInfo2, EtypeInfo2Asn1};
+use super::pac_request::{PacRequest,PacRequestAsn1};
+use crate::constants::pa_data_types::{PA_PAC_REQUEST, PA_ETYPE_INFO2, PA_ENC_TIMESTAMP};
 use crate::error::{ErrorKind, Result};
 use red_asn1::*;
 
