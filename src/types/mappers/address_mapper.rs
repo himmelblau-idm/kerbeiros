@@ -1,5 +1,5 @@
 use crate::constants::address_type;
-use crate::error::Result;
+use crate::error::{ErrorKind, Result};
 use crate::types::{Address, CountedOctetString, HostAddress, HostAddresses};
 use std::convert::TryInto;
 
@@ -34,6 +34,21 @@ impl AddressMapper {
                 ));
             }
         }
+    }
+
+    pub fn address_vector_to_host_addresses(mut addresses: Vec<Address>) -> Result<HostAddresses> {
+        if addresses.len() == 0 {
+            return Err(ErrorKind::NoAddress)?;
+        }
+        let main_address = addresses.remove(0);
+
+        let mut host_addresses = HostAddresses::new(Self::address_to_host_address(&main_address)?);
+
+        while addresses.len() > 0 {
+            host_addresses.push(Self::address_to_host_address(&addresses.remove(0))?);
+        }
+
+        return Ok(host_addresses);
     }
 }
 
@@ -106,7 +121,6 @@ mod test {
         );
     }
 
-
     #[test]
     fn test_address_vector_to_host_addresses() {
         let mut addresses = Vec::new();
@@ -125,7 +139,7 @@ mod test {
 
         assert_eq!(
             host_addresses,
-            AddressMapper::address_vector_to_host_addresses(&addresses)
+            AddressMapper::address_vector_to_host_addresses(addresses).unwrap()
         );
     }
 }

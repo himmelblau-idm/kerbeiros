@@ -21,6 +21,11 @@ impl HostAddresses {
             addresses: vec![address],
         };
     }
+
+    pub fn push(&mut self, address: HostAddress) {
+        return self.addresses.push(address);
+    }
+
 }
 
 impl Deref for HostAddresses {
