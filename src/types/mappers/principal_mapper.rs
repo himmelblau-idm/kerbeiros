@@ -91,4 +91,16 @@ mod test {
             PrincipalMapper::principal_to_realm_and_principal_name(&principal).unwrap(),
         );
     }
+
+    #[test]
+    #[should_panic(expected = "No principal name found")]
+    fn test_principal_to_realm_and_principal_name_panic() {
+        let principal = Principal::new(
+            NT_PRINCIPAL as u32,
+            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
+            vec![],
+        );
+
+        PrincipalMapper::principal_to_realm_and_principal_name(&principal).unwrap();
+    }
 }
