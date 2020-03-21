@@ -44,4 +44,22 @@ mod test {
             PrincipalMapper::realm_and_principal_name_to_principal(&realm, &principal_name)
         );
     }
+
+    #[test]
+    fn test_principal_to_realm_and_principal_name() {
+        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let principal_name =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
+
+        let principal = Principal::new(
+            NT_PRINCIPAL as u32,
+            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
+            vec![CountedOctetString::new("mickey".as_bytes().to_vec())],
+        );
+
+        assert_eq!(
+            (realm, principal_name),
+            PrincipalMapper::principal_to_realm_and_principal_name(&principal)
+        );
+    }
 }
