@@ -54,4 +54,16 @@ mod test {
             AuthDataMapper::method_data_to_auth_data_vector(&method_data)
         );
     }
+
+    #[test]
+    fn auth_data_to_padata() {
+        let padata = PaData::PacRequest(PacRequest::new(true));
+
+        let auth_data = AuthData::new(
+            PA_PAC_REQUEST as u16,
+            CountedOctetString::new(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff]),
+        );
+
+        assert_eq!(padata, AuthDataMapper::auth_data_to_padata(&auth_data));
+    }
 }
