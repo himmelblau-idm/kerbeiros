@@ -105,4 +105,27 @@ mod test {
             AddressMapper::address_to_host_address(&address).unwrap()
         );
     }
+
+
+    #[test]
+    fn test_address_vector_to_host_addresses() {
+        let mut addresses = Vec::new();
+        addresses.push(Address::new(
+            address_type::NETBIOS as u16,
+            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
+        ));
+        addresses.push(Address::new(
+            7,
+            CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
+        ));
+
+        let mut host_addresses =
+            HostAddresses::new(HostAddress::NetBios("KINGDOM.HEARTS".to_string()));
+        host_addresses.push(HostAddress::Raw(7, "HOLLOWBASTION".as_bytes().to_vec()));
+
+        assert_eq!(
+            host_addresses,
+            AddressMapper::address_vector_to_host_addresses(&addresses)
+        );
+    }
 }
