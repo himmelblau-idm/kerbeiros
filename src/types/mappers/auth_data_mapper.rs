@@ -24,6 +24,15 @@ impl AuthDataMapper {
             auth_data.addrdata().clone().data_move(),
         );
     }
+
+    pub fn auth_data_vector_to_method_data(auth_datas: Vec<AuthData>) -> MethodData {
+        return MethodData::new(
+            auth_datas
+                .into_iter()
+                .map(|auth_data| Self::auth_data_to_padata(&auth_data))
+                .collect(),
+        );
+    }
 }
 
 #[cfg(test)]
@@ -90,7 +99,7 @@ mod test {
 
         assert_eq!(
             method_data,
-            AuthDataMapper::auth_data_vector_to_method_data(&auth_datas)
+            AuthDataMapper::auth_data_vector_to_method_data(auth_datas)
         );
     }
 }
