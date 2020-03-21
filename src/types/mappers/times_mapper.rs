@@ -84,4 +84,24 @@ mod test {
             )
         );
     }
+
+    #[test]
+    fn authtime_starttime_endtime_renew_till_to_times() {
+        let authtime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
+        let starttime = Utc.ymd(2019, 4, 19).and_hms(06, 00, 31);
+        let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
+        let renew_till = Utc.ymd(2019, 4, 25).and_hms(06, 00, 31);
+
+        let time = ccache::Times::new(
+            authtime.timestamp() as u32,
+            starttime.timestamp() as u32,
+            endtime.timestamp() as u32,
+            renew_till.timestamp() as u32,
+        );
+
+        assert_eq!(
+            (authtime, starttime, endtime, renew_till),
+            TimesMapper::times_to_authtime_starttime_endtime_renew_till(time)
+        );
+    }
 }
