@@ -1,4 +1,4 @@
-use super::counted_octet_string::*;
+use super::counted_octet_string::CountedOctetString;
 
 /// Name of some Kerberos entity.
 #[derive(Debug, Clone, PartialEq)]
@@ -19,6 +19,18 @@ impl Principal {
             realm,
             components,
         };
+    }
+
+    pub fn name_type(&self) -> u32 {
+        return self.name_type;
+    }
+
+    pub fn realm(&self) -> &CountedOctetString {
+        return &self.realm;
+    }
+
+    pub fn components(&self) -> &Vec<CountedOctetString> {
+        return &self.components;
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {

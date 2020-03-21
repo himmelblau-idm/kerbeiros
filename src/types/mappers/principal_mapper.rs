@@ -1,4 +1,6 @@
+use crate::error::{ErrorKind, Result};
 use crate::types::*;
+use std::convert::TryInto;
 
 pub struct PrincipalMapper {}
 
@@ -18,6 +20,33 @@ impl PrincipalMapper {
             CountedOctetString::from(realm),
             components,
         );
+    }
+
+    pub fn principal_to_realm_and_principal_name(
+        principal: &Principal,
+    ) -> Result<(Realm, PrincipalName)> {
+        let components = principal.components();
+        let mut names = Vec::with_capacity(components.len());
+        for component in components.iter() {
+            names.push(component.clone().try_into()?);
+        }
+
+        let main_name;
+        if let Some(name) = names.pop() {
+            main_name = name;
+        } else {
+            return Err(ErrorKind::NoPrincipalName)?;
+        }
+
+        let mut principal_name = PrincipalName::new(principal.name_type() as i32, main_name);
+
+        while let Some(name) = names.pop() {
+            principal_name.push(name)
+        }
+
+        let realm = principal.realm().clone().try_into()?;
+
+        return Ok((realm, principal_name));
     }
 }
 
@@ -59,7 +88,7 @@ mod test {
 
         assert_eq!(
             (realm, principal_name),
-            PrincipalMapper::principal_to_realm_and_principal_name(&principal)
+            PrincipalMapper::principal_to_realm_and_principal_name(&principal).unwrap(),
         );
     }
 }
