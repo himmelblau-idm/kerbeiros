@@ -1,5 +1,5 @@
 use crate::types::{KerberosTime, Times};
-use chrono::{Timezone, UTC};
+use chrono::{TimeZone, Utc};
 
 pub struct TimesMapper {}
 
@@ -43,22 +43,22 @@ impl TimesMapper {
         KerberosTime,
         Option<KerberosTime>,
     ) {
-        let authtime = UTC.timestamp(times.authtime(), 0);
+        let authtime = Utc.timestamp(times.authtime() as i64, 0);
 
         let starttime;
         if times.authtime() == times.starttime() {
             starttime = None;
         } else {
-            starttime = Some(UTC.timestamp(times.starttime(), 0));
+            starttime = Some(Utc.timestamp(times.starttime() as i64, 0));
         }
 
-        let endtime = UTC.timestamp(times.endtime(), 0);
+        let endtime = Utc.timestamp(times.endtime() as i64, 0);
 
         let renew_till;
         if times.renew_till() == 0 {
             renew_till = None;
         } else {
-            renew_till = Some(UTC.timestamp(times.renew_till(), 0));
+            renew_till = Some(Utc.timestamp(times.renew_till() as i64, 0));
         }
 
         return (authtime, starttime, endtime, renew_till);
@@ -68,7 +68,6 @@ impl TimesMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use chrono::prelude::*;
 
     #[test]
     fn authtime_starttime_endtime_renew_till_to_times() {
