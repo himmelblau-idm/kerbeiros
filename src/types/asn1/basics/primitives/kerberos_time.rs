@@ -5,31 +5,6 @@ use red_asn1::*;
 /// (*KerberosTime*) For time representations in Kerberos.
 pub type KerberosTime = DateTime<Utc>;
 
-// Struct used to contain the authtime, starttime, endtime and renew_till.
-// It is equivalent to Times struct in CCache. Does not exists in kerberos RFC.
-pub(crate) struct KrbTimes<'a> {
-    authtime: &'a KerberosTime,
-    starttime: Option<&'a KerberosTime>,
-    endtime: &'a KerberosTime,
-    renew_till: Option<&'a KerberosTime>,
-}
-
-impl<'a> KrbTimes<'a> {
-    pub fn new(
-        authtime: &'a KerberosTime,
-        starttime: Option<&'a KerberosTime>,
-        endtime: &'a KerberosTime,
-        renew_till: Option<&'a KerberosTime>,
-    ) -> Self {
-        return Self {
-            authtime,
-            starttime,
-            endtime,
-            renew_till,
-        };
-    }
-}
-
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct KerberosTimeAsn1 {
     subtype: GeneralizedTime,
