@@ -73,4 +73,17 @@ mod test {
     fn test_counted_octet_string_to_kerberos_string_fail() {
         let _: KerberosString = CountedOctetString::new(vec![0xff]).try_into().unwrap();
     }
+
+
+    #[test]
+    fn test_counted_octet_string_to_string() {
+        let string: String = CountedOctetString::from("ABC").try_into().unwrap();
+        assert_eq!("ABC".to_string(), string)
+    }
+
+    #[test]
+    #[should_panic(expected = "Invalid utf-8 string")]
+    fn test_counted_octet_string_to_string_panic() {
+        let _: String = CountedOctetString::new(vec![0xff]).try_into().unwrap();
+    }
 }
