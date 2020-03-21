@@ -1,4 +1,4 @@
-use crate::types::{PaData, AuthData, MethodData, CountedOctetString};
+use crate::types::{AuthData, CountedOctetString, MethodData, PaData};
 
 pub struct AuthDataMapper {}
 
@@ -19,7 +19,10 @@ impl AuthDataMapper {
     }
 
     pub fn auth_data_to_padata(auth_data: &AuthData) -> PaData {
-        return PaData::new(auth_data.addrtype() as i32, auth_data.addrdata().clone().data_move());
+        return PaData::new(
+            auth_data.addrtype() as i32,
+            auth_data.addrdata().clone().data_move(),
+        );
     }
 }
 
@@ -27,7 +30,7 @@ impl AuthDataMapper {
 mod test {
     use super::*;
     use crate::constants::*;
-    use crate::types::{PacRequest, Address};
+    use crate::types::{Address, PacRequest};
 
     #[test]
     fn padata_to_auth_data() {
@@ -70,5 +73,24 @@ mod test {
         );
 
         assert_eq!(padata, AuthDataMapper::auth_data_to_padata(&auth_data));
+    }
+
+    #[test]
+    fn test_auth_data_vector_to_method_data() {
+        let mut auth_datas = Vec::new();
+        auth_datas.push(AuthData::new(
+            PA_PAC_REQUEST as u16,
+            CountedOctetString::new(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff]),
+        ));
+        auth_datas.push(Address::new(9, CountedOctetString::new(vec![0x8, 0x9])));
+
+        let mut method_data = MethodData::default();
+        method_data.push(PaData::PacRequest(PacRequest::new(true)));
+        method_data.push(PaData::Raw(9, vec![0x8, 0x9]));
+
+        assert_eq!(
+            method_data,
+            AuthDataMapper::auth_data_vector_to_method_data(&auth_datas)
+        );
     }
 }
