@@ -81,6 +81,11 @@ pub enum ErrorKind {
     /// The type of the principal name was not specified.
     #[fail(display = "Undefined type of principal name: {}", _0)]
     PrincipalNameTypeUndefined(String),
+
+    /// No principal name
+    #[fail(display = "No principal name found")]
+    NoPrincipalName
+
 }
 
 /// Types of errors related to data encryption/decryption
