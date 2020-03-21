@@ -27,6 +27,14 @@ impl From<&KerberosString> for CountedOctetString {
     }
 }
 
+impl TryInto<KerberosString> for CountedOctetString {
+    type Error = error::Error;
+
+    fn try_into(self) -> Result<KerberosString, Self::Error> {
+        return Ok(KerberosString::from_ascii(self.data)?);
+    }
+}
+
 impl From<&str> for CountedOctetString {
     fn from(string: &str) -> Self {
         return Self::new(string.as_bytes().to_vec());
@@ -56,15 +64,13 @@ mod test {
 
     #[test]
     fn test_counted_octet_string_to_kerberos_string() {
-        assert_eq!(
-            KerberosString::from_ascii("ABC"),
-            CountedOctetString::from("ABC").try_into().unwrap()
-        )
+        let k_string: KerberosString = CountedOctetString::from("ABC").try_into().unwrap();
+        assert_eq!(KerberosString::from_ascii("ABC").unwrap(), k_string)
     }
 
     #[test]
     #[should_panic(expected = "Invalid ascii string")]
     fn test_counted_octet_string_to_kerberos_string_fail() {
-            CountedOctetString::new(vec![0xff]).try_into().unwrap()
+        let _: KerberosString = CountedOctetString::new(vec![0xff]).try_into().unwrap();
     }
 }
