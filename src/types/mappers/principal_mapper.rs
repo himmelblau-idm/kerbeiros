@@ -103,4 +103,27 @@ mod test {
 
         PrincipalMapper::principal_to_realm_and_principal_name(&principal).unwrap();
     }
+
+    #[test]
+    fn test_principal_to_realm_and_principal_name_multiple_names() {
+        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let mut principal_name =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
+
+        principal_name.push(KerberosString::from_ascii("user2").unwrap());
+
+        let principal = Principal::new(
+            NT_PRINCIPAL as u32,
+            CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
+            vec![
+                CountedOctetString::new("mickey".as_bytes().to_vec()),
+                CountedOctetString::new("user2".as_bytes().to_vec()),                   
+            ],
+        );
+
+        assert_eq!(
+            (realm, principal_name),
+            PrincipalMapper::principal_to_realm_and_principal_name(&principal).unwrap(),
+        );
+    }
 }
