@@ -31,17 +31,15 @@ impl PrincipalMapper {
             names.push(component.clone().try_into()?);
         }
 
-        let main_name;
-        if let Some(name) = names.pop() {
-            main_name = name;
-        } else {
+        if names.len() == 0 {
             return Err(ErrorKind::NoPrincipalName)?;
         }
 
+        let main_name = names.remove(0);
         let mut principal_name = PrincipalName::new(principal.name_type() as i32, main_name);
 
-        while let Some(name) = names.pop() {
-            principal_name.push(name)
+        while names.len() > 0 {
+            principal_name.push(names.remove(0));
         }
 
         let realm = principal.realm().clone().try_into()?;
@@ -117,7 +115,7 @@ mod test {
             CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
             vec![
                 CountedOctetString::new("mickey".as_bytes().to_vec()),
-                CountedOctetString::new("user2".as_bytes().to_vec()),                   
+                CountedOctetString::new("user2".as_bytes().to_vec()),
             ],
         );
 
