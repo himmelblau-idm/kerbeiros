@@ -41,6 +41,14 @@ impl From<&str> for CountedOctetString {
     }
 }
 
+impl TryInto<String> for CountedOctetString {
+    type Error = error::Error;
+
+    fn try_into(self) -> Result<String, Self::Error> {
+        return Ok(String::from_utf8(self.data)?);
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -73,7 +81,6 @@ mod test {
     fn test_counted_octet_string_to_kerberos_string_fail() {
         let _: KerberosString = CountedOctetString::new(vec![0xff]).try_into().unwrap();
     }
-
 
     #[test]
     fn test_counted_octet_string_to_string() {
