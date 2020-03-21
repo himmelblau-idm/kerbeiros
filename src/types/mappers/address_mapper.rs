@@ -93,4 +93,16 @@ mod test {
             AddressMapper::address_to_host_address(&address).unwrap()
         );
     }
+
+    #[test]
+    fn address_to_host_address_raw() {
+        let host_address = HostAddress::Raw(1, vec![1, 2, 3]);
+
+        let address = Address::new(1, CountedOctetString::new(vec![1, 2, 3]));
+
+        assert_eq!(
+            host_address,
+            AddressMapper::address_to_host_address(&address).unwrap()
+        );
+    }
 }
