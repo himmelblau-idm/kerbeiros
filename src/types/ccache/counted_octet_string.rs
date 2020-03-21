@@ -13,6 +13,10 @@ impl CountedOctetString {
         return CountedOctetString { data };
     }
 
+    pub fn data_move(self) -> Vec<u8> {
+        return self.data;
+    }
+
     pub fn to_bytes(&self) -> Vec<u8> {
         let data_len = self.data.len() as u32;
         let mut bytes = data_len.to_be_bytes().to_vec();

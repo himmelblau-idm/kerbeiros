@@ -1,4 +1,7 @@
-use crate::types::*;
+use crate::constants::address_type;
+use crate::error::Result;
+use crate::types::{Address, CountedOctetString, HostAddress, HostAddresses};
+use std::convert::TryInto;
 
 pub struct AddressMapper {}
 
@@ -16,6 +19,21 @@ impl AddressMapper {
             addresses.push(Self::host_address_to_address(host_address));
         }
         return addresses;
+    }
+
+    pub fn address_to_host_address(address: &Address) -> Result<HostAddress> {
+        let address_type = address.addrtype() as i32;
+        match address_type {
+            address_type::NETBIOS => {
+                return Ok(HostAddress::NetBios(address.addrdata().clone().try_into()?));
+            }
+            _ => {
+                return Ok(HostAddress::Raw(
+                    address_type,
+                    address.addrdata().clone().data_move(),
+                ));
+            }
+        }
     }
 }
 
@@ -72,7 +90,7 @@ mod test {
 
         assert_eq!(
             host_address,
-            AddressMapper::address_to_host_address(&address)
+            AddressMapper::address_to_host_address(&address).unwrap()
         );
     }
 }

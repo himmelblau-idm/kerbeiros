@@ -12,6 +12,14 @@ impl Address {
         return Self { addrtype, addrdata };
     }
 
+    pub fn addrtype(&self) -> u16 {
+        return self.addrtype;
+    }
+
+    pub fn addrdata(&self) -> &CountedOctetString {
+        return &self.addrdata;
+    }
+
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = self.addrtype.to_be_bytes().to_vec();
         bytes.append(&mut self.addrdata.to_bytes());
