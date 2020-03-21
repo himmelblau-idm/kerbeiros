@@ -90,6 +90,10 @@ pub enum ErrorKind {
     /// No principal name
     #[fail(display = "No principal name found")]
     NoPrincipalName,
+
+    /// No address found
+    #[fail(display = "No address found")]
+    NoAddress,
 }
 
 /// Types of errors related to data encryption/decryption
