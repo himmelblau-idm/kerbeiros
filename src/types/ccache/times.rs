@@ -17,6 +17,22 @@ impl Times {
         };
     }
 
+    pub fn authtime(&self) -> u32 {
+        return self.authtime;
+    }
+
+    pub fn starttime(&self) -> u32 {
+        return self.starttime;
+    }
+
+    pub fn endtime(&self) -> u32 {
+        return self.endtime;
+    }
+
+    pub fn renew_till(&self) -> u32 {
+        return self.renew_till;
+    }
+
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = self.authtime.to_be_bytes().to_vec();
         bytes.append(&mut self.starttime.to_be_bytes().to_vec());
