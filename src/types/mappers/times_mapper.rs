@@ -1,4 +1,4 @@
-use crate::types::*;
+use crate::types::{KerberosTime, Times};
 
 pub struct TimesMapper {}
 
@@ -33,6 +33,7 @@ impl TimesMapper {
             renew_till_timestamp,
         );
     }
+
 }
 
 #[cfg(test)]
@@ -47,7 +48,7 @@ mod test {
         let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
         let renew_till = Utc.ymd(2019, 4, 25).and_hms(06, 00, 31);
 
-        let time = ccache::Times::new(
+        let time = Times::new(
             authtime.timestamp() as u32,
             starttime.timestamp() as u32,
             endtime.timestamp() as u32,
@@ -70,7 +71,7 @@ mod test {
         let authtime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
         let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
 
-        let time = ccache::Times::new(
+        let time = Times::new(
             authtime.timestamp() as u32,
             authtime.timestamp() as u32,
             endtime.timestamp() as u32,
@@ -92,7 +93,7 @@ mod test {
         let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
         let renew_till = Utc.ymd(2019, 4, 25).and_hms(06, 00, 31);
 
-        let time = ccache::Times::new(
+        let time = Times::new(
             authtime.timestamp() as u32,
             starttime.timestamp() as u32,
             endtime.timestamp() as u32,
@@ -100,7 +101,7 @@ mod test {
         );
 
         assert_eq!(
-            (authtime, starttime, endtime, renew_till),
+            (authtime, Some(starttime), endtime, Some(renew_till)),
             TimesMapper::times_to_authtime_starttime_endtime_renew_till(time)
         );
     }
