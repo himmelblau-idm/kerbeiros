@@ -39,27 +39,18 @@ impl TimesMapper {
         times: &Times,
     ) -> (
         KerberosTime,
-        Option<KerberosTime>,
+        KerberosTime,
         KerberosTime,
         Option<KerberosTime>,
     ) {
         let authtime = Utc.timestamp(times.authtime() as i64, 0);
-
-        let starttime;
-        if times.authtime() == times.starttime() {
-            starttime = None;
-        } else {
-            starttime = Some(Utc.timestamp(times.starttime() as i64, 0));
-        }
-
+        let starttime = Utc.timestamp(times.starttime() as i64, 0);
         let endtime = Utc.timestamp(times.endtime() as i64, 0);
 
-        let renew_till;
-        if times.renew_till() == 0 {
-            renew_till = None;
-        } else {
-            renew_till = Some(Utc.timestamp(times.renew_till() as i64, 0));
-        }
+        let renew_till = match times.renew_till() {
+            0 => None,
+            _ => Some(Utc.timestamp(times.renew_till() as i64, 0))
+        };
 
         return (authtime, starttime, endtime, renew_till);
     }
@@ -129,7 +120,7 @@ mod test {
         );
 
         assert_eq!(
-            (authtime, Some(starttime), endtime, Some(renew_till)),
+            (authtime, starttime, endtime, Some(renew_till)),
             TimesMapper::times_to_authtime_starttime_endtime_renew_till(&time)
         );
     }
@@ -147,7 +138,7 @@ mod test {
         );
 
         assert_eq!(
-            (authtime, None, endtime, None),
+            (authtime, authtime, endtime, None),
             TimesMapper::times_to_authtime_starttime_endtime_renew_till(&time)
         );
     }

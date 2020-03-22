@@ -89,9 +89,8 @@ impl CredentialCCacheMapper {
             sname,
         );
 
-        if let Some(time) = starttime {
-            enc_part.set_starttime(time);
-        }
+        enc_part.set_starttime(starttime);
+
         if let Some(time) = renew_till {
             enc_part.set_renew_till(time);
         }
