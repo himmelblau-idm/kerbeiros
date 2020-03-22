@@ -79,6 +79,18 @@ mod test {
     }
 
     #[test]
+    fn test_counted_octet_string_from_bytes() {
+        assert_eq!(
+            CountedOctetString::from("KINGDOM.HEARTS"),
+            CountedOctetString::from_bytes(&[
+                0x00, 0x00, 0x00, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45,
+                0x41, 0x52, 0x54, 0x53
+            ])
+            .unwrap()
+        );
+    }
+
+    #[test]
     fn test_counted_octet_string_to_kerberos_string() {
         let k_string: KerberosString = CountedOctetString::from("ABC").try_into().unwrap();
         assert_eq!(KerberosString::from_ascii("ABC").unwrap(), k_string)
