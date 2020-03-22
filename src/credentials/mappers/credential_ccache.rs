@@ -1,7 +1,9 @@
 use super::super::credential::Credential;
+use crate::error::Result;
 use crate::types::ccache;
 use crate::types::{
-    AddressMapper, AuthDataMapper, KeyBlockMapper, PrincipalMapper, TicketFlagsMapper, TimesMapper,
+    AddressMapper, AuthDataMapper, EncKdcRepPart, KeyBlockMapper, LastReq, PrincipalMapper, Ticket,
+    TicketFlagsMapper, TimesMapper,
 };
 
 pub struct CredentialCCacheMapper {}
@@ -47,6 +49,62 @@ impl CredentialCCacheMapper {
         }
 
         return ccache_credential;
+    }
+
+    pub fn ccache_credential_to_credential(
+        ccache_credential: ccache::CredentialEntry,
+    ) -> Result<Credential> {
+        let (authtime, starttime, endtime, renew_till) =
+            TimesMapper::times_to_authtime_starttime_endtime_renew_till(ccache_credential.time());
+
+        let ticket_flags =
+            TicketFlagsMapper::tktflags_to_ticket_flags(ccache_credential.tktflags());
+
+        let encryption_key =
+            KeyBlockMapper::keyblock_to_encryption_key(ccache_credential.key().clone());
+
+        let (crealm, cname) =
+            PrincipalMapper::principal_to_realm_and_principal_name(ccache_credential.client())?;
+
+        let (srealm, sname) =
+            PrincipalMapper::principal_to_realm_and_principal_name(ccache_credential.server())?;
+
+        let caddr_result =
+            AddressMapper::address_vector_to_host_addresses(ccache_credential.addrs().clone());
+
+        let method_data =
+            AuthDataMapper::auth_data_vector_to_method_data(ccache_credential.authdata().clone());
+
+        let ticket_bytes = ccache_credential.ticket().data();
+        let ticket = Ticket::parse(ticket_bytes)?;
+
+        let mut enc_part = EncKdcRepPart::new(
+            encryption_key,
+            LastReq::default(),
+            0,
+            ticket_flags,
+            authtime,
+            endtime,
+            srealm,
+            sname,
+        );
+
+        if let Some(time) = starttime {
+            enc_part.set_starttime(time);
+        }
+        if let Some(time) = renew_till {
+            enc_part.set_renew_till(time);
+        }
+
+        if let Ok(caddr) = caddr_result {
+            enc_part.set_caddr(caddr);
+        }
+
+        if method_data.len() > 0 {
+            enc_part.set_encrypted_pa_data(method_data);
+        }
+
+        return Ok(Credential::new(crealm, cname, ticket, enc_part));
     }
 }
 
@@ -365,7 +423,7 @@ mod test {
 
         assert_eq!(
             credential,
-            CredentialCCacheMapper::ccache_credential_to_credential(ccache_credential)
+            CredentialCCacheMapper::ccache_credential_to_credential(ccache_credential).unwrap()
         );
     }
 }
