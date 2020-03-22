@@ -13,6 +13,10 @@ impl CountedOctetString {
         return CountedOctetString { data };
     }
 
+    pub fn data(&self) -> &Vec<u8> {
+        return &self.data;
+    }
+
     pub fn data_move(self) -> Vec<u8> {
         return self.data;
     }
