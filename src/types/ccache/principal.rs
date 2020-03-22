@@ -69,4 +69,28 @@ mod test {
             .to_bytes()
         );
     }
+
+    #[test]
+    fn test_parse_principal_from_bytes() {
+        assert_eq!(
+            Principal::new(
+                NT_PRINCIPAL as u32,
+                CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
+                vec![CountedOctetString::new("mickey".as_bytes().to_vec())]
+            ),
+            Principal::parse(&[
+                0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0e, 0x4b, 0x49,
+                0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0x00, 0x00,
+                0x00, 0x06, 0x6d, 0x69, 0x63, 0x6b, 0x65, 0x79
+            ])
+            .unwrap()
+            .1,
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "Error parsing binary data")]
+    fn test_parse_principal_from_bytes_panic() {
+        Principal::parse(&[0x00]).unwrap();
+    }
 }
