@@ -235,4 +235,137 @@ mod test {
             CredentialCCacheMapper::credential_to_ccache_credential(&credential)
         );
     }
+
+    #[test]
+    fn test_convert_ccache_credential_to_credential() {
+        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+
+        let mut sname =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("krbtgt").unwrap());
+        sname.push(realm.clone());
+
+        let pname = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
+
+        let encryption_key = EncryptionKey::new(
+            AES256_CTS_HMAC_SHA1_96,
+            vec![
+                0x01, 0x27, 0x59, 0x90, 0x9b, 0x2a, 0xbf, 0x45, 0xbc, 0x36, 0x95, 0x7c, 0x32, 0xc9,
+                0x16, 0xe6, 0xde, 0xbe, 0x82, 0xfd, 0x9d, 0x64, 0xcf, 0x28, 0x1b, 0x23, 0xea, 0x73,
+                0xfc, 0x91, 0xd4, 0xc2,
+            ],
+        );
+
+        let key = ccache::KeyBlock::new(
+            AES256_CTS_HMAC_SHA1_96 as u16,
+            vec![
+                0x01, 0x27, 0x59, 0x90, 0x9b, 0x2a, 0xbf, 0x45, 0xbc, 0x36, 0x95, 0x7c, 0x32, 0xc9,
+                0x16, 0xe6, 0xde, 0xbe, 0x82, 0xfd, 0x9d, 0x64, 0xcf, 0x28, 0x1b, 0x23, 0xea, 0x73,
+                0xfc, 0x91, 0xd4, 0xc2,
+            ],
+        );
+
+        let authtime = Utc.ymd(2019, 7, 7).and_hms(14, 23, 33);
+        let starttime = Utc.ymd(2019, 7, 7).and_hms(14, 23, 33);
+        let endtime = Utc.ymd(2019, 7, 8).and_hms(0, 23, 33);
+        let renew_till = Utc.ymd(2019, 7, 8).and_hms(14, 23, 30);
+
+        let time = ccache::Times::new(
+            authtime.timestamp() as u32,
+            starttime.timestamp() as u32,
+            endtime.timestamp() as u32,
+            renew_till.timestamp() as u32,
+        );
+
+        let tktflags = ticket_flags::FORWARDABLE
+            | ticket_flags::PROXIABLE
+            | ticket_flags::RENEWABLE
+            | ticket_flags::INITIAL
+            | ticket_flags::PRE_AUTHENT;
+
+        let ticket_flags = TicketFlags::new(tktflags);
+
+        let mut ticket_encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0a]);
+        ticket_encrypted_data.set_kvno(2);
+
+        let ticket_credential = Ticket::new(realm.clone(), sname.clone(), ticket_encrypted_data);
+
+        let host_addresses = HostAddresses::new(HostAddress::NetBios("HOLLOWBASTION".to_string()));
+        let mut method_data = MethodData::default();
+        method_data.push(PaData::PacRequest(PacRequest::new(true)));
+
+        let credential = create_credential(
+            encryption_key.clone(),
+            realm.clone(),
+            pname.clone(),
+            ticket_flags.clone(),
+            authtime.clone(),
+            starttime.clone(),
+            endtime.clone(),
+            renew_till.clone(),
+            realm.clone(),
+            sname.clone(),
+            Some(host_addresses),
+            method_data,
+            ticket_credential,
+        );
+
+        let ticket = ccache::CountedOctetString::new(vec![
+            0x61, 0x51, 0x30, 0x4f, 0xa0, 0x03, 0x02, 0x01, 0x05, 0xa1, 0x10, 0x1b, 0x0e, 0x4b,
+            0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0xa2,
+            0x23, 0x30, 0x21, 0xa0, 0x03, 0x02, 0x01, 0x01, 0xa1, 0x1a, 0x30, 0x18, 0x1b, 0x06,
+            0x6b, 0x72, 0x62, 0x74, 0x67, 0x74, 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f,
+            0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53, 0xa3, 0x11, 0x30, 0x0f, 0xa0, 0x03,
+            0x02, 0x01, 0x12, 0xa1, 0x03, 0x02, 0x01, 0x02, 0xa2, 0x03, 0x04, 0x01, 0x0a,
+        ]);
+
+        let realm_string = ccache::CountedOctetString::new(realm.as_bytes().to_vec());
+
+        let client_principal = ccache::Principal::new(
+            NT_PRINCIPAL as u32,
+            realm_string.clone(),
+            vec![ccache::CountedOctetString::new(
+                "mickey".as_bytes().to_vec(),
+            )],
+        );
+        let server_principal = ccache::Principal::new(
+            NT_PRINCIPAL as u32,
+            realm_string.clone(),
+            vec![
+                ccache::CountedOctetString::new("krbtgt".as_bytes().to_vec()),
+                realm_string.clone(),
+            ],
+        );
+
+        let is_skey = 0;
+
+        let mut ccache_credential = ccache::CredentialEntry::new(
+            client_principal.clone(),
+            server_principal,
+            key,
+            time,
+            is_skey,
+            tktflags,
+            ticket,
+        );
+
+        let mut addresses = Vec::new();
+        addresses.push(Address::new(
+            address_type::NETBIOS as u16,
+            CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
+        ));
+        ccache_credential.set_addrs(addresses);
+
+        let mut auth_datas = Vec::new();
+        auth_datas.push(AuthData::new(
+            PA_PAC_REQUEST as u16,
+            CountedOctetString::new(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff]),
+        ));
+
+        ccache_credential.set_authdata(auth_datas);
+
+        assert_eq!(
+            credential,
+            CredentialCCacheMapper::ccache_credential_to_credential(ccache_credential)
+        );
+    }
 }
