@@ -8,6 +8,7 @@ use red_asn1;
 use std::fmt;
 use std::result;
 use std::string::FromUtf8Error;
+use nom::Err as NomError;
 
 /// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;
@@ -94,6 +95,10 @@ pub enum ErrorKind {
     /// No address found
     #[fail(display = "No address found")]
     NoAddress,
+
+    /// Error parsing binary data
+    #[fail(display = "Error parsing binary data")]
+    BinaryParseError,
 }
 
 /// Types of errors related to data encryption/decryption
@@ -180,6 +185,14 @@ impl From<red_asn1::Error> for Error {
     fn from(error: red_asn1::Error) -> Self {
         return Error {
             inner: Context::new(ErrorKind::Asn1Error(error.kind().clone())),
+        };
+    }
+}
+
+impl<E> From<NomError<E>> for Error {
+    fn from(_error: NomError<E>) -> Self {
+        return Error {
+            inner: Context::new(ErrorKind::BinaryParseError),
         };
     }
 }

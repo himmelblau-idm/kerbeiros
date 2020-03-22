@@ -1,6 +1,10 @@
 use crate::error;
 use crate::types::KerberosString;
 use std::convert::{From, TryInto};
+use nom::{named, length_data};
+use nom::number::complete::be_u32;
+
+named!(parse_length_array, length_data!(be_u32));
 
 /// String used by ccache.
 #[derive(Debug, PartialEq, Clone, Default)]
@@ -26,6 +30,11 @@ impl CountedOctetString {
         let mut bytes = data_len.to_be_bytes().to_vec();
         bytes.append(&mut self.data.clone());
         return bytes;
+    }
+
+    pub fn from_bytes(raw: &[u8]) -> error::Result<Self> {
+        let (_, data) = parse_length_array(raw)?;
+        return Ok(Self::new(data.to_vec()));
     }
 }
 
