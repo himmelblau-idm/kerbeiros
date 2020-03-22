@@ -44,6 +44,12 @@ impl Ticket {
     pub fn build(&self) -> Vec<u8> {
         return TicketAsn1::from(self).encode().unwrap();
     }
+
+    pub fn parse(raw: &[u8]) -> Result<Self> {
+        let mut ticket_asn1 = TicketAsn1::default();
+        ticket_asn1.decode(raw)?;
+        return Ok(ticket_asn1.no_asn1_type().unwrap());
+    }
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
