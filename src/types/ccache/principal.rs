@@ -1,4 +1,8 @@
 use super::counted_octet_string::CountedOctetString;
+use crate::error::Result;
+use nom::number::complete::be_u32;
+use nom::{named};
+use nom::error::ErrorKind;
 
 /// Name of some Kerberos entity.
 #[derive(Debug, Clone, PartialEq)]
@@ -45,6 +49,22 @@ impl Principal {
         }
 
         return bytes;
+    }
+
+    pub fn parse(raw: &[u8]) -> Result<(&[u8], Self)> {
+        let (rest, name_type) = be_u32::<(&[u8],ErrorKind)>(raw)?;
+        let (rest, components_len) = be_u32::<(&[u8],ErrorKind)>(rest)?;
+        let (rest, realm) = CountedOctetString::parse(rest)?;
+        let mut components = Vec::with_capacity(components_len as usize);
+
+        let mut rest = rest;
+        for _ in 0..components_len {
+            let tup = CountedOctetString::parse(rest)?;
+            rest = tup.0;
+            components.push(tup.1);
+        }
+
+        return Ok((rest, Self::new(name_type, realm, components)));
     }
 }
 
