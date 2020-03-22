@@ -44,6 +44,38 @@ impl CredentialEntry {
         };
     }
 
+    pub fn time(&self) -> &Times {
+        return &self.time;
+    }
+
+    pub fn tktflags(&self) -> u32 {
+        return self.tktflags;
+    }
+
+    pub fn key(&self) -> &KeyBlock {
+        return &self.key;
+    }
+
+    pub fn client(&self) -> &Principal {
+        return &self.client;
+    }
+
+    pub fn server(&self) -> &Principal {
+        return &self.server;
+    }
+
+    pub fn addrs(&self) -> &Vec<Address> {
+        return &self.addrs;
+    }
+
+    pub fn authdata(&self) -> &Vec<AuthData> {
+        return &self.authdata;
+    }
+
+    pub fn ticket(&self) -> &CountedOctetString {
+        return &self.ticket;
+    }
+
     pub fn set_authdata(&mut self, authdata: Vec<AuthData>) {
         return self.authdata = authdata;
     }
