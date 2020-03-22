@@ -1,8 +1,8 @@
 use crate::error;
 use crate::types::KerberosString;
-use std::convert::{From, TryInto};
-use nom::{named, length_data};
 use nom::number::complete::be_u32;
+use nom::{length_data, named};
+use std::convert::{From, TryInto};
 
 named!(parse_length_array, length_data!(be_u32));
 
@@ -32,9 +32,9 @@ impl CountedOctetString {
         return bytes;
     }
 
-    pub fn from_bytes(raw: &[u8]) -> error::Result<Self> {
-        let (_, data) = parse_length_array(raw)?;
-        return Ok(Self::new(data.to_vec()));
+    pub fn parse(raw: &[u8]) -> error::Result<(&[u8], Self)> {
+        let (rest, data) = parse_length_array(raw)?;
+        return Ok((rest, Self::new(data.to_vec())));
     }
 }
 
@@ -91,12 +91,18 @@ mod test {
     fn test_counted_octet_string_from_bytes() {
         assert_eq!(
             CountedOctetString::from("KINGDOM.HEARTS"),
-            CountedOctetString::from_bytes(&[
+            CountedOctetString::parse(&[
                 0x00, 0x00, 0x00, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45,
                 0x41, 0x52, 0x54, 0x53
             ])
-            .unwrap()
+            .unwrap().1
         );
+    }
+
+    #[test]
+    #[should_panic(expected = "Error parsing binary data")]
+    fn test_counted_octet_string_from_bytes_panic() {
+        CountedOctetString::parse(&[0x00]).unwrap();
     }
 
     #[test]
