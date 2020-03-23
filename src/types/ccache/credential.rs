@@ -1,12 +1,16 @@
-use super::address::*;
-use super::auth_data::*;
-use super::counted_octet_string::*;
-use super::key_block::*;
-use super::principal::*;
-use super::times::*;
+use super::address::Address;
+use super::auth_data::AuthData;
+use super::counted_octet_string::CountedOctetString;
+use super::key_block::KeyBlock;
+use super::principal::Principal;
+use super::times::Times;
+use crate::error::Result;
+use nom::error::ErrorKind;
+use nom::number::complete::{be_u32, be_u8};
+use getset::Setters;
 
 /// Represents a credential stored in ccache.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Setters)]
 pub struct CredentialEntry {
     client: Principal,
     server: Principal,
@@ -14,9 +18,15 @@ pub struct CredentialEntry {
     time: Times,
     is_skey: u8,
     tktflags: u32,
+
+    #[getset(set = "pub")]
     addrs: Vec<Address>,
+
+    #[getset(set = "pub")]
     authdata: Vec<AuthData>,
     ticket: CountedOctetString,
+
+    #[getset(set)]
     second_ticket: CountedOctetString,
 }
 
@@ -76,14 +86,6 @@ impl CredentialEntry {
         return &self.ticket;
     }
 
-    pub fn set_authdata(&mut self, authdata: Vec<AuthData>) {
-        return self.authdata = authdata;
-    }
-
-    pub fn set_addrs(&mut self, addrs: Vec<Address>) {
-        return self.addrs = addrs;
-    }
-
     pub fn build(&self) -> Vec<u8> {
         let mut bytes = self.client.to_bytes();
         bytes.append(&mut self.server.to_bytes());
@@ -112,6 +114,54 @@ impl CredentialEntry {
         bytes.append(&mut self.second_ticket.to_bytes());
 
         return bytes;
+    }
+
+    pub fn parse(raw: &[u8]) -> Result<(&[u8], Self)> {
+        let (raw, client) = Principal::parse(raw)?;
+        let (raw, server) = Principal::parse(raw)?;
+        let (raw, key) = KeyBlock::parse(raw)?;
+        let (raw, time) = Times::parse(raw)?;
+        let (raw, is_skey) = be_u8::<(&[u8], ErrorKind)>(raw)?;
+        let (raw, tktflags) = be_u32::<(&[u8], ErrorKind)>(raw)?;
+        let (raw, num_address) = be_u32::<(&[u8], ErrorKind)>(raw)?;
+
+        let mut addrs = Vec::with_capacity(num_address as usize);
+
+        let mut raw = raw;
+        for _ in 0..num_address {
+            let tup = Address::parse(raw)?;
+            addrs.push(tup.1);
+            raw = tup.0;
+        }
+
+        let (raw, num_authdata) = be_u32::<(&[u8], ErrorKind)>(raw)?;
+
+        let mut auth_data = Vec::with_capacity(num_authdata as usize);
+
+        let mut raw = raw;
+        for _ in 0..num_authdata {
+            let tup = AuthData::parse(raw)?;
+            auth_data.push(tup.1);
+            raw = tup.0;
+        }
+
+        let (raw, ticket) = CountedOctetString::parse(raw)?;
+        let (raw, second_ticket) = CountedOctetString::parse(raw)?;
+
+        let mut credential_entry = Self::new(
+            client,
+            server,
+            key,
+            time,
+            is_skey,
+            tktflags,
+            ticket,
+        );
+        credential_entry.set_addrs(addrs);
+        credential_entry.set_authdata(auth_data);
+        credential_entry.set_second_ticket(second_ticket);
+
+        return Ok((raw, credential_entry));
     }
 }
 
@@ -396,6 +446,7 @@ mod test {
     }
 
     #[test]
+    #[should_panic(expected = "Error parsing binary data")]
     fn test_parse_ccache_credential_panic() {
         CredentialEntry::parse(&[0x0]).unwrap();
     }
