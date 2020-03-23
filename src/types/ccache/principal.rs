@@ -1,7 +1,6 @@
 use super::counted_octet_string::CountedOctetString;
 use crate::error::Result;
 use nom::number::complete::be_u32;
-use nom::{named};
 use nom::error::ErrorKind;
 
 /// Name of some Kerberos entity.
