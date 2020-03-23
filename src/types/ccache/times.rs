@@ -64,4 +64,28 @@ mod test {
             .to_bytes()
         )
     }
+
+    #[test]
+    fn test_parse_times_from_bytes() {
+        assert_eq!(
+            Times::new(
+                Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,
+                Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,
+                Utc.ymd(2019, 7, 8).and_hms(0, 23, 33).timestamp() as u32,
+                Utc.ymd(2019, 7, 8).and_hms(14, 23, 30).timestamp() as u32,
+            ),
+            Times::parse(&[
+                0x5d, 0x22, 0x00, 0x65, 0x5d, 0x22, 0x00, 0x65, 0x5d, 0x22, 0x8d, 0x05, 0x5d, 0x23,
+                0x51, 0xe2
+            ])
+            .unwrap()
+            .1
+        )
+    }
+
+    #[test]
+    #[should_panic(expected = "Error parsing binary data")]
+    fn test_parse_times_from_bytes_panic() {
+        Times::parse(&[0xe2]).unwrap();
+    }
 }
