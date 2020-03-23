@@ -39,4 +39,22 @@ mod test {
             Header::new_default().to_bytes()
         )
     }
+
+    #[test]
+    fn test_parse_header() {
+        assert_eq!(
+            Header::new_default().to_bytes(),
+            Header::parse(&[
+                0x00, 0x01, 0x00, 0x08, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00
+            ])
+            .unwrap()
+            .1,
+        )
+    }
+
+    #[test]
+    #[should_panic(expected = "Error parsing binary data")]
+    fn test_parse_header_panic() {
+        Header::parse(&[0x00]).unwrap();
+    }
 }
