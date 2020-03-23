@@ -1,3 +1,7 @@
+use crate::error::Result;
+use nom::error::ErrorKind;
+use nom::number::complete::be_u32;
+
 /// Holds the differents timestamps handled by Kerberos.
 #[derive(Debug, PartialEq, Clone)]
 pub struct Times {
@@ -40,6 +44,15 @@ impl Times {
         bytes.append(&mut self.renew_till.to_be_bytes().to_vec());
 
         return bytes;
+    }
+
+    pub fn parse(raw: &[u8]) -> Result<(&[u8], Self)> {
+        let (rest, authtime) = be_u32::<(&[u8], ErrorKind)>(raw)?;
+        let (rest, starttime) = be_u32::<(&[u8], ErrorKind)>(rest)?;
+        let (rest, endtime) = be_u32::<(&[u8], ErrorKind)>(rest)?;
+        let (rest, renew_till) = be_u32::<(&[u8], ErrorKind)>(rest)?;
+
+        return Ok((rest, Self::new(authtime, starttime, endtime, renew_till)));
     }
 }
 
