@@ -1,4 +1,7 @@
 use super::counted_octet_string::*;
+use crate::error::Result;
+use nom::number::complete::be_u16;
+use nom::error::ErrorKind;
 
 /// Represent addresses of Kerberos actors.
 #[derive(Debug, PartialEq, Clone)]
@@ -24,6 +27,13 @@ impl Address {
         let mut bytes = self.addrtype.to_be_bytes().to_vec();
         bytes.append(&mut self.addrdata.to_bytes());
         return bytes;
+    }
+
+    pub fn parse(raw: &[u8]) -> Result<(&[u8], Self)> {
+        let (rest, addrtype) = be_u16::<(&[u8], ErrorKind)>(raw)?;
+        let (rest, addrdata) = CountedOctetString::parse(rest)?;
+
+        return Ok((rest, Self::new(addrtype, addrdata)));
     }
 }
 
