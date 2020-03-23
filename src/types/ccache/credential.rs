@@ -84,7 +84,7 @@ impl CredentialEntry {
         return self.addrs = addrs;
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         let mut bytes = self.client.to_bytes();
         bytes.append(&mut self.server.to_bytes());
         bytes.append(&mut self.key.to_bytes());
@@ -344,6 +344,6 @@ mod test {
         );
 
 
-        assert_eq!(raw_credential, credential.to_bytes());
+        assert_eq!(raw_credential, credential.build());
     }
 }

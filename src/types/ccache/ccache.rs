@@ -40,7 +40,7 @@ impl CCache {
         bytes.append(&mut self.primary_principal.to_bytes());
 
         for credential in self.credentials.iter() {
-            bytes.append(&mut credential.to_bytes());
+            bytes.append(&mut credential.build());
         }
 
         return bytes;
