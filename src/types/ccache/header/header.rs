@@ -80,6 +80,18 @@ mod test {
     }
 
     #[test]
+    fn test_parse_non_default_header() {
+        assert_eq!(
+            Header::Raw(0x3, vec![0x0, 0x1, 0x2, 0x4]),
+            Header::parse(&[
+                0x00, 0x03, 0x00, 0x04, 0x0, 0x1, 0x2, 0x4
+            ])
+            .unwrap()
+            .1,
+        )
+    }
+
+    #[test]
     #[should_panic(expected = "[0], Eof")]
     fn test_parse_header_panic() {
         Header::parse(&[0x00]).unwrap();
