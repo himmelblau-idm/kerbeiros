@@ -19,13 +19,13 @@ impl Header {
         return Header::DeltaTime(DeltaTime::new_default());
     }
 
-    pub fn build(&self) -> Vec<u8> {
-        match &self {
+    pub fn build(self) -> Vec<u8> {
+        match self {
             Header::DeltaTime(delta_time) => {
                 return Self::to_bytes_raw(Self::DELTA_TIME, delta_time.build());
             }
             Self::Raw(tag, data) => {
-                return Self::to_bytes_raw(*tag, data.clone());
+                return Self::to_bytes_raw(tag, data);
             }
         }
     }

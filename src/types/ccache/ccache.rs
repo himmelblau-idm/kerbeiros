@@ -25,11 +25,7 @@ impl CCache {
         };
     }
 
-    pub fn build(&self) -> Vec<u8> {
-        return self.to_bytes();
-    }
-
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(self) -> Vec<u8> {
         let mut bytes = self.file_format_version.to_be_bytes().to_vec();
 
         let mut header_bytes = self.header.build();
