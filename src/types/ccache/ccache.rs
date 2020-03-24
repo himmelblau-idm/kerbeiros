@@ -52,9 +52,7 @@ mod test {
     use crate::constants::*;
     use chrono::prelude::*;
 
-    #[test]
-    fn build_ccache() {
-        let raw_ccache = vec![
+    static RAW_CCACHE: &'static [u8] = &[
             0x05, 0x04, 0x00, 0x0c, 0x00, 0x01, 0x00, 0x08, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0e,
             0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53,
@@ -147,8 +145,7 @@ mod test {
             0x6e, 0xb7, 0x13, 0x3c, 0x8d, 0xbe, 0x40, 0xbe, 0xa0, 0x15, 0xd8, 0x36, 0xd8, 0x88,
             0x00, 0x00, 0x00, 0x00,
         ];
-
-        let ticket = CountedOctetString::new(vec![
+    static RAW_TICKET: &'static [u8] = &[
             0x61, 0x82, 0x04, 0x13, 0x30, 0x82, 0x04, 0x0f, 0xa0, 0x03, 0x02, 0x01, 0x05, 0xa1,
             0x10, 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41,
             0x52, 0x54, 0x53, 0xa2, 0x23, 0x30, 0x21, 0xa0, 0x03, 0x02, 0x01, 0x01, 0xa1, 0x1a,
@@ -224,7 +221,13 @@ mod test {
             0xdf, 0xb6, 0x13, 0x7a, 0x0a, 0xfb, 0x6e, 0xb2, 0x80, 0x16, 0xc5, 0xd4, 0x75, 0x81,
             0x1d, 0x1e, 0x26, 0xf5, 0x1f, 0x14, 0x75, 0x4a, 0xde, 0x3d, 0x65, 0x6e, 0xb7, 0x13,
             0x3c, 0x8d, 0xbe, 0x40, 0xbe, 0xa0, 0x15, 0xd8, 0x36, 0xd8, 0x88,
-        ]);
+        ];
+
+    
+    #[test]
+    fn build_ccache() {
+
+        let ticket = CountedOctetString::new(RAW_TICKET.to_vec());
 
         let realm_string = CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec());
 
@@ -280,6 +283,74 @@ mod test {
 
         let ccache = CCache::new(header, client_principal, vec![credential]);
 
-        assert_eq!(raw_ccache, ccache.build());
+        assert_eq!(RAW_CCACHE.to_vec(), ccache.build());
+    }
+
+    #[test]
+    fn test_parse_ccache() {
+
+        let ticket = CountedOctetString::new(RAW_TICKET.to_vec());
+
+        let realm_string = CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec());
+
+        let client_principal = Principal::new(
+            NT_PRINCIPAL as u32,
+            realm_string.clone(),
+            vec![CountedOctetString::new("mickey".as_bytes().to_vec())],
+        );
+        let server_principal = Principal::new(
+            NT_PRINCIPAL as u32,
+            realm_string.clone(),
+            vec![
+                CountedOctetString::new("krbtgt".as_bytes().to_vec()),
+                realm_string.clone(),
+            ],
+        );
+
+        let key = KeyBlock::new(
+            AES256_CTS_HMAC_SHA1_96 as u16,
+            vec![
+                0x01, 0x27, 0x59, 0x90, 0x9b, 0x2a, 0xbf, 0x45, 0xbc, 0x36, 0x95, 0x7c, 0x32, 0xc9,
+                0x16, 0xe6, 0xde, 0xbe, 0x82, 0xfd, 0x9d, 0x64, 0xcf, 0x28, 0x1b, 0x23, 0xea, 0x73,
+                0xfc, 0x91, 0xd4, 0xc2,
+            ],
+        );
+
+        let is_skey = 0;
+
+        let tktflags = ticket_flags::FORWARDABLE
+            | ticket_flags::PROXIABLE
+            | ticket_flags::RENEWABLE
+            | ticket_flags::INITIAL
+            | ticket_flags::PRE_AUTHENT;
+
+        let time = Times::new(
+            Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,
+            Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,
+            Utc.ymd(2019, 7, 8).and_hms(0, 23, 33).timestamp() as u32,
+            Utc.ymd(2019, 7, 8).and_hms(14, 23, 30).timestamp() as u32,
+        );
+
+        let credential = CredentialEntry::new(
+            client_principal.clone(),
+            server_principal,
+            key,
+            time,
+            is_skey,
+            tktflags,
+            ticket,
+        );
+
+        let header = Header::DeltaTime(DeltaTime::new(u32::max_value(), 0));
+
+        let ccache = CCache::new(header, client_principal, vec![credential]);
+
+        assert_eq!(ccache, CCache::parse(RAW_CCACHE));
+    }
+
+    #[test]
+    #[should_panic(expected = "[0], Eof")]
+    fn test_parse_ccache_error(){
+        CCache::parse(&[0]);
     }
 }
