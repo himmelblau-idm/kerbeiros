@@ -32,7 +32,7 @@ impl CCache {
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = self.file_format_version.to_be_bytes().to_vec();
 
-        let mut header_bytes = self.header.to_bytes();
+        let mut header_bytes = self.header.build();
         let header_len = header_bytes.len() as u16;
 
         bytes.append(&mut header_len.to_be_bytes().to_vec());

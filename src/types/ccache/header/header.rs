@@ -19,7 +19,7 @@ impl Header {
         return Header::DeltaTime(DeltaTime::new_default());
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         match &self {
             Header::DeltaTime(delta_time) => {
                 return Self::to_bytes_raw(Self::DELTA_TIME, delta_time.to_bytes());
@@ -63,7 +63,7 @@ mod test {
     fn header_to_bytes() {
         assert_eq!(
             vec![0x00, 0x01, 0x00, 0x08, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00],
-            Header::new_default().to_bytes()
+            Header::new_default().build()
         )
     }
 
