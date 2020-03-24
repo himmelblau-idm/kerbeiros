@@ -51,7 +51,15 @@ mod test {
     fn parse_deltatime_from_bytes() {
         assert_eq!(
             DeltaTime::new_default(),
-            DeltaTime::parse(&[0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00]).unwrap().1
+            DeltaTime::parse(&[0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00])
+                .unwrap()
+                .1
         )
+    }
+
+    #[test]
+    #[should_panic(expected = "[0], Eof")]
+    fn parse_deltatime_from_bytes_error() {
+        DeltaTime::parse(&[0x0]).unwrap();
     }
 }
