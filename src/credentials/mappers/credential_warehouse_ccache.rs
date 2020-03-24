@@ -1,12 +1,12 @@
-use super::super::*;
-use super::*;
-use crate::types::*;
+use crate::types::{CCache, Header, PrincipalMapper};
+use super::CredentialCCacheMapper;
+use super::super::CredentialWarehouse;
 
 pub struct CredentialWarehouseCCacheMapper {}
 
 impl CredentialWarehouseCCacheMapper {
     pub fn credential_warehouse_to_ccache(warehouse: &CredentialWarehouse) -> CCache {
-        let header = ccache::Header::new_default();
+        let header = Header::new_default();
         let primary_principal = PrincipalMapper::realm_and_principal_name_to_principal(
             warehouse.realm(),
             warehouse.client(),
@@ -34,6 +34,8 @@ mod test {
     use crate::constants::ticket_flags;
     use crate::constants::*;
     use chrono::prelude::*;
+    use crate::types::*;
+    use super::super::super::Credential;
 
     fn create_credential(
         encryption_key: EncryptionKey,
