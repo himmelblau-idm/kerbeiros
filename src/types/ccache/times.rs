@@ -1,6 +1,5 @@
-use crate::error::Result;
-use nom::error::ErrorKind;
 use nom::number::complete::be_u32;
+use nom::IResult;
 
 /// Holds the differents timestamps handled by Kerberos.
 #[derive(Debug, PartialEq, Clone)]
@@ -46,11 +45,11 @@ impl Times {
         return bytes;
     }
 
-    pub fn parse(raw: &[u8]) -> Result<(&[u8], Self)> {
-        let (rest, authtime) = be_u32::<(&[u8], ErrorKind)>(raw)?;
-        let (rest, starttime) = be_u32::<(&[u8], ErrorKind)>(rest)?;
-        let (rest, endtime) = be_u32::<(&[u8], ErrorKind)>(rest)?;
-        let (rest, renew_till) = be_u32::<(&[u8], ErrorKind)>(rest)?;
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+        let (rest, authtime) = be_u32(raw)?;
+        let (rest, starttime) = be_u32(rest)?;
+        let (rest, endtime) = be_u32(rest)?;
+        let (rest, renew_till) = be_u32(rest)?;
 
         return Ok((rest, Self::new(authtime, starttime, endtime, renew_till)));
     }
@@ -97,8 +96,8 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "Error parsing binary data")]
+    #[should_panic(expected = "[0], Eof")]
     fn test_parse_times_from_bytes_panic() {
-        Times::parse(&[0xe2]).unwrap();
+        Times::parse(&[0x0]).unwrap();
     }
 }
