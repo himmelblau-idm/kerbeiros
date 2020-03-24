@@ -29,7 +29,7 @@ impl KeyBlock {
         return self.keyvalue;
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         let mut bytes = self.keytype.to_be_bytes().to_vec();
         bytes.append(&mut self.etype.to_be_bytes().to_vec());
         let keylen = self.keyvalue.len() as u16;
@@ -72,7 +72,7 @@ mod test {
                     0xea, 0x73, 0xfc, 0x91, 0xd4, 0xc2
                 ]
             )
-            .to_bytes()
+            .build()
         )
     }
 
