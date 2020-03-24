@@ -1,11 +1,11 @@
 use super::credential::CredentialEntry;
 use super::header::Header;
 use super::principal::Principal;
-use getset::Getters;
+use getset::{Getters, Setters};
 
 /// To store an array of credentials.
-#[derive(Debug, PartialEq, Clone, Getters)]
-#[getset (get = "pub")]
+#[derive(Debug, PartialEq, Clone, Getters, Setters)]
+#[getset (get = "pub", set = "pub")]
 pub struct CCache {
     file_format_version: u16,
     header: Header,
