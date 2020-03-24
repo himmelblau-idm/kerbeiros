@@ -6,7 +6,7 @@ use nom::IResult;
 
 /// Name of some Kerberos entity.
 #[derive(Debug, Clone, PartialEq, Getters)]
-#[getset(get = "pub")]
+#[getset(get = "pub", set = "pub")]
 pub struct Principal {
     name_type: u32,
     realm: CountedOctetString,
