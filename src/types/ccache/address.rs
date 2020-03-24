@@ -16,7 +16,7 @@ impl Address {
         return Self { addrtype, addrdata };
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         let mut bytes = self.addrtype.to_be_bytes().to_vec();
         bytes.append(&mut self.addrdata.build());
         return bytes;
@@ -46,7 +46,7 @@ mod test {
                 address_type::NETBIOS as u16,
                 CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
             )
-            .to_bytes()
+            .build()
         )
     }
 

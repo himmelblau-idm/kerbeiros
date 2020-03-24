@@ -68,7 +68,7 @@ impl CredentialEntry {
         bytes.append(&mut num_address.to_be_bytes().to_vec());
 
         for addrs in self.addrs.iter() {
-            bytes.append(&mut addrs.to_bytes());
+            bytes.append(&mut addrs.build());
         }
 
         let num_authdata = self.authdata.len() as u32;
@@ -76,7 +76,7 @@ impl CredentialEntry {
         bytes.append(&mut num_authdata.to_be_bytes().to_vec());
 
         for authdata in self.authdata.iter() {
-            bytes.append(&mut authdata.to_bytes());
+            bytes.append(&mut authdata.build());
         }
 
         bytes.append(&mut self.ticket.build());
