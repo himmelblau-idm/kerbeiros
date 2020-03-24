@@ -1,8 +1,10 @@
 use nom::number::complete::be_u32;
 use nom::IResult;
+use getset::Getters;
 
 /// Type of [Header](./struct.Header.html).
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Getters)]
+#[getset (get = "pub")]
 pub struct DeltaTime {
     time_offset: u32,
     usec_offset: u32,
