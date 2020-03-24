@@ -22,7 +22,7 @@ impl Times {
         };
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         let mut bytes = self.authtime.to_be_bytes().to_vec();
         bytes.append(&mut self.starttime.to_be_bytes().to_vec());
         bytes.append(&mut self.endtime.to_be_bytes().to_vec());
@@ -59,7 +59,7 @@ mod test {
                 Utc.ymd(2019, 7, 8).and_hms(0, 23, 33).timestamp() as u32,
                 Utc.ymd(2019, 7, 8).and_hms(14, 23, 30).timestamp() as u32,
             )
-            .to_bytes()
+            .build()
         )
     }
 

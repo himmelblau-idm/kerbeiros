@@ -59,7 +59,7 @@ impl CredentialEntry {
         let mut bytes = self.client.build();
         bytes.append(&mut self.server.build());
         bytes.append(&mut self.key.build());
-        bytes.append(&mut self.time.to_bytes());
+        bytes.append(&mut self.time.build());
         bytes.push(self.is_skey);
         bytes.append(&mut self.tktflags.to_be_bytes().to_vec());
 
