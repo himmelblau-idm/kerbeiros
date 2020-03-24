@@ -20,7 +20,7 @@ impl DeltaTime {
         };
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         let mut bytes = Vec::with_capacity(8);
         bytes.append(&mut self.time_offset.to_be_bytes().to_vec());
         bytes.append(&mut self.usec_offset.to_be_bytes().to_vec());
@@ -43,7 +43,7 @@ mod test {
     fn deltatime_to_bytes() {
         assert_eq!(
             vec![0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00],
-            DeltaTime::new_default().to_bytes()
+            DeltaTime::new_default().build()
         )
     }
 

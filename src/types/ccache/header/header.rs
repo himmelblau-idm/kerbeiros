@@ -22,7 +22,7 @@ impl Header {
     pub fn build(&self) -> Vec<u8> {
         match &self {
             Header::DeltaTime(delta_time) => {
-                return Self::to_bytes_raw(Self::DELTA_TIME, delta_time.to_bytes());
+                return Self::to_bytes_raw(Self::DELTA_TIME, delta_time.build());
             }
             Self::Raw(tag, data) => {
                 return Self::to_bytes_raw(*tag, data.clone());
