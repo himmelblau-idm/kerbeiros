@@ -11,7 +11,7 @@ use nom::IResult;
 
 /// Represents a credential stored in ccache.
 #[derive(Debug, PartialEq, Clone, Setters, Getters)]
-#[getset(get = "pub")]
+#[getset(get = "pub", set = "pub")]
 pub struct CredentialEntry {
     client: Principal,
     server: Principal,
@@ -19,15 +19,9 @@ pub struct CredentialEntry {
     time: Times,
     is_skey: u8,
     tktflags: u32,
-
-    #[getset(set = "pub")]
     addrs: Vec<Address>,
-
-    #[getset(set = "pub")]
     authdata: Vec<AuthData>,
     ticket: CountedOctetString,
-
-    #[getset(set)]
     second_ticket: CountedOctetString,
 }
 
