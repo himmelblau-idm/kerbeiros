@@ -1,7 +1,6 @@
-use super::counted_octet_string::*;
-use crate::error::Result;
+use super::counted_octet_string::CountedOctetString;
 use nom::number::complete::be_u16;
-use nom::error::ErrorKind;
+use nom::IResult;
 
 /// Represent addresses of Kerberos actors.
 #[derive(Debug, PartialEq, Clone)]
@@ -29,8 +28,8 @@ impl Address {
         return bytes;
     }
 
-    pub fn parse(raw: &[u8]) -> Result<(&[u8], Self)> {
-        let (rest, addrtype) = be_u16::<(&[u8], ErrorKind)>(raw)?;
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+        let (rest, addrtype) = be_u16(raw)?;
         let (rest, addrdata) = CountedOctetString::parse(rest)?;
 
         return Ok((rest, Self::new(addrtype, addrdata)));
@@ -74,8 +73,8 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "Error parsing binary data")]
+    #[should_panic(expected = "[0], Eof")]
     fn test_parse_address_from_bytes_panic() {
-        Address::parse(&[0x48, 0x45, 0x41, 0x52, 0x54, 0x53]).unwrap();
+        Address::parse(&[0x0]).unwrap();
     }
 }
