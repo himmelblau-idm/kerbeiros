@@ -1,7 +1,7 @@
 use crate::error;
 use crate::types::KerberosString;
 use nom::number::complete::be_u32;
-use nom::{length_data, named};
+use nom::{length_data, named, IResult};
 use std::convert::{From, TryInto};
 
 named!(parse_length_array, length_data!(be_u32));
@@ -32,7 +32,7 @@ impl CountedOctetString {
         return bytes;
     }
 
-    pub fn parse(raw: &[u8]) -> error::Result<(&[u8], Self)> {
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
         let (rest, data) = parse_length_array(raw)?;
         return Ok((rest, Self::new(data.to_vec())));
     }
@@ -100,8 +100,8 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "Error parsing binary data")]
-    fn test_counted_octet_string_from_bytes_panic() {
+    #[should_panic(expected = "[0], Eof")]
+    fn test_parse_counted_octet_string_from_bytes_panic() {
         CountedOctetString::parse(&[0x00]).unwrap();
     }
 
