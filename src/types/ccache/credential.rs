@@ -55,7 +55,7 @@ impl CredentialEntry {
         };
     }
 
-    pub fn build(&self) -> Vec<u8> {
+    pub fn build(self) -> Vec<u8> {
         let mut bytes = self.client.build();
         bytes.append(&mut self.server.build());
         bytes.append(&mut self.key.build());
@@ -67,7 +67,7 @@ impl CredentialEntry {
 
         bytes.append(&mut num_address.to_be_bytes().to_vec());
 
-        for addrs in self.addrs.iter() {
+        for addrs in self.addrs.into_iter() {
             bytes.append(&mut addrs.build());
         }
 
@@ -75,7 +75,7 @@ impl CredentialEntry {
 
         bytes.append(&mut num_authdata.to_be_bytes().to_vec());
 
-        for authdata in self.authdata.iter() {
+        for authdata in self.authdata.into_iter() {
             bytes.append(&mut authdata.build());
         }
 

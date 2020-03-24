@@ -25,10 +25,10 @@ impl CountedOctetString {
         return self.data;
     }
 
-    pub fn build(&self) -> Vec<u8> {
+    pub fn build(mut self) -> Vec<u8> {
         let data_len = self.data.len() as u32;
         let mut bytes = data_len.to_be_bytes().to_vec();
-        bytes.append(&mut self.data.clone());
+        bytes.append(&mut self.data);
         return bytes;
     }
 

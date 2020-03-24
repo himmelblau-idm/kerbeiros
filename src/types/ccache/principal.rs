@@ -26,14 +26,14 @@ impl Principal {
         };
     }
 
-    pub fn build(&self) -> Vec<u8> {
+    pub fn build(self) -> Vec<u8> {
         let mut bytes = self.name_type.to_be_bytes().to_vec();
         let components_len = self.components.len() as u32;
 
         bytes.append(&mut components_len.to_be_bytes().to_vec());
         bytes.append(&mut self.realm.build());
 
-        for component in self.components.iter() {
+        for component in self.components.into_iter() {
             bytes.append(&mut component.build());
         }
 
