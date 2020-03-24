@@ -1,6 +1,5 @@
-use crate::error::Result;
 use getset::{Setters, Getters};
-use nom::error::ErrorKind;
+use nom::IResult;
 use nom::number::complete::be_u16;
 use nom::{length_data, named};
 
@@ -40,9 +39,9 @@ impl KeyBlock {
         return bytes;
     }
 
-    pub fn parse(raw: &[u8]) -> Result<(&[u8], Self)> {
-        let (rest, keytype) = be_u16::<(&[u8], ErrorKind)>(raw)?;
-        let (rest, etype) = be_u16::<(&[u8], ErrorKind)>(rest)?;
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+        let (rest, keytype) = be_u16(raw)?;
+        let (rest, etype) = be_u16(rest)?;
         let (rest, keyvalue) = parse_length_array(rest)?;
 
         let mut key_block = Self::new(keytype, keyvalue.to_vec());
@@ -99,7 +98,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "Error parsing binary data")]
+    #[should_panic(expected = "[0], Eof")]
     fn test_parse_keyblock_from_bytes_panic() {
         KeyBlock::parse(&[0x00]).unwrap();
     }
