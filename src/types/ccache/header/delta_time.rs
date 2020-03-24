@@ -1,3 +1,6 @@
+use nom::number::complete::be_u32;
+use nom::IResult;
+
 /// Type of [Header](./struct.Header.html).
 #[derive(Debug, PartialEq, Clone)]
 pub struct DeltaTime {
@@ -23,6 +26,13 @@ impl DeltaTime {
         bytes.append(&mut self.usec_offset.to_be_bytes().to_vec());
         return bytes;
     }
+
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+        let (raw, time_offset) = be_u32(raw)?;
+        let (raw, usec_offset) = be_u32(raw)?;
+
+        return Ok((raw, Self::new(time_offset, usec_offset)));
+    }
 }
 
 #[cfg(test)]
@@ -40,7 +50,7 @@ mod test {
     #[test]
     fn parse_deltatime_from_bytes() {
         assert_eq!(
-            DeltaTime::new_default().to_bytes(),
+            DeltaTime::new_default(),
             DeltaTime::parse(&[0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00]).unwrap().1
         )
     }
