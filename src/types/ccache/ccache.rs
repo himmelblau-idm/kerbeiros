@@ -33,7 +33,7 @@ impl CCache {
 
         bytes.append(&mut header_len.to_be_bytes().to_vec());
         bytes.append(&mut header_bytes);
-        bytes.append(&mut self.primary_principal.to_bytes());
+        bytes.append(&mut self.primary_principal.build());
 
         for credential in self.credentials.iter() {
             bytes.append(&mut credential.build());

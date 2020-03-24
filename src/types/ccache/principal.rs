@@ -26,7 +26,7 @@ impl Principal {
         };
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         let mut bytes = self.name_type.to_be_bytes().to_vec();
         let components_len = self.components.len() as u32;
 
@@ -72,7 +72,7 @@ mod test {
                 CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
                 vec![CountedOctetString::new("mickey".as_bytes().to_vec())]
             )
-            .to_bytes()
+            .build()
         );
     }
 

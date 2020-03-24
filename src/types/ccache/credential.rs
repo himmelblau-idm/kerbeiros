@@ -56,8 +56,8 @@ impl CredentialEntry {
     }
 
     pub fn build(&self) -> Vec<u8> {
-        let mut bytes = self.client.to_bytes();
-        bytes.append(&mut self.server.to_bytes());
+        let mut bytes = self.client.build();
+        bytes.append(&mut self.server.build());
         bytes.append(&mut self.key.to_bytes());
         bytes.append(&mut self.time.to_bytes());
         bytes.push(self.is_skey);
