@@ -1,12 +1,20 @@
-pub use super::delta_time::*;
+pub use super::delta_time::DeltaTime;
+use nom::number::complete::be_u16;
+use nom::IResult;
+use nom::{length_data, named};
+
+named!(parse_length_u16_array, length_data!(be_u16));
 
 /// Header of [CCache](./struct.CCache.html).
 #[derive(Debug, PartialEq, Clone)]
 pub enum Header {
     DeltaTime(DeltaTime),
+    Raw(u16, Vec<u8>),
 }
 
 impl Header {
+    const DELTA_TIME: u16 = 1;
+
     pub fn new_default() -> Self {
         return Header::DeltaTime(DeltaTime::new_default());
     }
@@ -14,7 +22,10 @@ impl Header {
     pub fn to_bytes(&self) -> Vec<u8> {
         match &self {
             Header::DeltaTime(delta_time) => {
-                return Self::to_bytes_raw(0x1, delta_time.to_bytes());
+                return Self::to_bytes_raw(Self::DELTA_TIME, delta_time.to_bytes());
+            }
+            Self::Raw(tag, data) => {
+                return Self::to_bytes_raw(*tag, data.clone());
             }
         }
     }
@@ -25,6 +36,22 @@ impl Header {
         bytes.append(&mut raw_len.to_be_bytes().to_vec());
         bytes.append(&mut raw);
         return bytes;
+    }
+
+    fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+        let (raw, tag) = be_u16(raw)?;
+
+        match tag {
+            Self::DELTA_TIME => {
+                let (raw, _taglen) = be_u16(raw)?;
+                let (raw, delta_time) = DeltaTime::parse(raw)?;
+                return Ok((raw, Self::DeltaTime(delta_time)));
+            }
+            _ => {
+                let (raw, data) = parse_length_u16_array(raw)?;
+                return Ok((raw, Self::Raw(tag, data.to_vec())));
+            }
+        }
     }
 }
 
@@ -43,7 +70,7 @@ mod test {
     #[test]
     fn test_parse_header() {
         assert_eq!(
-            Header::new_default().to_bytes(),
+            Header::new_default(),
             Header::parse(&[
                 0x00, 0x01, 0x00, 0x08, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00
             ])
