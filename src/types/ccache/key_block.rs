@@ -7,11 +7,9 @@ named!(parse_length_array, length_data!(be_u16));
 
 /// Represents the session key.
 #[derive(Debug, PartialEq, Clone, Setters, Getters)]
+#[getset (get = "pub", set = "pub")]
 pub struct KeyBlock {
-    #[getset(get = "pub")]
     keytype: u16,
-
-    #[getset(set)]
     etype: u16,
     keyvalue: Vec<u8>,
 }

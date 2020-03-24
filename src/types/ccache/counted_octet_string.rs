@@ -3,7 +3,7 @@ use crate::types::KerberosString;
 use nom::number::complete::be_u32;
 use nom::{length_data, named, IResult};
 use std::convert::{From, TryInto};
-use getset::{Getters, Setters}
+use getset::{Getters, Setters};
 
 named!(parse_length_array, length_data!(be_u32));
 
