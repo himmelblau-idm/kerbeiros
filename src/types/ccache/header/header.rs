@@ -53,7 +53,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "Error parsing binary data")]
+    #[should_panic(expected = "[0], Eof")]
     fn test_parse_header_panic() {
         Header::parse(&[0x00]).unwrap();
     }
