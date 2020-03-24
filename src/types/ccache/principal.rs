@@ -1,7 +1,8 @@
 use super::counted_octet_string::CountedOctetString;
+use getset::Getters;
+use nom::multi::many_m_n;
 use nom::number::complete::be_u32;
 use nom::IResult;
-use getset::Getters;
 
 /// Name of some Kerberos entity.
 #[derive(Debug, Clone, PartialEq, Getters)]
@@ -43,14 +44,11 @@ impl Principal {
         let (rest, name_type) = be_u32(raw)?;
         let (rest, components_len) = be_u32(rest)?;
         let (rest, realm) = CountedOctetString::parse(rest)?;
-        let mut components = Vec::with_capacity(components_len as usize);
-
-        let mut rest = rest;
-        for _ in 0..components_len {
-            let tup = CountedOctetString::parse(rest)?;
-            rest = tup.0;
-            components.push(tup.1);
-        }
+        let (rest, components) = many_m_n(
+            components_len as usize,
+            components_len as usize,
+            CountedOctetString::parse,
+        )(rest)?;
 
         return Ok((rest, Self::new(name_type, realm, components)));
     }
