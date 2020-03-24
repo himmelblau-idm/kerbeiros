@@ -38,7 +38,7 @@ impl Header {
         return bytes;
     }
 
-    fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
         let (raw, tag) = be_u16(raw)?;
 
         match tag {
