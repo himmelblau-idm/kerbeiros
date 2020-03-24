@@ -3,11 +3,13 @@ use crate::types::KerberosString;
 use nom::number::complete::be_u32;
 use nom::{length_data, named, IResult};
 use std::convert::{From, TryInto};
+use getset::{Getters, Setters}
 
 named!(parse_length_array, length_data!(be_u32));
 
 /// String used by ccache.
-#[derive(Debug, PartialEq, Clone, Default)]
+#[derive(Debug, PartialEq, Clone, Default, Getters, Setters)]
+#[getset (get = "pub", set = "pub")]
 pub struct CountedOctetString {
     data: Vec<u8>,
 }
@@ -15,10 +17,6 @@ pub struct CountedOctetString {
 impl CountedOctetString {
     pub fn new(data: Vec<u8>) -> Self {
         return CountedOctetString { data };
-    }
-
-    pub fn data(&self) -> &Vec<u8> {
-        return &self.data;
     }
 
     pub fn data_move(self) -> Vec<u8> {
