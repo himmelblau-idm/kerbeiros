@@ -79,8 +79,8 @@ impl CredentialEntry {
             bytes.append(&mut authdata.to_bytes());
         }
 
-        bytes.append(&mut self.ticket.to_bytes());
-        bytes.append(&mut self.second_ticket.to_bytes());
+        bytes.append(&mut self.ticket.build());
+        bytes.append(&mut self.second_ticket.build());
 
         return bytes;
     }

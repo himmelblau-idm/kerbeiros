@@ -25,7 +25,7 @@ impl CountedOctetString {
         return self.data;
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         let data_len = self.data.len() as u32;
         let mut bytes = data_len.to_be_bytes().to_vec();
         bytes.append(&mut self.data.clone());
@@ -83,7 +83,7 @@ mod test {
                 0x00, 0x00, 0x00, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45,
                 0x41, 0x52, 0x54, 0x53
             ],
-            CountedOctetString::from("KINGDOM.HEARTS").to_bytes()
+            CountedOctetString::from("KINGDOM.HEARTS").build()
         );
     }
 

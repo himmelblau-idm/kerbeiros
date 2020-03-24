@@ -31,10 +31,10 @@ impl Principal {
         let components_len = self.components.len() as u32;
 
         bytes.append(&mut components_len.to_be_bytes().to_vec());
-        bytes.append(&mut self.realm.to_bytes());
+        bytes.append(&mut self.realm.build());
 
         for component in self.components.iter() {
-            bytes.append(&mut component.to_bytes());
+            bytes.append(&mut component.build());
         }
 
         return bytes;

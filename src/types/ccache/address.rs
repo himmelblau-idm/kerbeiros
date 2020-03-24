@@ -18,7 +18,7 @@ impl Address {
 
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = self.addrtype.to_be_bytes().to_vec();
-        bytes.append(&mut self.addrdata.to_bytes());
+        bytes.append(&mut self.addrdata.build());
         return bytes;
     }
 
