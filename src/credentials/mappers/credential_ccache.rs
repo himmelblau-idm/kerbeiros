@@ -58,7 +58,7 @@ impl CredentialCCacheMapper {
             TimesMapper::times_to_authtime_starttime_endtime_renew_till(ccache_credential.time());
 
         let ticket_flags =
-            TicketFlagsMapper::tktflags_to_ticket_flags(ccache_credential.tktflags());
+            TicketFlagsMapper::tktflags_to_ticket_flags(*ccache_credential.tktflags());
 
         let encryption_key =
             KeyBlockMapper::keyblock_to_encryption_key(ccache_credential.key().clone());

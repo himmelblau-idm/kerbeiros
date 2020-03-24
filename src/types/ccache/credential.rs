@@ -5,12 +5,13 @@ use super::key_block::KeyBlock;
 use super::principal::Principal;
 use super::times::Times;
 use crate::error::Result;
+use getset::{Getters, Setters};
 use nom::error::ErrorKind;
 use nom::number::complete::{be_u32, be_u8};
-use getset::Setters;
 
 /// Represents a credential stored in ccache.
-#[derive(Debug, PartialEq, Clone, Setters)]
+#[derive(Debug, PartialEq, Clone, Setters, Getters)]
+#[getset(get = "pub")]
 pub struct CredentialEntry {
     client: Principal,
     server: Principal,
@@ -52,38 +53,6 @@ impl CredentialEntry {
             ticket,
             second_ticket: CountedOctetString::default(),
         };
-    }
-
-    pub fn time(&self) -> &Times {
-        return &self.time;
-    }
-
-    pub fn tktflags(&self) -> u32 {
-        return self.tktflags;
-    }
-
-    pub fn key(&self) -> &KeyBlock {
-        return &self.key;
-    }
-
-    pub fn client(&self) -> &Principal {
-        return &self.client;
-    }
-
-    pub fn server(&self) -> &Principal {
-        return &self.server;
-    }
-
-    pub fn addrs(&self) -> &Vec<Address> {
-        return &self.addrs;
-    }
-
-    pub fn authdata(&self) -> &Vec<AuthData> {
-        return &self.authdata;
-    }
-
-    pub fn ticket(&self) -> &CountedOctetString {
-        return &self.ticket;
     }
 
     pub fn build(&self) -> Vec<u8> {
@@ -148,15 +117,7 @@ impl CredentialEntry {
         let (raw, ticket) = CountedOctetString::parse(raw)?;
         let (raw, second_ticket) = CountedOctetString::parse(raw)?;
 
-        let mut credential_entry = Self::new(
-            client,
-            server,
-            key,
-            time,
-            is_skey,
-            tktflags,
-            ticket,
-        );
+        let mut credential_entry = Self::new(client, server, key, time, is_skey, tktflags, ticket);
         credential_entry.set_addrs(addrs);
         credential_entry.set_authdata(auth_data);
         credential_entry.set_second_ticket(second_ticket);
