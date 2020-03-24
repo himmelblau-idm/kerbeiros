@@ -1,5 +1,5 @@
 use crate::error::Result;
-use getset::Setters;
+use getset::{Setters, Getters};
 use nom::error::ErrorKind;
 use nom::number::complete::be_u16;
 use nom::{length_data, named};
@@ -7,8 +7,9 @@ use nom::{length_data, named};
 named!(parse_length_array, length_data!(be_u16));
 
 /// Represents the session key.
-#[derive(Debug, PartialEq, Clone, Setters)]
+#[derive(Debug, PartialEq, Clone, Setters, Getters)]
 pub struct KeyBlock {
+    #[getset(get = "pub")]
     keytype: u16,
 
     #[getset(set)]
@@ -23,10 +24,6 @@ impl KeyBlock {
             etype: 0,
             keyvalue,
         };
-    }
-
-    pub fn keytype(&self) -> u16 {
-        return self.keytype;
     }
 
     pub fn keyvalue_move(self) -> Vec<u8> {

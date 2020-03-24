@@ -13,7 +13,7 @@ impl KeyBlockMapper {
 
     pub fn keyblock_to_encryption_key(key_block: KeyBlock) -> EncryptionKey {
         return EncryptionKey::new(
-            key_block.keytype() as i32,
+            *key_block.keytype() as i32,
             key_block.keyvalue_move()
         );
     }
