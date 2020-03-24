@@ -1,7 +1,6 @@
 use super::counted_octet_string::CountedOctetString;
-use crate::error::Result;
 use nom::number::complete::be_u32;
-use nom::error::ErrorKind;
+use nom::IResult;
 
 /// Name of some Kerberos entity.
 #[derive(Debug, Clone, PartialEq)]
@@ -50,9 +49,9 @@ impl Principal {
         return bytes;
     }
 
-    pub fn parse(raw: &[u8]) -> Result<(&[u8], Self)> {
-        let (rest, name_type) = be_u32::<(&[u8],ErrorKind)>(raw)?;
-        let (rest, components_len) = be_u32::<(&[u8],ErrorKind)>(rest)?;
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+        let (rest, name_type) = be_u32(raw)?;
+        let (rest, components_len) = be_u32(rest)?;
         let (rest, realm) = CountedOctetString::parse(rest)?;
         let mut components = Vec::with_capacity(components_len as usize);
 
@@ -108,7 +107,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "Error parsing binary data")]
+    #[should_panic(expected = "[0], Eof")]
     fn test_parse_principal_from_bytes_panic() {
         Principal::parse(&[0x00]).unwrap();
     }
