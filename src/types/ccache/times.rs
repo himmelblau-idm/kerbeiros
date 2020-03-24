@@ -4,7 +4,7 @@ use nom::IResult;
 
 /// Holds the differents timestamps handled by Kerberos.
 #[derive(Debug, PartialEq, Clone, Getters)]
-#[getset(get = "pub")]
+#[getset(get = "pub", set = "pub")]
 pub struct Times {
     authtime: u32,
     starttime: u32,
