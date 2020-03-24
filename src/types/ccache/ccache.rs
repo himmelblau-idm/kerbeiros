@@ -1,6 +1,6 @@
-use super::credential::*;
-use super::header::*;
-use super::principal::*;
+use super::credential::CredentialEntry;
+use super::header::Header;
+use super::principal::Principal;
 use getset::Getters;
 
 /// To store an array of credentials.
