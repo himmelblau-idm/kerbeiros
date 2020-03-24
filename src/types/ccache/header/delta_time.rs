@@ -36,4 +36,12 @@ mod test {
             DeltaTime::new_default().to_bytes()
         )
     }
+
+    #[test]
+    fn parse_deltatime_from_bytes() {
+        assert_eq!(
+            DeltaTime::new_default().to_bytes(),
+            DeltaTime::parse(&[0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00]).unwrap().1
+        )
+    }
 }
