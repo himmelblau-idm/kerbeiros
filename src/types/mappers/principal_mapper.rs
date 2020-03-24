@@ -36,7 +36,7 @@ impl PrincipalMapper {
         }
 
         let main_name = names.remove(0);
-        let mut principal_name = PrincipalName::new(principal.name_type() as i32, main_name);
+        let mut principal_name = PrincipalName::new(*principal.name_type() as i32, main_name);
 
         while names.len() > 0 {
             principal_name.push(names.remove(0));
