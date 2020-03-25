@@ -7,9 +7,11 @@ use crate::types::{
 };
 
 use std::convert::TryFrom;
+use getset::Getters;
 
 /// To store several credentials related to the same user and realm
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Getters)]
+#[getset (get = "pub")]
 pub struct CredentialWarehouse {
     credentials: Vec<Credential>,
     realm: Realm,
@@ -35,18 +37,6 @@ impl CredentialWarehouse {
             client,
             credentials,
         };
-    }
-
-    pub fn realm(&self) -> &Realm {
-        return &self.realm;
-    }
-
-    pub fn credentials(&self) -> &Vec<Credential> {
-        return &self.credentials;
-    }
-
-    pub fn client(&self) -> &PrincipalName {
-        return &self.client;
     }
 
     pub(crate) fn into_krb_cred(&self) -> KrbCred {
