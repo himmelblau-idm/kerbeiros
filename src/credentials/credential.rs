@@ -1,7 +1,12 @@
-use super::credential_warehouse::*;
+use super::credential_warehouse::CredentialWarehouse;
 use crate::error;
-use crate::error::*;
-use crate::types::*;
+use crate::error::Result;
+use crate::types::{
+    AddressMapper, AuthDataMapper, CountedOctetString, CredentialEntry,
+    EncKdcRepPart, EncryptionKey, HostAddresses, KerberosString, KerberosTime,
+    KeyBlockMapper, LastReq, MethodData, PrincipalMapper, PrincipalName, Realm,
+    Ticket, TicketFlags, TicketFlagsMapper, TimesMapper,
+};
 use std::convert::TryFrom;
 
 /// Represents a Kerberos credential, which includes one Ticket and session information.
@@ -192,7 +197,7 @@ impl Into<CredentialEntry> for Credential {
             self.sname(),
         );
 
-        let mut ccache_credential = ccache::CredentialEntry::new(
+        let mut ccache_credential = CredentialEntry::new(
             client, server, key, time, is_skey, tktflags, ticket,
         );
 
@@ -229,6 +234,7 @@ mod test {
         Realm, Ticket, TicketFlags,
     };
     use chrono::prelude::*;
+    use crate::types::ccache;
 
     fn create_credential(
         encryption_key: EncryptionKey,
