@@ -5,6 +5,7 @@ use crate::error::*;
 use crate::types::*;
 
 /// To store several credentials related to the same user and realm
+#[derive(Debug, PartialEq)]
 pub struct CredentialWarehouse {
     credentials: Vec<Credential>,
     realm: Realm,
@@ -17,6 +18,18 @@ impl CredentialWarehouse {
             realm: credential.crealm().clone(),
             client: credential.cname().clone(),
             credentials: vec![credential],
+        };
+    }
+
+    pub fn new_all(
+        realm: Realm,
+        client: PrincipalName,
+        credentials: Vec<Credential>,
+    ) -> Self {
+        return Self {
+            realm,
+            client,
+            credentials,
         };
     }
 
@@ -37,7 +50,9 @@ impl CredentialWarehouse {
     }
 
     pub(crate) fn into_ccache(&self) -> CCache {
-        return CredentialWarehouseCCacheMapper::credential_warehouse_to_ccache(self);
+        return CredentialWarehouseCCacheMapper::credential_warehouse_to_ccache(
+            self,
+        );
     }
 
     /// Saves the credentials into a file by using the ccache format, used by Linux.
