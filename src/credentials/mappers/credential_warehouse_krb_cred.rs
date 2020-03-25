@@ -107,7 +107,7 @@ mod test {
             EncryptedData::new(NO_ENCRYPTION, enc_krb_cred_part.build()),
         );
 
-        let credential_warehouse = CredentialWarehouse::new(credential);
+        let credential_warehouse = CredentialWarehouse::from(credential);
 
         assert_eq!(
             krb_cred,

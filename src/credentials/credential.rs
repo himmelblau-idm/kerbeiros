@@ -90,15 +90,13 @@ impl Credential {
     }
 
     /// Saves the credential into a file by using the ccache format, used by Linux.
-    pub fn save_into_ccache_file(&self, path: &str) -> Result<()> {
-        return CredentialWarehouse::new(self.clone())
-            .save_into_ccache_file(path);
+    pub fn save_into_ccache_file(self, path: &str) -> Result<()> {
+        return CredentialWarehouse::from(self).save_into_ccache_file(path);
     }
 
     /// Saves the credential into a file by using the KRB-CRED format, used by Windows.
-    pub fn save_into_krb_cred_file(&self, path: &str) -> Result<()> {
-        return CredentialWarehouse::new(self.clone())
-            .save_into_krb_cred_file(path);
+    pub fn save_into_krb_cred_file(self, path: &str) -> Result<()> {
+        return CredentialWarehouse::from(self).save_into_krb_cred_file(path);
     }
 }
 
@@ -227,6 +225,7 @@ mod test {
     use crate::constants::{
         AES256_CTS_HMAC_SHA1_96, NT_PRINCIPAL, PA_PAC_REQUEST,
     };
+    use crate::types::ccache;
     use crate::types::{
         Address, AuthData, CountedOctetString, EncKdcRepPart, EncryptedData,
         EncryptionKey, HostAddress, HostAddresses, KerberosString,
@@ -234,7 +233,6 @@ mod test {
         Realm, Ticket, TicketFlags,
     };
     use chrono::prelude::*;
-    use crate::types::ccache;
 
     fn create_credential(
         encryption_key: EncryptionKey,

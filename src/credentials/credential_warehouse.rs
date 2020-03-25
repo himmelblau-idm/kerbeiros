@@ -19,15 +19,7 @@ pub struct CredentialWarehouse {
 }
 
 impl CredentialWarehouse {
-    pub fn new(credential: Credential) -> Self {
-        return Self {
-            realm: credential.crealm().clone(),
-            client: credential.cname().clone(),
-            credentials: vec![credential],
-        };
-    }
-
-    pub fn new_all(
+    pub fn new(
         realm: Realm,
         client: PrincipalName,
         credentials: Vec<Credential>,
@@ -54,6 +46,16 @@ impl CredentialWarehouse {
     }
 }
 
+impl From<Credential> for CredentialWarehouse {
+    fn from(credential: Credential) -> Self {
+        return Self::new(
+            credential.crealm().clone(),
+            credential.cname().clone(),
+            vec![credential],
+        );
+    }
+}
+
 impl TryFrom<&CCache> for CredentialWarehouse {
     type Error = error::Error;
 
@@ -71,7 +73,7 @@ impl TryFrom<&CCache> for CredentialWarehouse {
             credentials.push(credential);
         }
 
-        return Ok(CredentialWarehouse::new_all(realm, client, credentials));
+        return Ok(CredentialWarehouse::new(realm, client, credentials));
     }
 }
 
@@ -400,7 +402,7 @@ mod test {
             ticket_credential,
         );
 
-        let credential_warehouse = CredentialWarehouse::new(credential);
+        let credential_warehouse = CredentialWarehouse::from(credential);
 
         let ticket = ccache::CountedOctetString::new(RAW_TICKET.to_vec());
 
@@ -626,7 +628,7 @@ mod test {
             ticket_credential,
         );
 
-        let credential_warehouse = CredentialWarehouse::new(credential);
+        let credential_warehouse = CredentialWarehouse::from(credential);
 
         let ticket = ccache::CountedOctetString::new(RAW_TICKET.to_vec());
 
