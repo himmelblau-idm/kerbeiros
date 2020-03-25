@@ -55,7 +55,6 @@ impl AddressMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
 
     #[test]
     fn host_address_to_address() {
