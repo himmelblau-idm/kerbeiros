@@ -6,12 +6,26 @@ use crate::types::{
     CCache, Header, KrbCred, PrincipalMapper, PrincipalName, Realm,
 };
 
-use std::convert::TryFrom;
 use getset::Getters;
+use std::convert::TryFrom;
+///
+/// # Example
+/// Load from ccache file:
+/// ```no_run
+/// use kerbeiros::credentials::CredentialWarehouse;
+/// use kerbeiros::types::CCache;
+/// use std::convert::TryFrom;
+/// use std::fs;
+///
+/// let file_data = fs::read("/home/zrt/test/testi/bob_tgt.ccache").expect("Unable to read file");
+///
+/// let ccache = CCache::parse(&file_data).expect("Unable to parse file content").1;
+/// let credentials = CredentialWarehouse::try_from(&ccache).expect("Unable to parse CCache");
+/// ```
 
 /// To store several credentials related to the same user and realm
 #[derive(Debug, PartialEq, Clone, Getters)]
-#[getset (get = "pub")]
+#[getset(get = "pub")]
 pub struct CredentialWarehouse {
     credentials: Vec<Credential>,
     realm: Realm,
@@ -105,8 +119,8 @@ mod test {
     use super::*;
     use crate::constants::ticket_flags;
     use crate::constants::*;
-    use chrono::prelude::*;
     use crate::types::*;
+    use chrono::prelude::*;
 
     fn create_credential(
         encryption_key: EncryptionKey,
