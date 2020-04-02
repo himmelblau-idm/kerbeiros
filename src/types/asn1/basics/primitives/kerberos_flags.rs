@@ -1,5 +1,5 @@
 use crate::error::{ErrorKind, Result};
-use red_asn1::*;
+use red_asn1::{Asn1Object, BitSring, Tag};
 
 /// (*KerberosFlags*) Flags used for different entities.
 #[derive(Debug, PartialEq, Clone, Default)]
@@ -28,6 +28,12 @@ impl KerberosFlags {
 
     pub fn flags(&self) -> u32 {
         return self.flags;
+    }
+}
+
+impl From<u32> for KerberosFlags {
+    fn from(flags: u32) -> Self {
+        return Self::new(flags);
     }
 }
 
@@ -99,11 +105,23 @@ impl Asn1Object for KerberosFlagsAsn1 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use red_asn1::BIT_STRING_TAG_NUMBER;
+    use std::u32;
 
     #[test]
     fn test_create_default_flags() {
         let kdc_flags = KerberosFlags::default();
         assert_eq!(0, kdc_flags.flags);
+    }
+
+    #[test]
+    fn test_kerberos_flags_from_u32() {
+        let test_numbers = vec![0, 1, u32::MAX, 2344, 546];
+
+        for i in test_numbers.iter() {
+            let kdc_flags = KerberosFlags::from(*i);
+            assert_eq!(*i, kdc_flags.flags);
+        }
     }
 
     #[test]

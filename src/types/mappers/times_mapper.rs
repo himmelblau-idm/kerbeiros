@@ -1,4 +1,5 @@
-use crate::types::*;
+use crate::types::{KerberosTime, Times};
+use chrono::{TimeZone, Utc};
 
 pub struct TimesMapper {}
 
@@ -33,12 +34,31 @@ impl TimesMapper {
             renew_till_timestamp,
         );
     }
+
+    pub fn times_to_authtime_starttime_endtime_renew_till(
+        times: &Times,
+    ) -> (
+        KerberosTime,
+        KerberosTime,
+        KerberosTime,
+        Option<KerberosTime>,
+    ) {
+        let authtime = Utc.timestamp(*times.authtime() as i64, 0);
+        let starttime = Utc.timestamp(*times.starttime() as i64, 0);
+        let endtime = Utc.timestamp(*times.endtime() as i64, 0);
+
+        let renew_till = match times.renew_till() {
+            0 => None,
+            _ => Some(Utc.timestamp(*times.renew_till() as i64, 0))
+        };
+
+        return (authtime, starttime, endtime, renew_till);
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use chrono::prelude::*;
 
     #[test]
     fn authtime_starttime_endtime_renew_till_to_times() {
@@ -47,7 +67,7 @@ mod test {
         let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
         let renew_till = Utc.ymd(2019, 4, 25).and_hms(06, 00, 31);
 
-        let time = ccache::Times::new(
+        let time = Times::new(
             authtime.timestamp() as u32,
             starttime.timestamp() as u32,
             endtime.timestamp() as u32,
@@ -70,7 +90,7 @@ mod test {
         let authtime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
         let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
 
-        let time = ccache::Times::new(
+        let time = Times::new(
             authtime.timestamp() as u32,
             authtime.timestamp() as u32,
             endtime.timestamp() as u32,
@@ -82,6 +102,44 @@ mod test {
             TimesMapper::authtime_starttime_endtime_renew_till_to_times(
                 &authtime, None, &endtime, None
             )
+        );
+    }
+
+    #[test]
+    fn test_times_to_authtime_starttime_endtime_renew_till() {
+        let authtime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
+        let starttime = Utc.ymd(2019, 4, 19).and_hms(06, 00, 31);
+        let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
+        let renew_till = Utc.ymd(2019, 4, 25).and_hms(06, 00, 31);
+
+        let time = Times::new(
+            authtime.timestamp() as u32,
+            starttime.timestamp() as u32,
+            endtime.timestamp() as u32,
+            renew_till.timestamp() as u32,
+        );
+
+        assert_eq!(
+            (authtime, starttime, endtime, Some(renew_till)),
+            TimesMapper::times_to_authtime_starttime_endtime_renew_till(&time)
+        );
+    }
+
+    #[test]
+    fn test_times_to_authtime_endtime() {
+        let authtime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
+        let endtime = Utc.ymd(2019, 4, 20).and_hms(16, 00, 31);
+
+        let time = Times::new(
+            authtime.timestamp() as u32,
+            authtime.timestamp() as u32,
+            endtime.timestamp() as u32,
+            0,
+        );
+
+        assert_eq!(
+            (authtime, authtime, endtime, None),
+            TimesMapper::times_to_authtime_starttime_endtime_renew_till(&time)
         );
     }
 }

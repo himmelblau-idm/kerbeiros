@@ -3,6 +3,7 @@ use crate::error::*;
 use failure::ResultExt;
 use std::fs::File;
 use std::io::Write;
+use crate::types::CCache;
 
 pub struct CredentialFileConverter<'a> {
     credentials: &'a CredentialWarehouse,
@@ -45,6 +46,7 @@ impl<'a> CredentialFileConverter<'a> {
     }
 
     fn build_ccache(&self) -> Vec<u8> {
-        return self.credentials.into_ccache().build();
+        let ccache: CCache = self.credentials.clone().into();
+        return ccache.build();
     }
 }

@@ -1,7 +1,11 @@
-use super::counted_octet_string::*;
+use super::counted_octet_string::CountedOctetString;
+use nom::number::complete::be_u16;
+use nom::IResult;
+use getset::{Getters, Setters};
 
 /// Represent addresses of Kerberos actors.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Setters, Getters)]
+#[getset(get = "pub", set = "pub")]
 pub struct Address {
     addrtype: u16,
     addrdata: CountedOctetString,
@@ -12,10 +16,17 @@ impl Address {
         return Self { addrtype, addrdata };
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(self) -> Vec<u8> {
         let mut bytes = self.addrtype.to_be_bytes().to_vec();
-        bytes.append(&mut self.addrdata.to_bytes());
+        bytes.append(&mut self.addrdata.build());
         return bytes;
+    }
+
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+        let (rest, addrtype) = be_u16(raw)?;
+        let (rest, addrdata) = CountedOctetString::parse(rest)?;
+
+        return Ok((rest, Self::new(addrtype, addrdata)));
     }
 }
 
@@ -35,7 +46,29 @@ mod test {
                 address_type::NETBIOS as u16,
                 CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
             )
-            .to_bytes()
+            .build()
         )
+    }
+
+    #[test]
+    fn test_parse_address_from_bytes() {
+        assert_eq!(
+            Address::new(
+                address_type::NETBIOS as u16,
+                CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
+            ),
+            Address::parse(&[
+                0x00, 0x14, 0x00, 0x00, 0x00, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e,
+                0x48, 0x45, 0x41, 0x52, 0x54, 0x53
+            ])
+            .unwrap()
+            .1,
+        )
+    }
+
+    #[test]
+    #[should_panic(expected = "[0], Eof")]
+    fn test_parse_address_from_bytes_panic() {
+        Address::parse(&[0x0]).unwrap();
     }
 }

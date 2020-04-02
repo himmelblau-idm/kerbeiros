@@ -7,6 +7,8 @@ use failure_derive::Fail;
 use red_asn1;
 use std::fmt;
 use std::result;
+use std::string::FromUtf8Error;
+use nom::Err as NomError;
 
 /// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;
@@ -31,6 +33,10 @@ pub enum ErrorKind {
     /// Invalid ascii string.
     #[fail(display = "Invalid ascii string")]
     InvalidAscii,
+
+    /// Invalid utf8 string.
+    #[fail(display = "Invalid utf-8 string")]
+    InvalidUtf8,
 
     /// Invalid microseconds value. Minimum = 0, Maximum = 999999.
     #[fail(display = "Invalid microseconds value {}. Max is 999999", _0)]
@@ -81,6 +87,18 @@ pub enum ErrorKind {
     /// The type of the principal name was not specified.
     #[fail(display = "Undefined type of principal name: {}", _0)]
     PrincipalNameTypeUndefined(String),
+
+    /// No principal name
+    #[fail(display = "No principal name found")]
+    NoPrincipalName,
+
+    /// No address found
+    #[fail(display = "No address found")]
+    NoAddress,
+
+    /// Error parsing binary data
+    #[fail(display = "Error parsing binary data")]
+    BinaryParseError,
 }
 
 /// Types of errors related to data encryption/decryption
@@ -147,10 +165,34 @@ impl From<FromAsciiError<&str>> for Error {
     }
 }
 
+impl From<FromAsciiError<Vec<u8>>> for Error {
+    fn from(_error: FromAsciiError<Vec<u8>>) -> Self {
+        return Error {
+            inner: Context::new(ErrorKind::InvalidAscii),
+        };
+    }
+}
+
+impl From<FromUtf8Error> for Error {
+    fn from(_error: FromUtf8Error) -> Self {
+        return Error {
+            inner: Context::new(ErrorKind::InvalidUtf8),
+        };
+    }
+}
+
 impl From<red_asn1::Error> for Error {
     fn from(error: red_asn1::Error) -> Self {
         return Error {
             inner: Context::new(ErrorKind::Asn1Error(error.kind().clone())),
+        };
+    }
+}
+
+impl<E> From<NomError<E>> for Error {
+    fn from(_error: NomError<E>) -> Self {
+        return Error {
+            inner: Context::new(ErrorKind::BinaryParseError),
         };
     }
 }

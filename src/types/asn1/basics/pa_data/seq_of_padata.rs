@@ -27,6 +27,10 @@ impl DerefMut for SeqOfPaData {
 }
 
 impl SeqOfPaData {
+    pub fn new(padatas: Vec<PaData>) -> Self {
+        return Self { padatas };
+    }
+
     pub fn parse(raw: &Vec<u8>) -> Result<Self> {
         let mut seq_of_padata_asn1 = SeqOfPaDataAsn1::default();
         seq_of_padata_asn1.decode(raw)?;

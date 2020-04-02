@@ -29,7 +29,7 @@ use std::net::IpAddr;
 /// let credential = tgt_requester.request(&username, Some(&user_key)).unwrap();
 ///
 /// // Save the ticket into a Windows format file
-/// credential.save_into_krb_cred_file("bob_tgt.krb");
+/// credential.clone().save_into_krb_cred_file("bob_tgt.krb");
 ///
 /// // Save the ticket into a Linux format file
 /// credential.save_into_ccache_file("bob_tgt.ccache");

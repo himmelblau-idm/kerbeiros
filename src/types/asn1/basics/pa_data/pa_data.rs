@@ -1,8 +1,8 @@
-use super::super::encrypted_data::*;
-use super::super::int32::*;
-use super::etype_info_2::*;
-use super::pac_request::*;
-use crate::constants::pa_data_types::*;
+use super::super::encrypted_data::{EncryptedDataAsn1, EncryptedData};
+use super::super::int32::{Int32, Int32Asn1};
+use super::etype_info_2::{EtypeInfo2, EtypeInfo2Asn1};
+use super::pac_request::{PacRequest,PacRequestAsn1};
+use crate::constants::pa_data_types::{PA_PAC_REQUEST, PA_ETYPE_INFO2, PA_ENC_TIMESTAMP};
 use crate::error::{ErrorKind, Result};
 use red_asn1::*;
 
@@ -16,6 +16,20 @@ pub enum PaData {
 }
 
 impl PaData {
+    pub fn new(data_type: Int32, data: Vec<u8>) -> Self {
+        match data_type {
+            PA_PAC_REQUEST => match PacRequest::parse(&data) {
+                Ok(pac_request) => PaData::PacRequest(pac_request),
+                Err(_) => Self::Raw(data_type, data),
+            },
+            PA_ETYPE_INFO2 => match EtypeInfo2::parse(&data) {
+                Ok(etype_info2) => PaData::EtypeInfo2(etype_info2),
+                Err(_) => Self::Raw(data_type, data),
+            },
+            _ => PaData::Raw(data_type, data),
+        }
+    }
+
     pub fn padata_type(&self) -> Int32 {
         match self {
             PaData::Raw(padata_type, _) => *padata_type,
@@ -61,19 +75,7 @@ impl PaDataAsn1 {
             .value()
             .ok_or_else(|| ErrorKind::NotAvailableData("PaData::value".to_string()))?;
 
-        let padata = match padata_type {
-            PA_PAC_REQUEST => match PacRequest::parse(padata_value) {
-                Ok(pac_request) => PaData::PacRequest(pac_request),
-                Err(_) => PaData::Raw(padata_type, padata_value.clone()),
-            },
-            PA_ETYPE_INFO2 => match EtypeInfo2::parse(padata_value) {
-                Ok(etype_info2) => PaData::EtypeInfo2(etype_info2),
-                Err(_) => PaData::Raw(padata_type, padata_value.clone()),
-            },
-            _ => PaData::Raw(padata_type, padata_value.clone()),
-        };
-
-        return Ok(padata);
+        return Ok(PaData::new(padata_type, padata_value.clone()));
     }
 }
 

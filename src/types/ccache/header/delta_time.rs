@@ -1,5 +1,10 @@
+use nom::number::complete::be_u32;
+use nom::IResult;
+use getset::{Getters, Setters};
+
 /// Type of [Header](./struct.Header.html).
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Getters, Setters)]
+#[getset (get = "pub", set = "pub")]
 pub struct DeltaTime {
     time_offset: u32,
     usec_offset: u32,
@@ -17,11 +22,18 @@ impl DeltaTime {
         };
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn build(&self) -> Vec<u8> {
         let mut bytes = Vec::with_capacity(8);
         bytes.append(&mut self.time_offset.to_be_bytes().to_vec());
         bytes.append(&mut self.usec_offset.to_be_bytes().to_vec());
         return bytes;
+    }
+
+    pub fn parse(raw: &[u8]) -> IResult<&[u8], Self> {
+        let (raw, time_offset) = be_u32(raw)?;
+        let (raw, usec_offset) = be_u32(raw)?;
+
+        return Ok((raw, Self::new(time_offset, usec_offset)));
     }
 }
 
@@ -33,7 +45,23 @@ mod test {
     fn deltatime_to_bytes() {
         assert_eq!(
             vec![0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00],
-            DeltaTime::new_default().to_bytes()
+            DeltaTime::new_default().build()
         )
+    }
+
+    #[test]
+    fn parse_deltatime_from_bytes() {
+        assert_eq!(
+            DeltaTime::new_default(),
+            DeltaTime::parse(&[0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00])
+                .unwrap()
+                .1
+        )
+    }
+
+    #[test]
+    #[should_panic(expected = "[0], Eof")]
+    fn parse_deltatime_from_bytes_error() {
+        DeltaTime::parse(&[0x0]).unwrap();
     }
 }
