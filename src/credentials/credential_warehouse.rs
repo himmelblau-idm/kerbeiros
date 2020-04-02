@@ -17,7 +17,7 @@ use std::convert::TryFrom;
 /// use std::convert::TryFrom;
 /// use std::fs;
 ///
-/// let file_data = fs::read("/home/zrt/test/testi/bob_tgt.ccache").expect("Unable to read file");
+/// let file_data = fs::read("./bob_tgt.ccache").expect("Unable to read file");
 ///
 /// let ccache = CCache::parse(&file_data).expect("Unable to parse file content").1;
 /// let credentials = CredentialWarehouse::try_from(&ccache).expect("Unable to parse CCache");
