@@ -5,10 +5,10 @@ use red_asn1::*;
 /// (*KRB-CRED*) Kerberos credential which is returned by the KDC
 #[derive(Debug, PartialEq, Clone)]
 pub struct KrbCred {
-    pvno: i8,
-    msg_type: i8,
-    tickets: SeqOfTickets,
-    enc_part: EncryptedData,
+    pub pvno: i8,
+    pub msg_type: i8,
+    pub tickets: SeqOfTickets,
+    pub enc_part: EncryptedData,
 }
 
 impl KrbCred {
@@ -21,23 +21,7 @@ impl KrbCred {
         };
     }
 
-    pub fn pvno(&self) -> i8 {
-        return self.pvno;
-    }
-
-    pub fn msg_type(&self) -> i8 {
-        return self.msg_type;
-    }
-
-    pub fn tickets(&self) -> &SeqOfTickets {
-        return &self.tickets;
-    }
-
-    pub fn enc_part(&self) -> &EncryptedData {
-        return &self.enc_part;
-    }
-
-    pub fn build(&self) -> Vec<u8> {
+    pub fn build(self) -> Vec<u8> {
         return KrbCredAsn1::from(self).encode().unwrap();
     }
 }
@@ -55,14 +39,14 @@ pub(crate) struct KrbCredAsn1 {
     enc_part: SeqField<EncryptedDataAsn1>,
 }
 
-impl From<&KrbCred> for KrbCredAsn1 {
-    fn from(krb_cred: &KrbCred) -> Self {
+impl From<KrbCred> for KrbCredAsn1 {
+    fn from(krb_cred: KrbCred) -> Self {
         let mut krb_cred_asn1 = Self::default();
 
-        krb_cred_asn1.set_pvno(Integer::from(krb_cred.pvno() as i64));
-        krb_cred_asn1.set_msg_type(Integer::from(krb_cred.msg_type() as i64));
-        krb_cred_asn1.set_tickets(krb_cred.tickets().clone().into());
-        krb_cred_asn1.set_enc_part(krb_cred.enc_part().clone().into());
+        krb_cred_asn1.set_pvno(Integer::from(krb_cred.pvno as i64));
+        krb_cred_asn1.set_msg_type(Integer::from(krb_cred.msg_type as i64));
+        krb_cred_asn1.set_tickets(krb_cred.tickets.into());
+        krb_cred_asn1.set_enc_part(krb_cred.enc_part.into());
 
         return krb_cred_asn1;
     }
