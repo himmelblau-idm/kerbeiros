@@ -76,10 +76,10 @@ impl TryFrom<&CCache> for CredentialWarehouse {
     fn try_from(ccache: &CCache) -> Result<Self, Self::Error> {
         let (realm, client) =
             PrincipalMapper::principal_to_realm_and_principal_name(
-                ccache.primary_principal(),
+                &ccache.primary_principal,
             )?;
 
-        let ccache_credentials = ccache.credentials();
+        let ccache_credentials = &ccache.credentials;
         let mut credentials = Vec::with_capacity(ccache_credentials.len());
 
         for credential_entry in ccache_credentials.iter() {

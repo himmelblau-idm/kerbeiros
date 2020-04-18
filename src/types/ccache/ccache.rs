@@ -1,7 +1,6 @@
 use super::credential::CredentialEntry;
 use super::header::Header;
 use super::principal::Principal;
-use getset::{Getters, Setters};
 use nom::number::complete::be_u16;
 use nom::{many0, named, tag, IResult};
 
@@ -26,13 +25,12 @@ named!(parse_credentials<&[u8], Vec<CredentialEntry>>, many0!(CredentialEntry::p
 /// ```
 
 /// To store an array of credentials.
-#[derive(Debug, PartialEq, Clone, Getters, Setters)]
-#[getset(get = "pub", set = "pub")]
+#[derive(Debug, PartialEq, Clone)]
 pub struct CCache {
-    file_format_version: u16,
-    header: Header,
-    primary_principal: Principal,
-    credentials: Vec<CredentialEntry>,
+    pub file_format_version: u16,
+    pub header: Header,
+    pub primary_principal: Principal,
+    pub credentials: Vec<CredentialEntry>,
 }
 
 impl CCache {
