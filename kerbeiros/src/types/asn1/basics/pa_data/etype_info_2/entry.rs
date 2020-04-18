@@ -87,7 +87,7 @@ impl From<&EtypeInfo2Entry> for EtypeInfo2EntryAsn1 {
         entry_asn1.set_etype(entry.etype().into());
 
         if let Some(salt) = entry.salt() {
-            entry_asn1.set_salt(salt.into());
+            entry_asn1.set_salt(salt.clone().into());
         }
 
         if let Some(s2kparams) = entry.s2kparams() {

@@ -58,18 +58,18 @@ pub(crate) struct PrincipalNameAsn1 {
 }
 
 impl PrincipalNameAsn1 {
-    fn set_asn1_values(&mut self, principal_name: &PrincipalName) {
+    fn set_asn1_values(&mut self, principal_name: PrincipalName) {
         self.set_name_type(principal_name.name_type.into());
         self.set_name_string(self.seq_of_kerberos_strings(principal_name));
     }
 
     fn seq_of_kerberos_strings(
         &self,
-        principal_name: &PrincipalName,
+        principal_name: PrincipalName,
     ) -> SequenceOf<KerberosStringAsn1> {
         let mut seq_of_kerberos_strings: SequenceOf<KerberosStringAsn1> = SequenceOf::default();
 
-        for kerb_string in principal_name.name_string.iter() {
+        for kerb_string in principal_name.name_string.into_iter() {
             seq_of_kerberos_strings.push(kerb_string.into());
         }
 
@@ -104,8 +104,8 @@ impl PrincipalNameAsn1 {
     }
 }
 
-impl From<&PrincipalName> for PrincipalNameAsn1 {
-    fn from(principal_name: &PrincipalName) -> Self {
+impl From<PrincipalName> for PrincipalNameAsn1 {
+    fn from(principal_name: PrincipalName) -> Self {
         let mut asn1_principal_name = Self::default();
         asn1_principal_name.set_asn1_values(principal_name);
 
@@ -133,7 +133,7 @@ mod tests {
     fn test_encode_principal_name() {
         let principal_name =
             PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
-        let principal_name_asn1 = PrincipalNameAsn1::from(&principal_name);
+        let principal_name_asn1 = PrincipalNameAsn1::from(principal_name);
 
         assert_eq!(
             vec![
@@ -149,7 +149,7 @@ mod tests {
         let mut principal_name =
             PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
         principal_name.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
-        let principal_name_asn1 = PrincipalNameAsn1::from(&principal_name);
+        let principal_name_asn1 = PrincipalNameAsn1::from(principal_name);
 
         assert_eq!(
             vec![

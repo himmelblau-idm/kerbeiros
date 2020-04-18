@@ -28,12 +28,6 @@ impl From<KerberosString> for KerberosStringAsn1 {
     }
 }
 
-impl From<&KerberosString> for KerberosStringAsn1 {
-    fn from(value: &KerberosString) -> Self {
-        return Self::from(value.clone());
-    }
-}
-
 impl Asn1Object for KerberosStringAsn1 {
     fn tag(&self) -> Tag {
         return GeneralString::default().tag();

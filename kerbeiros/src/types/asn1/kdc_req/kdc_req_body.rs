@@ -103,13 +103,13 @@ impl KdcReqBodyAsn1 {
         self.set_kdc_options((&kdc_body.kdc_options).into());
 
         if let Some(cname) = kdc_body.cname {
-            self.set_cname((&cname).into());
+            self.set_cname(cname.into());
         }
 
         self.set_realm(kdc_body.realm.into());
 
         if let Some(sname) = kdc_body.sname {
-            self.set_sname((&sname).into());
+            self.set_sname(sname.into());
         }
 
         if let Some(from) = kdc_body.from {

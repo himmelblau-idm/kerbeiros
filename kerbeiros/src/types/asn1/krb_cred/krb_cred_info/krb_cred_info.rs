@@ -219,11 +219,11 @@ impl From<&KrbCredInfo> for KrbCredInfoAsn1 {
         krb_cred_info_asn1.set_key(krb_cred_info.key().clone().into());
 
         if let Some(prealm) = krb_cred_info.prealm() {
-            krb_cred_info_asn1.set_prealm(prealm.into());
+            krb_cred_info_asn1.set_prealm(prealm.clone().into());
         }
 
         if let Some(pname) = krb_cred_info.pname() {
-            krb_cred_info_asn1.set_pname(pname.into());
+            krb_cred_info_asn1.set_pname(pname.clone().into());
         }
 
         if let Some(flags) = krb_cred_info.flags() {
@@ -247,10 +247,10 @@ impl From<&KrbCredInfo> for KrbCredInfoAsn1 {
         }
 
         if let Some(srealm) = krb_cred_info.srealm() {
-            krb_cred_info_asn1.set_srealm(srealm.into());
+            krb_cred_info_asn1.set_srealm(srealm.clone().into());
         }
         if let Some(sname) = krb_cred_info.sname() {
-            krb_cred_info_asn1.set_sname(sname.into());
+            krb_cred_info_asn1.set_sname(sname.clone().into());
         }
         if let Some(caddr) = krb_cred_info.caddr() {
             krb_cred_info_asn1.set_caddr(caddr.into());
