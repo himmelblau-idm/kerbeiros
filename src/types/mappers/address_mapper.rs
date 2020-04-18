@@ -22,15 +22,15 @@ impl AddressMapper {
     }
 
     pub fn address_to_host_address(address: &Address) -> Result<HostAddress> {
-        let address_type = *address.addrtype() as i32;
+        let address_type = address.addrtype as i32;
         match address_type {
             address_type::NETBIOS => {
-                return Ok(HostAddress::NetBios(address.addrdata().clone().try_into()?));
+                return Ok(HostAddress::NetBios((&address.addrdata).clone().try_into()?));
             }
             _ => {
                 return Ok(HostAddress::Raw(
                     address_type,
-                    address.addrdata().clone().data,
+                    (&address.addrdata).clone().data,
                 ));
             }
         }

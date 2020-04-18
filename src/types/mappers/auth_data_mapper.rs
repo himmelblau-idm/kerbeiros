@@ -20,8 +20,8 @@ impl AuthDataMapper {
 
     pub fn auth_data_to_padata(auth_data: &AuthData) -> PaData {
         return PaData::new(
-            *auth_data.addrtype() as i32,
-            auth_data.addrdata().clone().data,
+            auth_data.addrtype as i32,
+            (&auth_data.addrdata).clone().data,
         );
     }
 

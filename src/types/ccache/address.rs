@@ -1,14 +1,12 @@
 use super::counted_octet_string::CountedOctetString;
 use nom::number::complete::be_u16;
 use nom::IResult;
-use getset::{Getters, Setters};
 
 /// Represent addresses of Kerberos actors.
-#[derive(Debug, PartialEq, Clone, Setters, Getters)]
-#[getset(get = "pub", set = "pub")]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Address {
-    addrtype: u16,
-    addrdata: CountedOctetString,
+    pub addrtype: u16,
+    pub addrdata: CountedOctetString,
 }
 
 impl Address {
