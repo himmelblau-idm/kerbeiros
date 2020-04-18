@@ -25,18 +25,18 @@ impl AddressMapper {
         return addresses;
     }
 
-    pub fn address_to_host_address(address: &Address) -> Result<HostAddress> {
+    pub fn address_to_host_address(address: Address) -> Result<HostAddress> {
         let address_type = address.addrtype as i32;
         match address_type {
             address_type::NETBIOS => {
                 return Ok(HostAddress::NetBios(
-                    (&address.addrdata).clone().try_into()?,
+                    address.addrdata.try_into()?,
                 ));
             }
             _ => {
                 return Ok(HostAddress::Raw(
                     address_type,
-                    (&address.addrdata).clone().data,
+                    address.addrdata.data,
                 ));
             }
         }
@@ -51,11 +51,11 @@ impl AddressMapper {
         let main_address = addresses.remove(0);
 
         let mut host_addresses =
-            HostAddresses::new(Self::address_to_host_address(&main_address)?);
+            HostAddresses::new(Self::address_to_host_address(main_address)?);
 
         while addresses.len() > 0 {
             host_addresses
-                .push(Self::address_to_host_address(&addresses.remove(0))?);
+                .push(Self::address_to_host_address(addresses.remove(0))?);
         }
 
         return Ok(host_addresses);
@@ -116,7 +116,7 @@ mod test {
 
         assert_eq!(
             host_address,
-            AddressMapper::address_to_host_address(&address).unwrap()
+            AddressMapper::address_to_host_address(address).unwrap()
         );
     }
 
@@ -128,7 +128,7 @@ mod test {
 
         assert_eq!(
             host_address,
-            AddressMapper::address_to_host_address(&address).unwrap()
+            AddressMapper::address_to_host_address(address).unwrap()
         );
     }
 
