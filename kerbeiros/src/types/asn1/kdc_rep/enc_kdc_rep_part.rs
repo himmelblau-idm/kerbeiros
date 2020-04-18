@@ -7,19 +7,19 @@ use red_asn1::*;
 /// (*EncKdcRepPart*) Holds the data that is encrypted in [KdcRep](./struct.KdcRep.html)
 #[derive(Debug, PartialEq, Clone)]
 pub struct EncKdcRepPart {
-    key: EncryptionKey,
-    last_req: LastReq,
-    nonce: UInt32,
-    key_expiration: Option<KerberosTime>,
-    flags: TicketFlags,
-    authtime: KerberosTime,
-    starttime: Option<KerberosTime>,
-    endtime: KerberosTime,
-    renew_till: Option<KerberosTime>,
-    srealm: Realm,
-    sname: PrincipalName,
-    caddr: Option<HostAddresses>,
-    encrypted_pa_data: Option<MethodData>,
+    pub key: EncryptionKey,
+    pub last_req: LastReq,
+    pub nonce: UInt32,
+    pub key_expiration: Option<KerberosTime>,
+    pub flags: TicketFlags,
+    pub authtime: KerberosTime,
+    pub starttime: Option<KerberosTime>,
+    pub endtime: KerberosTime,
+    pub renew_till: Option<KerberosTime>,
+    pub srealm: Realm,
+    pub sname: PrincipalName,
+    pub caddr: Option<HostAddresses>,
+    pub encrypted_pa_data: Option<MethodData>,
 }
 
 impl EncKdcRepPart {
@@ -48,94 +48,6 @@ impl EncKdcRepPart {
             caddr: None,
             encrypted_pa_data: None,
         };
-    }
-
-    pub fn key(&self) -> &EncryptionKey {
-        return &self.key;
-    }
-
-    pub fn set_key_expiration(&mut self, key_expiration: KerberosTime) {
-        self.key_expiration = Some(key_expiration);
-    }
-
-    pub fn flags(&self) -> &TicketFlags {
-        return &self.flags;
-    }
-
-    pub fn authtime(&self) -> &KerberosTime {
-        return &self.authtime;
-    }
-
-    pub fn starttime(&self) -> Option<&KerberosTime> {
-        match &self.starttime {
-            Some(starttime) => {
-                return Some(starttime);
-            }
-            None => {
-                return None;
-            }
-        }
-    }
-
-    pub fn set_starttime(&mut self, starttime: KerberosTime) {
-        self.starttime = Some(starttime);
-    }
-
-    pub fn endtime(&self) -> &KerberosTime {
-        return &self.endtime;
-    }
-
-    pub fn renew_till(&self) -> Option<&KerberosTime> {
-        match &self.renew_till {
-            Some(renew_till) => {
-                return Some(renew_till);
-            }
-            None => {
-                return None;
-            }
-        }
-    }
-
-    pub fn set_renew_till(&mut self, renew_till: KerberosTime) {
-        self.renew_till = Some(renew_till);
-    }
-
-    pub fn srealm(&self) -> &Realm {
-        return &self.srealm;
-    }
-
-    pub fn sname(&self) -> &PrincipalName {
-        return &self.sname;
-    }
-
-    pub fn caddr(&self) -> Option<&HostAddresses> {
-        match &self.caddr {
-            Some(caddr) => {
-                return Some(caddr);
-            }
-            None => {
-                return None;
-            }
-        }
-    }
-
-    pub fn set_caddr(&mut self, caddr: HostAddresses) {
-        self.caddr = Some(caddr);
-    }
-
-    pub fn encrypted_pa_data(&self) -> Option<&MethodData> {
-        match &self.encrypted_pa_data {
-            Some(encrypted_pa_data) => {
-                return Some(encrypted_pa_data);
-            }
-            None => {
-                return None;
-            }
-        }
-    }
-
-    pub fn set_encrypted_pa_data(&mut self, encrypted_pa_data: MethodData) {
-        self.encrypted_pa_data = Some(encrypted_pa_data);
     }
 
     pub fn parse(raw: &[u8]) -> Result<Self> {
@@ -215,22 +127,22 @@ impl EncAsRepPartAsn1 {
         );
 
         if let Some(key_expiration) = self.get_key_expiration() {
-            enc_as_rep_part.set_key_expiration(key_expiration.no_asn1_type()?);
+            enc_as_rep_part.key_expiration = Some(key_expiration.no_asn1_type()?);
         }
 
         if let Some(starttime) = self.get_starttime() {
-            enc_as_rep_part.set_starttime(starttime.no_asn1_type()?);
+            enc_as_rep_part.starttime = Some(starttime.no_asn1_type()?);
         }
         if let Some(renew_till) = self.get_renew_till() {
-            enc_as_rep_part.set_renew_till(renew_till.no_asn1_type()?);
+            enc_as_rep_part.renew_till = Some(renew_till.no_asn1_type()?);
         }
 
         if let Some(caddr) = self.get_caddr() {
-            enc_as_rep_part.set_caddr(caddr.no_asn1_type()?);
+            enc_as_rep_part.caddr = Some(caddr.no_asn1_type()?);
         }
 
         if let Some(encrypted_pa_data) = self.get_encrypted_pa_data() {
-            enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_data.no_asn1_type()?);
+            enc_as_rep_part.encrypted_pa_data = Some(encrypted_pa_data.no_asn1_type()?);
         }
 
         return Ok(enc_as_rep_part);
@@ -341,14 +253,14 @@ mod test {
             sname,
         );
 
-        enc_as_rep_part.set_key_expiration(Utc.ymd(2037, 9, 14).and_hms(02, 48, 05));
+        enc_as_rep_part.key_expiration = Some(Utc.ymd(2037, 9, 14).and_hms(02, 48, 05));
 
-        enc_as_rep_part.set_starttime(kerb_time);
-        enc_as_rep_part.set_renew_till(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31));
-        enc_as_rep_part.set_caddr(HostAddresses::new(HostAddress::NetBios(
+        enc_as_rep_part.starttime = Some(kerb_time);
+        enc_as_rep_part.renew_till = Some(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31));
+        enc_as_rep_part.caddr = Some(HostAddresses::new(HostAddress::NetBios(
             "HOLLOWBASTION".to_string(),
         )));
-        enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_datas);
+        enc_as_rep_part.encrypted_pa_data = Some(encrypted_pa_datas);
 
         assert_eq!(
             enc_as_rep_part,

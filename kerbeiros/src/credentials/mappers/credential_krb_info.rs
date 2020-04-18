@@ -253,9 +253,9 @@ mod test {
             srealm.clone(),
             sname.clone(),
         );
-        enc_as_rep_part.set_starttime(starttime);
-        enc_as_rep_part.set_renew_till(renew_till);
-        enc_as_rep_part.set_caddr(caddr);
+        enc_as_rep_part.starttime = Some(starttime);
+        enc_as_rep_part.renew_till = Some(renew_till);
+        enc_as_rep_part.caddr = Some(caddr);
 
         let ticket = Ticket::new(
             srealm.clone(),
@@ -462,16 +462,16 @@ mod test {
             sname,
         );
 
-        enc_as_rep_part
-            .set_key_expiration(Utc.ymd(2037, 9, 14).and_hms(02, 48, 05));
+        enc_as_rep_part.key_expiration =
+            Some(Utc.ymd(2037, 9, 14).and_hms(02, 48, 05));
 
-        enc_as_rep_part.set_starttime(kerb_time);
-        enc_as_rep_part
-            .set_renew_till(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31));
-        enc_as_rep_part.set_caddr(HostAddresses::new(HostAddress::NetBios(
+        enc_as_rep_part.starttime = Some(kerb_time);
+        enc_as_rep_part.renew_till =
+            Some(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31));
+        enc_as_rep_part.caddr = Some(HostAddresses::new(HostAddress::NetBios(
             "HOLLOWBASTION".to_string(),
         )));
-        enc_as_rep_part.set_encrypted_pa_data(encrypted_pa_datas);
+        enc_as_rep_part.encrypted_pa_data = Some(encrypted_pa_datas);
 
         return Credential::new(
             Realm::from_ascii("fake").unwrap(),

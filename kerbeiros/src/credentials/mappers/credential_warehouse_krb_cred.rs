@@ -170,11 +170,10 @@ mod test {
             srealm.clone(),
             sname.clone(),
         );
-        enc_as_rep_part.set_starttime(starttime);
-        enc_as_rep_part.set_renew_till(renew_till);
-        if let Some(caddr) = caddr {
-            enc_as_rep_part.set_caddr(caddr);
-        }
+        enc_as_rep_part.starttime = Some(starttime);
+        enc_as_rep_part.renew_till = Some(renew_till);
+        enc_as_rep_part.caddr = caddr;
+
 
         let credential = Credential::new(prealm.clone(), pname.clone(), ticket, enc_as_rep_part);
 

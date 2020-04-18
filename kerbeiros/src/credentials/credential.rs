@@ -51,43 +51,43 @@ impl Credential {
     }
 
     pub fn authtime(&self) -> &KerberosTime {
-        return self.client_part.authtime();
+        return &self.client_part.authtime;
     }
 
     pub fn starttime(&self) -> Option<&KerberosTime> {
-        return self.client_part.starttime();
+        return self.client_part.starttime.as_ref();
     }
 
     pub fn endtime(&self) -> &KerberosTime {
-        return self.client_part.endtime();
+        return &self.client_part.endtime;
     }
 
     pub fn renew_till(&self) -> Option<&KerberosTime> {
-        return self.client_part.renew_till();
+        return self.client_part.renew_till.as_ref();
     }
 
     pub fn flags(&self) -> &TicketFlags {
-        return self.client_part.flags();
+        return &self.client_part.flags;
     }
 
     pub fn key(&self) -> &EncryptionKey {
-        return self.client_part.key();
+        return &self.client_part.key;
     }
 
     pub fn srealm(&self) -> &KerberosString {
-        return self.client_part.srealm();
+        return &self.client_part.srealm;
     }
 
     pub fn sname(&self) -> &PrincipalName {
-        return self.client_part.sname();
+        return &self.client_part.sname;
     }
 
     pub fn caddr(&self) -> Option<&HostAddresses> {
-        return self.client_part.caddr();
+        return self.client_part.caddr.as_ref();
     }
 
     pub fn encrypted_pa_data(&self) -> Option<&MethodData> {
-        return self.client_part.encrypted_pa_data();
+        return self.client_part.encrypted_pa_data.as_ref();
     }
 
     /// Saves the credential into a file by using the ccache format, used by Linux.
@@ -149,18 +149,18 @@ impl TryFrom<CredentialEntry> for Credential {
             sname,
         );
 
-        enc_part.set_starttime(starttime);
+        enc_part.starttime = Some(starttime);
 
         if let Some(time) = renew_till {
-            enc_part.set_renew_till(time);
+            enc_part.renew_till = Some(time);
         }
 
         if let Ok(caddr) = caddr_result {
-            enc_part.set_caddr(caddr);
+            enc_part.caddr = Some(caddr);
         }
 
         if method_data.len() > 0 {
-            enc_part.set_encrypted_pa_data(method_data);
+            enc_part.encrypted_pa_data = Some(method_data);
         }
 
         return Ok(Self::new(crealm, cname, ticket, enc_part));
@@ -259,14 +259,10 @@ mod test {
             srealm.clone(),
             sname.clone(),
         );
-        enc_as_rep_part.set_starttime(starttime);
-        enc_as_rep_part.set_renew_till(renew_till);
-
-        if let Some(caddr) = caddr {
-            enc_as_rep_part.set_caddr(caddr);
-        }
-
-        enc_as_rep_part.set_encrypted_pa_data(method_data);
+        enc_as_rep_part.starttime = Some(starttime);
+        enc_as_rep_part.renew_till = Some(renew_till);
+        enc_as_rep_part.caddr = caddr;
+        enc_as_rep_part.encrypted_pa_data = Some(method_data);
 
         let credential = Credential::new(
             prealm.clone(),
