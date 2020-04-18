@@ -77,11 +77,11 @@ impl AsReq {
     }
 
     pub fn set_kdc_options(&mut self, options: u32) {
-        self.req_body.set_kdc_options(options);
+        self.req_body.kdc_options.set_flags(options);
     }
 
     fn set_sname(&mut self, name_type: i32, name_string: KerberosString) {
-        self.req_body.set_sname(name_type, name_string);
+        self.req_body.sname = Some(PrincipalName::new(name_type, name_string));
     }
 
     fn push_sname(&mut self, name_string: KerberosString) -> Result<()> {
@@ -90,7 +90,7 @@ impl AsReq {
 
     #[cfg(test)]
     fn set_till(&mut self, date: DateTime<Utc>) {
-        self.req_body.set_till(date);
+        self.req_body.till = date;
     }
 
     pub fn set_default_rtime(&mut self) {
@@ -102,21 +102,21 @@ impl AsReq {
     }
 
     pub fn set_rtime(&mut self, date: DateTime<Utc>) {
-        self.req_body.set_rtime(date);
+        self.req_body.rtime = Some(date);
     }
 
     #[cfg(test)]
     fn set_nonce(&mut self, nonce: u32) {
-        self.req_body.set_nonce(nonce);
+        self.req_body.nonce = nonce;
     }
 
     pub fn push_etype(&mut self, etype: i32) {
-        self.req_body.push_etype(etype);
+        self.req_body.etypes.push(etype);
     }
 
     #[cfg(test)]
     pub fn etypes(&self) -> &SeqOfInt32 {
-        return self.req_body.etypes();
+        return &self.req_body.etypes;
     }
 
     #[cfg(test)]
@@ -151,7 +151,7 @@ impl AsReqAsn1 {
             self.set_padata(seq_of_padatas.into());
         }
 
-        self.set_req_body(as_req.req_body().into());
+        self.set_req_body(as_req.req_body().clone().into());
     }
 }
 
