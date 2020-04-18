@@ -4,25 +4,23 @@ use super::counted_octet_string::CountedOctetString;
 use super::key_block::KeyBlock;
 use super::principal::Principal;
 use super::times::Times;
-use getset::{Getters, Setters};
 use nom::multi::many_m_n;
 use nom::number::complete::{be_u32, be_u8};
 use nom::IResult;
 
 /// Represents a credential stored in ccache.
-#[derive(Debug, PartialEq, Clone, Setters, Getters)]
-#[getset(get = "pub", set = "pub")]
+#[derive(Debug, PartialEq, Clone)]
 pub struct CredentialEntry {
-    client: Principal,
-    server: Principal,
-    key: KeyBlock,
-    time: Times,
-    is_skey: u8,
-    tktflags: u32,
-    addrs: Vec<Address>,
-    authdata: Vec<AuthData>,
-    ticket: CountedOctetString,
-    second_ticket: CountedOctetString,
+    pub client: Principal,
+    pub server: Principal,
+    pub key: KeyBlock,
+    pub time: Times,
+    pub is_skey: u8,
+    pub tktflags: u32,
+    pub addrs: Vec<Address>,
+    pub authdata: Vec<AuthData>,
+    pub ticket: CountedOctetString,
+    pub second_ticket: CountedOctetString,
 }
 
 impl CredentialEntry {
@@ -99,9 +97,9 @@ impl CredentialEntry {
         let (raw, second_ticket) = CountedOctetString::parse(raw)?;
 
         let mut credential_entry = Self::new(client, server, key, time, is_skey, tktflags, ticket);
-        credential_entry.set_addrs(addrs);
-        credential_entry.set_authdata(auth_data);
-        credential_entry.set_second_ticket(second_ticket);
+        credential_entry.addrs = addrs;
+        credential_entry.authdata = auth_data;
+        credential_entry.second_ticket = second_ticket;
 
         return Ok((raw, credential_entry));
     }

@@ -106,36 +106,35 @@ impl TryFrom<CredentialEntry> for Credential {
     fn try_from(credential_entry: CredentialEntry) -> Result<Self> {
         let (authtime, starttime, endtime, renew_till) =
             TimesMapper::times_to_authtime_starttime_endtime_renew_till(
-                credential_entry.time(),
+                &credential_entry.time,
             );
 
         let ticket_flags = TicketFlagsMapper::tktflags_to_ticket_flags(
-            *credential_entry.tktflags(),
+            credential_entry.tktflags,
         );
 
-        let encryption_key = KeyBlockMapper::keyblock_to_encryption_key(
-            credential_entry.key().clone(),
-        );
+        let encryption_key =
+            KeyBlockMapper::keyblock_to_encryption_key(credential_entry.key);
 
         let (crealm, cname) =
             PrincipalMapper::principal_to_realm_and_principal_name(
-                credential_entry.client(),
+                &credential_entry.client,
             )?;
 
         let (srealm, sname) =
             PrincipalMapper::principal_to_realm_and_principal_name(
-                credential_entry.server(),
+                &credential_entry.server,
             )?;
 
         let caddr_result = AddressMapper::address_vector_to_host_addresses(
-            credential_entry.addrs().clone(),
+            credential_entry.addrs,
         );
 
         let method_data = AuthDataMapper::auth_data_vector_to_method_data(
-            credential_entry.authdata().clone(),
+            credential_entry.authdata,
         );
 
-        let ticket_bytes = &credential_entry.ticket().data;
+        let ticket_bytes = &credential_entry.ticket.data;
         let ticket = Ticket::parse(ticket_bytes)?;
 
         let mut enc_part = EncKdcRepPart::new(
@@ -200,17 +199,15 @@ impl Into<CredentialEntry> for Credential {
         );
 
         if let Some(caddr) = self.caddr() {
-            ccache_credential.set_addrs(
-                AddressMapper::host_addresses_to_address_vector(caddr),
-            );
+            ccache_credential.addrs =
+                AddressMapper::host_addresses_to_address_vector(caddr);
         }
 
         if let Some(encrypted_pa_data) = self.encrypted_pa_data() {
-            ccache_credential.set_authdata(
+            ccache_credential.authdata =
                 AuthDataMapper::method_data_to_auth_data_vector(
                     encrypted_pa_data,
-                ),
-            );
+                );
         }
 
         return ccache_credential;
@@ -410,7 +407,7 @@ mod test {
             address_type::NETBIOS as u16,
             CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
         ));
-        ccache_credential.set_addrs(addresses);
+        ccache_credential.addrs = addresses;
 
         let mut auth_datas = Vec::new();
         auth_datas.push(AuthData::new(
@@ -420,7 +417,7 @@ mod test {
             ]),
         ));
 
-        ccache_credential.set_authdata(auth_datas);
+        ccache_credential.authdata = auth_datas;
 
         assert_eq!(ccache_credential, credential.into());
     }
@@ -556,7 +553,7 @@ mod test {
             address_type::NETBIOS as u16,
             CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
         ));
-        ccache_credential.set_addrs(addresses);
+        ccache_credential.addrs = addresses;
 
         let mut auth_datas = Vec::new();
         auth_datas.push(AuthData::new(
@@ -566,7 +563,7 @@ mod test {
             ]),
         ));
 
-        ccache_credential.set_authdata(auth_datas);
+        ccache_credential.authdata = auth_datas;
 
         assert_eq!(
             credential,
