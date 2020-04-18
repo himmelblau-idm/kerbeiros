@@ -1,37 +1,12 @@
 use super::krb_cred_info::*;
 use red_asn1::*;
-use std::ops::{Deref, DerefMut};
 
 #[cfg(test)]
 use crate::error::Result;
 
 /// (*SEQUENCE OF KrbCredInfo*) Array of [KrbCredInfo](./struct.KrbCredInfo.html).
-#[derive(Debug, Clone, PartialEq, Default)]
-pub struct SeqOfKrbCredInfo {
-    entries: Vec<KrbCredInfo>,
-}
+pub type SeqOfKrbCredInfo = Vec<KrbCredInfo>;
 
-impl Deref for SeqOfKrbCredInfo {
-    type Target = Vec<KrbCredInfo>;
-    fn deref(&self) -> &Vec<KrbCredInfo> {
-        &self.entries
-    }
-}
-
-impl DerefMut for SeqOfKrbCredInfo {
-    fn deref_mut(&mut self) -> &mut Vec<KrbCredInfo> {
-        &mut self.entries
-    }
-}
-
-impl SeqOfKrbCredInfo {
-    #[cfg(test)]
-    pub fn new(mut items: Vec<KrbCredInfo>) -> Self {
-        let mut seq_of = Self::default();
-        seq_of.append(&mut items);
-        return seq_of;
-    }
-}
 
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct SeqOfKrbCredInfoAsn1 {
@@ -39,8 +14,8 @@ pub(crate) struct SeqOfKrbCredInfoAsn1 {
 }
 
 impl SeqOfKrbCredInfoAsn1 {
-    fn set_asn1_values(&mut self, seq_of_krb_cred_info: &SeqOfKrbCredInfo) {
-        for krb_cred_info in seq_of_krb_cred_info.iter() {
+    fn set_asn1_values(&mut self, seq_of_krb_cred_info: SeqOfKrbCredInfo) {
+        for krb_cred_info in seq_of_krb_cred_info.into_iter() {
             self.subtype.push(krb_cred_info.into());
         }
     }
@@ -56,8 +31,8 @@ impl SeqOfKrbCredInfoAsn1 {
     }
 }
 
-impl From<&SeqOfKrbCredInfo> for SeqOfKrbCredInfoAsn1 {
-    fn from(seq_of_krb_cred_info: &SeqOfKrbCredInfo) -> Self {
+impl From<SeqOfKrbCredInfo> for SeqOfKrbCredInfoAsn1 {
+    fn from(seq_of_krb_cred_info: SeqOfKrbCredInfo) -> Self {
         let mut seq_of_krb_cred_info_asn1 = Self::default();
         seq_of_krb_cred_info_asn1.set_asn1_values(seq_of_krb_cred_info);
         return seq_of_krb_cred_info_asn1;
@@ -102,7 +77,7 @@ mod test {
     #[test]
     fn create_seq_of_krb_cred_info() {
         let seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
-        assert_eq!(Vec::<KrbCredInfo>::new(), seq_of_krb_cred_info.entries);
+        assert_eq!(Vec::<KrbCredInfo>::new(), seq_of_krb_cred_info);
     }
 
     #[test]
@@ -142,24 +117,24 @@ mod test {
 
         let mut krb_cred_info = KrbCredInfo::new(encryption_key);
 
-        krb_cred_info.set_prealm(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
-        krb_cred_info.set_pname(pname);
-        krb_cred_info.set_flags(TicketFlags::new(
+        krb_cred_info.prealm = Some(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
+        krb_cred_info.pname = Some(pname);
+        krb_cred_info.flags = Some(TicketFlags::new(
             FORWARDABLE | RENEWABLE | INITIAL | PRE_AUTHENT,
         ));
 
-        krb_cred_info.set_starttime(Utc.ymd(2019, 6, 25).and_hms(15, 28, 53));
-        krb_cred_info.set_endtime(Utc.ymd(2019, 6, 26).and_hms(1, 28, 53));
-        krb_cred_info.set_renew_till(Utc.ymd(2019, 7, 2).and_hms(15, 28, 53));
-        krb_cred_info.set_srealm(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
-        krb_cred_info.set_sname(sname);
+        krb_cred_info.starttime = Some(Utc.ymd(2019, 6, 25).and_hms(15, 28, 53));
+        krb_cred_info.endtime = Some(Utc.ymd(2019, 6, 26).and_hms(1, 28, 53));
+        krb_cred_info.renew_till = Some(Utc.ymd(2019, 7, 2).and_hms(15, 28, 53));
+        krb_cred_info.srealm = Some(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
+        krb_cred_info.sname = Some(sname);
 
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);
 
         assert_eq!(
             raw,
-            SeqOfKrbCredInfoAsn1::from(&seq_of_krb_cred_info)
+            SeqOfKrbCredInfoAsn1::from(seq_of_krb_cred_info)
                 .encode()
                 .unwrap()
         );
@@ -202,17 +177,17 @@ mod test {
 
         let mut krb_cred_info = KrbCredInfo::new(encryption_key);
 
-        krb_cred_info.set_prealm(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
-        krb_cred_info.set_pname(pname);
-        krb_cred_info.set_flags(TicketFlags::new(
+        krb_cred_info.prealm = Some(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
+        krb_cred_info.pname = Some(pname);
+        krb_cred_info.flags = Some(TicketFlags::new(
             FORWARDABLE | RENEWABLE | INITIAL | PRE_AUTHENT,
         ));
 
-        krb_cred_info.set_starttime(Utc.ymd(2019, 6, 25).and_hms(15, 28, 53));
-        krb_cred_info.set_endtime(Utc.ymd(2019, 6, 26).and_hms(1, 28, 53));
-        krb_cred_info.set_renew_till(Utc.ymd(2019, 7, 2).and_hms(15, 28, 53));
-        krb_cred_info.set_srealm(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
-        krb_cred_info.set_sname(sname);
+        krb_cred_info.starttime = Some(Utc.ymd(2019, 6, 25).and_hms(15, 28, 53));
+        krb_cred_info.endtime = Some(Utc.ymd(2019, 6, 26).and_hms(1, 28, 53));
+        krb_cred_info.renew_till = Some(Utc.ymd(2019, 7, 2).and_hms(15, 28, 53));
+        krb_cred_info.srealm = Some(Realm::from_ascii("KINGDOM.HEARTS").unwrap());
+        krb_cred_info.sname = Some(sname);
 
         let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
         seq_of_krb_cred_info.push(krb_cred_info);

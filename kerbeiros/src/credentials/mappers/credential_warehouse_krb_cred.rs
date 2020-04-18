@@ -95,7 +95,7 @@ mod test {
             sname.clone(),
             caddr.clone(),
         );
-        let seq_of_krb_cred_info = SeqOfKrbCredInfo::new(vec![krb_cred_info]);
+        let seq_of_krb_cred_info = vec![krb_cred_info];
 
         let ticket = create_ticket(realm.clone(), sname.clone());
         let seq_of_tickets = vec![ticket];
@@ -131,16 +131,16 @@ mod test {
         caddr: HostAddresses,
     ) -> KrbCredInfo {
         let mut krb_cred_info = KrbCredInfo::new(encryption_key);
-        krb_cred_info.set_prealm(prealm);
-        krb_cred_info.set_pname(pname);
-        krb_cred_info.set_flags(ticket_flags);
-        krb_cred_info.set_authtime(authtime);
-        krb_cred_info.set_starttime(starttime);
-        krb_cred_info.set_endtime(endtime);
-        krb_cred_info.set_renew_till(renew_till);
-        krb_cred_info.set_srealm(srealm);
-        krb_cred_info.set_sname(sname);
-        krb_cred_info.set_caddr(caddr);
+        krb_cred_info.prealm = Some(prealm);
+        krb_cred_info.pname = Some(pname);
+        krb_cred_info.flags = Some(ticket_flags);
+        krb_cred_info.authtime = Some(authtime);
+        krb_cred_info.starttime = Some(starttime);
+        krb_cred_info.endtime = Some(endtime);
+        krb_cred_info.renew_till = Some(renew_till);
+        krb_cred_info.srealm = Some(srealm);
+        krb_cred_info.sname = Some(sname);
+        krb_cred_info.caddr = Some(caddr);
 
         return krb_cred_info;
     }

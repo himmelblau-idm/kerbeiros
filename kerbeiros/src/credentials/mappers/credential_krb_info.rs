@@ -12,27 +12,27 @@ impl CredentialKrbInfoMapper {
     ) -> (KrbCredInfo, Ticket) {
         let mut krb_cred_info = KrbCredInfo::new(credential.key().clone());
 
-        krb_cred_info.set_flags(credential.flags().clone());
-        krb_cred_info.set_authtime(credential.authtime().clone());
+        krb_cred_info.flags = Some(credential.flags().clone());
+        krb_cred_info.authtime = Some(credential.authtime().clone());
 
         if let Some(starttime) = credential.starttime() {
-            krb_cred_info.set_starttime(starttime.clone());
+            krb_cred_info.starttime = Some(starttime.clone());
         }
-        krb_cred_info.set_endtime(credential.endtime().clone());
+        krb_cred_info.endtime = Some(credential.endtime().clone());
 
         if let Some(renew_till) = credential.renew_till() {
-            krb_cred_info.set_renew_till(renew_till.clone());
+            krb_cred_info.renew_till = Some(renew_till.clone());
         }
 
-        krb_cred_info.set_srealm(credential.srealm().clone());
-        krb_cred_info.set_sname(credential.sname().clone());
+        krb_cred_info.srealm = Some(credential.srealm().clone());
+        krb_cred_info.sname = Some(credential.sname().clone());
 
         if let Some(caddr) = credential.caddr() {
-            krb_cred_info.set_caddr(caddr.clone());
+            krb_cred_info.caddr = Some(caddr.clone());
         }
 
-        krb_cred_info.set_prealm(credential.crealm().clone());
-        krb_cred_info.set_pname(credential.cname().clone());
+        krb_cred_info.prealm = Some(credential.crealm().clone());
+        krb_cred_info.pname = Some(credential.cname().clone());
         return (krb_cred_info, credential.ticket().clone());
     }
 
@@ -215,16 +215,16 @@ mod test {
         caddr: HostAddresses,
     ) -> KrbCredInfo {
         let mut krb_cred_info = KrbCredInfo::new(encryption_key);
-        krb_cred_info.set_prealm(prealm);
-        krb_cred_info.set_pname(pname);
-        krb_cred_info.set_flags(ticket_flags);
-        krb_cred_info.set_authtime(authtime);
-        krb_cred_info.set_starttime(starttime);
-        krb_cred_info.set_endtime(endtime);
-        krb_cred_info.set_renew_till(renew_till);
-        krb_cred_info.set_srealm(srealm);
-        krb_cred_info.set_sname(sname);
-        krb_cred_info.set_caddr(caddr);
+        krb_cred_info.prealm = Some(prealm);
+        krb_cred_info.pname = Some(pname);
+        krb_cred_info.flags = Some(ticket_flags);
+        krb_cred_info.authtime = Some(authtime);
+        krb_cred_info.starttime = Some(starttime);
+        krb_cred_info.endtime = Some(endtime);
+        krb_cred_info.renew_till = Some(renew_till);
+        krb_cred_info.srealm = Some(srealm);
+        krb_cred_info.sname = Some(sname);
+        krb_cred_info.caddr = Some(caddr);
 
         return krb_cred_info;
     }
