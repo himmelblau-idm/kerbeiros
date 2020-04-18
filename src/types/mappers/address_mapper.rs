@@ -30,7 +30,7 @@ impl AddressMapper {
             _ => {
                 return Ok(HostAddress::Raw(
                     address_type,
-                    address.addrdata().clone().data_move(),
+                    address.addrdata().clone().data,
                 ));
             }
         }

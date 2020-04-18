@@ -135,7 +135,7 @@ impl TryFrom<CredentialEntry> for Credential {
             credential_entry.authdata().clone(),
         );
 
-        let ticket_bytes = credential_entry.ticket().data();
+        let ticket_bytes = &credential_entry.ticket().data;
         let ticket = Ticket::parse(ticket_bytes)?;
 
         let mut enc_part = EncKdcRepPart::new(
