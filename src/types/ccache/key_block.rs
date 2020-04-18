@@ -1,4 +1,3 @@
-use getset::{Setters, Getters};
 use nom::IResult;
 use nom::number::complete::be_u16;
 use nom::{length_data, named};
@@ -6,12 +5,11 @@ use nom::{length_data, named};
 named!(parse_length_array, length_data!(be_u16));
 
 /// Represents the session key.
-#[derive(Debug, PartialEq, Clone, Setters, Getters)]
-#[getset (get = "pub", set = "pub")]
+#[derive(Debug, PartialEq, Clone)]
 pub struct KeyBlock {
-    keytype: u16,
-    etype: u16,
-    keyvalue: Vec<u8>,
+    pub keytype: u16,
+    pub etype: u16,
+    pub keyvalue: Vec<u8>,
 }
 
 impl KeyBlock {
@@ -21,10 +19,6 @@ impl KeyBlock {
             etype: 0,
             keyvalue,
         };
-    }
-
-    pub fn keyvalue_move(self) -> Vec<u8> {
-        return self.keyvalue;
     }
 
     pub fn build(&self) -> Vec<u8> {
@@ -43,7 +37,7 @@ impl KeyBlock {
         let (rest, keyvalue) = parse_length_array(rest)?;
 
         let mut key_block = Self::new(keytype, keyvalue.to_vec());
-        key_block.set_etype(etype);
+        key_block.etype = etype;
 
         return Ok((rest, key_block));
     }
