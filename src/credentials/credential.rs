@@ -2,11 +2,12 @@ use super::credential_warehouse::CredentialWarehouse;
 use crate::error;
 use crate::error::Result;
 use crate::types::{
-    AddressMapper, AuthDataMapper, CountedOctetString, CredentialEntry,
-    EncKdcRepPart, EncryptionKey, HostAddresses, KerberosString, KerberosTime,
-    KeyBlockMapper, LastReq, MethodData, PrincipalMapper, PrincipalName, Realm,
-    Ticket, TicketFlags, TicketFlagsMapper, TimesMapper,
+    AddressMapper, AuthDataMapper, EncKdcRepPart, EncryptionKey, HostAddresses,
+    KerberosString, KerberosTime, KeyBlockMapper, LastReq, MethodData,
+    PrincipalMapper, PrincipalName, Realm, Ticket, TicketFlags,
+    TicketFlagsMapper, TimesMapper,
 };
+use kerberos_ccache::{CountedOctetString, Credential as CredentialEntry};
 use std::convert::TryFrom;
 
 /// Represents a Kerberos credential, which includes one Ticket and session information.
@@ -222,14 +223,15 @@ mod test {
     use crate::constants::{
         AES256_CTS_HMAC_SHA1_96, NT_PRINCIPAL, PA_PAC_REQUEST,
     };
-    use crate::types::ccache;
     use crate::types::{
-        Address, AuthData, CountedOctetString, EncKdcRepPart, EncryptedData,
-        EncryptionKey, HostAddress, HostAddresses, KerberosString,
-        KerberosTime, LastReq, MethodData, PaData, PacRequest, PrincipalName,
-        Realm, Ticket, TicketFlags,
+        EncKdcRepPart, EncryptedData, EncryptionKey, HostAddress,
+        HostAddresses, KerberosString, KerberosTime, LastReq, MethodData,
+        PaData, PacRequest, PrincipalName, Realm, Ticket, TicketFlags,
     };
     use chrono::prelude::*;
+    use kerberos_ccache as ccache;
+    use kerberos_ccache::{Address, AuthData};
+    
 
     fn create_credential(
         encryption_key: EncryptionKey,
@@ -392,7 +394,7 @@ mod test {
 
         let is_skey = 0;
 
-        let mut ccache_credential = ccache::CredentialEntry::new(
+        let mut ccache_credential = ccache::Credential::new(
             client_principal.clone(),
             server_principal,
             key,
@@ -538,7 +540,7 @@ mod test {
 
         let is_skey = 0;
 
-        let mut ccache_credential = ccache::CredentialEntry::new(
+        let mut ccache_credential = ccache::Credential::new(
             client_principal.clone(),
             server_principal,
             key,

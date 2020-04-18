@@ -1,6 +1,7 @@
+use super::CountedOctetStringMapper;
 use crate::error::{ErrorKind, Result};
 use crate::types::*;
-use std::convert::TryInto;
+use kerberos_ccache::Principal;
 
 pub struct PrincipalMapper {}
 
@@ -12,12 +13,16 @@ impl PrincipalMapper {
         let mut components = Vec::new();
 
         for name in principal_name.name_string().iter() {
-            components.push(CountedOctetString::from(name));
+            components.push(
+                CountedOctetStringMapper::kerberos_string_to_counted_octet_string(name)
+            );
         }
 
         return Principal::new(
             principal_name.name_type() as u32,
-            CountedOctetString::from(realm),
+            CountedOctetStringMapper::kerberos_string_to_counted_octet_string(
+                realm,
+            ),
             components,
         );
     }
@@ -28,7 +33,9 @@ impl PrincipalMapper {
         let components = principal.components;
         let mut names = Vec::with_capacity(components.len());
         for component in components.into_iter() {
-            names.push(component.try_into()?);
+            names.push(
+                CountedOctetStringMapper::counted_octet_string_to_kerberos_string(component)?
+               );
         }
 
         if names.len() == 0 {
@@ -36,13 +43,17 @@ impl PrincipalMapper {
         }
 
         let main_name = names.remove(0);
-        let mut principal_name = PrincipalName::new(principal.name_type as i32, main_name);
+        let mut principal_name =
+            PrincipalName::new(principal.name_type as i32, main_name);
 
         while names.len() > 0 {
             principal_name.push(names.remove(0));
         }
 
-        let realm = principal.realm.try_into()?;
+        let realm =
+            CountedOctetStringMapper::counted_octet_string_to_kerberos_string(
+                principal.realm,
+            )?;
 
         return Ok((realm, principal_name));
     }
@@ -53,12 +64,15 @@ impl PrincipalMapper {
 mod test {
     use super::*;
     use crate::constants::*;
+    use kerberos_ccache::CountedOctetString;
 
     #[test]
     fn realm_and_principal_name_to_principal() {
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
-        let principal_name =
-            PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
+        let principal_name = PrincipalName::new(
+            NT_PRINCIPAL,
+            KerberosString::from_ascii("mickey").unwrap(),
+        );
 
         let principal = Principal::new(
             NT_PRINCIPAL as u32,
@@ -68,15 +82,20 @@ mod test {
 
         assert_eq!(
             principal,
-            PrincipalMapper::realm_and_principal_name_to_principal(&realm, &principal_name)
+            PrincipalMapper::realm_and_principal_name_to_principal(
+                &realm,
+                &principal_name
+            )
         );
     }
 
     #[test]
     fn test_principal_to_realm_and_principal_name() {
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
-        let principal_name =
-            PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
+        let principal_name = PrincipalName::new(
+            NT_PRINCIPAL,
+            KerberosString::from_ascii("mickey").unwrap(),
+        );
 
         let principal = Principal::new(
             NT_PRINCIPAL as u32,
@@ -86,7 +105,8 @@ mod test {
 
         assert_eq!(
             (realm, principal_name),
-            PrincipalMapper::principal_to_realm_and_principal_name(principal).unwrap(),
+            PrincipalMapper::principal_to_realm_and_principal_name(principal)
+                .unwrap(),
         );
     }
 
@@ -99,14 +119,17 @@ mod test {
             vec![],
         );
 
-        PrincipalMapper::principal_to_realm_and_principal_name(principal).unwrap();
+        PrincipalMapper::principal_to_realm_and_principal_name(principal)
+            .unwrap();
     }
 
     #[test]
     fn test_principal_to_realm_and_principal_name_multiple_names() {
         let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
-        let mut principal_name =
-            PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
+        let mut principal_name = PrincipalName::new(
+            NT_PRINCIPAL,
+            KerberosString::from_ascii("mickey").unwrap(),
+        );
 
         principal_name.push(KerberosString::from_ascii("user2").unwrap());
 
@@ -121,7 +144,8 @@ mod test {
 
         assert_eq!(
             (realm, principal_name),
-            PrincipalMapper::principal_to_realm_and_principal_name(principal).unwrap(),
+            PrincipalMapper::principal_to_realm_and_principal_name(principal)
+                .unwrap(),
         );
     }
 }

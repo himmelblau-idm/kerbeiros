@@ -3,7 +3,7 @@ use crate::error::*;
 use failure::ResultExt;
 use std::fs::File;
 use std::io::Write;
-use crate::types::CCache;
+use kerberos_ccache::CCache;
 
 pub struct CredentialFileConverter<'a> {
     credentials: &'a CredentialWarehouse,

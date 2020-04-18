@@ -3,9 +3,9 @@ use super::file::CredentialFileConverter;
 use super::mappers::CredentialWarehouseKrbCredMapper;
 use crate::error;
 use crate::types::{
-    CCache, Header, KrbCred, PrincipalMapper, PrincipalName, Realm,
+    KrbCred, PrincipalMapper, PrincipalName, Realm,
 };
-
+use kerberos_ccache::{CCache, Header};
 use getset::Getters;
 use std::convert::TryFrom;
 ///
@@ -13,7 +13,7 @@ use std::convert::TryFrom;
 /// Load from ccache file:
 /// ```no_run
 /// use kerbeiros::credentials::CredentialWarehouse;
-/// use kerbeiros::types::CCache;
+/// use kerberos_ccache::CCache;
 /// use std::convert::TryFrom;
 /// use std::fs;
 ///
@@ -93,7 +93,7 @@ impl TryFrom<CCache> for CredentialWarehouse {
 
 impl Into<CCache> for CredentialWarehouse {
     fn into(self) -> CCache {
-        let header = Header::new_default();
+        let header = Header::default();
         let primary_principal =
             PrincipalMapper::realm_and_principal_name_to_principal(
                 self.realm(),
@@ -121,6 +121,7 @@ mod test {
     use crate::constants::*;
     use crate::types::*;
     use chrono::prelude::*;
+    use kerberos_ccache as ccache;
 
     fn create_credential(
         encryption_key: EncryptionKey,
@@ -442,7 +443,7 @@ mod test {
 
         let is_skey = 0;
 
-        let ccache_credential = ccache::CredentialEntry::new(
+        let ccache_credential = ccache::Credential::new(
             client_principal.clone(),
             server_principal,
             key,
@@ -452,10 +453,10 @@ mod test {
             ticket,
         );
 
-        let ccache_header = ccache::Header::DeltaTime(ccache::DeltaTime::new(
-            u32::max_value(),
-            0,
-        ));
+        let ccache_header = ccache::Header::new(
+            ccache::Header::DELTA_TIME,
+            ccache::DeltaTime::new(u32::max_value(),0).build()
+        );
 
         let ccache = CCache::new(
             ccache_header,
@@ -668,7 +669,7 @@ mod test {
 
         let is_skey = 0;
 
-        let ccache_credential = ccache::CredentialEntry::new(
+        let ccache_credential = ccache::Credential::new(
             client_principal.clone(),
             server_principal,
             key,
@@ -678,10 +679,7 @@ mod test {
             ticket,
         );
 
-        let ccache_header = ccache::Header::DeltaTime(ccache::DeltaTime::new(
-            u32::max_value(),
-            0,
-        ));
+        let ccache_header = ccache::Header::default();
 
         let ccache = CCache::new(
             ccache_header,

@@ -1,12 +1,12 @@
 use crate::error;
 use crate::types::KerberosString;
-use crate::types::CountedOctetString;
+use kerberos_ccache::CountedOctetString;
 
 pub struct CountedOctetStringMapper {}
 
 impl CountedOctetStringMapper {
     pub fn kerberos_string_to_counted_octet_string(
-        kerberos_string: KerberosString,
+        kerberos_string: &KerberosString,
     ) -> CountedOctetString {
         return CountedOctetString::new(kerberos_string.as_bytes().to_vec())
     }
@@ -25,7 +25,7 @@ mod test {
     #[test]
     fn test_kerberos_string_to_counted_octet_string() {
         let cos_string = CountedOctetStringMapper::kerberos_string_to_counted_octet_string(
-            KerberosString::from_ascii("ABC").unwrap()
+            &KerberosString::from_ascii("ABC").unwrap()
         );
         
         assert_eq!(CountedOctetString::from("ABC"), cos_string);

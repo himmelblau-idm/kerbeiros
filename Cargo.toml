@@ -10,6 +10,7 @@ repository = "https://gitlab.com/Zer1t0/kerbeiros"
 
 [dependencies]
 red_asn1 = "0.1"
+kerberos_ccache = "0.0"
 ascii = "0.9.1"
 chrono = "0.4"
 failure = "0.1.5"

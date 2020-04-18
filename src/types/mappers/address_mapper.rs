@@ -1,7 +1,8 @@
 use crate::constants::address_type;
 use crate::error::{ErrorKind, Result};
-use crate::types::{Address, CountedOctetString, HostAddress, HostAddresses};
+use crate::types::{HostAddress, HostAddresses};
 use std::convert::TryInto;
+use kerberos_ccache::{Address, CountedOctetString};
 
 pub struct AddressMapper {}
 

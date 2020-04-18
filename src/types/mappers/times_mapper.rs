@@ -1,5 +1,6 @@
-use crate::types::{KerberosTime, Times};
+use crate::types::KerberosTime;
 use chrono::{TimeZone, Utc};
+use kerberos_ccache::Times;
 
 pub struct TimesMapper {}
 
@@ -49,7 +50,7 @@ impl TimesMapper {
 
         let renew_till = match times.renew_till {
             0 => None,
-            _ => Some(Utc.timestamp(times.renew_till as i64, 0))
+            _ => Some(Utc.timestamp(times.renew_till as i64, 0)),
         };
 
         return (authtime, starttime, endtime, renew_till);
