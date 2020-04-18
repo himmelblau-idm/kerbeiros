@@ -25,7 +25,7 @@ impl PrincipalMapper {
     pub fn principal_to_realm_and_principal_name(
         principal: &Principal,
     ) -> Result<(Realm, PrincipalName)> {
-        let components = principal.components();
+        let components = &principal.components;
         let mut names = Vec::with_capacity(components.len());
         for component in components.iter() {
             names.push(component.clone().try_into()?);
@@ -36,13 +36,13 @@ impl PrincipalMapper {
         }
 
         let main_name = names.remove(0);
-        let mut principal_name = PrincipalName::new(*principal.name_type() as i32, main_name);
+        let mut principal_name = PrincipalName::new(principal.name_type as i32, main_name);
 
         while names.len() > 0 {
             principal_name.push(names.remove(0));
         }
 
-        let realm = principal.realm().clone().try_into()?;
+        let realm = (&principal.realm).clone().try_into()?;
 
         return Ok((realm, principal_name));
     }

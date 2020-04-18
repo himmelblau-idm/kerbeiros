@@ -1,16 +1,14 @@
 use super::counted_octet_string::CountedOctetString;
-use getset::{Getters,Setters};
 use nom::multi::many_m_n;
 use nom::number::complete::be_u32;
 use nom::IResult;
 
 /// Name of some Kerberos entity.
-#[derive(Debug, Clone, PartialEq, Getters, Setters)]
-#[getset(get = "pub", set = "pub")]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Principal {
-    name_type: u32,
-    realm: CountedOctetString,
-    components: Vec<CountedOctetString>,
+    pub name_type: u32,
+    pub realm: CountedOctetString,
+    pub components: Vec<CountedOctetString>,
 }
 
 impl Principal {
