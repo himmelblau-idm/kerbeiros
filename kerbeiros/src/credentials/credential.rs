@@ -183,7 +183,7 @@ impl Into<CredentialEntry> for Credential {
 
         let key = KeyBlockMapper::encryption_key_to_keyblock(self.key().clone());
 
-        let ticket = CountedOctetString::new(self.ticket().build());
+        let ticket = CountedOctetString::new(self.ticket().clone().build());
 
         let client = PrincipalMapper::realm_and_principal_name_to_principal(
             self.crealm(),

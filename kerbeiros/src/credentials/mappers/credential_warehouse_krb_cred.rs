@@ -98,7 +98,7 @@ mod test {
         let seq_of_krb_cred_info = SeqOfKrbCredInfo::new(vec![krb_cred_info]);
 
         let ticket = create_ticket(realm.clone(), sname.clone());
-        let seq_of_tickets = SeqOfTickets::new(vec![ticket]);
+        let seq_of_tickets = vec![ticket];
 
         let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
 

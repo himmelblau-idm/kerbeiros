@@ -1,34 +1,8 @@
 use super::ticket::*;
 use red_asn1::*;
-use std::ops::{Deref, DerefMut};
 
 /// (*SEQUENCE OF Ticket*) Array of [Ticket](./struct.Ticket.html).
-#[derive(Debug, PartialEq, Clone, Default)]
-pub struct SeqOfTickets {
-    tickets: Vec<Ticket>,
-}
-
-impl Deref for SeqOfTickets {
-    type Target = Vec<Ticket>;
-    fn deref(&self) -> &Vec<Ticket> {
-        &self.tickets
-    }
-}
-
-impl DerefMut for SeqOfTickets {
-    fn deref_mut(&mut self) -> &mut Vec<Ticket> {
-        &mut self.tickets
-    }
-}
-
-impl SeqOfTickets {
-    #[cfg(test)]
-    pub fn new(mut items: Vec<Ticket>) -> Self {
-        let mut seq_of = Self::default();
-        seq_of.append(&mut items);
-        return seq_of;
-    }
-}
+pub type SeqOfTickets = Vec<Ticket>;
 
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct SeqOfTicketsAsn1 {
@@ -36,15 +10,15 @@ pub(crate) struct SeqOfTicketsAsn1 {
 }
 
 impl SeqOfTicketsAsn1 {
-    fn set_asn1_values(&mut self, seq_of_tickets: &SeqOfTickets) {
-        for ticket in seq_of_tickets.iter() {
+    fn set_asn1_values(&mut self, seq_of_tickets: SeqOfTickets) {
+        for ticket in seq_of_tickets.into_iter() {
             self.subtype.push(ticket.into());
         }
     }
 }
 
-impl From<&SeqOfTickets> for SeqOfTicketsAsn1 {
-    fn from(seq_of_tickets: &SeqOfTickets) -> SeqOfTicketsAsn1 {
+impl From<SeqOfTickets> for SeqOfTicketsAsn1 {
+    fn from(seq_of_tickets: SeqOfTickets) -> SeqOfTicketsAsn1 {
         let mut seq_tickets_asn1 = Self::default();
 
         seq_tickets_asn1.set_asn1_values(seq_of_tickets);
@@ -87,6 +61,6 @@ mod test {
     #[test]
     fn create_default_seq_of_tickets() {
         let seq_of_tickets = SeqOfTickets::default();
-        assert_eq!(Vec::<Ticket>::new(), seq_of_tickets.tickets);
+        assert_eq!(Vec::<Ticket>::new(), seq_of_tickets);
     }
 }

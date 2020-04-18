@@ -208,7 +208,7 @@ impl KdcReqBodyAsn1 {
         }
 
         if let Some(tickets) = kdc_body.additional_tickets() {
-            self.set_additional_tickets(tickets.into());
+            self.set_additional_tickets(tickets.clone().into());
         }
     }
 }

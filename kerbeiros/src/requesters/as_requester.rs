@@ -41,7 +41,7 @@ pub enum AsReqResponse {
 ///     }
 ///     AsReqResponse::AsRep(as_rep) => {
 ///         let ticket = as_rep.ticket();
-///         println!("Ticket obtained for service {}", ticket.sname());
+///         println!("Ticket obtained for service {}", ticket.sname);
 ///     }
 /// }
 /// ```

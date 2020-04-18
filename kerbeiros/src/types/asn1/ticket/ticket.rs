@@ -5,10 +5,10 @@ use red_asn1::*;
 /// (*Ticket*) Represents a Kerberos ticket.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Ticket {
-    tkt_vno: i8,
-    realm: Realm,
-    sname: PrincipalName,
-    enc_part: EncryptedData,
+    pub tkt_vno: i8,
+    pub realm: Realm,
+    pub sname: PrincipalName,
+    pub enc_part: EncryptedData,
 }
 
 impl Ticket {
@@ -21,27 +21,7 @@ impl Ticket {
         };
     }
 
-    pub fn enc_part(&self) -> &EncryptedData {
-        return &self.enc_part;
-    }
-
-    pub fn sname(&self) -> &PrincipalName {
-        return &self.sname;
-    }
-
-    pub fn realm(&self) -> &Realm {
-        return &self.realm;
-    }
-
-    pub fn tkt_vno(&self) -> i8 {
-        return self.tkt_vno;
-    }
-
-    pub fn set_tkt_vno(&mut self, tkt_vno: i8) {
-        self.tkt_vno = tkt_vno;
-    }
-
-    pub fn build(&self) -> Vec<u8> {
+    pub fn build(self) -> Vec<u8> {
         return TicketAsn1::from(self).encode().unwrap();
     }
 
@@ -89,20 +69,20 @@ impl TicketAsn1 {
             sname.no_asn1_type()?,
             enc_part.no_asn1_type()?,
         );
-        ticket.set_tkt_vno(tkt_vno_value as i8);
+        ticket.tkt_vno = tkt_vno_value as i8;
 
         return Ok(ticket);
     }
 }
 
-impl From<&Ticket> for TicketAsn1 {
-    fn from(ticket: &Ticket) -> TicketAsn1 {
+impl From<Ticket> for TicketAsn1 {
+    fn from(ticket: Ticket) -> TicketAsn1 {
         let mut ticket_asn1 = Self::default();
 
-        ticket_asn1.set_tkt_vno(Integer::from(ticket.tkt_vno() as i64));
-        ticket_asn1.set_realm(ticket.realm().into());
-        ticket_asn1.set_sname(ticket.sname().into());
-        ticket_asn1.set_enc_part(ticket.enc_part().clone().into());
+        ticket_asn1.set_tkt_vno(Integer::from(ticket.tkt_vno as i64));
+        ticket_asn1.set_realm(ticket.realm.into());
+        ticket_asn1.set_sname((&ticket.sname).into());
+        ticket_asn1.set_enc_part(ticket.enc_part.into());
 
         return ticket_asn1;
     }
