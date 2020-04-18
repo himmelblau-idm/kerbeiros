@@ -2,5 +2,6 @@
 
 members = [
   "kerbeiros",
-  "kerberos_ccache"
+  "kerberos_ccache",
+  "kerberos_asn1"
 ]
