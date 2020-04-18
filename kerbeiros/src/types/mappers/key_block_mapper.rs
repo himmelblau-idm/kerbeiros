@@ -4,10 +4,10 @@ use kerberos_ccache::KeyBlock;
 pub struct KeyBlockMapper {}
 
 impl KeyBlockMapper {
-    pub fn encryption_key_to_keyblock(encryption_key: &EncryptionKey) -> KeyBlock {
+    pub fn encryption_key_to_keyblock(encryption_key: EncryptionKey) -> KeyBlock {
         return KeyBlock::new(
-            encryption_key.keytype() as u16,
-            encryption_key.keyvalue().clone(),
+            encryption_key.keytype as u16,
+            encryption_key.keyvalue,
         );
     }
 
@@ -46,7 +46,7 @@ mod test {
 
         assert_eq!(
             keyblock,
-            KeyBlockMapper::encryption_key_to_keyblock(&encryption_key)
+            KeyBlockMapper::encryption_key_to_keyblock(encryption_key)
         );
     }
 

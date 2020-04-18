@@ -5,8 +5,8 @@ use red_asn1::*;
 /// (*EncryptionKey*) To represent the key of an encryption algorithm.
 #[derive(Debug, PartialEq, Clone)]
 pub struct EncryptionKey {
-    keytype: Int32,
-    keyvalue: Vec<u8>,
+    pub keytype: Int32,
+    pub keyvalue: Vec<u8>,
 }
 
 impl EncryptionKey {
@@ -14,13 +14,6 @@ impl EncryptionKey {
         return Self { keytype, keyvalue };
     }
 
-    pub fn keytype(&self) -> Int32 {
-        return self.keytype;
-    }
-
-    pub fn keyvalue(&self) -> &Vec<u8> {
-        return &self.keyvalue;
-    }
 }
 
 #[derive(Sequence, Default, PartialEq, Debug)]
@@ -49,11 +42,11 @@ impl EncryptionKeyAsn1 {
     }
 }
 
-impl From<&EncryptionKey> for EncryptionKeyAsn1 {
-    fn from(encryption_key: &EncryptionKey) -> Self {
+impl From<EncryptionKey> for EncryptionKeyAsn1 {
+    fn from(encryption_key: EncryptionKey) -> Self {
         let mut encryption_key_asn1 = Self::default();
-        encryption_key_asn1.set_keytype(encryption_key.keytype().into());
-        encryption_key_asn1.set_keyvalue(encryption_key.keyvalue().clone().into());
+        encryption_key_asn1.set_keytype(encryption_key.keytype.into());
+        encryption_key_asn1.set_keyvalue(encryption_key.keyvalue.into());
         return encryption_key_asn1;
     }
 }

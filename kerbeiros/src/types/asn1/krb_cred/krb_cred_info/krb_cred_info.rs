@@ -216,7 +216,7 @@ impl From<&KrbCredInfo> for KrbCredInfoAsn1 {
     fn from(krb_cred_info: &KrbCredInfo) -> Self {
         let mut krb_cred_info_asn1 = Self::default();
 
-        krb_cred_info_asn1.set_key(krb_cred_info.key().into());
+        krb_cred_info_asn1.set_key(krb_cred_info.key().clone().into());
 
         if let Some(prealm) = krb_cred_info.prealm() {
             krb_cred_info_asn1.set_prealm(prealm.into());

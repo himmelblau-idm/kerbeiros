@@ -181,7 +181,7 @@ impl Into<CredentialEntry> for Credential {
         let tktflags =
             TicketFlagsMapper::ticket_flags_to_tktflags(self.flags());
 
-        let key = KeyBlockMapper::encryption_key_to_keyblock(self.key());
+        let key = KeyBlockMapper::encryption_key_to_keyblock(self.key().clone());
 
         let ticket = CountedOctetString::new(self.ticket().build());
 
