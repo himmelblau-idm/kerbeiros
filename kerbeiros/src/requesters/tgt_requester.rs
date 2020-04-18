@@ -146,7 +146,7 @@ impl<'a> TGTRequest<'a> {
             ))?;
         }
 
-        match as_rep.into_credential(user_key) {
+        match as_rep.clone().into_credential(user_key) {
             Ok(credential) => {
                 return Ok(credential);
             }

@@ -11,13 +11,13 @@ pub type AsRep = KdcRep;
 /// (*KDC-REP*) Main structure of the AS-REP and TGS-REP messages.
 #[derive(Debug, Clone, PartialEq)]
 pub struct KdcRep {
-    pvno: i8,
-    msg_type: i8,
-    padata: Option<SeqOfPaData>,
-    crealm: Realm,
-    cname: PrincipalName,
-    ticket: Ticket,
-    enc_part: EncryptedData,
+    pub pvno: i8,
+    pub msg_type: i8,
+    pub padata: Option<SeqOfPaData>,
+    pub crealm: Realm,
+    pub cname: PrincipalName,
+    pub ticket: Ticket,
+    pub enc_part: EncryptedData,
 }
 
 impl KdcRep {
@@ -38,42 +38,6 @@ impl KdcRep {
         };
     }
 
-    fn set_pvno(&mut self, pvno: i8) {
-        self.pvno = pvno;
-    }
-
-    fn set_msg_type(&mut self, msg_type: i8) {
-        self.msg_type = msg_type;
-    }
-
-    pub fn set_padata(&mut self, padata: SeqOfPaData) {
-        self.padata = Some(padata);
-    }
-
-    pub fn padata(&self) -> &Option<SeqOfPaData> {
-        return &self.padata;
-    }
-
-    pub fn crealm(&self) -> &Realm {
-        return &self.crealm;
-    }
-
-    pub fn cname(&self) -> &PrincipalName {
-        return &self.cname;
-    }
-
-    pub fn ticket(&self) -> &Ticket {
-        return &self.ticket;
-    }
-
-    pub fn enc_part_etype(&self) -> i32 {
-        return self.enc_part.etype;
-    }
-
-    pub fn enc_part_cipher(&self) -> &Vec<u8> {
-        return &self.enc_part.cipher;
-    }
-
     pub fn encryption_salt(&self) -> Vec<u8> {
         if let Some(padata) = &self.padata {
             for entry_data in padata.iter() {
@@ -88,7 +52,7 @@ impl KdcRep {
         return Vec::new();
     }
 
-    pub fn into_credential(&self, user_key: &Key) -> Result<Credential> {
+    pub fn into_credential(self, user_key: &Key) -> Result<Credential> {
         return CredentialKrbInfoMapper::kdc_rep_to_credential(user_key, self);
     }
 
@@ -154,11 +118,11 @@ impl KdcRepAsn1 {
             enc_part.no_asn1_type()?,
         );
 
-        as_rep.set_pvno(pvno_value as i8);
-        as_rep.set_msg_type(msg_type_value as i8);
+        as_rep.pvno = pvno_value as i8;
+        as_rep.msg_type = msg_type_value as i8;
 
         if let Some(padata) = self.get_padata() {
-            as_rep.set_padata(padata.no_asn1_type()?);
+            as_rep.padata = Some(padata.no_asn1_type()?);
         }
 
         return Ok(as_rep);
@@ -238,7 +202,7 @@ mod test {
 
         let mut as_rep = KdcRep::new(realm, cname, ticket, encrypted_data);
 
-        as_rep.set_padata(padata);
+        as_rep.padata = Some(padata);
 
         assert_eq!(as_rep, as_rep_decoded);
     }

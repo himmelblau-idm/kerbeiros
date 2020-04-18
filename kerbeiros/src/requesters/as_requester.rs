@@ -40,7 +40,7 @@ pub enum AsReqResponse {
 ///         println!("KRB-ERROR with error code = {}", krb_error.error_code);
 ///     }
 ///     AsReqResponse::AsRep(as_rep) => {
-///         let ticket = as_rep.ticket();
+///         let ticket = as_rep.ticket;
 ///         println!("Ticket obtained for service {}", ticket.sname);
 ///     }
 /// }
