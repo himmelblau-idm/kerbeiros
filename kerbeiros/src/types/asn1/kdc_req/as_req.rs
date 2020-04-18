@@ -9,11 +9,12 @@ use red_asn1::*;
 use super::super::host_address::HostAddress;
 
 /// (*AS-REQ*) Message used to request a TGT.
+#[derive(Debug, PartialEq, Clone)]
 pub struct AsReq {
-    pvno: i8,
-    msg_type: i8,
-    padata: Option<SeqOfPaData>,
-    req_body: KdcReqBody,
+    pub pvno: i8,
+    pub msg_type: i8,
+    pub padata: Option<SeqOfPaData>,
+    pub req_body: KdcReqBody,
 }
 
 impl AsReq {
@@ -33,22 +34,6 @@ impl AsReq {
         as_req.set_default_rtime();
 
         return as_req;
-    }
-
-    pub fn req_body(&self) -> &KdcReqBody {
-        return &self.req_body;
-    }
-
-    pub fn msg_type(&self) -> i8 {
-        return self.msg_type;
-    }
-
-    pub fn padata(&self) -> &Option<SeqOfPaData> {
-        return &self.padata;
-    }
-
-    pub fn pvno(&self) -> i8 {
-        return self.pvno;
     }
 
     pub fn include_pac(&mut self) {
@@ -124,7 +109,7 @@ impl AsReq {
         self.req_body.set_address(address);
     }
 
-    pub fn build(&self) -> Vec<u8> {
+    pub fn build(self) -> Vec<u8> {
         return AsReqAsn1::from(self).encode().unwrap();
     }
 }
@@ -143,20 +128,20 @@ pub(crate) struct AsReqAsn1 {
 }
 
 impl AsReqAsn1 {
-    fn set_asn1_values(&mut self, as_req: &AsReq) {
-        self.set_pvno(Integer::from(as_req.pvno() as i64));
-        self.set_msg_type(Integer::from(as_req.msg_type() as i64));
+    fn set_asn1_values(&mut self, as_req: AsReq) {
+        self.set_pvno(Integer::from(as_req.pvno as i64));
+        self.set_msg_type(Integer::from(as_req.msg_type as i64));
 
-        if let Some(seq_of_padatas) = as_req.padata() {
-            self.set_padata(seq_of_padatas.into());
+        if let Some(seq_of_padatas) = as_req.padata {
+            self.set_padata((&seq_of_padatas).into());
         }
 
-        self.set_req_body(as_req.req_body().clone().into());
+        self.set_req_body(as_req.req_body.into());
     }
 }
 
-impl From<&AsReq> for AsReqAsn1 {
-    fn from(as_req: &AsReq) -> Self {
+impl From<AsReq> for AsReqAsn1 {
+    fn from(as_req: AsReq) -> Self {
         let mut as_req_asn1 = Self::default();
 
         as_req_asn1.set_asn1_values(as_req);
