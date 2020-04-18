@@ -20,7 +20,7 @@ use std::convert::TryFrom;
 /// let file_data = fs::read("./bob_tgt.ccache").expect("Unable to read file");
 ///
 /// let ccache = CCache::parse(&file_data).expect("Unable to parse file content").1;
-/// let credentials = CredentialWarehouse::try_from(&ccache).expect("Unable to parse CCache");
+/// let credentials = CredentialWarehouse::try_from(ccache).expect("Unable to parse CCache");
 /// ```
 
 /// To store several credentials related to the same user and realm
@@ -70,20 +70,20 @@ impl From<Credential> for CredentialWarehouse {
     }
 }
 
-impl TryFrom<&CCache> for CredentialWarehouse {
+impl TryFrom<CCache> for CredentialWarehouse {
     type Error = error::Error;
 
-    fn try_from(ccache: &CCache) -> Result<Self, Self::Error> {
+    fn try_from(ccache: CCache) -> Result<Self, Self::Error> {
         let (realm, client) =
             PrincipalMapper::principal_to_realm_and_principal_name(
-                &ccache.primary_principal,
+                ccache.primary_principal,
             )?;
 
-        let ccache_credentials = &ccache.credentials;
+        let ccache_credentials = ccache.credentials;
         let mut credentials = Vec::with_capacity(ccache_credentials.len());
 
-        for credential_entry in ccache_credentials.iter() {
-            let credential = Credential::try_from(credential_entry.clone())?;
+        for credential_entry in ccache_credentials.into_iter() {
+            let credential = Credential::try_from(credential_entry)?;
             credentials.push(credential);
         }
 
@@ -691,7 +691,7 @@ mod test {
 
         assert_eq!(
             credential_warehouse,
-            CredentialWarehouse::try_from(&ccache).unwrap()
+            CredentialWarehouse::try_from(ccache).unwrap()
         );
     }
 }

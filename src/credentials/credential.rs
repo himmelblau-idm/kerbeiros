@@ -118,12 +118,12 @@ impl TryFrom<CredentialEntry> for Credential {
 
         let (crealm, cname) =
             PrincipalMapper::principal_to_realm_and_principal_name(
-                &credential_entry.client,
+                credential_entry.client,
             )?;
 
         let (srealm, sname) =
             PrincipalMapper::principal_to_realm_and_principal_name(
-                &credential_entry.server,
+                credential_entry.server,
             )?;
 
         let caddr_result = AddressMapper::address_vector_to_host_addresses(

@@ -23,12 +23,12 @@ impl PrincipalMapper {
     }
 
     pub fn principal_to_realm_and_principal_name(
-        principal: &Principal,
+        principal: Principal,
     ) -> Result<(Realm, PrincipalName)> {
-        let components = &principal.components;
+        let components = principal.components;
         let mut names = Vec::with_capacity(components.len());
-        for component in components.iter() {
-            names.push(component.clone().try_into()?);
+        for component in components.into_iter() {
+            names.push(component.try_into()?);
         }
 
         if names.len() == 0 {
@@ -42,7 +42,7 @@ impl PrincipalMapper {
             principal_name.push(names.remove(0));
         }
 
-        let realm = (&principal.realm).clone().try_into()?;
+        let realm = principal.realm.try_into()?;
 
         return Ok((realm, principal_name));
     }
@@ -86,7 +86,7 @@ mod test {
 
         assert_eq!(
             (realm, principal_name),
-            PrincipalMapper::principal_to_realm_and_principal_name(&principal).unwrap(),
+            PrincipalMapper::principal_to_realm_and_principal_name(principal).unwrap(),
         );
     }
 
@@ -99,7 +99,7 @@ mod test {
             vec![],
         );
 
-        PrincipalMapper::principal_to_realm_and_principal_name(&principal).unwrap();
+        PrincipalMapper::principal_to_realm_and_principal_name(principal).unwrap();
     }
 
     #[test]
@@ -121,7 +121,7 @@ mod test {
 
         assert_eq!(
             (realm, principal_name),
-            PrincipalMapper::principal_to_realm_and_principal_name(&principal).unwrap(),
+            PrincipalMapper::principal_to_realm_and_principal_name(principal).unwrap(),
         );
     }
 }
