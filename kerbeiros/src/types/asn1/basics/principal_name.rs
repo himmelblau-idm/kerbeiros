@@ -9,8 +9,8 @@ use std::fmt;
 /// Used for client name and service name.
 #[derive(Debug, Clone, PartialEq)]
 pub struct PrincipalName {
-    name_type: Int32,
-    name_string: Vec<KerberosString>,
+    pub name_type: Int32,
+    pub name_string: Vec<KerberosString>,
 }
 
 impl PrincipalName {
@@ -25,18 +25,9 @@ impl PrincipalName {
         return principal_name;
     }
 
-    pub fn name_type(&self) -> i32 {
-        return self.name_type;
-    }
-
-    pub fn name_string(&self) -> &Vec<KerberosString> {
-        return &self.name_string;
-    }
-
     pub fn main_name(&self) -> &KerberosString {
         return &self.name_string[0];
     }
-
     pub fn push(&mut self, string: KerberosString) {
         self.name_string.push(string);
     }
@@ -68,7 +59,7 @@ pub(crate) struct PrincipalNameAsn1 {
 
 impl PrincipalNameAsn1 {
     fn set_asn1_values(&mut self, principal_name: &PrincipalName) {
-        self.set_name_type(principal_name.name_type().into());
+        self.set_name_type(principal_name.name_type.into());
         self.set_name_string(self.seq_of_kerberos_strings(principal_name));
     }
 
@@ -78,7 +69,7 @@ impl PrincipalNameAsn1 {
     ) -> SequenceOf<KerberosStringAsn1> {
         let mut seq_of_kerberos_strings: SequenceOf<KerberosStringAsn1> = SequenceOf::default();
 
-        for kerb_string in principal_name.name_string().iter() {
+        for kerb_string in principal_name.name_string.iter() {
             seq_of_kerberos_strings.push(kerb_string.into());
         }
 

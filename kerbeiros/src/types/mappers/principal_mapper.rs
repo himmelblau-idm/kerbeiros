@@ -12,14 +12,14 @@ impl PrincipalMapper {
     ) -> Principal {
         let mut components = Vec::new();
 
-        for name in principal_name.name_string().iter() {
+        for name in principal_name.name_string.iter() {
             components.push(
                 CountedOctetStringMapper::kerberos_string_to_counted_octet_string(name)
             );
         }
 
         return Principal::new(
-            principal_name.name_type() as u32,
+            principal_name.name_type as u32,
             CountedOctetStringMapper::kerberos_string_to_counted_octet_string(
                 realm,
             ),
