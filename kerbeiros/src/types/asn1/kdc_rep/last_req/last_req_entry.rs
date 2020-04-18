@@ -5,8 +5,8 @@ use red_asn1::*;
 /// Register of time of a request to KDC.
 #[derive(Debug, PartialEq, Clone)]
 pub struct LastReqEntry {
-    lr_type: Int32,
-    lr_value: KerberosTime,
+    pub lr_type: Int32,
+    pub lr_value: KerberosTime,
 }
 
 impl LastReqEntry {

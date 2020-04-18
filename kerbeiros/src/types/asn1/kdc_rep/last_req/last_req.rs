@@ -1,26 +1,9 @@
 use super::last_req_entry::*;
 use crate::error::Result;
 use red_asn1::*;
-use std::ops::{Deref, DerefMut};
 
 /// (*LastReq*) Times of the last Kerberos requests. Array of [LastReqEntry](./struct.LastReqEntry.html).
-#[derive(Debug, Clone, PartialEq, Default)]
-pub struct LastReq {
-    entries: Vec<LastReqEntry>,
-}
-
-impl Deref for LastReq {
-    type Target = Vec<LastReqEntry>;
-    fn deref(&self) -> &Vec<LastReqEntry> {
-        &self.entries
-    }
-}
-
-impl DerefMut for LastReq {
-    fn deref_mut(&mut self) -> &mut Vec<LastReqEntry> {
-        &mut self.entries
-    }
-}
+pub type LastReq = Vec<LastReqEntry>;
 
 #[derive(Default, Debug, PartialEq)]
 pub(crate) struct LastReqAsn1 {
@@ -64,7 +47,7 @@ mod test {
     #[test]
     fn create_default_last_req() {
         let last_req = LastReq::default();
-        assert_eq!(Vec::<LastReqEntry>::new(), last_req.entries);
+        assert_eq!(Vec::<LastReqEntry>::new(), last_req);
     }
 
     #[test]
