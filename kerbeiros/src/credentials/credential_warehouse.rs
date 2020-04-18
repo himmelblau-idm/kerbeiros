@@ -397,7 +397,7 @@ mod test {
             AES256_CTS_HMAC_SHA1_96,
             RAW_TICKET_ENCRYPTED.to_vec(),
         );
-        ticket_encrypted_data.set_kvno(2);
+        ticket_encrypted_data.kvno = Some(2);
 
         let ticket_credential =
             Ticket::new(realm.clone(), sname.clone(), ticket_encrypted_data);
@@ -623,7 +623,7 @@ mod test {
                 0x36, 0xd8, 0x88,
             ],
         );
-        ticket_encrypted_data.set_kvno(2);
+        ticket_encrypted_data.kvno = Some(2);
 
         let ticket_credential =
             Ticket::new(realm.clone(), sname.clone(), ticket_encrypted_data);

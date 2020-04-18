@@ -335,7 +335,7 @@ mod test {
 
         let mut ticket_encrypted_data =
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0a]);
-        ticket_encrypted_data.set_kvno(2);
+        ticket_encrypted_data.kvno = Some(2);
 
         let ticket_credential =
             Ticket::new(realm.clone(), sname.clone(), ticket_encrypted_data);
@@ -481,7 +481,7 @@ mod test {
 
         let mut ticket_encrypted_data =
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0a]);
-        ticket_encrypted_data.set_kvno(2);
+        ticket_encrypted_data.kvno = Some(2);
 
         let ticket_credential =
             Ticket::new(realm.clone(), sname.clone(), ticket_encrypted_data);

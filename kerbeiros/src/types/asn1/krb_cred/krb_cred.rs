@@ -62,7 +62,7 @@ impl From<&KrbCred> for KrbCredAsn1 {
         krb_cred_asn1.set_pvno(Integer::from(krb_cred.pvno() as i64));
         krb_cred_asn1.set_msg_type(Integer::from(krb_cred.msg_type() as i64));
         krb_cred_asn1.set_tickets(krb_cred.tickets().into());
-        krb_cred_asn1.set_enc_part(krb_cred.enc_part().into());
+        krb_cred_asn1.set_enc_part(krb_cred.enc_part().clone().into());
 
         return krb_cred_asn1;
     }
@@ -90,7 +90,7 @@ mod test {
     #[test]
     fn test_encode_krb_cred() {
         let mut encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x4e]);
-        encrypted_data.set_kvno(2);
+        encrypted_data.kvno = Some(2);
 
         let mut principal_name =
             PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());

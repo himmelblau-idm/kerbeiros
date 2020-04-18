@@ -204,7 +204,7 @@ impl KdcReqBodyAsn1 {
             self.set_addresses(addresses.into());
         }
         if let Some(enc_authorization_data) = kdc_body.enc_authorization_data() {
-            self.set_enc_authorization_data(enc_authorization_data.into());
+            self.set_enc_authorization_data(enc_authorization_data.clone().into());
         }
 
         if let Some(tickets) = kdc_body.additional_tickets() {

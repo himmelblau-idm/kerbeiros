@@ -67,11 +67,11 @@ impl KdcRep {
     }
 
     pub fn enc_part_etype(&self) -> i32 {
-        return self.enc_part.etype();
+        return self.enc_part.etype;
     }
 
     pub fn enc_part_cipher(&self) -> &Vec<u8> {
-        return self.enc_part.cipher();
+        return &self.enc_part.cipher;
     }
 
     pub fn encryption_salt(&self) -> Vec<u8> {
@@ -217,7 +217,7 @@ mod test {
         sname_ticket.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
 
         let mut encrypted_data_ticket = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
-        encrypted_data_ticket.set_kvno(2);
+        encrypted_data_ticket.kvno = Some(2);
 
         let ticket = Ticket::new(
             Realm::from_ascii("KINGDOM.HEARTS").unwrap(),
@@ -226,7 +226,7 @@ mod test {
         );
 
         let mut encrypted_data = EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x9]);
-        encrypted_data.set_kvno(2);
+        encrypted_data.kvno = Some(2);
 
         let mut padata = SeqOfPaData::default();
         let mut entry1 = EtypeInfo2Entry::new(AES256_CTS_HMAC_SHA1_96);

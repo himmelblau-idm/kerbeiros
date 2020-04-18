@@ -6,9 +6,9 @@ use red_asn1::*;
 /// (*EncryptedData*) Chunck of data that is encrypted in Kerberos exchanges.
 #[derive(Debug, Clone, PartialEq)]
 pub struct EncryptedData {
-    etype: Int32,
-    kvno: Option<UInt32>,
-    cipher: Vec<u8>,
+    pub etype: Int32,
+    pub kvno: Option<UInt32>,
+    pub cipher: Vec<u8>,
 }
 
 impl EncryptedData {
@@ -20,21 +20,6 @@ impl EncryptedData {
         };
     }
 
-    pub fn kvno(&self) -> Option<UInt32> {
-        return self.kvno;
-    }
-
-    pub fn set_kvno(&mut self, kvno: UInt32) {
-        self.kvno = Some(kvno);
-    }
-
-    pub fn etype(&self) -> i32 {
-        return self.etype;
-    }
-
-    pub fn cipher(&self) -> &Vec<u8> {
-        return &self.cipher;
-    }
 }
 
 #[derive(Sequence, Default, Debug, PartialEq)]
@@ -62,21 +47,21 @@ impl EncryptedDataAsn1 {
         let mut enc_data = EncryptedData::new(etype.no_asn1_type()?, cipher_value.clone());
 
         if let Some(kvno) = self.get_kvno() {
-            enc_data.set_kvno(kvno.no_asn1_type()?);
+            enc_data.kvno = Some(kvno.no_asn1_type()?);
         }
 
         return Ok(enc_data);
     }
 }
 
-impl From<&EncryptedData> for EncryptedDataAsn1 {
-    fn from(enc_data: &EncryptedData) -> EncryptedDataAsn1 {
+impl From<EncryptedData> for EncryptedDataAsn1 {
+    fn from(enc_data: EncryptedData) -> EncryptedDataAsn1 {
         let mut enc_data_asn1 = Self::default();
 
-        enc_data_asn1.set_etype(enc_data.etype().into());
-        enc_data_asn1.set_cipher(enc_data.cipher.clone().into());
+        enc_data_asn1.set_etype(enc_data.etype.into());
+        enc_data_asn1.set_cipher(enc_data.cipher.into());
 
-        if let Some(kvno) = enc_data.kvno() {
+        if let Some(kvno) = enc_data.kvno {
             enc_data_asn1.set_kvno(kvno.into());
         }
 
@@ -122,7 +107,7 @@ mod test {
                 0x29, 0x9d, 0xd1, 0xec, 0x62, 0xbc, 0x99, 0xce, 0x2c, 0x9f, 0x6a, 0x4e, 0xf1, 0xf0,
                 0x25, 0xf9, 0x9e, 0x13, 0xa5, 0x94, 0xa2, 0x39, 0x80, 0x7f, 0xdf
             ],
-            EncryptedDataAsn1::from(&enc_data).encode().unwrap()
+            EncryptedDataAsn1::from(enc_data).encode().unwrap()
         );
     }
 
