@@ -37,7 +37,7 @@ pub enum AsReqResponse {
 ///
 /// match response {
 ///     AsReqResponse::KrbError(krb_error) => {
-///         println!("KRB-ERROR with error code = {}", krb_error.error_code());
+///         println!("KRB-ERROR with error code = {}", krb_error.error_code);
 ///     }
 ///     AsReqResponse::AsRep(as_rep) => {
 ///         let ticket = as_rep.ticket();

@@ -112,7 +112,7 @@ impl<'a> TGTRequest<'a> {
     }
 
     fn process_1st_krb_error(&self, krb_error: KrbError) -> Result<Credential> {
-        if krb_error.error_code() != KDC_ERR_PREAUTH_REQUIRED {
+        if krb_error.error_code != KDC_ERR_PREAUTH_REQUIRED {
             return Err(ErrorKind::KrbErrorResponse(krb_error))?;
         }
 

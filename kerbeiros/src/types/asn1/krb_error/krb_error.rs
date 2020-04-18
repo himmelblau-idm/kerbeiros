@@ -9,19 +9,19 @@ use std::fmt;
 /// (*KRB-ERROR*) Message used to indicate an error.
 #[derive(Debug, Clone, PartialEq)]
 pub struct KrbError {
-    pvno: i8,
-    msg_type: i8,
-    ctime: Option<KerberosTime>,
-    cusec: Option<Microseconds>,
-    stime: KerberosTime,
-    susec: Microseconds,
-    error_code: Int32,
-    crealm: Option<Realm>,
-    cname: Option<PrincipalName>,
-    realm: Realm,
-    sname: PrincipalName,
-    e_text: Option<KerberosString>,
-    e_data: Option<Edata>,
+    pub pvno: i8,
+    pub msg_type: i8,
+    pub ctime: Option<KerberosTime>,
+    pub cusec: Option<Microseconds>,
+    pub stime: KerberosTime,
+    pub susec: Microseconds,
+    pub error_code: Int32,
+    pub crealm: Option<Realm>,
+    pub cname: Option<PrincipalName>,
+    pub realm: Realm,
+    pub sname: PrincipalName,
+    pub e_text: Option<KerberosString>,
+    pub e_data: Option<Edata>,
 }
 
 impl KrbError {
@@ -49,93 +49,10 @@ impl KrbError {
         };
     }
 
-    pub fn pvno(&self) -> i8 {
-        return self.pvno;
-    }
-
-    fn set_pvno(&mut self, pvno: i8) {
-        self.pvno = pvno;
-    }
-
-    pub fn msg_type(&self) -> i8 {
-        return self.msg_type;
-    }
-
-    fn set_msg_type(&mut self, msg_type: i8) {
-        self.msg_type = msg_type;
-    }
-
-    pub fn ctime(&self) -> &Option<KerberosTime> {
-        return &self.ctime;
-    }
-
-    fn set_ctime(&mut self, ctime: KerberosTime) {
-        self.ctime = Some(ctime);
-    }
-
-    pub fn cusec(&self) -> &Option<Microseconds> {
-        return &self.cusec;
-    }
-
-    fn set_cusec(&mut self, cusec: Microseconds) {
-        self.cusec = Some(cusec);
-    }
-
-    pub fn stime(&self) -> &KerberosTime {
-        return &self.stime;
-    }
-
-    pub fn susec(&self) -> &Microseconds {
-        return &self.susec;
-    }
-
-    pub fn error_code(&self) -> i32 {
-        return self.error_code;
-    }
-
     pub fn error_code_message(&self) -> String {
         return error_code_to_string(self.error_code);
     }
 
-    pub fn crealm(&self) -> &Option<Realm> {
-        return &self.crealm;
-    }
-
-    fn set_crealm(&mut self, crealm: Realm) {
-        self.crealm = Some(crealm);
-    }
-
-    pub fn cname(&self) -> &Option<PrincipalName> {
-        return &self.cname;
-    }
-
-    fn set_cname(&mut self, cname: PrincipalName) {
-        self.cname = Some(cname);
-    }
-
-    pub fn realm(&self) -> &Realm {
-        return &self.realm;
-    }
-
-    pub fn sname(&self) -> &PrincipalName {
-        return &self.sname;
-    }
-
-    pub fn e_text(&self) -> &Option<KerberosString> {
-        return &self.e_text;
-    }
-
-    fn set_e_text(&mut self, e_text: KerberosString) {
-        self.e_text = Some(e_text);
-    }
-
-    pub fn e_data(&self) -> &Option<Edata> {
-        return &self.e_data;
-    }
-
-    fn set_e_data(&mut self, e_data: Edata) {
-        self.e_data = Some(e_data);
-    }
 
     pub fn parse(raw: &[u8]) -> Result<KrbError> {
         let mut krb_error_asn1 = KrbErrorAsn1::default();
@@ -149,7 +66,7 @@ impl fmt::Display for KrbError {
         write!(
             f,
             "KRB-ERROR [{}] {}",
-            self.error_code(),
+            self.error_code,
             self.error_code_message()
         )
     }
@@ -222,7 +139,7 @@ impl KrbErrorAsn1 {
         let pvno_value = pvno
             .value()
             .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::pvno".to_string()))?;
-        krb_error.set_pvno(pvno_value as i8);
+        krb_error.pvno = pvno_value as i8;
 
         let msg_type = self
             .get_msg_type()
@@ -230,26 +147,26 @@ impl KrbErrorAsn1 {
         let msg_type_value = msg_type
             .value()
             .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::msg_type".to_string()))?;
-        krb_error.set_msg_type(msg_type_value as i8);
+        krb_error.msg_type = msg_type_value as i8;
 
         if let Some(ctime) = self.get_ctime() {
-            krb_error.set_ctime(ctime.no_asn1_type()?);
+            krb_error.ctime = Some(ctime.no_asn1_type()?);
         }
 
         if let Some(cusec) = self.get_cusec() {
-            krb_error.set_cusec(cusec.no_asn1_type()?);
+            krb_error.cusec = Some(cusec.no_asn1_type()?);
         }
 
         if let Some(crealm) = self.get_crealm() {
-            krb_error.set_crealm(crealm.no_asn1_type()?);
+            krb_error.crealm = Some(crealm.no_asn1_type()?);
         }
 
         if let Some(cname) = self.get_cname() {
-            krb_error.set_cname(cname.no_asn1_type()?);
+            krb_error.cname = Some(cname.no_asn1_type()?);
         }
 
         if let Some(e_text) = self.get_e_text() {
-            krb_error.set_e_text(e_text.no_asn1_type()?);
+            krb_error.e_text = Some(e_text.no_asn1_type()?);
         }
 
         if let Some(e_data) = self.get_e_data() {
@@ -260,14 +177,14 @@ impl KrbErrorAsn1 {
             if krb_error.error_code == KDC_ERR_PREAUTH_REQUIRED {
                 match MethodData::parse(e_data_value) {
                     Ok(method_data) => {
-                        krb_error.set_e_data(Edata::MethodData(method_data));
+                        krb_error.e_data = Some(Edata::MethodData(method_data));
                     }
                     Err(_) => {
-                        krb_error.set_e_data(Edata::Raw(e_data_value.clone()));
+                        krb_error.e_data = Some(Edata::Raw(e_data_value.clone()));
                     }
                 }
             } else {
-                krb_error.set_e_data(Edata::Raw(e_data_value.clone()));
+                krb_error.e_data = Some(Edata::Raw(e_data_value.clone()));
             }
         }
 
@@ -359,7 +276,7 @@ mod test {
         method_data.push(PaData::Raw(PA_PK_AS_REQ, vec![]));
         method_data.push(PaData::Raw(PA_PK_AS_REP_OLD, vec![]));
 
-        krb_error.set_e_data(Edata::MethodData(method_data));
+        krb_error.e_data = Some(Edata::MethodData(method_data));
 
         assert_eq!(krb_error, krb_error_asn1.no_asn1_type().unwrap());
     }
@@ -405,20 +322,20 @@ mod test {
             sname.clone(),
         );
 
-        krb_error.set_e_data(e_data.clone());
+        krb_error.e_data = Some(e_data.clone());
 
-        assert_eq!(5, krb_error.pvno());
-        assert_eq!(30, krb_error.msg_type());
-        assert_eq!(&None, krb_error.ctime());
-        assert_eq!(&None, krb_error.cusec());
-        assert_eq!(&stime, krb_error.stime());
-        assert_eq!(&susec, krb_error.susec());
-        assert_eq!(error_code, krb_error.error_code());
-        assert_eq!(&None, krb_error.crealm());
-        assert_eq!(&None, krb_error.cname());
-        assert_eq!(&realm, krb_error.realm());
-        assert_eq!(&sname, krb_error.sname());
-        assert_eq!(&None, krb_error.e_text());
-        assert_eq!(&Some(e_data), krb_error.e_data());
+        assert_eq!(5, krb_error.pvno);
+        assert_eq!(30, krb_error.msg_type);
+        assert_eq!(None, krb_error.ctime);
+        assert_eq!(None, krb_error.cusec);
+        assert_eq!(stime, krb_error.stime);
+        assert_eq!(susec, krb_error.susec);
+        assert_eq!(error_code, krb_error.error_code);
+        assert_eq!(None, krb_error.crealm);
+        assert_eq!(None, krb_error.cname);
+        assert_eq!(realm, krb_error.realm);
+        assert_eq!(sname, krb_error.sname);
+        assert_eq!(None, krb_error.e_text);
+        assert_eq!(Some(e_data), krb_error.e_data);
     }
 }
