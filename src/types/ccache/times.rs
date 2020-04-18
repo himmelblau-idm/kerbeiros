@@ -1,15 +1,13 @@
-use getset::{Getters,Setters};
 use nom::number::complete::be_u32;
 use nom::IResult;
 
 /// Holds the differents timestamps handled by Kerberos.
-#[derive(Debug, PartialEq, Clone, Getters, Setters)]
-#[getset(get = "pub", set = "pub")]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Times {
-    authtime: u32,
-    starttime: u32,
-    endtime: u32,
-    renew_till: u32,
+    pub authtime: u32,
+    pub starttime: u32,
+    pub endtime: u32,
+    pub renew_till: u32,
 }
 
 impl Times {

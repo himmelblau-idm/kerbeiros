@@ -43,13 +43,13 @@ impl TimesMapper {
         KerberosTime,
         Option<KerberosTime>,
     ) {
-        let authtime = Utc.timestamp(*times.authtime() as i64, 0);
-        let starttime = Utc.timestamp(*times.starttime() as i64, 0);
-        let endtime = Utc.timestamp(*times.endtime() as i64, 0);
+        let authtime = Utc.timestamp(times.authtime as i64, 0);
+        let starttime = Utc.timestamp(times.starttime as i64, 0);
+        let endtime = Utc.timestamp(times.endtime as i64, 0);
 
-        let renew_till = match times.renew_till() {
+        let renew_till = match times.renew_till {
             0 => None,
-            _ => Some(Utc.timestamp(*times.renew_till() as i64, 0))
+            _ => Some(Utc.timestamp(times.renew_till as i64, 0))
         };
 
         return (authtime, starttime, endtime, renew_till);
