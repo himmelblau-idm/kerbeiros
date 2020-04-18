@@ -15,3 +15,6 @@ pub use address_mapper::*;
 
 mod auth_data_mapper;
 pub use auth_data_mapper::*;
+
+mod octet_string_mapper;
+pub use octet_string_mapper::*;
