@@ -18,10 +18,10 @@ impl AuthDataMapper {
         return auth_data;
     }
 
-    pub fn auth_data_to_padata(auth_data: &AuthData) -> PaData {
+    pub fn auth_data_to_padata(auth_data: AuthData) -> PaData {
         return PaData::new(
             auth_data.addrtype as i32,
-            (&auth_data.addrdata).clone().data,
+            auth_data.addrdata.data,
         );
     }
 
@@ -29,7 +29,7 @@ impl AuthDataMapper {
         return MethodData::new(
             auth_datas
                 .into_iter()
-                .map(|auth_data| Self::auth_data_to_padata(&auth_data))
+                .map(|auth_data| Self::auth_data_to_padata(auth_data))
                 .collect(),
         );
     }
@@ -81,7 +81,7 @@ mod test {
             CountedOctetString::new(vec![0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff]),
         );
 
-        assert_eq!(padata, AuthDataMapper::auth_data_to_padata(&auth_data));
+        assert_eq!(padata, AuthDataMapper::auth_data_to_padata(auth_data));
     }
 
     #[test]
