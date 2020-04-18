@@ -9,11 +9,15 @@ impl AddressMapper {
     pub fn host_address_to_address(host_address: &HostAddress) -> Address {
         return Address::new(
             host_address.addr_type() as u16,
-            CountedOctetString::new(host_address.address_without_modifications()),
+            CountedOctetString::new(
+                host_address.address_without_modifications(),
+            ),
         );
     }
 
-    pub fn host_addresses_to_address_vector(host_addresses: &HostAddresses) -> Vec<Address> {
+    pub fn host_addresses_to_address_vector(
+        host_addresses: &HostAddresses,
+    ) -> Vec<Address> {
         let mut addresses = Vec::new();
         for host_address in host_addresses.iter() {
             addresses.push(Self::host_address_to_address(host_address));
@@ -25,7 +29,9 @@ impl AddressMapper {
         let address_type = address.addrtype as i32;
         match address_type {
             address_type::NETBIOS => {
-                return Ok(HostAddress::NetBios((&address.addrdata).clone().try_into()?));
+                return Ok(HostAddress::NetBios(
+                    (&address.addrdata).clone().try_into()?,
+                ));
             }
             _ => {
                 return Ok(HostAddress::Raw(
@@ -36,16 +42,20 @@ impl AddressMapper {
         }
     }
 
-    pub fn address_vector_to_host_addresses(mut addresses: Vec<Address>) -> Result<HostAddresses> {
+    pub fn address_vector_to_host_addresses(
+        mut addresses: Vec<Address>,
+    ) -> Result<HostAddresses> {
         if addresses.len() == 0 {
             return Err(ErrorKind::NoAddress)?;
         }
         let main_address = addresses.remove(0);
 
-        let mut host_addresses = HostAddresses::new(Self::address_to_host_address(&main_address)?);
+        let mut host_addresses =
+            HostAddresses::new(Self::address_to_host_address(&main_address)?);
 
         while addresses.len() > 0 {
-            host_addresses.push(Self::address_to_host_address(&addresses.remove(0))?);
+            host_addresses
+                .push(Self::address_to_host_address(&addresses.remove(0))?);
         }
 
         return Ok(host_addresses);
@@ -83,9 +93,11 @@ mod test {
             CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
         ));
 
-        let mut host_addresses =
-            HostAddresses::new(HostAddress::NetBios("KINGDOM.HEARTS".to_string()));
-        host_addresses.push(HostAddress::Raw(7, "HOLLOWBASTION".as_bytes().to_vec()));
+        let mut host_addresses = HostAddresses::new(HostAddress::NetBios(
+            "KINGDOM.HEARTS".to_string(),
+        ));
+        host_addresses
+            .push(HostAddress::Raw(7, "HOLLOWBASTION".as_bytes().to_vec()));
 
         assert_eq!(
             addresses,
@@ -132,9 +144,11 @@ mod test {
             CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
         ));
 
-        let mut host_addresses =
-            HostAddresses::new(HostAddress::NetBios("KINGDOM.HEARTS".to_string()));
-        host_addresses.push(HostAddress::Raw(7, "HOLLOWBASTION".as_bytes().to_vec()));
+        let mut host_addresses = HostAddresses::new(HostAddress::NetBios(
+            "KINGDOM.HEARTS".to_string(),
+        ));
+        host_addresses
+            .push(HostAddress::Raw(7, "HOLLOWBASTION".as_bytes().to_vec()));
 
         assert_eq!(
             host_addresses,
