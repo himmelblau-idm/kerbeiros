@@ -3,7 +3,8 @@ mod cryptography;
 mod rc4_hmac_md5;
 
 mod byteparser;
-mod etypes;
+pub mod etypes;
+
 
 mod error;
 pub use error::{Error, Result};
