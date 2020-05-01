@@ -5,7 +5,8 @@ use crate::transporter::*;
 use ascii::AsciiString;
 use std::collections::HashSet;
 use std::net::IpAddr;
-use crate::asn1::{KrbError, AsRep};
+use kerberos_asn1::{KrbError, AsRep};
+use red_asn1::Asn1Object;
 
 /// Encapsule the possible responses to an AS-REQ request
 #[derive(Debug, PartialEq)]
@@ -113,11 +114,11 @@ impl AsRequest {
 
     fn parse_as_request_response(raw_response: &[u8]) -> Result<AsReqResponse> {
         match KrbError::parse(raw_response) {
-            Ok(krb_error) => {
+            Ok((_, krb_error)) => {
                 return Ok(AsReqResponse::KrbError(krb_error));
             }
             Err(_) => {
-                let as_rep = AsRep::parse(raw_response)?;
+                let as_rep = AsRep::parse(raw_response)?.1;
                 return Ok(AsReqResponse::AsRep(as_rep));
             }
         }

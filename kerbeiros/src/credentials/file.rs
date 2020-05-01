@@ -3,6 +3,7 @@ use crate::{Result, Error};
 use std::fs::File;
 use std::io::Write;
 use kerberos_ccache::CCache;
+use red_asn1::Asn1Object;
 
 pub struct CredentialFileConverter<'a> {
     credentials: &'a CredentialWarehouse,

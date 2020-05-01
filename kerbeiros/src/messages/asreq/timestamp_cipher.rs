@@ -1,13 +1,14 @@
-use kerberos_constants::etypes::{
-    RC4_HMAC, AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96
-};
-use kerberos_constants::key_usages::KEY_USAGE_AS_REQ_TIMESTAMP;
+use kerberos_asn1::PaEncTsEnc;
 use crate::key::Key;
-use crate::asn1;
+use crate::{Error, Result};
 use ascii::AsciiString;
 use chrono::Utc;
-use crate::{Result, Error};
+use kerberos_constants::etypes::{
+    AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
+};
+use kerberos_constants::key_usages::KEY_USAGE_AS_REQ_TIMESTAMP;
 use kerberos_crypto::new_kerberos_cipher;
+use red_asn1::Asn1Object;
 
 pub struct AsReqTimestampCipher<'a> {
     realm: &'a AsciiString,
@@ -44,25 +45,31 @@ impl<'a> AsReqTimestampCipher<'a> {
     }
 
     fn produce_raw_timestamp() -> Vec<u8> {
-        let timestamp = asn1::PaEncTsEnc::from(Utc::now());
+        let timestamp = PaEncTsEnc::from(Utc::now());
         return timestamp.build();
     }
 
     fn produce_encrypted_timestamp(&self) -> Result<(i32, Vec<u8>)> {
         match self.user_key {
             Key::Password(password) => {
-                return self.encrypt_timestamp_with_best_cipher_and_password(password);
+                return self
+                    .encrypt_timestamp_with_best_cipher_and_password(password);
             }
             Key::RC4Key(rc4_key) => {
-                return self.encrypt_timestamp_with_cipher_and_key(RC4_HMAC, rc4_key);
+                return self
+                    .encrypt_timestamp_with_cipher_and_key(RC4_HMAC, rc4_key);
             }
             Key::AES128Key(aes_key_128) => {
-                return self
-                    .encrypt_timestamp_with_cipher_and_key(AES128_CTS_HMAC_SHA1_96, aes_key_128);
+                return self.encrypt_timestamp_with_cipher_and_key(
+                    AES128_CTS_HMAC_SHA1_96,
+                    aes_key_128,
+                );
             }
             Key::AES256Key(aes_key_256) => {
-                return self
-                    .encrypt_timestamp_with_cipher_and_key(AES256_CTS_HMAC_SHA1_96, aes_key_256);
+                return self.encrypt_timestamp_with_cipher_and_key(
+                    AES256_CTS_HMAC_SHA1_96,
+                    aes_key_256,
+                );
             }
         }
     }
@@ -87,7 +94,9 @@ impl<'a> AsReqTimestampCipher<'a> {
             return Err(Error::NoProvidedSupportedCipherAlgorithm)?;
         }
 
-        return self.encrypt_timestamp_with_cipher_and_password(etype, password, &salt);
+        return self.encrypt_timestamp_with_cipher_and_password(
+            etype, password, &salt,
+        );
     }
 
     fn encrypt_timestamp_with_cipher_and_key(
@@ -98,7 +107,11 @@ impl<'a> AsReqTimestampCipher<'a> {
         let cipher = new_kerberos_cipher(etype)?;
         return Ok((
             etype,
-            cipher.encrypt(key, KEY_USAGE_AS_REQ_TIMESTAMP, &self.raw_timestamp),
+            cipher.encrypt(
+                key,
+                KEY_USAGE_AS_REQ_TIMESTAMP,
+                &self.raw_timestamp,
+            ),
         ));
     }
 
@@ -142,17 +155,18 @@ mod test {
     fn produce_encrypted_timestamp_with_rc4_key() {
         let etypes = vec![RC4_HMAC];
         let key = [
-            0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31, 0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0,
-            0x89, 0xc0,
+            0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31, 0xb7, 0x3c, 0x59,
+            0xd7, 0xe0, 0xc0, 0x89, 0xc0,
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::RC4Key(key.clone()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::RC4Key(key.clone()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(RC4_HMAC, result_etype);
         new_kerberos_cipher(RC4_HMAC)
@@ -165,17 +179,18 @@ mod test {
     fn produce_encrypted_timestamp_with_aes128_key() {
         let etypes = vec![AES128_CTS_HMAC_SHA1_96];
         let key = [
-            0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45, 0x9a, 0x1c, 0x39, 0xbf, 0x83, 0x23,
-            0x56, 0x09,
+            0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45, 0x9a, 0x1c, 0x39,
+            0xbf, 0x83, 0x23, 0x56, 0x09,
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::AES128Key(key.clone()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::AES128Key(key.clone()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(AES128_CTS_HMAC_SHA1_96, result_etype);
         new_kerberos_cipher(AES128_CTS_HMAC_SHA1_96)
@@ -188,18 +203,19 @@ mod test {
     fn produce_encrypted_timestamp_with_aes256_key() {
         let etypes = vec![AES256_CTS_HMAC_SHA1_96];
         let key = [
-            0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 0x26, 0xa5, 0x69, 0xf8, 0xb7, 0xc3,
-            0x67, 0x15, 0xc8, 0xda, 0xef, 0x10, 0x9f, 0xa3, 0xd8, 0xb2, 0xe1, 0x46, 0x16, 0xaa,
-            0xca, 0xb5, 0x49, 0xfd,
+            0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 0x26, 0xa5, 0x69,
+            0xf8, 0xb7, 0xc3, 0x67, 0x15, 0xc8, 0xda, 0xef, 0x10, 0x9f, 0xa3,
+            0xd8, 0xb2, 0xe1, 0x46, 0x16, 0xaa, 0xca, 0xb5, 0x49, 0xfd,
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::AES256Key(key.clone()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::AES256Key(key.clone()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(AES256_CTS_HMAC_SHA1_96, result_etype);
         new_kerberos_cipher(AES256_CTS_HMAC_SHA1_96)
@@ -212,17 +228,18 @@ mod test {
     fn produce_encrypted_timestamp_with_rc4_key_without_specify_any_cipher() {
         let etypes = vec![];
         let key = [
-            0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31, 0xb7, 0x3c, 0x59, 0xd7, 0xe0, 0xc0,
-            0x89, 0xc0,
+            0x31, 0xd6, 0xcf, 0xe0, 0xd1, 0x6a, 0xe9, 0x31, 0xb7, 0x3c, 0x59,
+            0xd7, 0xe0, 0xc0, 0x89, 0xc0,
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::RC4Key(key.clone()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::RC4Key(key.clone()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(RC4_HMAC, result_etype);
         new_kerberos_cipher(RC4_HMAC)
@@ -232,20 +249,22 @@ mod test {
     }
 
     #[test]
-    fn produce_encrypted_timestamp_with_aes128_key_without_specify_any_cipher() {
+    fn produce_encrypted_timestamp_with_aes128_key_without_specify_any_cipher()
+    {
         let etypes = vec![];
         let key = [
-            0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45, 0x9a, 0x1c, 0x39, 0xbf, 0x83, 0x23,
-            0x56, 0x09,
+            0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45, 0x9a, 0x1c, 0x39,
+            0xbf, 0x83, 0x23, 0x56, 0x09,
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::AES128Key(key.clone()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::AES128Key(key.clone()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(AES128_CTS_HMAC_SHA1_96, result_etype);
         new_kerberos_cipher(AES128_CTS_HMAC_SHA1_96)
@@ -255,21 +274,23 @@ mod test {
     }
 
     #[test]
-    fn produce_encrypted_timestamp_with_aes256_key_without_specify_any_cipher() {
+    fn produce_encrypted_timestamp_with_aes256_key_without_specify_any_cipher()
+    {
         let etypes = vec![];
         let key = [
-            0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 0x26, 0xa5, 0x69, 0xf8, 0xb7, 0xc3,
-            0x67, 0x15, 0xc8, 0xda, 0xef, 0x10, 0x9f, 0xa3, 0xd8, 0xb2, 0xe1, 0x46, 0x16, 0xaa,
-            0xca, 0xb5, 0x49, 0xfd,
+            0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 0x26, 0xa5, 0x69,
+            0xf8, 0xb7, 0xc3, 0x67, 0x15, 0xc8, 0xda, 0xef, 0x10, 0x9f, 0xa3,
+            0xd8, 0xb2, 0xe1, 0x46, 0x16, 0xaa, 0xca, 0xb5, 0x49, 0xfd,
         ];
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::AES256Key(key.clone()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::AES256Key(key.clone()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(AES256_CTS_HMAC_SHA1_96, result_etype);
         new_kerberos_cipher(AES256_CTS_HMAC_SHA1_96)
@@ -292,17 +313,20 @@ mod test {
     }
 
     #[test]
-    fn produce_encrypted_timestamp_with_password_setting_aes256_as_best_cipher() {
-        let etypes = vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC];
+    fn produce_encrypted_timestamp_with_password_setting_aes256_as_best_cipher()
+    {
+        let etypes =
+            vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC];
         let password = "password";
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::Password(password.to_string()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::Password(password.to_string()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(AES256_CTS_HMAC_SHA1_96, result_etype);
         new_kerberos_cipher(AES256_CTS_HMAC_SHA1_96)
@@ -317,17 +341,19 @@ mod test {
     }
 
     #[test]
-    fn produce_encrypted_timestamp_with_password_setting_aes128_as_best_cipher() {
+    fn produce_encrypted_timestamp_with_password_setting_aes128_as_best_cipher()
+    {
         let etypes = vec![AES128_CTS_HMAC_SHA1_96, RC4_HMAC];
         let password = "password";
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::Password(password.to_string()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::Password(password.to_string()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(AES128_CTS_HMAC_SHA1_96, result_etype);
         new_kerberos_cipher(AES128_CTS_HMAC_SHA1_96)
@@ -346,13 +372,14 @@ mod test {
         let etypes = vec![RC4_HMAC];
         let password = "password";
 
-        let (result_etype, timestamp) = AsReqTimestampCipher::build_encrypted_timestamp(
-            &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
-            &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::Password(password.to_string()),
-            &etypes,
-        )
-        .unwrap();
+        let (result_etype, timestamp) =
+            AsReqTimestampCipher::build_encrypted_timestamp(
+                &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
+                &AsciiString::from_ascii("Mickey").unwrap(),
+                &Key::Password(password.to_string()),
+                &etypes,
+            )
+            .unwrap();
 
         assert_eq!(RC4_HMAC, result_etype);
         new_kerberos_cipher(RC4_HMAC)

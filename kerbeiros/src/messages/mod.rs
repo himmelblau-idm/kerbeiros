@@ -3,8 +3,6 @@
 mod asreq;
 pub(crate) use asreq::*;
 
-use crate::asn1;
-pub use asn1::AsRep;
-pub use asn1::AsReq;
-pub use asn1::KdcRep;
-pub use asn1::KrbError;
+pub use kerberos_asn1::AsRep;
+pub use kerberos_asn1::AsReq;
+pub use kerberos_asn1::KrbError;

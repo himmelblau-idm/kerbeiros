@@ -1,6 +1,6 @@
 use crate::mappers::CountedOctetStringMapper;
 use crate::{Error, Result};
-use crate::asn1::{PrincipalName, Realm};
+use kerberos_asn1::{PrincipalName, Realm};
 use kerberos_ccache::Principal;
 
 pub struct PrincipalMapper {}
@@ -63,16 +63,16 @@ impl PrincipalMapper {
 
 mod test {
     use super::*;
-    use kerberos_constants::principal_names::*;
+    use kerberos_asn1::KerberosString;
     use kerberos_ccache::CountedOctetString;
-    use crate::asn1::KerberosString;
+    use kerberos_constants::principal_names::*;
 
     #[test]
     fn realm_and_principal_name_to_principal() {
-        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let realm = Realm::from("KINGDOM.HEARTS");
         let principal_name = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("mickey").unwrap(),
+            KerberosString::from("mickey"),
         );
 
         let principal = Principal::new(
@@ -92,10 +92,10 @@ mod test {
 
     #[test]
     fn test_principal_to_realm_and_principal_name() {
-        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let realm = Realm::from("KINGDOM.HEARTS");
         let principal_name = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("mickey").unwrap(),
+            KerberosString::from("mickey"),
         );
 
         let principal = Principal::new(
@@ -126,13 +126,13 @@ mod test {
 
     #[test]
     fn test_principal_to_realm_and_principal_name_multiple_names() {
-        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let realm = Realm::from("KINGDOM.HEARTS");
         let mut principal_name = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("mickey").unwrap(),
+            KerberosString::from("mickey"),
         );
 
-        principal_name.push(KerberosString::from_ascii("user2").unwrap());
+        principal_name.push(KerberosString::from("user2"));
 
         let principal = Principal::new(
             NT_PRINCIPAL as u32,

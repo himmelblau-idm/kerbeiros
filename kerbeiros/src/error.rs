@@ -7,7 +7,7 @@ use nom::Err as NomError;
 use red_asn1;
 use std::result;
 use std::string::FromUtf8Error;
-use crate::messages::{KrbError, KdcRep};
+use crate::messages::{KrbError, AsRep};
 
 /// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;
@@ -17,7 +17,7 @@ pub type Result<T> = result::Result<T, Error>;
 pub enum Error {
     /// Error handlening asn1 entities.
     #[fail(display = "Asn1 error: {}", _0)]
-    Asn1Error(red_asn1::ErrorKind),
+    Asn1Error(red_asn1::Error),
 
     /// Error produced in the application of cryptographic algorithms.
     #[fail(display = "Cryptography error: {}", _0)]
@@ -50,7 +50,7 @@ pub enum Error {
     InvalidKeyLength(usize),
 
     /// Received KRB-ERROR response.
-    #[fail(display = "Received {}", _0)]
+    #[fail(display = "Received {:?}", _0)]
     KrbErrorResponse(KrbError),
 
     /// Error resolving name.
@@ -73,9 +73,9 @@ pub enum Error {
     #[fail(display = "Not available data {}", _0)]
     NotAvailableData(String),
 
-    /// Error parsing KDC-REP message.
-    #[fail(display = "Error parsing KdcRep: {}", _1)]
-    ParseKdcRepError(KdcRep, Box<Error>),
+    /// Error parsing AS-REP message.
+    #[fail(display = "Error parsing AsRep: {}", _1)]
+    ParseAsRepError(AsRep, Box<Error>),
 
     /// The type of the principal name was not specified.
     #[fail(display = "Undefined type of principal name: {}", _0)]
@@ -120,7 +120,7 @@ impl From<FromUtf8Error> for Error {
 
 impl From<red_asn1::Error> for Error {
     fn from(error: red_asn1::Error) -> Self {
-        return Self::Asn1Error(error.kind().clone());
+        return Self::Asn1Error(error);
     }
 }
 

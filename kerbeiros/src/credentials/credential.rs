@@ -1,8 +1,8 @@
 use super::credential_warehouse::CredentialWarehouse;
 use crate::error;
 use crate::error::Result;
-use crate::asn1::{
-    EncKdcRepPart, EncryptionKey, HostAddresses,
+use kerberos_asn1::{
+    EncAsRepPart, EncryptionKey, HostAddresses,
     KerberosString, KerberosTime, LastReq, MethodData,
     PrincipalName, Realm, Ticket, TicketFlags,
 };
@@ -11,6 +11,7 @@ use crate::mappers::{
 };
 use kerberos_ccache::{CountedOctetString, Credential as CredentialEntry};
 use std::convert::TryFrom;
+use red_asn1::Asn1Object;
 
 /// Represents a Kerberos credential, which includes one Ticket and session information.
 ///
@@ -22,7 +23,7 @@ pub struct Credential {
     crealm: Realm,
     cname: PrincipalName,
     ticket: Ticket,
-    client_part: EncKdcRepPart,
+    client_part: EncAsRepPart,
 }
 
 impl Credential {
@@ -30,7 +31,7 @@ impl Credential {
         crealm: Realm,
         cname: PrincipalName,
         ticket: Ticket,
-        client_part: EncKdcRepPart,
+        client_part: EncAsRepPart,
     ) -> Self {
         return Self {
             crealm,
@@ -138,20 +139,23 @@ impl TryFrom<CredentialEntry> for Credential {
         );
 
         let ticket_bytes = &credential_entry.ticket.data;
-        let ticket = Ticket::parse(ticket_bytes)?;
+        let (_, ticket) = Ticket::parse(ticket_bytes)?;
 
-        let mut enc_part = EncKdcRepPart::new(
-            encryption_key,
-            LastReq::default(),
-            0,
-            ticket_flags,
+        let mut enc_part = EncAsRepPart {
+            key: encryption_key,
+            last_req: LastReq::default(),
+            nonce: 0,
+            key_expiration: None,
+            flags: ticket_flags,
             authtime,
+            starttime: Some(starttime),
             endtime,
+            renew_till: None,
             srealm,
             sname,
-        );
-
-        enc_part.starttime = Some(starttime);
+            caddr: None,
+            encrypted_pa_data: None,
+        };
 
         if let Some(time) = renew_till {
             enc_part.renew_till = Some(time);
@@ -220,15 +224,16 @@ impl Into<CredentialEntry> for Credential {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::address_types;
+    use kerberos_constants::address_types::*;
     use kerberos_constants::ticket_flags;
     use kerberos_constants::etypes::*;
     use kerberos_constants::principal_names::*;
     use kerberos_constants::pa_data_types::*;
-    use crate::asn1::{
-        EncKdcRepPart, EncryptedData, EncryptionKey, HostAddress,
+    use kerberos_asn1::{
+        EncAsRepPart, EncryptedData, EncryptionKey, HostAddress,
         HostAddresses, KerberosString, KerberosTime, LastReq, MethodData,
-        PaData, PacRequest, PrincipalName, Realm, Ticket, TicketFlags,
+        PaData, KerbPaPacRequest, PrincipalName, Realm, Ticket, TicketFlags,
+        padd_netbios_string
     };
     use chrono::prelude::*;
     use kerberos_ccache as ccache;
@@ -251,20 +256,21 @@ mod test {
         ticket: Ticket,
     ) -> Credential {
         let nonce = 0;
-        let mut enc_as_rep_part = EncKdcRepPart::new(
-            encryption_key,
-            LastReq::default(),
+        let enc_as_rep_part = EncAsRepPart {
+            key: encryption_key,
+            last_req: LastReq::default(),
             nonce,
-            ticket_flags,
+            key_expiration: None,
+            flags: ticket_flags,
             authtime,
+            starttime: Some(starttime),
             endtime,
-            srealm.clone(),
-            sname.clone(),
-        );
-        enc_as_rep_part.starttime = Some(starttime);
-        enc_as_rep_part.renew_till = Some(renew_till);
-        enc_as_rep_part.caddr = caddr;
-        enc_as_rep_part.encrypted_pa_data = Some(method_data);
+            renew_till: Some(renew_till),
+            srealm: srealm.clone(),
+            sname: sname.clone(),
+            caddr: caddr,
+            encrypted_pa_data: Some(method_data),
+        };
 
         let credential = Credential::new(
             prealm.clone(),
@@ -278,17 +284,17 @@ mod test {
 
     #[test]
     fn convert_credential_to_ccache_credential() {
-        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let realm = Realm::from("KINGDOM.HEARTS");
 
         let mut sname = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("krbtgt").unwrap(),
+            KerberosString::from("krbtgt"),
         );
         sname.push(realm.clone());
 
         let pname = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("mickey").unwrap(),
+            KerberosString::from("mickey"),
         );
 
         let encryption_key = EncryptionKey::new(
@@ -329,30 +335,32 @@ mod test {
             | ticket_flags::INITIAL
             | ticket_flags::PRE_AUTHENT;
 
-        let ticket_flags = TicketFlags::new(tktflags);
+        let ticket_flags = TicketFlags::from(tktflags);
 
         let mut ticket_encrypted_data =
-            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0a]);
+            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, None, vec![0x0a]);
         ticket_encrypted_data.kvno = Some(2);
 
         let ticket_credential =
             Ticket::new(realm.clone(), sname.clone(), ticket_encrypted_data);
 
-        let host_addresses = HostAddresses::new(HostAddress::NetBios(
-            "HOLLOWBASTION".to_string(),
-        ));
-        let mut method_data = MethodData::default();
-        method_data.push(PaData::PacRequest(PacRequest::new(true)));
+        let host_addresses = vec![HostAddress::new(
+            NETBIOS,
+            padd_netbios_string("HOLLOWBASTION".to_string()).into_bytes(),
+        )];
+        let method_data = vec![
+            PaData::new(PA_PAC_REQUEST, KerbPaPacRequest::new(true).build())
+        ];
 
         let credential = create_credential(
             encryption_key.clone(),
             realm.clone(),
             pname.clone(),
             ticket_flags.clone(),
-            authtime.clone(),
-            starttime.clone(),
-            endtime.clone(),
-            renew_till.clone(),
+            authtime.into(),
+            starttime.into(),
+            endtime.into(),
+            renew_till.into(),
             realm.clone(),
             sname.clone(),
             Some(host_addresses),
@@ -404,7 +412,7 @@ mod test {
 
         let mut addresses = Vec::new();
         addresses.push(Address::new(
-            address_types::NETBIOS as u16,
+            NETBIOS as u16,
             CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
         ));
         ccache_credential.addrs = addresses;
@@ -424,17 +432,17 @@ mod test {
 
     #[test]
     fn test_convert_ccache_credential_to_credential() {
-        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let realm = Realm::from("KINGDOM.HEARTS");
 
         let mut sname = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("krbtgt").unwrap(),
+            KerberosString::from("krbtgt"),
         );
         sname.push(realm.clone());
 
         let pname = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("mickey").unwrap(),
+            KerberosString::from("mickey"),
         );
 
         let encryption_key = EncryptionKey::new(
@@ -475,30 +483,32 @@ mod test {
             | ticket_flags::INITIAL
             | ticket_flags::PRE_AUTHENT;
 
-        let ticket_flags = TicketFlags::new(tktflags);
+        let ticket_flags = TicketFlags::from(tktflags);
 
         let mut ticket_encrypted_data =
-            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0a]);
+            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, None, vec![0x0a]);
         ticket_encrypted_data.kvno = Some(2);
 
         let ticket_credential =
             Ticket::new(realm.clone(), sname.clone(), ticket_encrypted_data);
 
-        let host_addresses = HostAddresses::new(HostAddress::NetBios(
-            "HOLLOWBASTION".to_string(),
-        ));
-        let mut method_data = MethodData::default();
-        method_data.push(PaData::PacRequest(PacRequest::new(true)));
-
+        let host_addresses = vec![HostAddress::new(
+            NETBIOS,
+            padd_netbios_string("HOLLOWBASTION".to_string()).into_bytes(),
+        )];
+        let method_data = vec![
+            PaData::new(PA_PAC_REQUEST, KerbPaPacRequest::new(true).build())
+        ];
+        
         let credential = create_credential(
             encryption_key.clone(),
             realm.clone(),
             pname.clone(),
             ticket_flags.clone(),
-            authtime.clone(),
-            starttime.clone(),
-            endtime.clone(),
-            renew_till.clone(),
+            authtime.clone().into(),
+            starttime.clone().into(),
+            endtime.clone().into(),
+            renew_till.clone().into(),
             realm.clone(),
             sname.clone(),
             Some(host_addresses),
@@ -550,7 +560,7 @@ mod test {
 
         let mut addresses = Vec::new();
         addresses.push(Address::new(
-            address_types::NETBIOS as u16,
+            NETBIOS as u16,
             CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
         ));
         ccache_credential.addrs = addresses;

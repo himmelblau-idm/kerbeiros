@@ -1,10 +1,10 @@
-use crate::asn1::TicketFlags;
+use kerberos_asn1::TicketFlags;
 
 pub struct TicketFlagsMapper {}
 
 impl TicketFlagsMapper {
     pub fn ticket_flags_to_tktflags(ticket_flags: &TicketFlags) -> u32 {
-        return ticket_flags.flags();
+        return **ticket_flags;
     }
     pub fn tktflags_to_ticket_flags(tktflags: u32) -> TicketFlags {
         return TicketFlags::from(tktflags);
@@ -18,7 +18,7 @@ mod test {
 
     #[test]
     fn ticket_flags_to_tktflags() {
-        let ticket_flags = TicketFlags::new(
+        let ticket_flags = TicketFlags::from(
             ticket_flags::FORWARDABLE
                 | ticket_flags::PROXIABLE
                 | ticket_flags::RENEWABLE
@@ -40,7 +40,7 @@ mod test {
 
     #[test]
     fn test_tktflags_to_ticket_flags() {
-        let ticket_flags = TicketFlags::new(
+        let ticket_flags = TicketFlags::from(
             ticket_flags::FORWARDABLE
                 | ticket_flags::PROXIABLE
                 | ticket_flags::RENEWABLE

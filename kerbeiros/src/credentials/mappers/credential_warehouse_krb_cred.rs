@@ -1,28 +1,44 @@
 use super::super::*;
 use super::*;
+use kerberos_asn1::{EncKrbCredPart, EncryptedData, KrbCred};
 use kerberos_constants::etypes::NO_ENCRYPTION;
-use crate::asn1::*;
+use red_asn1::Asn1Object;
 
 pub struct CredentialWarehouseKrbCredMapper {}
 
 impl CredentialWarehouseKrbCredMapper {
-    pub fn credential_warehouse_to_krb_cred(warehouse: &CredentialWarehouse) -> KrbCred {
+    pub fn credential_warehouse_to_krb_cred(
+        warehouse: &CredentialWarehouse,
+    ) -> KrbCred {
         let credentials = warehouse.credentials();
-        let mut seq_of_tickets = SeqOfTickets::default();
-        let mut seq_of_krb_cred_info = SeqOfKrbCredInfo::default();
+        let mut seq_of_tickets = Vec::new();
+        let mut seq_of_krb_cred_info = Vec::new();
 
         for credential in credentials.iter() {
             let (krb_cred_info, ticket) =
-                CredentialKrbInfoMapper::credential_to_krb_info_and_ticket(credential);
+                CredentialKrbInfoMapper::credential_to_krb_info_and_ticket(
+                    credential,
+                );
             seq_of_tickets.push(ticket);
             seq_of_krb_cred_info.push(krb_cred_info);
         }
 
-        let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
+        let enc_krb_cred_part = EncKrbCredPart {
+            ticket_info: seq_of_krb_cred_info,
+            nonce: None,
+            timestamp: None,
+            usec: None,
+            s_address: None,
+            r_address: None,
+        };
 
         return KrbCred::new(
             seq_of_tickets,
-            EncryptedData::new(NO_ENCRYPTION, enc_krb_cred_part.build()),
+            EncryptedData {
+                etype: NO_ENCRYPTION,
+                kvno: None,
+                cipher: enc_krb_cred_part.build(),
+            },
         );
     }
 }
@@ -30,37 +46,48 @@ impl CredentialWarehouseKrbCredMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::ticket_flags;
+    use chrono::prelude::*;
+    use kerberos_asn1::*;
+    use kerberos_constants::address_types::NETBIOS;
     use kerberos_constants::etypes::*;
     use kerberos_constants::principal_names::*;
-    use chrono::prelude::*;
+    use kerberos_constants::ticket_flags;
 
     #[test]
     fn credential_warehouse_to_krb_cred() {
-        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let realm = Realm::from("KINGDOM.HEARTS");
 
         let mut sname =
-            PrincipalName::new(NT_SRV_INST, KerberosString::from_ascii("krbtgt").unwrap());
-        sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
+            PrincipalName::new(NT_SRV_INST, KerberosString::from("krbtgt"));
+        sname.push(KerberosString::from("KINGDOM.HEARTS"));
 
-        let pname = PrincipalName::new(NT_PRINCIPAL, KerberosString::from_ascii("mickey").unwrap());
+        let pname =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from("mickey"));
 
         let encryption_key = EncryptionKey::new(
             AES256_CTS_HMAC_SHA1_96,
             vec![
-                0x89, 0x4d, 0x65, 0x37, 0x37, 0x12, 0xcc, 0xbd, 0x4e, 0x51, 0x1e, 0xe1, 0x8f, 0xef,
-                0x51, 0xc4, 0xd4, 0xa5, 0xd2, 0xef, 0x88, 0x81, 0x6d, 0xde, 0x85, 0x72, 0x5f, 0x70,
-                0xc2, 0x78, 0x47, 0x86,
+                0x89, 0x4d, 0x65, 0x37, 0x37, 0x12, 0xcc, 0xbd, 0x4e, 0x51,
+                0x1e, 0xe1, 0x8f, 0xef, 0x51, 0xc4, 0xd4, 0xa5, 0xd2, 0xef,
+                0x88, 0x81, 0x6d, 0xde, 0x85, 0x72, 0x5f, 0x70, 0xc2, 0x78,
+                0x47, 0x86,
             ],
         );
 
-        let auth_time = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
-        let starttime = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
-        let endtime = Utc.ymd(2019, 4, 18).and_hms(16, 00, 31);
-        let renew_till = Utc.ymd(2019, 4, 25).and_hms(06, 00, 31);
+        let auth_time =
+            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
+        let starttime =
+            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
+        let endtime =
+            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(16, 00, 31));
+        let renew_till =
+            KerberosTime::from(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31));
 
-        let caddr = HostAddresses::new(HostAddress::NetBios("HOLLOWBASTION".to_string()));
-        let ticket_flags = TicketFlags::new(
+        let caddr = vec![HostAddress::new(
+            NETBIOS,
+            padd_netbios_string("HOLLOWBASTION".to_string()).into_bytes(),
+        )];
+        let ticket_flags = TicketFlags::from(
             ticket_flags::INITIAL
                 | ticket_flags::FORWARDABLE
                 | ticket_flags::PRE_AUTHENT
@@ -102,11 +129,22 @@ mod test {
         let ticket = create_ticket(realm.clone(), sname.clone());
         let seq_of_tickets = vec![ticket];
 
-        let enc_krb_cred_part = EncKrbCredPart::new(seq_of_krb_cred_info);
+        let enc_krb_cred_part = EncKrbCredPart {
+            ticket_info: seq_of_krb_cred_info,
+            nonce: None,
+            timestamp: None,
+            usec: None,
+            s_address: None,
+            r_address: None,
+        };
 
         let krb_cred = KrbCred::new(
             seq_of_tickets,
-            EncryptedData::new(NO_ENCRYPTION, enc_krb_cred_part.build()),
+            EncryptedData {
+                etype: NO_ENCRYPTION,
+                kvno: None,
+                cipher: enc_krb_cred_part.build(),
+            },
         );
 
         let credential_warehouse = CredentialWarehouse::from(credential);
@@ -132,19 +170,19 @@ mod test {
         sname: PrincipalName,
         caddr: HostAddresses,
     ) -> KrbCredInfo {
-        let mut krb_cred_info = KrbCredInfo::new(encryption_key);
-        krb_cred_info.prealm = Some(prealm);
-        krb_cred_info.pname = Some(pname);
-        krb_cred_info.flags = Some(ticket_flags);
-        krb_cred_info.authtime = Some(authtime);
-        krb_cred_info.starttime = Some(starttime);
-        krb_cred_info.endtime = Some(endtime);
-        krb_cred_info.renew_till = Some(renew_till);
-        krb_cred_info.srealm = Some(srealm);
-        krb_cred_info.sname = Some(sname);
-        krb_cred_info.caddr = Some(caddr);
-
-        return krb_cred_info;
+        return  KrbCredInfo {
+            key: encryption_key,
+            prealm: Some(prealm),
+            pname: Some(pname),
+            flags: Some(ticket_flags),
+            authtime: Some(authtime),
+            starttime: Some(starttime),
+            endtime: Some(endtime),
+            renew_till: Some(renew_till),
+            srealm: Some(srealm),
+            sname: Some(sname),
+            caddr: Some(caddr),
+        };
     }
 
     fn create_credential(
@@ -162,22 +200,28 @@ mod test {
         ticket: Ticket,
     ) -> Credential {
         let nonce = 0;
-        let mut enc_as_rep_part = EncKdcRepPart::new(
-            encryption_key,
-            LastReq::default(),
+        let enc_as_rep_part = EncAsRepPart {
+            key: encryption_key,
+            last_req: LastReq::default(),
             nonce,
-            ticket_flags,
+            key_expiration: None,
+            flags: ticket_flags,
             authtime,
+            starttime: Some(starttime),
             endtime,
-            srealm.clone(),
-            sname.clone(),
+            renew_till: Some(renew_till),
+            srealm: srealm.clone(),
+            sname: sname.clone(),
+            caddr,
+            encrypted_pa_data: None,
+        };
+
+        let credential = Credential::new(
+            prealm.clone(),
+            pname.clone(),
+            ticket,
+            enc_as_rep_part,
         );
-        enc_as_rep_part.starttime = Some(starttime);
-        enc_as_rep_part.renew_till = Some(renew_till);
-        enc_as_rep_part.caddr = caddr;
-
-
-        let credential = Credential::new(prealm.clone(), pname.clone(), ticket, enc_as_rep_part);
 
         return credential;
     }
@@ -186,7 +230,7 @@ mod test {
         return Ticket::new(
             realm,
             pname,
-            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, vec![0x0]),
+            EncryptedData::new(AES256_CTS_HMAC_SHA1_96, None, vec![0x0]),
         );
     }
 }

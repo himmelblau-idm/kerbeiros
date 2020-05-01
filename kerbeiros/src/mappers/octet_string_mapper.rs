@@ -1,5 +1,5 @@
 use crate::error;
-use crate::asn1::KerberosString;
+use kerberos_asn1::KerberosString;
 use kerberos_ccache::CountedOctetString;
 
 pub struct CountedOctetStringMapper {}
@@ -14,7 +14,7 @@ impl CountedOctetStringMapper {
     pub fn counted_octet_string_to_kerberos_string(
         counted_octet_string: CountedOctetString,
     ) -> error::Result<KerberosString> {
-        return Ok(KerberosString::from_ascii(counted_octet_string.data)?);
+        return Ok(KerberosString::from_utf8(counted_octet_string.data)?);
     }
 }
 
@@ -25,7 +25,7 @@ mod test {
     #[test]
     fn test_kerberos_string_to_counted_octet_string() {
         let cos_string = CountedOctetStringMapper::kerberos_string_to_counted_octet_string(
-            &KerberosString::from_ascii("ABC").unwrap()
+            &KerberosString::from("ABC")
         );
         
         assert_eq!(CountedOctetString::from("ABC"), cos_string);
@@ -37,11 +37,11 @@ mod test {
             CountedOctetString::from("ABC")
         ).unwrap();
         
-        assert_eq!(KerberosString::from_ascii("ABC").unwrap(), k_string)
+        assert_eq!(KerberosString::from("ABC"), k_string)
     }
 
     #[test]
-    #[should_panic(expected = "InvalidAscii")]
+    #[should_panic(expected = "InvalidUtf8")]
     fn test_counted_octet_string_to_kerberos_string_fail() {
         CountedOctetStringMapper::counted_octet_string_to_kerberos_string(
             CountedOctetString::new(vec![0xff])

@@ -2,12 +2,10 @@ use super::credential::Credential;
 use super::file::CredentialFileConverter;
 use super::mappers::CredentialWarehouseKrbCredMapper;
 use crate::error;
-use crate::asn1::{
-    KrbCred, PrincipalName, Realm,
-};
 use crate::mappers::PrincipalMapper;
-use kerberos_ccache::{CCache, Header};
 use getset::Getters;
+use kerberos_asn1::{KrbCred, PrincipalName, Realm};
+use kerberos_ccache::{CCache, Header};
 use std::convert::TryFrom;
 ///
 /// # Example
@@ -118,12 +116,12 @@ impl Into<CCache> for CredentialWarehouse {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::ticket_flags;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::etypes::*;
-    use crate::asn1::*;
     use chrono::prelude::*;
+    use kerberos_asn1::*;
     use kerberos_ccache as ccache;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
+    use kerberos_constants::ticket_flags;
 
     fn create_credential(
         encryption_key: EncryptionKey,
@@ -140,19 +138,21 @@ mod test {
         ticket: Ticket,
     ) -> Credential {
         let nonce = 0;
-        let mut enc_as_rep_part = EncKdcRepPart::new(
-            encryption_key,
-            LastReq::default(),
+        let enc_as_rep_part = EncAsRepPart {
+            key: encryption_key,
+            last_req: LastReq::default(),
             nonce,
-            ticket_flags,
+            key_expiration: None,
+            flags: ticket_flags,
             authtime,
+            starttime: Some(starttime),
             endtime,
-            srealm.clone(),
-            sname.clone(),
-        );
-        enc_as_rep_part.starttime = Some(starttime);
-        enc_as_rep_part.renew_till = Some(renew_till);
-        enc_as_rep_part.caddr = caddr;
+            renew_till: Some(renew_till),
+            srealm: srealm.clone(),
+            sname: sname.clone(),
+            caddr: caddr,
+            encrypted_pa_data: None,
+        };
 
         let credential = Credential::new(
             prealm.clone(),
@@ -340,17 +340,17 @@ mod test {
 
     #[test]
     fn convert_credential_warehouse_to_ccache() {
-        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let realm = Realm::from("KINGDOM.HEARTS");
 
         let mut sname = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("krbtgt").unwrap(),
+            KerberosString::from("krbtgt"),
         );
-        sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
+        sname.push(KerberosString::from("KINGDOM.HEARTS"));
 
         let pname = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("mickey").unwrap(),
+            KerberosString::from("mickey"),
         );
 
         let encryption_key = EncryptionKey::new(
@@ -391,10 +391,11 @@ mod test {
             | ticket_flags::INITIAL
             | ticket_flags::PRE_AUTHENT;
 
-        let ticket_flags = TicketFlags::new(tktflags);
+        let ticket_flags = TicketFlags::from(tktflags);
 
         let mut ticket_encrypted_data = EncryptedData::new(
             AES256_CTS_HMAC_SHA1_96,
+            None,
             RAW_TICKET_ENCRYPTED.to_vec(),
         );
         ticket_encrypted_data.kvno = Some(2);
@@ -407,10 +408,10 @@ mod test {
             realm.clone(),
             pname.clone(),
             ticket_flags.clone(),
-            authtime.clone(),
-            starttime.clone(),
-            endtime.clone(),
-            renew_till.clone(),
+            authtime.into(),
+            starttime.into(),
+            endtime.into(),
+            renew_till.into(),
             realm.clone(),
             sname.clone(),
             None,
@@ -455,7 +456,7 @@ mod test {
 
         let ccache_header = ccache::Header::new(
             ccache::Header::DELTA_TIME,
-            ccache::DeltaTime::new(u32::max_value(),0).build()
+            ccache::DeltaTime::new(u32::max_value(), 0).build(),
         );
 
         let ccache = CCache::new(
@@ -469,17 +470,17 @@ mod test {
 
     #[test]
     fn convert_ccache_to_credential_warehouse() {
-        let realm = Realm::from_ascii("KINGDOM.HEARTS").unwrap();
+        let realm = Realm::from("KINGDOM.HEARTS");
 
         let mut sname = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("krbtgt").unwrap(),
+            KerberosString::from("krbtgt"),
         );
-        sname.push(KerberosString::from_ascii("KINGDOM.HEARTS").unwrap());
+        sname.push(KerberosString::from("KINGDOM.HEARTS"));
 
         let pname = PrincipalName::new(
             NT_PRINCIPAL,
-            KerberosString::from_ascii("mickey").unwrap(),
+            KerberosString::from("mickey"),
         );
 
         let encryption_key = EncryptionKey::new(
@@ -520,10 +521,11 @@ mod test {
             | ticket_flags::INITIAL
             | ticket_flags::PRE_AUTHENT;
 
-        let ticket_flags = TicketFlags::new(tktflags);
+        let ticket_flags = TicketFlags::from(tktflags);
 
         let mut ticket_encrypted_data = EncryptedData::new(
             AES256_CTS_HMAC_SHA1_96,
+            None,
             vec![
                 0x0a, 0x33, 0x84, 0xdb, 0x8b, 0x31, 0x15, 0x29, 0x20, 0x37,
                 0xe5, 0xe7, 0xb0, 0x50, 0x1f, 0xbe, 0x91, 0x11, 0xff, 0x69,
@@ -633,10 +635,10 @@ mod test {
             realm.clone(),
             pname.clone(),
             ticket_flags.clone(),
-            authtime.clone(),
-            starttime.clone(),
-            endtime.clone(),
-            renew_till.clone(),
+            authtime.into(),
+            starttime.into(),
+            endtime.into(),
+            renew_till.into(),
             realm.clone(),
             sname.clone(),
             None,
