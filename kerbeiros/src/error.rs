@@ -2,27 +2,19 @@
 
 use crate::messages::*;
 use ascii::FromAsciiError;
-use failure::*;
-use failure_derive::Fail;
+use failure::Fail;
+use kerberos_crypto;
+use nom::Err as NomError;
 use red_asn1;
-use std::fmt;
 use std::result;
 use std::string::FromUtf8Error;
-use nom::Err as NomError;
-use kerberos_crypto;
 
 /// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;
 
-/// Error returned by functions of the kerbeiros library.
-#[derive(Debug)]
-pub struct Error {
-    inner: Context<ErrorKind>,
-}
-
 /// Type of error in kerbeiros library.
 #[derive(Clone, PartialEq, Debug, Fail)]
-pub enum ErrorKind {
+pub enum Error {
     /// Error handlening asn1 entities.
     #[fail(display = "Asn1 error: {}", _0)]
     Asn1Error(red_asn1::ErrorKind),
@@ -83,7 +75,7 @@ pub enum ErrorKind {
 
     /// Error parsing KDC-REP message.
     #[fail(display = "Error parsing KdcRep: {}", _1)]
-    ParseKdcRepError(KdcRep, Box<ErrorKind>),
+    ParseKdcRepError(KdcRep, Box<Error>),
 
     /// The type of the principal name was not specified.
     #[fail(display = "Undefined type of principal name: {}", _0)]
@@ -102,87 +94,39 @@ pub enum ErrorKind {
     BinaryParseError,
 }
 
-impl Error {
-    pub fn kind(&self) -> &ErrorKind {
-        return self.inner.get_context();
-    }
-}
-
-impl Fail for Error {
-    fn cause(&self) -> Option<&dyn Fail> {
-        self.inner.cause()
-    }
-
-    fn backtrace(&self) -> Option<&Backtrace> {
-        self.inner.backtrace()
-    }
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Display::fmt(&self.inner, f)
-    }
-}
-
-impl From<ErrorKind> for Error {
-    fn from(kind: ErrorKind) -> Error {
-        return Error {
-            inner: Context::new(kind),
-        };
-    }
-}
-
-impl From<Context<ErrorKind>> for Error {
-    fn from(inner: Context<ErrorKind>) -> Error {
-        return Error { inner };
-    }
-}
-
 impl From<kerberos_crypto::Error> for Error {
     fn from(kind: kerberos_crypto::Error) -> Error {
-        return Error {
-            inner: Context::new(ErrorKind::CryptographyError(kind)),
-        };
+        return Self::CryptographyError(kind);
     }
 }
 
 impl From<FromAsciiError<&str>> for Error {
     fn from(_error: FromAsciiError<&str>) -> Self {
-        return Error {
-            inner: Context::new(ErrorKind::InvalidAscii),
-        };
+        return Self::InvalidAscii;
     }
 }
 
 impl From<FromAsciiError<Vec<u8>>> for Error {
     fn from(_error: FromAsciiError<Vec<u8>>) -> Self {
-        return Error {
-            inner: Context::new(ErrorKind::InvalidAscii),
-        };
+        return Self::InvalidAscii;
     }
 }
 
 impl From<FromUtf8Error> for Error {
     fn from(_error: FromUtf8Error) -> Self {
-        return Error {
-            inner: Context::new(ErrorKind::InvalidUtf8),
-        };
+        return Self::InvalidUtf8;
     }
 }
 
 impl From<red_asn1::Error> for Error {
     fn from(error: red_asn1::Error) -> Self {
-        return Error {
-            inner: Context::new(ErrorKind::Asn1Error(error.kind().clone())),
-        };
+        return Self::Asn1Error(error.kind().clone());
     }
 }
 
 impl<E> From<NomError<E>> for Error {
     fn from(_error: NomError<E>) -> Self {
-        return Error {
-            inner: Context::new(ErrorKind::BinaryParseError),
-        };
+        return Self::BinaryParseError;
     }
 }
 
@@ -193,20 +137,20 @@ mod tests {
     #[test]
     fn test_kerberos_error() {
         match produce_invalid_network_error() {
-            Err(kerberos_error) => match kerberos_error.kind() {
-                ErrorKind::NetworkError => {}
+            Err(kerberos_error) => match kerberos_error {
+                Error::NetworkError => {}
                 _ => {
                     unreachable!();
                 }
             },
             _ => {
-                unreachable!();
+                unreachable!()
             }
         }
     }
 
     fn produce_invalid_network_error() -> Result<()> {
-        Err(ErrorKind::NetworkError)?;
+        Err(Error::NetworkError)?;
         unreachable!();
     }
 }

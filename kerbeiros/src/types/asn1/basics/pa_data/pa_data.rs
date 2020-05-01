@@ -3,7 +3,7 @@ use super::super::int32::{Int32, Int32Asn1};
 use super::etype_info_2::{EtypeInfo2, EtypeInfo2Asn1};
 use super::pac_request::{PacRequest,PacRequestAsn1};
 use crate::constants::pa_data_types::{PA_PAC_REQUEST, PA_ETYPE_INFO2, PA_ENC_TIMESTAMP};
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 /// (*PA-DATA*) Container that encapsules different types of preauthentication data structures.
@@ -66,14 +66,14 @@ impl PaDataAsn1 {
     pub fn no_asn1_type(&self) -> Result<PaData> {
         let padata_type_asn1 = self
             .get_padata_type()
-            .ok_or_else(|| ErrorKind::NotAvailableData("PaData::type".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("PaData::type".to_string()))?;
         let padata_type = padata_type_asn1.no_asn1_type()?;
         let padata_value_asn1 = self
             .get_padata_value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("PaData::value".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("PaData::value".to_string()))?;
         let padata_value = padata_value_asn1
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("PaData::value".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("PaData::value".to_string()))?;
 
         return Ok(PaData::new(padata_type, padata_value.clone()));
     }

@@ -1,6 +1,6 @@
 use super::int32::{Int32, Int32Asn1};
 use super::primitives::kerberos_string::*;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 use std::fmt;
 
@@ -79,14 +79,14 @@ impl PrincipalNameAsn1 {
     pub fn no_asn1_type(&self) -> Result<PrincipalName> {
         let name_type = self
             .get_name_type()
-            .ok_or_else(|| ErrorKind::NotAvailableData("PrincipalName::name_type".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("PrincipalName::name_type".to_string()))?;
 
         let name_string = self
             .get_name_string()
-            .ok_or_else(|| ErrorKind::NotAvailableData("PrincipalName::name_string".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("PrincipalName::name_string".to_string()))?;
 
         if name_string.len() == 0 {
-            return Err(ErrorKind::NotAvailableData(
+            return Err(Error::NotAvailableData(
                 "PrincipalName::name_string".to_string(),
             ))?;
         }

@@ -3,7 +3,7 @@ use super::krb_cred_info::*;
 use red_asn1::*;
 
 #[cfg(test)]
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 
 /// (*EncKrbCredPart*) Holds the data for user in [KrbCred](./struct.KrbCred.html)
 #[derive(Debug, Clone, PartialEq)]
@@ -54,7 +54,7 @@ impl EncKrbCredPartAsn1 {
     #[cfg(test)]
     pub fn no_asn1_type(&self) -> Result<EncKrbCredPart> {
         let ticket_info = self.get_ticket_info().ok_or_else(|| {
-            ErrorKind::NotAvailableData("EncKrbCredPart::ticket_info".to_string())
+            Error::NotAvailableData("EncKrbCredPart::ticket_info".to_string())
         })?;
 
         let mut enc_krb_cred_part = EncKrbCredPart::new(ticket_info.no_asn1_type()?);

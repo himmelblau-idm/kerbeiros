@@ -3,7 +3,7 @@
 use crate::constants::*;
 use kerberos_crypto;
 
-use crate::error::*;
+use crate::{Result, Error};
 use std::result;
 
 /// Size of [`Key::RC4Key`](./enum.Key.html#variant.RC4Key).
@@ -155,11 +155,11 @@ impl Key {
         size: usize,
     ) -> Result<Vec<u8>> {
         if hex_str.len() != size * 2 {
-            return Err(ErrorKind::InvalidKeyLength(size * 2))?;
+            return Err(Error::InvalidKeyLength(size * 2))?;
         }
 
         return Ok(Self::convert_hex_string_into_byte_array(hex_str)
-            .map_err(|_| ErrorKind::InvalidKeyCharset)?);
+            .map_err(|_| Error::InvalidKeyCharset)?);
     }
 
     fn convert_hex_string_into_byte_array(

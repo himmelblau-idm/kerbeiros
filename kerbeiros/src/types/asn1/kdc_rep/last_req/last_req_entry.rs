@@ -1,5 +1,5 @@
 use super::super::super::basics::*;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 /// Register of time of a request to KDC.
@@ -27,10 +27,10 @@ impl LastReqEntryAsn1 {
     pub fn no_asn1_type(&self) -> Result<LastReqEntry> {
         let lr_type = self
             .get_lr_type()
-            .ok_or_else(|| ErrorKind::NotAvailableData("LastReqEntry::lr_type".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("LastReqEntry::lr_type".to_string()))?;
         let lr_value = self
             .get_lr_value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("LastReqEntry::lr_value".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("LastReqEntry::lr_value".to_string()))?;
 
         let last_req_entry = LastReqEntry::new(lr_type.no_asn1_type()?, lr_value.no_asn1_type()?);
 

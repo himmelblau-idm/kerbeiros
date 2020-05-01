@@ -39,9 +39,8 @@
 mod transporter;
 pub mod types;
 
-pub mod error;
-pub use error::Error;
-pub use error::*;
+mod error;
+pub use error::{Result, Error};
 
 pub mod messages;
 pub use messages::*;

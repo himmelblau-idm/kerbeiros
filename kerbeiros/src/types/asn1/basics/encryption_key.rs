@@ -1,5 +1,5 @@
 use super::int32::*;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 /// (*EncryptionKey*) To represent the key of an encryption algorithm.
@@ -28,13 +28,13 @@ impl EncryptionKeyAsn1 {
     pub fn no_asn1_type(&self) -> Result<EncryptionKey> {
         let keytype = self
             .get_keytype()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncryptionKey::keytype".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncryptionKey::keytype".to_string()))?;
         let keyvalue = self
             .get_keyvalue()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncryptionKey::keyvalue".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncryptionKey::keyvalue".to_string()))?;
         let keyvalue_value = keyvalue
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncryptionKey::keyvalue".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncryptionKey::keyvalue".to_string()))?;
 
         let encryption_key = EncryptionKey::new(keytype.no_asn1_type()?, keyvalue_value.clone());
 

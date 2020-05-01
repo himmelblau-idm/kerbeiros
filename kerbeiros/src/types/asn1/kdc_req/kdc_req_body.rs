@@ -2,7 +2,7 @@ use super::super::basics::*;
 use super::super::ticket::*;
 use super::kdc_options::*;
 use crate::constants::principal_name_types::*;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use rand::Rng;
 use red_asn1::*;
 
@@ -57,7 +57,7 @@ impl KdcReqBody {
                 return Ok(());
             }
             None => {
-                Err(ErrorKind::PrincipalNameTypeUndefined(
+                Err(Error::PrincipalNameTypeUndefined(
                     "sname".to_string(),
                 ))?;
             }

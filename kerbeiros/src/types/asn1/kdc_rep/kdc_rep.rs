@@ -1,7 +1,7 @@
 use super::super::basics::*;
 use super::super::ticket::*;
 use crate::credentials::*;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use crate::key::Key;
 use red_asn1::*;
 
@@ -86,30 +86,30 @@ impl KdcRepAsn1 {
     fn no_asn1_type(&self) -> Result<KdcRep> {
         let pvno = self
             .get_pvno()
-            .ok_or_else(|| ErrorKind::NotAvailableData("AsRep::pvno".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("AsRep::pvno".to_string()))?;
         let pvno_value = pvno
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("AsRep::pvno".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("AsRep::pvno".to_string()))?;
 
         let msg_type = self
             .get_msg_type()
-            .ok_or_else(|| ErrorKind::NotAvailableData("AsRep::msg_type".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("AsRep::msg_type".to_string()))?;
         let msg_type_value = msg_type
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("AsRep::msg_type".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("AsRep::msg_type".to_string()))?;
 
         let crealm = self
             .get_crealm()
-            .ok_or_else(|| ErrorKind::NotAvailableData("AsRep::crealm".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("AsRep::crealm".to_string()))?;
         let cname = self
             .get_cname()
-            .ok_or_else(|| ErrorKind::NotAvailableData("AsRep::cname".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("AsRep::cname".to_string()))?;
         let ticket = self
             .get_ticket()
-            .ok_or_else(|| ErrorKind::NotAvailableData("AsRep::ticket".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("AsRep::ticket".to_string()))?;
         let enc_part = self
             .get_enc_part()
-            .ok_or_else(|| ErrorKind::NotAvailableData("AsRep::enc_part".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("AsRep::enc_part".to_string()))?;
 
         let mut as_rep = KdcRep::new(
             crealm.no_asn1_type()?,

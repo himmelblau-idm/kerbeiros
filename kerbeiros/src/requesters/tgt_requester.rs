@@ -1,7 +1,7 @@
 use super::as_requester::*;
 use crate::constants::*;
 use crate::credentials::*;
-use crate::error::*;
+use crate::{Result, Error};
 use crate::key::Key;
 use crate::messages::*;
 use crate::transporter::*;
@@ -113,20 +113,20 @@ impl<'a> TGTRequest<'a> {
 
     fn process_1st_krb_error(&self, krb_error: KrbError) -> Result<Credential> {
         if krb_error.error_code != KDC_ERR_PREAUTH_REQUIRED {
-            return Err(ErrorKind::KrbErrorResponse(krb_error))?;
+            return Err(Error::KrbErrorResponse(krb_error))?;
         }
 
         if let Some(user_key) = self.user_key.clone() {
             return self.request_2nd_as_req(&user_key);
         }
 
-        return Err(ErrorKind::KrbErrorResponse(krb_error))?;
+        return Err(Error::KrbErrorResponse(krb_error))?;
     }
 
     fn request_2nd_as_req(&self, user_key: &Key) -> Result<Credential> {
         match self.as_requester.request(self.username, Some(user_key))? {
             AsReqResponse::KrbError(krb_error) => {
-                return Err(ErrorKind::KrbErrorResponse(krb_error))?;
+                return Err(Error::KrbErrorResponse(krb_error))?;
             }
             AsReqResponse::AsRep(as_rep) => {
                 return self.extract_credential_from_as_rep(as_rep);
@@ -140,9 +140,9 @@ impl<'a> TGTRequest<'a> {
         if let Some(key) = &self.user_key {
             user_key = key;
         } else {
-            return Err(ErrorKind::ParseKdcRepError(
+            return Err(Error::ParseKdcRepError(
                 as_rep,
-                Box::new(ErrorKind::NoKeyProvided),
+                Box::new(Error::NoKeyProvided),
             ))?;
         }
 
@@ -151,9 +151,9 @@ impl<'a> TGTRequest<'a> {
                 return Ok(credential);
             }
             Err(error) => {
-                return Err(ErrorKind::ParseKdcRepError(
+                return Err(Error::ParseKdcRepError(
                     as_rep,
-                    Box::new(error.kind().clone()),
+                    Box::new(error.clone()),
                 ))?;
             }
         }

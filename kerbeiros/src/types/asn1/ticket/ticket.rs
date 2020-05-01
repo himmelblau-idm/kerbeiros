@@ -1,5 +1,5 @@
 use super::super::basics::*;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 /// (*Ticket*) Represents a Kerberos ticket.
@@ -49,20 +49,20 @@ impl TicketAsn1 {
     pub fn no_asn1_type(&self) -> Result<Ticket> {
         let tkt_vno = self
             .get_tkt_vno()
-            .ok_or_else(|| ErrorKind::NotAvailableData("Ticket::tkt_vno".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("Ticket::tkt_vno".to_string()))?;
         let tkt_vno_value = tkt_vno
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("Ticket::tkt_vno".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("Ticket::tkt_vno".to_string()))?;
 
         let realm = self
             .get_realm()
-            .ok_or_else(|| ErrorKind::NotAvailableData("Ticket::realm".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("Ticket::realm".to_string()))?;
         let sname = self
             .get_sname()
-            .ok_or_else(|| ErrorKind::NotAvailableData("Ticket::sname".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("Ticket::sname".to_string()))?;
         let enc_part = self
             .get_enc_part()
-            .ok_or_else(|| ErrorKind::NotAvailableData("Ticket::enc_part".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("Ticket::enc_part".to_string()))?;
 
         let mut ticket = Ticket::new(
             realm.no_asn1_type()?,

@@ -1,7 +1,7 @@
 use super::super::basics::*;
 use super::super::ticket::ticket_flags::*;
 use super::last_req::*;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 /// (*EncKdcRepPart*) Holds the data that is encrypted in [KdcRep](./struct.KdcRep.html)
@@ -109,28 +109,28 @@ impl EncAsRepPartAsn1 {
     fn no_asn1_type(&self) -> Result<EncKdcRepPart> {
         let key = self
             .get_key()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncKdcRepPart::key".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncKdcRepPart::key".to_string()))?;
         let last_req = self
             .get_last_req()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncKdcRepPart::last_req".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncKdcRepPart::last_req".to_string()))?;
         let nonce = self
             .get_nonce()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncKdcRepPart::nonce".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncKdcRepPart::nonce".to_string()))?;
         let flags = self
             .get_flags()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncKdcRepPart::flags".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncKdcRepPart::flags".to_string()))?;
         let authtime = self
             .get_authtime()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncKdcRepPart::authtime".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncKdcRepPart::authtime".to_string()))?;
         let endtime = self
             .get_endtime()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncKdcRepPart::endtime".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncKdcRepPart::endtime".to_string()))?;
         let srealm = self
             .get_srealm()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncKdcRepPart::srealm".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncKdcRepPart::srealm".to_string()))?;
         let sname = self
             .get_sname()
-            .ok_or_else(|| ErrorKind::NotAvailableData("EncKdcRepPart::sname".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("EncKdcRepPart::sname".to_string()))?;
 
         let mut enc_as_rep_part = EncKdcRepPart::new(
             key.no_asn1_type()?,

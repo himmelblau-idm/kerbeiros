@@ -1,4 +1,4 @@
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 /// (*KERB-PA-PAC-REQUEST*) To indicate if PAC should be included in response.
@@ -35,10 +35,10 @@ impl PacRequestAsn1 {
     fn no_asn1_type(&self) -> Result<PacRequest> {
         let include_pac_asn1 = self
             .get_include_pac()
-            .ok_or_else(|| ErrorKind::NotAvailableData("PacRequest::include_pac".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("PacRequest::include_pac".to_string()))?;
         let include_pac = include_pac_asn1
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("PacRequest::include_pac".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("PacRequest::include_pac".to_string()))?;
 
         return Ok(PacRequest::new(include_pac));
     }

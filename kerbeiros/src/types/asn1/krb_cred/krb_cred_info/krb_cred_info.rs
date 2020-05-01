@@ -3,7 +3,7 @@ use super::super::super::ticket::ticket_flags::*;
 use red_asn1::*;
 
 #[cfg(test)]
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 
 /// (*KrbCredInfo*) Gives information about user and client for a [EncKrbCredPart](./struct.EncKrbCredPart.html).
 #[derive(Debug, PartialEq, Clone)]
@@ -81,7 +81,7 @@ impl KrbCredInfoAsn1 {
     pub fn no_asn1_type(&self) -> Result<KrbCredInfo> {
         let key = self
             .get_key()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbCredInfo::key".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbCredInfo::key".to_string()))?;
 
         let mut krb_cred_info = KrbCredInfo::new(key.no_asn1_type()?);
 

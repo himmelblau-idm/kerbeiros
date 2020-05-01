@@ -1,4 +1,4 @@
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 /// (*Int32*) Kerberos i32.
@@ -14,7 +14,7 @@ impl Int32Asn1 {
         let value = self
             .subtype
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("Int32".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("Int32".to_string()))?;
         return Ok(value as Int32);
     }
 }

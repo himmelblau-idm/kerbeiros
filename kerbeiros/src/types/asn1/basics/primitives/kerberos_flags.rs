@@ -1,4 +1,4 @@
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::{Asn1Object, BitSring, Tag};
 
 /// (*KerberosFlags*) Flags used for different entities.
@@ -47,7 +47,7 @@ impl KerberosFlagsAsn1 {
         let value = self
             .subtype
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KerberosFlags".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KerberosFlags".to_string()))?;
         let mut flags = KerberosFlags::default();
 
         let mut bytes = value.get_bytes().clone();

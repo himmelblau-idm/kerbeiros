@@ -1,6 +1,6 @@
 use super::super::int32::*;
 use crate::constants::address_type;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 static NETBIOS_PADDING_CHAR: char = 32 as char;
@@ -69,14 +69,14 @@ impl HostAddressAsn1 {
     pub fn no_asn1_type(&self) -> Result<HostAddress> {
         let addr_type_asn1 = self
             .get_addr_type()
-            .ok_or_else(|| ErrorKind::NotAvailableData("HostAddress::addr_type".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("HostAddress::addr_type".to_string()))?;
         let addr_type = addr_type_asn1.no_asn1_type()?;
         let address_asn1 = self
             .get_address()
-            .ok_or_else(|| ErrorKind::NotAvailableData("HostAddress::address".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("HostAddress::address".to_string()))?;
         let address = address_asn1
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("HostAddress::address".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("HostAddress::address".to_string()))?;
 
         let host_address = match addr_type {
             address_type::NETBIOS => {

@@ -3,7 +3,7 @@ use crate::key::Key;
 use crate::types::asn1;
 use ascii::AsciiString;
 use chrono::Utc;
-use crate::{Result, ErrorKind};
+use crate::{Result, Error};
 use kerberos_crypto::new_kerberos_cipher;
 
 pub struct AsReqTimestampCipher<'a> {
@@ -81,7 +81,7 @@ impl<'a> AsReqTimestampCipher<'a> {
             etype = RC4_HMAC;
             salt = Vec::new();
         } else {
-            return Err(ErrorKind::NoProvidedSupportedCipherAlgorithm)?;
+            return Err(Error::NoProvidedSupportedCipherAlgorithm)?;
         }
 
         return self.encrypt_timestamp_with_cipher_and_password(etype, password, &salt);

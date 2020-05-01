@@ -1,4 +1,4 @@
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use chrono::prelude::*;
 use red_asn1::*;
 
@@ -15,7 +15,7 @@ impl KerberosTimeAsn1 {
         let time = self
             .subtype
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KerberosTime".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KerberosTime".to_string()))?;
         return Ok(time.clone());
     }
 }

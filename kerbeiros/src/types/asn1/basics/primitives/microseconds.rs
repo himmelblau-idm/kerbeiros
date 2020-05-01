@@ -1,4 +1,4 @@
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 pub(crate) const MAX_MICROSECONDS: u32 = 999999;
@@ -25,7 +25,7 @@ impl Microseconds {
 
     fn set(&mut self, x: u32) -> Result<()> {
         if x > MAX_MICROSECONDS {
-            return Err(ErrorKind::InvalidMicroseconds(x))?;
+            return Err(Error::InvalidMicroseconds(x))?;
         }
 
         self.value = x;
@@ -43,7 +43,7 @@ impl MicrosecondsAsn1 {
         let value = self
             .subtype
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("Microseconds".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("Microseconds".to_string()))?;
         return Microseconds::new(value as u32);
     }
 }

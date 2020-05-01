@@ -1,7 +1,7 @@
 use super::super::basics::*;
 use super::edata::Edata;
 use crate::constants::error_codes::*;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use red_asn1::*;
 
 use std::fmt;
@@ -107,23 +107,23 @@ impl KrbErrorAsn1 {
     fn no_asn1_type(&self) -> Result<KrbError> {
         let stime = self
             .get_stime()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::stime".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::stime".to_string()))?;
 
         let susec = self
             .get_susec()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::susec".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::susec".to_string()))?;
 
         let error_code = self
             .get_error_code()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::error_code".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::error_code".to_string()))?;
 
         let realm = self
             .get_realm()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::realm".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::realm".to_string()))?;
 
         let sname = self
             .get_sname()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::sname".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::sname".to_string()))?;
 
         let mut krb_error = KrbError::new(
             stime.no_asn1_type()?,
@@ -135,18 +135,18 @@ impl KrbErrorAsn1 {
 
         let pvno = self
             .get_pvno()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::pvno".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::pvno".to_string()))?;
         let pvno_value = pvno
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::pvno".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::pvno".to_string()))?;
         krb_error.pvno = pvno_value as i8;
 
         let msg_type = self
             .get_msg_type()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::msg_type".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::msg_type".to_string()))?;
         let msg_type_value = msg_type
             .value()
-            .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::msg_type".to_string()))?;
+            .ok_or_else(|| Error::NotAvailableData("KrbError::msg_type".to_string()))?;
         krb_error.msg_type = msg_type_value as i8;
 
         if let Some(ctime) = self.get_ctime() {
@@ -172,7 +172,7 @@ impl KrbErrorAsn1 {
         if let Some(e_data) = self.get_e_data() {
             let e_data_value = e_data
                 .value()
-                .ok_or_else(|| ErrorKind::NotAvailableData("KrbError::e_data".to_string()))?;
+                .ok_or_else(|| Error::NotAvailableData("KrbError::e_data".to_string()))?;
 
             if krb_error.error_code == KDC_ERR_PREAUTH_REQUIRED {
                 match MethodData::parse(e_data_value) {

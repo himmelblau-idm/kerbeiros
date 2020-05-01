@@ -1,5 +1,4 @@
-use crate::error::*;
-use failure::ResultExt;
+use crate::{Result, Error};
 use std::io;
 pub use std::net::IpAddr;
 use std::net::*;
@@ -46,7 +45,7 @@ impl Transporter for UDPTransporter {
     fn request_and_response(&self, raw_request: &[u8]) -> Result<Vec<u8>> {
         let raw_response = self
             .request_and_response_udp(raw_request)
-            .context(ErrorKind::NetworkError)?;
+            .map_err(|_| Error::NetworkError)?;
         return Ok(raw_response);
     }
 }

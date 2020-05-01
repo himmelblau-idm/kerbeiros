@@ -1,5 +1,5 @@
 use super::CountedOctetStringMapper;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use crate::types::*;
 use kerberos_ccache::Principal;
 
@@ -39,7 +39,7 @@ impl PrincipalMapper {
         }
 
         if names.len() == 0 {
-            return Err(ErrorKind::NoPrincipalName)?;
+            return Err(Error::NoPrincipalName)?;
         }
 
         let main_name = names.remove(0);

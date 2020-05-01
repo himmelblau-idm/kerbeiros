@@ -1,5 +1,5 @@
 use crate::constants::address_type;
-use crate::error::{ErrorKind, Result};
+use crate::{Error, Result};
 use crate::types::{HostAddress, HostAddresses};
 use std::convert::TryInto;
 use kerberos_ccache::{Address, CountedOctetString};
@@ -47,7 +47,7 @@ impl AddressMapper {
         mut addresses: Vec<Address>,
     ) -> Result<HostAddresses> {
         if addresses.len() == 0 {
-            return Err(ErrorKind::NoAddress)?;
+            return Err(Error::NoAddress)?;
         }
         let main_address = addresses.remove(0);
 

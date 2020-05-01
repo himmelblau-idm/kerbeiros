@@ -1,6 +1,5 @@
 use super::credential_warehouse::*;
-use crate::error::*;
-use failure::ResultExt;
+use crate::{Result, Error};
 use std::fs::File;
 use std::io::Write;
 use kerberos_ccache::CCache;
@@ -34,9 +33,9 @@ impl<'a> CredentialFileConverter<'a> {
     }
 
     fn save_data_to_file(&self, data: &[u8]) -> Result<()> {
-        let mut fp = File::create(self.path).context(ErrorKind::IOError)?;
+        let mut fp = File::create(self.path).map_err(|_| Error::IOError)?;
 
-        fp.write_all(data).context(ErrorKind::IOError)?;
+        fp.write_all(data).map_err(|_| Error::IOError)?;
 
         return Ok(());
     }
