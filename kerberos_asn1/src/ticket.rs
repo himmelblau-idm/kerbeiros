@@ -43,8 +43,8 @@ impl Ticket {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
-    use crate::constants::principal_names::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
 
     #[test]
     fn test_parse_ticket() {

@@ -28,7 +28,7 @@ impl EncryptionKey {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn test_parse_encryption_key() {

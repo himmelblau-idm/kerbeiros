@@ -8,6 +8,8 @@ license = "AGPL-3.0"
 repository = "https://gitlab.com/Zer1t0/kerbeiros"
 
 [dependencies]
+kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
+
 red_asn1 = "0.3"
 red_asn1_derive = "0.2"
 chrono = "0.4"

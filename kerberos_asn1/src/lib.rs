@@ -169,4 +169,3 @@ pub use enc_as_rep_part::EncAsRepPart;
 mod krb_error;
 pub use krb_error::KrbError;
 
-pub mod constants;

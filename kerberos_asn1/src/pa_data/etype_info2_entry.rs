@@ -34,7 +34,7 @@ impl EtypeInfo2Entry {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn test_parse_etypeinfo2entry() {

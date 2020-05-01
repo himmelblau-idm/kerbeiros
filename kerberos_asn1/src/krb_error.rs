@@ -57,10 +57,10 @@ pub struct KrbError {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::error_codes::*;
-    use crate::constants::etypes::*;
-    use crate::constants::pa_data_types::*;
-    use crate::constants::principal_names::*;
+    use kerberos_constants::error_codes::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::pa_data_types::*;
+    use kerberos_constants::principal_names::*;
     use chrono::prelude::*;
     use crate::{EtypeInfo2Entry, PaData};
 

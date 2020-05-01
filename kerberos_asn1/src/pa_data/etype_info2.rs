@@ -12,7 +12,7 @@ pub type EtypeInfo2 = SequenceOf<EtypeInfo2Entry>;
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
     use crate::KerberosString;
     use red_asn1::Asn1Object;
 

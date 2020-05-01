@@ -60,11 +60,11 @@ pub struct EncAsRepPart {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::address_types::*;
-    use crate::constants::etypes::*;
-    use crate::constants::principal_names::*;
-    use crate::constants::ticket_flags::*;
-    use crate::constants::pa_data_types::*;
+    use kerberos_constants::address_types::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
+    use kerberos_constants::ticket_flags::*;
+    use kerberos_constants::pa_data_types::*;
     use crate::{
         padd_netbios_string, HostAddress, KerberosString, LastReqEntry,
     };

@@ -37,7 +37,7 @@ impl EncryptedData {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn test_build_encrypted_data() {

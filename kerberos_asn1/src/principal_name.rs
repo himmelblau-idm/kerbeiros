@@ -59,7 +59,7 @@ impl fmt::Display for PrincipalName {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::constants::principal_names::*;
+    use kerberos_constants::principal_names::*;
 
     #[test]
     fn test_encode_principal_name() {

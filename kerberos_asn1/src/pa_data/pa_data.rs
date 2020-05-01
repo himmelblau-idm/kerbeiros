@@ -30,7 +30,7 @@ impl PaData {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::pa_data_types::*;
+    use kerberos_constants::pa_data_types::*;
     use crate::KerbPaPacRequest;
 
     #[test]
