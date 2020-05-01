@@ -3,11 +3,11 @@ pub use cipher_trait::KerberosCipher;
 
 mod aes;
 pub use aes::AESCipher;
-use aes::AesSizes;
 
 mod rc4;
 pub use rc4::RC4Cipher;
 
+use crate::cryptography::AesSizes;
 use crate::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };

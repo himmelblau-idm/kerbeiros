@@ -1,6 +1,7 @@
 mod keys;
-mod nfold_dk;
-pub use keys::*;
+pub use keys::generate_aes_key;
 
 mod decrypt;
-pub use decrypt::*;
+pub use decrypt::{aes_hmac_sh1_decrypt, aes_hmac_sha1_encrypt};
+
+mod nfold_dk;
