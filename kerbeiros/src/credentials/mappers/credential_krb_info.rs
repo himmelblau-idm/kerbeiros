@@ -1,7 +1,7 @@
 use super::super::credential::*;
 use kerberos_constants::key_usages::KEY_USAGE_AS_REP_ENC_PART;
 use crate::key::Key;
-use crate::types::*;
+use crate::asn1::*;
 use crate::Result;
 use kerberos_crypto::new_kerberos_cipher;
 

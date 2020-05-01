@@ -3,8 +3,8 @@
 mod asreq;
 pub(crate) use asreq::*;
 
-use crate::types;
-pub use types::AsRep;
-pub use types::AsReq;
-pub use types::KdcRep;
-pub use types::KrbError;
+use crate::asn1;
+pub use asn1::AsRep;
+pub use asn1::AsReq;
+pub use asn1::KdcRep;
+pub use asn1::KrbError;

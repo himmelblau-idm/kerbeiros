@@ -1,11 +1,13 @@
 use super::credential_warehouse::CredentialWarehouse;
 use crate::error;
 use crate::error::Result;
-use crate::types::{
-    AddressMapper, AuthDataMapper, EncKdcRepPart, EncryptionKey, HostAddresses,
-    KerberosString, KerberosTime, KeyBlockMapper, LastReq, MethodData,
-    PrincipalMapper, PrincipalName, Realm, Ticket, TicketFlags,
-    TicketFlagsMapper, TimesMapper,
+use crate::asn1::{
+    EncKdcRepPart, EncryptionKey, HostAddresses,
+    KerberosString, KerberosTime, LastReq, MethodData,
+    PrincipalName, Realm, Ticket, TicketFlags,
+};
+use crate::mappers::{
+    TimesMapper, TicketFlagsMapper, AddressMapper, AuthDataMapper, PrincipalMapper, KeyBlockMapper
 };
 use kerberos_ccache::{CountedOctetString, Credential as CredentialEntry};
 use std::convert::TryFrom;
@@ -223,7 +225,7 @@ mod test {
     use kerberos_constants::etypes::*;
     use kerberos_constants::principal_names::*;
     use kerberos_constants::pa_data_types::*;
-    use crate::types::{
+    use crate::asn1::{
         EncKdcRepPart, EncryptedData, EncryptionKey, HostAddress,
         HostAddresses, KerberosString, KerberosTime, LastReq, MethodData,
         PaData, PacRequest, PrincipalName, Realm, Ticket, TicketFlags,

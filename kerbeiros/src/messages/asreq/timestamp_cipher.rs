@@ -3,7 +3,7 @@ use kerberos_constants::etypes::{
 };
 use kerberos_constants::key_usages::KEY_USAGE_AS_REQ_TIMESTAMP;
 use crate::key::Key;
-use crate::types::asn1;
+use crate::asn1;
 use ascii::AsciiString;
 use chrono::Utc;
 use crate::{Result, Error};

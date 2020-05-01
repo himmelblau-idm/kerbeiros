@@ -1,5 +1,5 @@
 use crate::error;
-use crate::types::KerberosString;
+use crate::asn1::KerberosString;
 use kerberos_ccache::CountedOctetString;
 
 pub struct CountedOctetStringMapper {}

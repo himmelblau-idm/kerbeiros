@@ -1,6 +1,5 @@
 //! Errors raised by this library
 
-use crate::messages::*;
 use ascii::FromAsciiError;
 use failure::Fail;
 use kerberos_crypto;
@@ -8,6 +7,7 @@ use nom::Err as NomError;
 use red_asn1;
 use std::result;
 use std::string::FromUtf8Error;
+use crate::messages::{KrbError, KdcRep};
 
 /// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;

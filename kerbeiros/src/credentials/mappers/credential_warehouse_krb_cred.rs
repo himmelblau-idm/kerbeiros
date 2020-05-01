@@ -1,7 +1,7 @@
 use super::super::*;
 use super::*;
 use kerberos_constants::etypes::NO_ENCRYPTION;
-use crate::types::*;
+use crate::asn1::*;
 
 pub struct CredentialWarehouseKrbCredMapper {}
 

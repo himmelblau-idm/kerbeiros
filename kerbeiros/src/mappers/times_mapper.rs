@@ -1,4 +1,4 @@
-use crate::types::KerberosTime;
+use crate::asn1::KerberosTime;
 use chrono::{TimeZone, Utc};
 use kerberos_ccache::Times;
 

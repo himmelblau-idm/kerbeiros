@@ -1,4 +1,4 @@
-use crate::types::asn1::TicketFlags;
+use crate::asn1::TicketFlags;
 
 pub struct TicketFlagsMapper {}
 

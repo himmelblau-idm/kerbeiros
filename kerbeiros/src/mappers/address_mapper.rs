@@ -1,6 +1,6 @@
 use kerberos_constants::address_types;
 use crate::{Error, Result};
-use crate::types::{HostAddress, HostAddresses};
+use crate::asn1::{HostAddress, HostAddresses};
 use std::convert::TryInto;
 use kerberos_ccache::{Address, CountedOctetString};
 

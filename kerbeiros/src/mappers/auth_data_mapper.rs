@@ -1,4 +1,4 @@
-use crate::types::{MethodData, PaData};
+use crate::asn1::{MethodData, PaData};
 use kerberos_ccache::{AuthData, CountedOctetString};
 
 pub struct AuthDataMapper {}
@@ -40,7 +40,7 @@ impl AuthDataMapper {
 mod test {
     use super::*;
     use kerberos_constants::pa_data_types::*;
-    use crate::types::{PacRequest};
+    use crate::asn1::{PacRequest};
     use kerberos_ccache::Address;
 
     #[test]

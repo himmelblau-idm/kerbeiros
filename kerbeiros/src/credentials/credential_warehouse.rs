@@ -2,9 +2,10 @@ use super::credential::Credential;
 use super::file::CredentialFileConverter;
 use super::mappers::CredentialWarehouseKrbCredMapper;
 use crate::error;
-use crate::types::{
-    KrbCred, PrincipalMapper, PrincipalName, Realm,
+use crate::asn1::{
+    KrbCred, PrincipalName, Realm,
 };
+use crate::mappers::PrincipalMapper;
 use kerberos_ccache::{CCache, Header};
 use getset::Getters;
 use std::convert::TryFrom;
@@ -120,7 +121,7 @@ mod test {
     use kerberos_constants::ticket_flags;
     use kerberos_constants::principal_names::*;
     use kerberos_constants::etypes::*;
-    use crate::types::*;
+    use crate::asn1::*;
     use chrono::prelude::*;
     use kerberos_ccache as ccache;
 

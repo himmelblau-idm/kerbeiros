@@ -3,11 +3,11 @@ use kerberos_constants::error_codes::KDC_ERR_PREAUTH_REQUIRED;
 use crate::credentials::*;
 use crate::{Result, Error};
 use crate::key::Key;
-use crate::messages::*;
 use crate::transporter::*;
 use ascii::AsciiString;
 use std::collections::HashSet;
 use std::net::IpAddr;
+use crate::asn1::{AsRep, KrbError};
 
 /// Gets a TGT from KDC by sending one or more AS-REQ requests
 /// # Examples
