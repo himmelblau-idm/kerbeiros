@@ -8,6 +8,7 @@ pub mod error_codes;
 pub mod etypes;
 pub mod kdc_options;
 pub mod kerb_error_data_type;
+pub mod key_usages;
 pub mod message_types;
 pub mod pa_data_types;
 pub mod principal_names;
