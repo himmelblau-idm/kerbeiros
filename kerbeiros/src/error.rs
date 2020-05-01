@@ -9,6 +9,7 @@ use std::fmt;
 use std::result;
 use std::string::FromUtf8Error;
 use nom::Err as NomError;
+use kerberos_crypto;
 
 /// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;
@@ -28,7 +29,7 @@ pub enum ErrorKind {
 
     /// Error produced in the application of cryptographic algorithms.
     #[fail(display = "Cryptography error: {}", _0)]
-    CryptographyError(Box<CryptographyErrorKind>),
+    CryptographyError(Box<kerberos_crypto::Error>),
 
     /// Invalid ascii string.
     #[fail(display = "Invalid ascii string")]
@@ -101,18 +102,6 @@ pub enum ErrorKind {
     BinaryParseError,
 }
 
-/// Types of errors related to data encryption/decryption
-#[derive(Clone, PartialEq, Debug, Fail)]
-pub enum CryptographyErrorKind {
-    /// Error while decrypting the data
-    #[fail(display = "Decryption error: {}", _0)]
-    DecryptionError(String),
-
-    /// Data is encrypted with an unsupported algorithm
-    #[fail(display = "Cipher algorithm with etype = {} is not supported", _0)]
-    UnsupportedCipherAlgorithm(i32),
-}
-
 impl Error {
     pub fn kind(&self) -> &ErrorKind {
         return self.inner.get_context();
@@ -149,8 +138,8 @@ impl From<Context<ErrorKind>> for Error {
     }
 }
 
-impl From<CryptographyErrorKind> for Error {
-    fn from(kind: CryptographyErrorKind) -> Error {
+impl From<kerberos_crypto::Error> for Error {
+    fn from(kind: kerberos_crypto::Error) -> Error {
         return Error {
             inner: Context::new(ErrorKind::CryptographyError(Box::new(kind))),
         };

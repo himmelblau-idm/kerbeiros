@@ -9,4 +9,7 @@ mod error;
 pub use error::{Error, Result};
 
 mod ciphers;
-pub use ciphers::{AESCipher, KerberosCipher, RC4Cipher};
+pub use ciphers::{
+    is_supported_etype, new_kerberos_cipher, AESCipher, KerberosCipher,
+    RC4Cipher, AES128_KEY_SIZE, AES256_KEY_SIZE, RC4_KEY_SIZE,
+};

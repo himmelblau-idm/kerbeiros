@@ -1,8 +1,9 @@
-use crate::ciphers::*;
 use crate::constants::etypes::*;
 use crate::constants::kdc_options::*;
 use ascii::AsciiString;
 use std::collections::HashSet;
+use crate::{Result};
+use kerberos_crypto::is_supported_etype;
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct AsReqOptions {
@@ -52,7 +53,7 @@ impl AsReqOptions {
 
     fn error_if_unsupported_etype(&self, etype: i32) -> Result<()> {
         if !is_supported_etype(etype) {
-            return Err(CryptographyErrorKind::UnsupportedCipherAlgorithm(etype))?;
+            return Err(kerberos_crypto::Error::UnsupportedAlgorithm(etype))?;
         }
         return Ok(());
     }

@@ -1,8 +1,9 @@
 use super::super::credential::*;
-use crate::ciphers::*;
 use crate::constants::*;
 use crate::key::Key;
 use crate::types::*;
+use crate::Result;
+use kerberos_crypto::new_kerberos_cipher;
 
 pub struct CredentialKrbInfoMapper {}
 
@@ -69,12 +70,12 @@ impl CredentialKrbInfoMapper {
         kdc_rep: &KdcRep,
     ) -> Result<Vec<u8>> {
         let cipher = new_kerberos_cipher(kdc_rep.enc_part.etype)?;
-        return cipher.generate_key_from_password_and_decrypt(
+        return Ok(cipher.generate_key_from_password_and_decrypt(
             password,
             &kdc_rep.encryption_salt(),
             KEY_USAGE_AS_REP_ENC_PART,
             &kdc_rep.enc_part.cipher,
-        );
+        )?);
     }
 
     fn decrypt_enc_kdc_rep_part_with_cipher_key(
@@ -84,7 +85,7 @@ impl CredentialKrbInfoMapper {
         match Self::try_decrypt_enc_kdc_rep_part_with_cipher_key(key, kdc_rep) {
             Err(error) => {
                 if key.etype() != kdc_rep.enc_part.etype {
-                    return Err(CryptographyErrorKind::DecryptionError(
+                    return Err(kerberos_crypto::Error::DecryptionError(
                         format!(
                         "Key etype = {} doesn't match with message etype = {}",
                         key.etype(),
@@ -104,11 +105,11 @@ impl CredentialKrbInfoMapper {
         kdc_rep: &KdcRep,
     ) -> Result<Vec<u8>> {
         let cipher = new_kerberos_cipher(key.etype()).unwrap();
-        return cipher.decrypt(
+        return Ok(cipher.decrypt(
             key.as_bytes(),
             KEY_USAGE_AS_REP_ENC_PART,
             &kdc_rep.enc_part.cipher,
-        );
+        )?);
     }
 }
 

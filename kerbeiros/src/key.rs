@@ -1,19 +1,19 @@
 //! Exports the types of user keys available for this implementation.
 
-use crate::ciphers;
 use crate::constants::*;
+use kerberos_crypto;
 
 use crate::error::*;
 use std::result;
 
 /// Size of [`Key::RC4Key`](./enum.Key.html#variant.RC4Key).
-pub const RC4_KEY_SIZE: usize = ciphers::RC4_KEY_SIZE;
+pub const RC4_KEY_SIZE: usize = kerberos_crypto::RC4_KEY_SIZE;
 
 /// Size of [`Key::AES128Key`](./enum.Key.html#variant.AES128Key).
-pub const AES128_KEY_SIZE: usize = ciphers::AES128_KEY_SIZE;
+pub const AES128_KEY_SIZE: usize = kerberos_crypto::AES128_KEY_SIZE;
 
 /// Size of [`Key::AES256Key`](./enum.Key.html#variant.AES256Key).
-pub const AES256_KEY_SIZE: usize = ciphers::AES256_KEY_SIZE;
+pub const AES256_KEY_SIZE: usize = kerberos_crypto::AES256_KEY_SIZE;
 
 /// Encapsules the possible keys used by this Kerberos implementation.
 /// Each key can be used by a different cryptographic algorithm.
@@ -88,7 +88,8 @@ impl Key {
     /// An error if raised if the argument string has any non hexadecimal character or size is different from 32.
     ///
     pub fn from_rc4_key_string(hex_str: &str) -> Result<Self> {
-        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, RC4_KEY_SIZE)?;
+        let ntlm =
+            Self::check_size_and_convert_in_byte_array(hex_str, RC4_KEY_SIZE)?;
 
         let mut key = [0; RC4_KEY_SIZE];
         key.copy_from_slice(&ntlm[0..RC4_KEY_SIZE]);
@@ -110,7 +111,10 @@ impl Key {
     /// An error if raised if the argument string has any non hexadecimal character or size is different from 32.
     ///
     pub fn from_aes_128_key_string(hex_str: &str) -> Result<Self> {
-        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, AES128_KEY_SIZE)?;
+        let ntlm = Self::check_size_and_convert_in_byte_array(
+            hex_str,
+            AES128_KEY_SIZE,
+        )?;
 
         let mut key = [0; AES128_KEY_SIZE];
         key.copy_from_slice(&ntlm[0..AES128_KEY_SIZE]);
@@ -135,7 +139,10 @@ impl Key {
     /// An error if raised if the argument string has any non hexadecimal character or size is different from 64.
     ///
     pub fn from_aes_256_key_string(hex_str: &str) -> Result<Self> {
-        let ntlm = Self::check_size_and_convert_in_byte_array(hex_str, AES256_KEY_SIZE)?;
+        let ntlm = Self::check_size_and_convert_in_byte_array(
+            hex_str,
+            AES256_KEY_SIZE,
+        )?;
 
         let mut key = [0; AES256_KEY_SIZE];
         key.copy_from_slice(&ntlm[0..AES256_KEY_SIZE]);
@@ -143,7 +150,10 @@ impl Key {
         return Ok(Key::AES256Key(key));
     }
 
-    fn check_size_and_convert_in_byte_array(hex_str: &str, size: usize) -> Result<Vec<u8>> {
+    fn check_size_and_convert_in_byte_array(
+        hex_str: &str,
+        size: usize,
+    ) -> Result<Vec<u8>> {
         if hex_str.len() != size * 2 {
             return Err(ErrorKind::InvalidKeyLength(size * 2))?;
         }
@@ -159,7 +169,10 @@ impl Key {
         let mut bytes = Vec::with_capacity(key_size);
         for i in 0..key_size {
             let str_index = i * 2;
-            bytes.push(u8::from_str_radix(&hex_str[str_index..str_index + 2], 16)?);
+            bytes.push(u8::from_str_radix(
+                &hex_str[str_index..str_index + 2],
+                16,
+            )?);
         }
 
         return Ok(bytes);
@@ -174,14 +187,16 @@ mod test {
     fn hex_string_to_rc4_key() {
         assert_eq!(
             Key::RC4Key([0; RC4_KEY_SIZE]),
-            Key::from_rc4_key_string("00000000000000000000000000000000").unwrap()
+            Key::from_rc4_key_string("00000000000000000000000000000000")
+                .unwrap()
         );
         assert_eq!(
             Key::RC4Key([
-                0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab,
-                0xcd, 0xef
+                0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23,
+                0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
             ]),
-            Key::from_rc4_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
+            Key::from_rc4_key_string("0123456789ABCDEF0123456789abcdef")
+                .unwrap()
         );
     }
 
@@ -203,14 +218,16 @@ mod test {
     fn hex_string_to_aes_128_key() {
         assert_eq!(
             Key::AES128Key([0; AES128_KEY_SIZE]),
-            Key::from_aes_128_key_string("00000000000000000000000000000000").unwrap()
+            Key::from_aes_128_key_string("00000000000000000000000000000000")
+                .unwrap()
         );
         assert_eq!(
             Key::AES128Key([
-                0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab,
-                0xcd, 0xef
+                0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23,
+                0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
             ]),
-            Key::from_aes_128_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
+            Key::from_aes_128_key_string("0123456789ABCDEF0123456789abcdef")
+                .unwrap()
         );
     }
 
@@ -225,7 +242,8 @@ mod test {
     )]
     #[test]
     fn invalid_chars_hex_string_to_aes_128_key() {
-        Key::from_aes_128_key_string("ERROR_0123456789ABCDEF0123456789").unwrap();
+        Key::from_aes_128_key_string("ERROR_0123456789ABCDEF0123456789")
+            .unwrap();
     }
 
     #[test]

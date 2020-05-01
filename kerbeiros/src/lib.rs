@@ -36,8 +36,6 @@
 //! * [\[MS-KILE\]: Kerberos Protocol Extensions](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-kile)
 //!
 
-mod byteparser;
-mod ciphers;
 mod transporter;
 pub mod types;
 
