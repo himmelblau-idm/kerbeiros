@@ -39,7 +39,7 @@ impl AuthDataMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::pa_data_types::*;
     use crate::types::{PacRequest};
     use kerberos_ccache::Address;
 

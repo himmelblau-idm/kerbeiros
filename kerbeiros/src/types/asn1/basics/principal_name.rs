@@ -116,7 +116,7 @@ impl From<PrincipalName> for PrincipalNameAsn1 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::constants::principal_name_types::*;
+    use kerberos_constants::principal_names::*;
 
     #[test]
     fn create_default_principal_name_asn1() {

@@ -1,6 +1,8 @@
 use super::super::basics::*;
 use super::edata::Edata;
-use crate::constants::error_codes::*;
+use kerberos_constants::error_codes::{
+    error_code_to_string, KDC_ERR_PREAUTH_REQUIRED
+};
 use crate::{Error, Result};
 use red_asn1::*;
 
@@ -195,7 +197,9 @@ impl KrbErrorAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::pa_data_types::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
     use chrono::prelude::*;
 
     #[test]

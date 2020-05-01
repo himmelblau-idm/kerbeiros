@@ -70,7 +70,7 @@ impl Asn1Object for SeqOfInt32Asn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn create_default_sequence_of_int32_asn1() {

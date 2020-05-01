@@ -1,4 +1,4 @@
-use crate::constants::address_type;
+use kerberos_constants::address_types;
 use crate::{Error, Result};
 use crate::types::{HostAddress, HostAddresses};
 use std::convert::TryInto;
@@ -29,7 +29,7 @@ impl AddressMapper {
     pub fn address_to_host_address(address: Address) -> Result<HostAddress> {
         let address_type = address.addrtype as i32;
         match address_type {
-            address_type::NETBIOS => {
+            address_types::NETBIOS => {
                 return Ok(HostAddress::NetBios(
                     address.addrdata.try_into()?,
                 ));
@@ -72,7 +72,7 @@ mod test {
         let host_address = HostAddress::NetBios("KINGDOM.HEARTS".to_string());
 
         let address = Address::new(
-            address_type::NETBIOS as u16,
+            address_types::NETBIOS as u16,
             CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
         );
 
@@ -86,7 +86,7 @@ mod test {
     fn host_addresses_to_address_vector() {
         let mut addresses = Vec::new();
         addresses.push(Address::new(
-            address_type::NETBIOS as u16,
+            address_types::NETBIOS as u16,
             CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
         ));
         addresses.push(Address::new(
@@ -111,7 +111,7 @@ mod test {
         let host_address = HostAddress::NetBios("KINGDOM.HEARTS".to_string());
 
         let address = Address::new(
-            address_type::NETBIOS as u16,
+            address_types::NETBIOS as u16,
             CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
         );
 
@@ -137,7 +137,7 @@ mod test {
     fn test_address_vector_to_host_addresses() {
         let mut addresses = Vec::new();
         addresses.push(Address::new(
-            address_type::NETBIOS as u16,
+            address_types::NETBIOS as u16,
             CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
         ));
         addresses.push(Address::new(

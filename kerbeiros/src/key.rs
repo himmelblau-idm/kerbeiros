@@ -1,6 +1,8 @@
 //! Exports the types of user keys available for this implementation.
 
-use crate::constants::*;
+use kerberos_constants::etypes::{
+    RC4_HMAC, AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96
+};
 use kerberos_crypto;
 
 use crate::{Result, Error};
@@ -38,12 +40,12 @@ impl Key {
     /// # Examples
     /// ```
     /// use kerbeiros::key;
-    /// use kerbeiros::constants;
+    /// use kerberos_constants::etypes::*;
     ///
     /// assert_eq!(0, key::Key::Password("".to_string()).etype());
-    /// assert_eq!(constants::etypes::RC4_HMAC, key::Key::RC4Key([0; key::RC4_KEY_SIZE]).etype());
-    /// assert_eq!(constants::etypes::AES128_CTS_HMAC_SHA1_96, key::Key::AES128Key([0; key::AES128_KEY_SIZE]).etype());
-    /// assert_eq!(constants::etypes::AES256_CTS_HMAC_SHA1_96, key::Key::AES256Key([0; key::AES256_KEY_SIZE]).etype());
+    /// assert_eq!(RC4_HMAC, key::Key::RC4Key([0; key::RC4_KEY_SIZE]).etype());
+    /// assert_eq!(AES128_CTS_HMAC_SHA1_96, key::Key::AES128Key([0; key::AES128_KEY_SIZE]).etype());
+    /// assert_eq!(AES256_CTS_HMAC_SHA1_96, key::Key::AES256Key([0; key::AES256_KEY_SIZE]).etype());
     /// ```
     pub fn etype(&self) -> i32 {
         match self {

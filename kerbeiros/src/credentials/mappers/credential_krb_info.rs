@@ -1,5 +1,5 @@
 use super::super::credential::*;
-use crate::constants::*;
+use kerberos_constants::key_usages::KEY_USAGE_AS_REP_ENC_PART;
 use crate::key::Key;
 use crate::types::*;
 use crate::Result;
@@ -117,7 +117,10 @@ impl CredentialKrbInfoMapper {
 
 mod test {
     use super::*;
-    use crate::constants::ticket_flags;
+    use kerberos_constants::ticket_flags;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
+    use kerberos_constants::pa_data_types::*;
     use chrono::prelude::*;
 
     #[test]

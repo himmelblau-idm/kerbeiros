@@ -101,7 +101,7 @@ impl From<&EtypeInfo2Entry> for EtypeInfo2EntryAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn create_default_etypeinfo2_entry_asn1() {

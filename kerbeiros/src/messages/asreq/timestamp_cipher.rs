@@ -1,4 +1,7 @@
-use crate::constants::*;
+use kerberos_constants::etypes::{
+    RC4_HMAC, AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96
+};
+use kerberos_constants::key_usages::KEY_USAGE_AS_REQ_TIMESTAMP;
 use crate::key::Key;
 use crate::types::asn1;
 use ascii::AsciiString;

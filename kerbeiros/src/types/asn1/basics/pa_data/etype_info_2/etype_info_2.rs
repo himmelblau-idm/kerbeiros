@@ -88,7 +88,7 @@ impl Asn1Object for EtypeInfo2Asn1 {
 mod test {
     use super::super::super::super::kerberos_string::*;
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn test_create_default_etypeinfo2() {

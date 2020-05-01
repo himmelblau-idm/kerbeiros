@@ -1,7 +1,7 @@
 use super::super::basics::*;
 use super::super::ticket::*;
 use super::kdc_options::*;
-use crate::constants::principal_name_types::*;
+use kerberos_constants::principal_names::NT_PRINCIPAL;
 use crate::{Error, Result};
 use rand::Rng;
 use red_asn1::*;
@@ -152,7 +152,9 @@ impl From<KdcReqBody> for KdcReqBodyAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
+    use kerberos_constants::kdc_options::*;
     use chrono::prelude::*;
 
     #[test]

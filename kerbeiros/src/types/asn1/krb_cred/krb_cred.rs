@@ -56,7 +56,8 @@ impl From<KrbCred> for KrbCredAsn1 {
 mod test {
     use super::super::super::basics::*;
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
 
     #[test]
     fn create_default_krb_cred_asn1() {

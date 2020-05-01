@@ -1,5 +1,5 @@
 use super::as_requester::*;
-use crate::constants::*;
+use kerberos_constants::error_codes::KDC_ERR_PREAUTH_REQUIRED;
 use crate::credentials::*;
 use crate::{Result, Error};
 use crate::key::Key;

@@ -21,6 +21,7 @@ pub enum AsReqResponse {
 /// use kerbeiros::*;
 /// use ascii::AsciiString;
 /// use std::net::*;
+/// use kerberos_constants::etypes::AES256_CTS_HMAC_SHA1_96;
 ///
 /// // Prepare the arguments
 /// let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();

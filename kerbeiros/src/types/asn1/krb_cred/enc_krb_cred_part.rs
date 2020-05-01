@@ -113,7 +113,9 @@ impl From<EncKrbCredPart> for EncKrbCredPartAsn1 {
 mod test {
     use super::super::super::*;
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::ticket_flags::*;
+    use kerberos_constants::principal_names::*;
     use chrono::prelude::*;
 
     #[test]

@@ -7,7 +7,7 @@ pub(crate) type KdcOptionsAsn1 = KerberosFlagsAsn1;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::constants::kdc_options::*;
+    use kerberos_constants::kdc_options::*;
     use red_asn1::*;
 
     #[test]

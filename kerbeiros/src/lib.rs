@@ -45,9 +45,6 @@ pub use error::{Result, Error};
 pub mod messages;
 pub use messages::*;
 
-pub mod constants;
-pub use constants::*;
-
 pub mod credentials;
 pub use credentials::*;
 

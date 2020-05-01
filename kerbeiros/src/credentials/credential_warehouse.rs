@@ -117,8 +117,9 @@ impl Into<CCache> for CredentialWarehouse {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::ticket_flags;
-    use crate::constants::*;
+    use kerberos_constants::ticket_flags;
+    use kerberos_constants::principal_names::*;
+    use kerberos_constants::etypes::*;
     use crate::types::*;
     use chrono::prelude::*;
     use kerberos_ccache as ccache;

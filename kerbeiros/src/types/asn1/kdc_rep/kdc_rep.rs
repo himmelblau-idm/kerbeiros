@@ -132,8 +132,9 @@ impl KdcRepAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
-
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
+    
     #[test]
     fn create_default_as_rep_asn1() {
         let as_rep_asn1 = KdcRepAsn1::default();

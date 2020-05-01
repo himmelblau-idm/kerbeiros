@@ -1,6 +1,6 @@
 use super::super::*;
 use super::*;
-use crate::constants::*;
+use kerberos_constants::etypes::NO_ENCRYPTION;
 use crate::types::*;
 
 pub struct CredentialWarehouseKrbCredMapper {}
@@ -30,7 +30,9 @@ impl CredentialWarehouseKrbCredMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::ticket_flags;
+    use kerberos_constants::ticket_flags;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
     use chrono::prelude::*;
 
     #[test]

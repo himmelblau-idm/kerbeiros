@@ -218,11 +218,11 @@ impl Into<CredentialEntry> for Credential {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::address_type;
-    use crate::constants::ticket_flags;
-    use crate::constants::{
-        AES256_CTS_HMAC_SHA1_96, NT_PRINCIPAL, PA_PAC_REQUEST,
-    };
+    use kerberos_constants::address_types;
+    use kerberos_constants::ticket_flags;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
+    use kerberos_constants::pa_data_types::*;
     use crate::types::{
         EncKdcRepPart, EncryptedData, EncryptionKey, HostAddress,
         HostAddresses, KerberosString, KerberosTime, LastReq, MethodData,
@@ -402,7 +402,7 @@ mod test {
 
         let mut addresses = Vec::new();
         addresses.push(Address::new(
-            address_type::NETBIOS as u16,
+            address_types::NETBIOS as u16,
             CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
         ));
         ccache_credential.addrs = addresses;
@@ -548,7 +548,7 @@ mod test {
 
         let mut addresses = Vec::new();
         addresses.push(Address::new(
-            address_type::NETBIOS as u16,
+            address_types::NETBIOS as u16,
             CountedOctetString::new("HOLLOWBASTION".as_bytes().to_vec()),
         ));
         ccache_credential.addrs = addresses;

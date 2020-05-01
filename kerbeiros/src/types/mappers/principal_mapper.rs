@@ -63,7 +63,7 @@ impl PrincipalMapper {
 
 mod test {
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::principal_names::*;
     use kerberos_ccache::CountedOctetString;
 
     #[test]

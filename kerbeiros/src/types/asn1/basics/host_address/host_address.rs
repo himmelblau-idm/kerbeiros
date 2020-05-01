@@ -1,5 +1,5 @@
 use super::super::int32::*;
-use crate::constants::address_type;
+use kerberos_constants::address_types;
 use crate::{Error, Result};
 use red_asn1::*;
 
@@ -51,7 +51,7 @@ impl HostAddress {
 
     pub fn addr_type(&self) -> i32 {
         match self {
-            HostAddress::NetBios(_) => address_type::NETBIOS,
+            HostAddress::NetBios(_) => address_types::NETBIOS,
             HostAddress::Raw(kind, _) => *kind,
         }
     }
@@ -79,7 +79,7 @@ impl HostAddressAsn1 {
             .ok_or_else(|| Error::NotAvailableData("HostAddress::address".to_string()))?;
 
         let host_address = match addr_type {
-            address_type::NETBIOS => {
+            address_types::NETBIOS => {
                 let addr_name = String::from_utf8_lossy(address)
                     .to_string()
                     .trim_end()

@@ -54,7 +54,7 @@ impl From<EncryptionKey> for EncryptionKeyAsn1 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn create_default_encryption_key_asn1() {

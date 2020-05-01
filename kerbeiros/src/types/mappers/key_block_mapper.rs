@@ -22,7 +22,7 @@ impl KeyBlockMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn encryption_key_to_key_block() {

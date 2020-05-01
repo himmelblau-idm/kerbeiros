@@ -1,6 +1,6 @@
 use super::super::basics::*;
 use super::kdc_req_body::*;
-use crate::constants::*;
+use kerberos_constants::principal_names::NT_SRV_INST;
 use crate::error::Result;
 use chrono::{DateTime, Duration, Utc};
 use red_asn1::*;
@@ -154,6 +154,8 @@ mod test {
     use super::*;
     use ascii::AsciiString;
     use chrono::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::kdc_options::*;
 
     #[test]
     fn create_default_as_req() {

@@ -14,7 +14,7 @@ impl TicketFlagsMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::ticket_flags;
+    use kerberos_constants::ticket_flags;
 
     #[test]
     fn ticket_flags_to_tktflags() {

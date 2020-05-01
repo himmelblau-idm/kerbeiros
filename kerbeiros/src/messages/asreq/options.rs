@@ -1,5 +1,9 @@
-use crate::constants::etypes::*;
-use crate::constants::kdc_options::*;
+use kerberos_constants::etypes::{
+    RC4_HMAC, AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96
+};
+use kerberos_constants::kdc_options::{
+  FORWARDABLE, RENEWABLE, CANONICALIZE, RENEWABLE_OK  
+};
 use ascii::AsciiString;
 use std::collections::HashSet;
 use crate::{Result};
@@ -88,6 +92,7 @@ impl AsReqOptions {
 #[cfg(test)]
 mod test {
     use super::*;
+    use kerberos_constants::etypes::DES_CBC_MD5;
 
     #[test]
     fn default_etypes() {

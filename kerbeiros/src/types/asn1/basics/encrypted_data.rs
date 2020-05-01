@@ -73,7 +73,7 @@ impl From<EncryptedData> for EncryptedDataAsn1 {
 
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn create_default_encrypted_data_asn1() {

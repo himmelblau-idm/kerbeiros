@@ -68,7 +68,7 @@ impl<'a> AsReqBuilder<'a> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn as_req_with_supported_rc4_and_aes_by_default() {
