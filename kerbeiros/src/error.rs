@@ -29,7 +29,7 @@ pub enum ErrorKind {
 
     /// Error produced in the application of cryptographic algorithms.
     #[fail(display = "Cryptography error: {}", _0)]
-    CryptographyError(Box<kerberos_crypto::Error>),
+    CryptographyError(kerberos_crypto::Error),
 
     /// Invalid ascii string.
     #[fail(display = "Invalid ascii string")]
@@ -141,7 +141,7 @@ impl From<Context<ErrorKind>> for Error {
 impl From<kerberos_crypto::Error> for Error {
     fn from(kind: kerberos_crypto::Error) -> Error {
         return Error {
-            inner: Context::new(ErrorKind::CryptographyError(Box::new(kind))),
+            inner: Context::new(ErrorKind::CryptographyError(kind)),
         };
     }
 }
