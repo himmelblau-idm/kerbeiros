@@ -8,9 +8,10 @@ mod rc4;
 pub use rc4::RC4Cipher;
 
 use crate::cryptography::AesSizes;
-use crate::etypes::{
-    AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
+use kerberos_constants::etypes::{
+    AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,    
 };
+
 use crate::{Error, Result};
 
 /// Size of RC4 key , 16 bytes
@@ -51,7 +52,7 @@ pub fn is_supported_etype(etype: i32) -> bool {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::etypes::*;
+    use kerberos_constants::etypes::*;
 
     #[test]
     fn supported_etypes() {

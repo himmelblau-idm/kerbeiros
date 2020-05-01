@@ -9,6 +9,8 @@ repository = "https://gitlab.com/Zer1t0/kerbeiros"
 
 
 [dependencies]
+kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
+
 chrono = "0.4"
 rand = "0.6.5"
 md4 = "0.8"

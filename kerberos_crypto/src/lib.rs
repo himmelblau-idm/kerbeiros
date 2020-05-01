@@ -15,8 +15,6 @@ pub use cryptography::AesSizes;
 mod rc4_hmac_md5;
 
 mod byteparser;
-pub mod etypes;
-
 
 mod error;
 pub use error::{Error, Result};
