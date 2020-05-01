@@ -111,7 +111,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "No principal name found")]
+    #[should_panic(expected = "NoPrincipalName")]
     fn test_principal_to_realm_and_principal_name_panic() {
         let principal = Principal::new(
             NT_PRINCIPAL as u32,

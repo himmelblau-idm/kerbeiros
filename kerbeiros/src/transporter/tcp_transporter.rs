@@ -55,7 +55,7 @@ impl Transporter for TCPTransporter {
 mod tests {
     use super::*;
 
-    #[should_panic(expected = "Network error")]
+    #[should_panic(expected = "NetworkError")]
     #[test]
     fn test_request_networks_error() {
         let requester =

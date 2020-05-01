@@ -275,7 +275,7 @@ mod test {
             .unwrap();
     }
 
-    #[should_panic(expected = "None cipher algorithm supported was specified")]
+    #[should_panic(expected = "NoProvidedSupportedCipherAlgorithm")]
     #[test]
     fn error_using_password_without_any_cipher_algorithm() {
         let etypes = Vec::new();

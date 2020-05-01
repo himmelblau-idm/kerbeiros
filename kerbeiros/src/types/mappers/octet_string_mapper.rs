@@ -41,7 +41,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "Invalid ascii string")]
+    #[should_panic(expected = "InvalidAscii")]
     fn test_counted_octet_string_to_kerberos_string_fail() {
         CountedOctetStringMapper::counted_octet_string_to_kerberos_string(
             CountedOctetString::new(vec![0xff])

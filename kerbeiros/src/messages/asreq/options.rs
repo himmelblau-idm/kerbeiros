@@ -128,7 +128,7 @@ mod test {
         assert_eq!(&etypes, options.etypes());
     }
 
-    #[should_panic(expected = "UnsupportedAlgorithm: 3")]
+    #[should_panic(expected = "UnsupportedAlgorithm(3)")]
     #[test]
     fn error_setting_unsupported_etypes() {
         let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
@@ -179,7 +179,7 @@ mod test {
         assert_eq!(&etypes, options.etypes());
     }
 
-    #[should_panic(expected = "UnsupportedAlgorithm: 3")]
+    #[should_panic(expected = "UnsupportedAlgorithm(3)")]
     #[test]
     fn error_setting_unsupported_etype() {
         let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());

@@ -105,7 +105,7 @@ mod test {
         }
     }
 
-    #[should_panic(expected = "Invalid microseconds value")]
+    #[should_panic(expected = "InvalidMicroseconds")]
     #[test]
     fn test_create_too_high_microseconds() {
         Microseconds::new(1000000).unwrap();
@@ -120,7 +120,7 @@ mod test {
         }
     }
 
-    #[should_panic(expected = "Invalid microseconds value")]
+    #[should_panic(expected = "InvalidMicroseconds")]
     #[test]
     fn test_set_too_high_microseconds() {
         let mut mic = Microseconds::new(0).unwrap();

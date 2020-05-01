@@ -158,7 +158,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "No address found")]
+    #[should_panic(expected = "NoAddress")]
     fn test_address_vector_to_host_addresses_panic() {
         let addresses = Vec::new();
         AddressMapper::address_vector_to_host_addresses(addresses).unwrap();

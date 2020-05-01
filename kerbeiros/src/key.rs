@@ -200,14 +200,14 @@ mod test {
         );
     }
 
-    #[should_panic(expected = "Invalid key: Length should be 32")]
+    #[should_panic(expected = "InvalidKeyLength(32)")]
     #[test]
     fn invalid_length_hex_string_to_rc4_key() {
         Key::from_rc4_key_string("0").unwrap();
     }
 
     #[should_panic(
-        expected = "Invalid key: Only hexadecimal characters are allowed [1234567890abcdefABCDEF]"
+        expected = "InvalidKeyCharset"
     )]
     #[test]
     fn invalid_chars_hex_string_to_rc4_key() {
@@ -231,14 +231,14 @@ mod test {
         );
     }
 
-    #[should_panic(expected = "Invalid key: Length should be 32")]
+    #[should_panic(expected = "InvalidKeyLength(32)")]
     #[test]
     fn invalid_length_hex_string_to_aes_128_key() {
         Key::from_aes_128_key_string("0").unwrap();
     }
 
     #[should_panic(
-        expected = "Invalid key: Only hexadecimal characters are allowed [1234567890abcdefABCDEF]"
+        expected = "InvalidKeyCharset"
     )]
     #[test]
     fn invalid_chars_hex_string_to_aes_128_key() {
@@ -268,14 +268,14 @@ mod test {
         );
     }
 
-    #[should_panic(expected = "Invalid key: Length should be 64")]
+    #[should_panic(expected = "InvalidKeyLength(64)")]
     #[test]
     fn invalid_length_hex_string_to_aes_256_key() {
         Key::from_aes_256_key_string("0").unwrap();
     }
 
     #[should_panic(
-        expected = "Invalid key: Only hexadecimal characters are allowed [1234567890abcdefABCDEF]"
+        expected = "InvalidKeyCharset"
     )]
     #[test]
     fn invalid_chars_hex_string_to_aes_256_key() {

@@ -165,7 +165,7 @@ mod test {
     use super::*;
     use std::net::Ipv4Addr;
 
-    #[should_panic(expected = "Received KRB-ERROR")]
+    #[should_panic(expected = "KrbErrorResponse")]
     #[test]
     fn request_tgt_receiving_krb_error() {
         struct FakeTransporter {}
@@ -353,7 +353,7 @@ mod test {
             .unwrap();
     }
 
-    #[should_panic(expected = "Error parsing KdcRep")]
+    #[should_panic(expected = "ParseKdcRepError")]
     #[test]
     fn request_tgt_as_rep_without_pre_authentication_and_incorrect_password() {
         struct FakeTransporter {}
@@ -678,7 +678,7 @@ mod test {
             .unwrap();
     }
 
-    #[should_panic(expected = "Received KRB-ERROR")]
+    #[should_panic(expected = "KrbErrorResponse")]
     #[test]
     fn request_tgt_without_user_key() {
         struct FakeTransporter {}

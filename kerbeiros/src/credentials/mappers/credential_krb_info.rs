@@ -310,7 +310,7 @@ mod test {
     }
 
     #[should_panic(
-        expected = "Key etype = 17 doesn't match with message etype = 18"
+        expected = "Key etype = 17 doesn\\\'t match with message etype = 18"
     )]
     #[test]
     fn decode_and_decrypt_enc_part_aes256_with_key_of_aes128() {
