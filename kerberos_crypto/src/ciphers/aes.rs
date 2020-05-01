@@ -65,7 +65,6 @@ impl KerberosCipher for AESCipher {
         key_usage: i32,
         ciphertext: &[u8],
     ) -> Result<Vec<u8>> {
-        println!("Decrypting");
         return aes_hmac_sh1_decrypt(
             key,
             key_usage,
