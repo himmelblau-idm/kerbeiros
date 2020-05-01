@@ -46,4 +46,3 @@ pub use credential::*;
 mod ccache;
 pub use ccache::*;
 
-pub mod constants;

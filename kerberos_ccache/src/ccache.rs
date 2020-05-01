@@ -79,7 +79,9 @@ impl CCache {
 mod test {
     use super::super::*;
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::ticket_flags;
+    use kerberos_constants::principal_names::*;
     use chrono::prelude::*;
 
     static RAW_CCACHE: &'static [u8] = &[

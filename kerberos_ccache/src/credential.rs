@@ -138,7 +138,9 @@ impl Credential {
 mod test {
     use super::super::*;
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::principal_names::*;
+    use kerberos_constants::ticket_flags;
     use chrono::prelude::*;
 
     static RAW_CREDENTIAL: &'static [u8] = &[

@@ -42,7 +42,7 @@ impl Address {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::constants::*;
+    use kerberos_constants::address_types::*;
 
     #[test]
     fn address_to_bytes() {
@@ -52,7 +52,7 @@ mod test {
                 0x44, 0x4f, 0x4d, 0x2e, 0x48, 0x45, 0x41, 0x52, 0x54, 0x53
             ],
             Address::new(
-                address_type::NETBIOS as u16,
+                NETBIOS as u16,
                 CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
             )
             .build()
@@ -63,7 +63,7 @@ mod test {
     fn test_parse_address_from_bytes() {
         assert_eq!(
             Address::new(
-                address_type::NETBIOS as u16,
+                NETBIOS as u16,
                 CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec())
             ),
             Address::parse(&[
