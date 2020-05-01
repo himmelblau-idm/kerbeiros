@@ -1,5 +1,17 @@
+//! # Kerberos crypto
+//! Library to implement the cryptographic algorithms involved in the kerberos protocol.
+//!
+//! The library provides different ciphers. The ciphers are classes which implements the diferent algorithms.
+//! All of them implement the KerberosCipher trait.
+//! ## Supported algorithms
+//! - RC4-HMAC
+//! - AES128-CTS-HMAC-SHA1-96
+//! - AES256-CTS-HMAC-SHA1-96
+
 mod aes_hmac_sha1;
 mod cryptography;
+pub use cryptography::AesSizes;
+
 mod rc4_hmac_md5;
 
 mod byteparser;

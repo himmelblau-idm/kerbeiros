@@ -10,6 +10,7 @@ const AES_MACSIZE: usize = 12;
 const AES_128_SEEDSIZE: usize = 16;
 const AES_256_SEEDSIZE: usize = 32;
 
+/// Enum to provide asociated parameters with each size of the AES algorithm 
 pub enum AesSizes {
     Aes128,
     Aes256,

@@ -13,10 +13,16 @@ use crate::etypes::{
 };
 use crate::{Error, Result};
 
+/// Size of RC4 key , 16 bytes
 pub const RC4_KEY_SIZE: usize = 16;
+
+/// Size of AES-128 key, 16 bytes
 pub const AES128_KEY_SIZE: usize = 16;
+
+/// Size of AES-256 key, 32 bytes
 pub const AES256_KEY_SIZE: usize = 32;
 
+/// Creates the appropiate cipher based on the encryption type specified
 pub fn new_kerberos_cipher(etype: i32) -> Result<Box<dyn KerberosCipher>> {
     match etype {
         AES256_CTS_HMAC_SHA1_96 => {
@@ -34,6 +40,7 @@ pub fn new_kerberos_cipher(etype: i32) -> Result<Box<dyn KerberosCipher>> {
     }
 }
 
+/// Helper to check is an encryption type is supported by this library
 pub fn is_supported_etype(etype: i32) -> bool {
     match etype {
         AES256_CTS_HMAC_SHA1_96 | AES128_CTS_HMAC_SHA1_96 | RC4_HMAC => true,

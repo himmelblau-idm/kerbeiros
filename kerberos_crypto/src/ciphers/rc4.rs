@@ -4,6 +4,7 @@ use crate::cryptography::{random_bytes, md4, string_unicode_bytes};
 
 use crate::Result;
 
+/// Cipher for the RC4 algorithm, used by the encryption type RC4_HMAC
 pub struct RC4Cipher {
     #[cfg(test)]
     preamble: Option<Vec<u8>>,

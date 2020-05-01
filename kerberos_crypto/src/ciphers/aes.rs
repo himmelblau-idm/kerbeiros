@@ -6,6 +6,7 @@ use crate::aes_hmac_sha1::{
 use crate::KerberosCipher;
 use crate::Result;
 
+/// Cipher for the AES algorithm, used by the encryption types AES128_CTS_HMAC_SHA1_96 and AES256_CTS_HMAC_SHA1_96
 pub struct AESCipher {
     aes_sizes: AesSizes,
 
