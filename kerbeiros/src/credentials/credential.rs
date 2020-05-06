@@ -4,14 +4,13 @@ use crate::error::Result;
 use kerberos_asn1::{
     EncAsRepPart, EncryptionKey, HostAddresses,
     KerberosString, KerberosTime, LastReq, MethodData,
-    PrincipalName, Realm, Ticket, TicketFlags,
+    PrincipalName, Realm, Ticket, TicketFlags, Asn1Object
 };
 use crate::mappers::{
     TimesMapper, TicketFlagsMapper, AddressMapper, AuthDataMapper, PrincipalMapper, KeyBlockMapper
 };
 use kerberos_ccache::{CountedOctetString, Credential as CredentialEntry};
 use std::convert::TryFrom;
-use red_asn1::Asn1Object;
 
 /// Represents a Kerberos credential, which includes one Ticket and session information.
 ///

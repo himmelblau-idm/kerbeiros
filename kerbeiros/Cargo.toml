@@ -14,7 +14,6 @@ kerberos_ccache = { version = "0.0", path = "../kerberos_ccache"}
 kerberos_crypto = { version = "0.0", path = "../kerberos_crypto"}
 kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
 
-red_asn1 = "0.3"
 ascii = "0.9.1"
 chrono = "0.4"
 failure = "0.1.5"

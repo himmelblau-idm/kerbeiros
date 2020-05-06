@@ -4,10 +4,10 @@ use ascii::FromAsciiError;
 use failure::Fail;
 use kerberos_crypto;
 use nom::Err as NomError;
-use red_asn1;
 use std::result;
 use std::string::FromUtf8Error;
 use crate::messages::{KrbError, AsRep};
+use kerberos_asn1;
 
 /// Result to wrap kerbeiros error.
 pub type Result<T> = result::Result<T, Error>;
@@ -17,7 +17,7 @@ pub type Result<T> = result::Result<T, Error>;
 pub enum Error {
     /// Error handlening asn1 entities.
     #[fail(display = "Asn1 error: {}", _0)]
-    Asn1Error(red_asn1::Error),
+    Asn1Error(kerberos_asn1::Error),
 
     /// Error produced in the application of cryptographic algorithms.
     #[fail(display = "Cryptography error: {}", _0)]
@@ -118,8 +118,8 @@ impl From<FromUtf8Error> for Error {
     }
 }
 
-impl From<red_asn1::Error> for Error {
-    fn from(error: red_asn1::Error) -> Self {
+impl From<kerberos_asn1::Error> for Error {
+    fn from(error: kerberos_asn1::Error) -> Self {
         return Self::Asn1Error(error);
     }
 }

@@ -1,4 +1,4 @@
-use kerberos_asn1::PaEncTsEnc;
+use kerberos_asn1::{PaEncTsEnc, Asn1Object};
 use crate::key::Key;
 use crate::{Error, Result};
 use ascii::AsciiString;
@@ -8,7 +8,6 @@ use kerberos_constants::etypes::{
 };
 use kerberos_constants::key_usages::KEY_USAGE_AS_REQ_TIMESTAMP;
 use kerberos_crypto::new_kerberos_cipher;
-use red_asn1::Asn1Object;
 
 pub struct AsReqTimestampCipher<'a> {
     realm: &'a AsciiString,

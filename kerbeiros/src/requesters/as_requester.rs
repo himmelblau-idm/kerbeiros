@@ -5,8 +5,7 @@ use crate::transporter::*;
 use ascii::AsciiString;
 use std::collections::HashSet;
 use std::net::IpAddr;
-use kerberos_asn1::{KrbError, AsRep};
-use red_asn1::Asn1Object;
+use kerberos_asn1::{KrbError, AsRep, Asn1Object};
 
 /// Encapsule the possible responses to an AS-REQ request
 #[derive(Debug, PartialEq)]

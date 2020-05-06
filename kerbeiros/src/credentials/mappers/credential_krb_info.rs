@@ -1,11 +1,12 @@
 use super::super::credential::*;
 use crate::key::Key;
 use crate::Result;
-use kerberos_asn1::{AsRep, EncAsRepPart, EtypeInfo2, KrbCredInfo, Ticket};
+use kerberos_asn1::{
+    AsRep, Asn1Object, EncAsRepPart, EtypeInfo2, KrbCredInfo, Ticket,
+};
 use kerberos_constants::key_usages::KEY_USAGE_AS_REP_ENC_PART;
 use kerberos_constants::pa_data_types::PA_ETYPE_INFO2;
 use kerberos_crypto::new_kerberos_cipher;
-use red_asn1::Asn1Object;
 
 pub struct CredentialKrbInfoMapper {}
 

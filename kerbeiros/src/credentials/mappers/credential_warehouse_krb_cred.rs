@@ -1,8 +1,7 @@
 use super::super::*;
 use super::*;
-use kerberos_asn1::{EncKrbCredPart, EncryptedData, KrbCred};
+use kerberos_asn1::{EncKrbCredPart, EncryptedData, KrbCred, Asn1Object};
 use kerberos_constants::etypes::NO_ENCRYPTION;
-use red_asn1::Asn1Object;
 
 pub struct CredentialWarehouseKrbCredMapper {}
 

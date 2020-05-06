@@ -38,10 +38,9 @@ impl AuthDataMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_asn1::KerbPaPacRequest;
+    use kerberos_asn1::{KerbPaPacRequest, Asn1Object};
     use kerberos_ccache::Address;
     use kerberos_constants::pa_data_types::*;
-    use red_asn1::Asn1Object;
 
     #[test]
     fn padata_to_auth_data() {

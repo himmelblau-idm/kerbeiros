@@ -5,12 +5,11 @@ use crate::key::Key;
 use ascii::AsciiString;
 use chrono::{Duration, Utc};
 use kerberos_asn1::{
-    AsReq, EncryptedData, KerbPaPacRequest, KerberosString, PaData,
+    AsReq, Asn1Object, EncryptedData, KerbPaPacRequest, KerberosString, PaData,
     PrincipalName,
 };
 use kerberos_constants::pa_data_types::{PA_ENC_TIMESTAMP, PA_PAC_REQUEST};
 use kerberos_constants::principal_names::{NT_PRINCIPAL, NT_SRV_INST};
-use red_asn1::Asn1Object;
 use rand::Rng;
 
 pub(crate) struct AsReqBuilder<'a> {
