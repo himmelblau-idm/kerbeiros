@@ -169,3 +169,8 @@ pub use enc_as_rep_part::EncAsRepPart;
 mod krb_error;
 pub use krb_error::KrbError;
 
+
+pub use red_asn1::Error as Error;
+pub use red_asn1::TagClass as TagClass;
+pub use red_asn1::Asn1Object as Asn1Object;
+pub use red_asn1::Result as Result;
