@@ -46,3 +46,5 @@ pub use credential::*;
 mod ccache;
 pub use ccache::*;
 
+pub use nom::Err as Error;
+pub use nom::IResult as Result;
