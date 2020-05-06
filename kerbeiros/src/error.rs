@@ -3,7 +3,7 @@
 use ascii::FromAsciiError;
 use failure::Fail;
 use kerberos_crypto;
-use nom::Err as NomError;
+use kerberos_ccache;
 use std::result;
 use std::string::FromUtf8Error;
 use crate::messages::{KrbError, AsRep};
@@ -124,8 +124,8 @@ impl From<kerberos_asn1::Error> for Error {
     }
 }
 
-impl<E> From<NomError<E>> for Error {
-    fn from(_error: NomError<E>) -> Self {
+impl<E> From<kerberos_ccache::Error<E>> for Error {
+    fn from(_error: kerberos_ccache::Error<E>) -> Self {
         return Self::BinaryParseError;
     }
 }
