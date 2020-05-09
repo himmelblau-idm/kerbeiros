@@ -25,5 +25,8 @@ pub use credential_mapper::{
     krb_cred_info_and_ticket_to_credential,
 };
 
+mod ccache_mapper;
+pub use ccache_mapper::ccache_to_krb_cred;
+
 mod error;
 pub use error::{ConvertError, ConvertResult};
