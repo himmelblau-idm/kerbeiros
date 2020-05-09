@@ -11,8 +11,10 @@ repository = "https://gitlab.com/Zer1t0/kerbeiros/kerberos_ccache"
 
 [dependencies]
 kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
+kerberos_asn1 = { version = "0.0", path = "../kerberos_asn1"}
+
+failure = "0.1"
+failure_derive = "0.1"
 
 nom = "5"
-
-[dev-dependencies]
 chrono = "0.4"
