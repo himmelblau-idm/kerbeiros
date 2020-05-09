@@ -20,5 +20,8 @@ mod octet_string_mapper;
 pub use octet_string_mapper::*;
 
 
+mod credential_mapper;
+pub use credential_mapper::credential_to_krb_cred_info_and_ticket;
+
 mod error;
 pub use error::{ConvertError, ConvertResult};
