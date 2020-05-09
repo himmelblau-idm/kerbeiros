@@ -26,7 +26,7 @@ pub use credential_mapper::{
 };
 
 mod ccache_mapper;
-pub use ccache_mapper::ccache_to_krb_cred;
+pub use ccache_mapper::{ccache_to_krb_cred, krb_cred_to_ccache};
 
 mod error;
 pub use error::{ConvertError, ConvertResult};

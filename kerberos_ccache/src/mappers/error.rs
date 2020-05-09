@@ -40,6 +40,9 @@ pub enum ConvertError {
     /// This could be due a Option field which is None.
     #[fail(display = "A required field is missing: {}", _0)]
     MissingField(String),
+
+    #[fail(display = "KrbCredError: {}", _0)]
+    KrbCredError(String)
 }
 
 
