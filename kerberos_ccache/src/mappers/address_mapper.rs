@@ -4,14 +4,14 @@ use std::convert::TryInto;
 use crate::{Address, CountedOctetString};
 use super::{ConvertResult, ConvertError};
 
-pub fn host_address_to_address(host_address: &HostAddress) -> Address {
+pub fn host_address_to_address(host_address: HostAddress) -> Address {
     let address = if host_address.addr_type == NETBIOS {
         String::from_utf8_lossy(&host_address.address)
             .trim_end()
             .as_bytes()
             .to_vec()
     } else {
-        host_address.address.clone()
+        host_address.address
     };
 
     return Address::new(
@@ -21,10 +21,10 @@ pub fn host_address_to_address(host_address: &HostAddress) -> Address {
 }
 
 pub fn host_addresses_to_address_vector(
-    host_addresses: &HostAddresses,
+    host_addresses: HostAddresses,
 ) -> Vec<Address> {
     let mut addresses = Vec::new();
-    for host_address in host_addresses.iter() {
+    for host_address in host_addresses.into_iter() {
         addresses.push(host_address_to_address(host_address));
     }
     return addresses;
@@ -81,7 +81,7 @@ mod test {
 
         assert_eq!(
             address,
-            host_address_to_address(&host_address)
+            host_address_to_address(host_address)
         );
     }
 
@@ -107,7 +107,7 @@ mod test {
 
         assert_eq!(
             addresses,
-            host_addresses_to_address_vector(&host_addresses)
+            host_addresses_to_address_vector(host_addresses)
         );
     }
 
