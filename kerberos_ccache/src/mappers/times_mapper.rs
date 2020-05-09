@@ -81,9 +81,9 @@ mod test {
         assert_eq!(
             time,
             authtime_starttime_endtime_renew_till_to_times(
-                &authtime,
+                Some(&authtime),
                 Some(&starttime),
-                &endtime,
+                Some(&endtime),
                 Some(&renew_till)
             )
         );
@@ -98,7 +98,7 @@ mod test {
 
         let time = Times::new(
             authtime.timestamp() as u32,
-            authtime.timestamp() as u32,
+            0,
             endtime.timestamp() as u32,
             0,
         );
@@ -106,7 +106,7 @@ mod test {
         assert_eq!(
             time,
             authtime_starttime_endtime_renew_till_to_times(
-                &authtime, None, &endtime, None
+                Some(&authtime), None, Some(&endtime), None
             )
         );
     }
@@ -130,7 +130,7 @@ mod test {
         );
 
         assert_eq!(
-            (authtime, starttime, endtime, Some(renew_till)),
+            (Some(authtime), Some(starttime), Some(endtime), Some(renew_till)),
             times_to_authtime_starttime_endtime_renew_till(&time)
         );
     }
@@ -150,7 +150,7 @@ mod test {
         );
 
         assert_eq!(
-            (authtime.clone(), authtime, endtime, None),
+            (Some(authtime.clone()), Some(authtime), Some(endtime), None),
             times_to_authtime_starttime_endtime_renew_till(&time)
         );
     }
