@@ -19,9 +19,11 @@ pub use auth_data_mapper::*;
 mod octet_string_mapper;
 pub use octet_string_mapper::*;
 
-
 mod credential_mapper;
-pub use credential_mapper::credential_to_krb_cred_info_and_ticket;
+pub use credential_mapper::{
+    credential_to_krb_cred_info_and_ticket,
+    krb_cred_info_and_ticket_to_credential,
+};
 
 mod error;
 pub use error::{ConvertError, ConvertResult};

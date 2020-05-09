@@ -46,6 +46,12 @@ impl CountedOctetString {
     }
 }
 
+impl From<Vec<u8>> for CountedOctetString {
+    fn from(v: Vec<u8>) -> Self {
+        return Self::new(v);
+    }
+}
+
 impl From<&str> for CountedOctetString {
     fn from(string: &str) -> Self {
         return Self::new(string.as_bytes().to_vec());

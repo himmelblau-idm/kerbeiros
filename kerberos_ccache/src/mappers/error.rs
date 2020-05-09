@@ -34,6 +34,12 @@ pub enum ConvertError {
     /// Error parsing binary data
     #[fail(display = "Error parsing binary data")]
     BinaryParseError,
+
+
+    /// The parsed struct doesn't have a required field.
+    /// This could be due a Option field which is None.
+    #[fail(display = "A required field is missing: {}", _0)]
+    MissingField(String),
 }
 
 
