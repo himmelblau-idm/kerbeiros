@@ -2,7 +2,7 @@ use super::{
     counted_octet_string_to_kerberos_string,
     kerberos_string_to_counted_octet_string,
 };
-use super::{ConvertError, ConvertResult};
+use crate::{ConvertError, ConvertResult};
 use crate::Principal;
 use kerberos_asn1::{PrincipalName, Realm};
 

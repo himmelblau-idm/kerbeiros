@@ -3,7 +3,7 @@ use super::{
     krb_cred_info_and_ticket_to_credential,
     realm_and_principal_name_to_principal,
 };
-use super::{ConvertError, ConvertResult};
+use crate::{ConvertError, ConvertResult};
 use crate::{CCache, Header};
 use kerberos_asn1::{Asn1Object, EncKrbCredPart, EncryptedData, KrbCred};
 use kerberos_constants::etypes::NO_ENCRYPTION;

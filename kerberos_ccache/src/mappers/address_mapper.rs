@@ -2,7 +2,7 @@ use kerberos_asn1::{padd_netbios_string, HostAddress, HostAddresses};
 use kerberos_constants::address_types::NETBIOS;
 use std::convert::TryInto;
 use crate::{Address, CountedOctetString};
-use super::{ConvertResult, ConvertError};
+use crate::{ConvertResult, ConvertError};
 
 pub fn host_address_to_address(host_address: HostAddress) -> Address {
     let address = if host_address.addr_type == NETBIOS {

@@ -51,3 +51,5 @@ pub use nom::IResult as Result;
 
 pub mod mappers;
 
+mod error;
+pub use error::{ConvertResult, ConvertError};

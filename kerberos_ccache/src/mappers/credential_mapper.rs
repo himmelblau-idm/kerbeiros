@@ -6,7 +6,7 @@ use super::{
     times_to_authtime_starttime_endtime_renew_till, tktflags_to_ticket_flags,
     host_addresses_to_address_vector
 };
-use super::{ConvertError, ConvertResult};
+use crate::{ConvertError, ConvertResult};
 use crate::Credential;
 use kerberos_asn1::{Asn1Object, KrbCredInfo, Ticket};
 
