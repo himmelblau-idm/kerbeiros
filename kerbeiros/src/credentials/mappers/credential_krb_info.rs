@@ -1,5 +1,5 @@
 use super::super::credential::*;
-use crate::key::Key;
+use kerberos_crypto::Key;
 use crate::Result;
 use kerberos_asn1::{
     AsRep, Asn1Object, EncAsRepPart, EtypeInfo2, KrbCredInfo, Ticket,
@@ -49,7 +49,7 @@ impl CredentialKrbInfoMapper {
     ) -> Result<Credential> {
         let plaintext;
         match key {
-            Key::Password(password) => {
+            Key::Secret(password) => {
                 plaintext = Self::decrypt_enc_kdc_rep_part_with_password(
                     password, &kdc_rep,
                 )?;
@@ -319,7 +319,7 @@ mod test {
         assert_eq!(
             credential,
             CredentialKrbInfoMapper::kdc_rep_to_credential(
-                &Key::Password("Minnie1234".to_string()),
+                &Key::Secret("Minnie1234".to_string()),
                 as_rep
             )
             .unwrap()

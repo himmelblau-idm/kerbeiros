@@ -1,6 +1,6 @@
 use super::as_requester::*;
 use crate::credentials::*;
-use crate::key::Key;
+use kerberos_crypto::Key;
 use crate::transporter::*;
 use crate::{Error, Result};
 use ascii::AsciiString;
@@ -16,6 +16,7 @@ use std::net::IpAddr;
 /// use kerbeiros::*;
 /// use ascii::AsciiString;
 /// use std::net::*;
+/// use kerberos_crypto::Key;
 ///
 /// // Prepare the arguments
 /// let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();
@@ -226,7 +227,7 @@ mod test {
         tgt_request
             .request(
                 &AsciiString::from_ascii("Mickey").unwrap(),
-                Some(&Key::Password("Minnie1234".to_string())),
+                Some(&Key::Secret("Minnie1234".to_string())),
             )
             .unwrap();
     }
@@ -407,7 +408,7 @@ mod test {
         tgt_request
             .request(
                 &AsciiString::from_ascii("mickey").unwrap(),
-                Some(&Key::Password("Minnie1234".to_string())),
+                Some(&Key::Secret("Minnie1234".to_string())),
             )
             .unwrap();
     }
@@ -589,7 +590,7 @@ mod test {
         tgt_request
             .request(
                 &AsciiString::from_ascii("mickey").unwrap(),
-                Some(&Key::Password("Incorrect password".to_string())),
+                Some(&Key::Secret("Incorrect password".to_string())),
             )
             .unwrap();
     }
@@ -820,7 +821,7 @@ mod test {
         tgt_request
             .request(
                 &AsciiString::from_ascii("mickey").unwrap(),
-                Some(&Key::Password("Minnie1234".to_string())),
+                Some(&Key::Secret("Minnie1234".to_string())),
             )
             .unwrap();
     }

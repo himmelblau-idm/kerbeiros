@@ -1,5 +1,5 @@
 use kerberos_asn1::{PaEncTsEnc, Asn1Object};
-use crate::key::Key;
+use kerberos_crypto::Key;
 use crate::{Error, Result};
 use ascii::AsciiString;
 use chrono::Utc;
@@ -50,7 +50,7 @@ impl<'a> AsReqTimestampCipher<'a> {
 
     fn produce_encrypted_timestamp(&self) -> Result<(i32, Vec<u8>)> {
         match self.user_key {
-            Key::Password(password) => {
+            Key::Secret(password) => {
                 return self
                     .encrypt_timestamp_with_best_cipher_and_password(password);
             }
@@ -305,7 +305,7 @@ mod test {
         AsReqTimestampCipher::build_encrypted_timestamp(
             &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
             &AsciiString::from_ascii("Mickey").unwrap(),
-            &Key::Password("password".to_string()),
+            &Key::Secret("password".to_string()),
             &etypes,
         )
         .unwrap();
@@ -322,7 +322,7 @@ mod test {
             AsReqTimestampCipher::build_encrypted_timestamp(
                 &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
                 &AsciiString::from_ascii("Mickey").unwrap(),
-                &Key::Password(password.to_string()),
+                &Key::Secret(password.to_string()),
                 &etypes,
             )
             .unwrap();
@@ -349,7 +349,7 @@ mod test {
             AsReqTimestampCipher::build_encrypted_timestamp(
                 &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
                 &AsciiString::from_ascii("Mickey").unwrap(),
-                &Key::Password(password.to_string()),
+                &Key::Secret(password.to_string()),
                 &etypes,
             )
             .unwrap();
@@ -375,7 +375,7 @@ mod test {
             AsReqTimestampCipher::build_encrypted_timestamp(
                 &AsciiString::from_ascii("KINGDOM.HEARTS").unwrap(),
                 &AsciiString::from_ascii("Mickey").unwrap(),
-                &Key::Password(password.to_string()),
+                &Key::Secret(password.to_string()),
                 &etypes,
             )
             .unwrap();

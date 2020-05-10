@@ -1,7 +1,7 @@
 use super::options::AsReqOptions;
 use super::timestamp_cipher::*;
 use crate::error::*;
-use crate::key::Key;
+use kerberos_crypto::Key;
 use ascii::AsciiString;
 use chrono::{Duration, Utc};
 use kerberos_asn1::{

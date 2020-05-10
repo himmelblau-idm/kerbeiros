@@ -13,12 +13,13 @@
 //! use kerbeiros::*;
 //! use ascii::AsciiString;
 //! use std::net::*;
-//!
+//! use kerberos_crypto::Key;
+//! 
 //! // Prepare the arguments
 //! let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();
 //! let kdc_address = IpAddr::V4(Ipv4Addr::new(192, 168, 0, 1));
 //! let username = AsciiString::from_ascii("Bob").unwrap();
-//! let user_key = Key::Password("S3cr3t".to_string());
+//! let user_key = Key::Secret("S3cr3t".to_string());
 //!
 //! // Request the TGT
 //! let tgt_requester = TgtRequester::new(realm, kdc_address);
@@ -46,9 +47,6 @@ pub use messages::*;
 
 pub mod credentials;
 pub use credentials::*;
-
-pub mod key;
-pub use key::*;
 
 pub mod requesters;
 pub use requesters::*;

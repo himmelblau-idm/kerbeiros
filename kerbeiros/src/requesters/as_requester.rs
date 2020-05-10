@@ -1,5 +1,5 @@
 use crate::error::*;
-use crate::key::Key;
+use kerberos_crypto::Key;
 use crate::messages::*;
 use crate::transporter::*;
 use ascii::AsciiString;
@@ -23,12 +23,13 @@ pub enum AsReqResponse {
 /// use ascii::AsciiString;
 /// use std::net::*;
 /// use kerberos_constants::etypes::AES256_CTS_HMAC_SHA1_96;
+/// use kerberos_crypto::Key;
 ///
 /// // Prepare the arguments
 /// let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();
 /// let kdc_address = IpAddr::V4(Ipv4Addr::new(192, 168, 0, 1));
 /// let username = AsciiString::from_ascii("Bob").unwrap();
-/// let user_key = Key::Password("S3cr3t".to_string());
+/// let user_key = Key::Secret("S3cr3t".to_string());
 ///
 /// let mut as_requester = kerbeiros::AsRequester::new(realm, kdc_address);
 ///
@@ -312,7 +313,7 @@ mod test {
         match as_requester
             .request(
                 &AsciiString::from_ascii("mickey").unwrap(),
-                Some(&Key::Password("Minnie1234".to_string())),
+                Some(&Key::Secret("Minnie1234".to_string())),
             )
             .unwrap()
         {
