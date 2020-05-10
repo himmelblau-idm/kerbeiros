@@ -10,7 +10,7 @@ const AES_MACSIZE: usize = 12;
 const AES_128_SEEDSIZE: usize = 16;
 const AES_256_SEEDSIZE: usize = 32;
 
-/// Enum to provide asociated parameters with each size of the AES algorithm 
+/// Enum to provide asociated parameters with each size of the AES algorithm
 pub enum AesSizes {
     Aes128,
     Aes256,
@@ -48,8 +48,13 @@ pub fn pbkdf2_sha1(key: &[u8], salt: &[u8], seed_size: usize) -> Vec<u8> {
     return seed;
 }
 
-pub fn decrypt_aes_ecb(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
-    let mut decryptor = aes::ecb_decryptor(aes_sizes.key_size(), key, blockmodes::NoPadding);
+pub fn decrypt_aes_ecb(
+    key: &[u8],
+    ciphertext: &[u8],
+    aes_sizes: &AesSizes,
+) -> Vec<u8> {
+    let mut decryptor =
+        aes::ecb_decryptor(aes_sizes.key_size(), key, blockmodes::NoPadding);
     let mut plaintext: Vec<u8> = vec![0; ciphertext.len()];
     decryptor
         .decrypt(
@@ -62,7 +67,11 @@ pub fn decrypt_aes_ecb(key: &[u8], ciphertext: &[u8], aes_sizes: &AesSizes) -> V
     return plaintext;
 }
 
-pub fn encrypt_aes_cbc(key: &[u8], plaintext: &[u8], aes_sizes: &AesSizes) -> Vec<u8> {
+pub fn encrypt_aes_cbc(
+    key: &[u8],
+    plaintext: &[u8],
+    aes_sizes: &AesSizes,
+) -> Vec<u8> {
     let mut encryptor = aes::cbc_encryptor(
         aes_sizes.key_size(),
         key,

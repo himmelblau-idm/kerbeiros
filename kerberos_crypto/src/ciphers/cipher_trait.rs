@@ -1,10 +1,19 @@
-use crate::{Result};
+use crate::Result;
 
 /// Trait implemented by the ciphers of this library
 pub trait KerberosCipher {
     fn generate_key(&self, raw_key: &[u8], salt: &[u8]) -> Vec<u8>;
-    fn generate_key_from_password(&self, password: &str, salt: &[u8]) -> Vec<u8>;
-    fn decrypt(&self, key: &[u8], key_usage: i32, ciphertext: &[u8]) -> Result<Vec<u8>>;
+    fn generate_key_from_password(
+        &self,
+        password: &str,
+        salt: &[u8],
+    ) -> Vec<u8>;
+    fn decrypt(
+        &self,
+        key: &[u8],
+        key_usage: i32,
+        ciphertext: &[u8],
+    ) -> Result<Vec<u8>>;
 
     fn generate_key_and_decrypt(
         &self,

@@ -9,7 +9,7 @@ pub use rc4::RC4Cipher;
 
 use crate::cryptography::AesSizes;
 use kerberos_constants::etypes::{
-    AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,    
+    AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
 
 use crate::{Error, Result};

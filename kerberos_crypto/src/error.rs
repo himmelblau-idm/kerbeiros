@@ -1,5 +1,5 @@
-use std::result;
 use failure::Fail;
+use std::result;
 
 /// Result that encapsulates the Error type of this library
 pub type Result<T> = result::Result<T, Error>;

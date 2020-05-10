@@ -1,5 +1,5 @@
-use crate::cryptography::{hmac_md5, rc4_encrypt, rc4_decrypt};
-use crate::{Result, Error};
+use crate::cryptography::{hmac_md5, rc4_decrypt, rc4_encrypt};
+use crate::{Error, Result};
 
 pub fn encrypt_rc4_hmac_md5(
     key: &[u8],
@@ -22,7 +22,11 @@ pub fn encrypt_rc4_hmac_md5(
     return cksum;
 }
 
-pub fn decrypt_rc4_hmac_md5(key: &[u8], key_usage: i32, ciphertext: &[u8]) -> Result<Vec<u8>> {
+pub fn decrypt_rc4_hmac_md5(
+    key: &[u8],
+    key_usage: i32,
+    ciphertext: &[u8],
+) -> Result<Vec<u8>> {
     if ciphertext.len() < 24 {
         return Err(Error::DecryptionError(
             "Ciphertext too short".to_string(),
