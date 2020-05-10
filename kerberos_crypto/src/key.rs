@@ -4,7 +4,7 @@ use kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
 
-use crate::{RC4_KEY_SIZE, AES128_KEY_SIZE, AES256_KEY_SIZE};
+use crate::{AES128_KEY_SIZE, AES256_KEY_SIZE, RC4_KEY_SIZE};
 
 use crate::{Error, Result};
 use std::result;
@@ -30,24 +30,35 @@ pub enum Key {
 }
 
 impl Key {
-    /// Return the etype associated with the type of key.
+    /// Return the etypes associated with the type of key.
     ///
     /// # Examples
     /// ```
     /// use kerberos_crypto::*;
     /// use kerberos_constants::etypes::*;
     ///
-    /// assert_eq!(0, Key::Secret("".to_string()).etype());
-    /// assert_eq!(RC4_HMAC, Key::RC4Key([0; RC4_KEY_SIZE]).etype());
-    /// assert_eq!(AES128_CTS_HMAC_SHA1_96, Key::AES128Key([0; AES128_KEY_SIZE]).etype());
-    /// assert_eq!(AES256_CTS_HMAC_SHA1_96, Key::AES256Key([0; AES256_KEY_SIZE]).etype());
+    /// assert_eq!(
+    ///     vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC],
+    ///     Key::Secret("".to_string()).etypes()
+    /// );
+    /// assert_eq!(vec![RC4_HMAC], Key::RC4Key([0; RC4_KEY_SIZE]).etypes());
+    /// assert_eq!(
+    ///     vec![AES128_CTS_HMAC_SHA1_96],
+    ///     Key::AES128Key([0; AES128_KEY_SIZE]).etypes()
+    /// );
+    /// assert_eq!(
+    ///     vec![AES256_CTS_HMAC_SHA1_96],
+    ///     Key::AES256Key([0; AES256_KEY_SIZE]).etypes()
+    /// );
     /// ```
-    pub fn etype(&self) -> i32 {
+    pub fn etypes(&self) -> Vec<i32> {
         match self {
-            Key::Secret(_) => 0,
-            Key::RC4Key(_) => RC4_HMAC,
-            Key::AES128Key(_) => AES128_CTS_HMAC_SHA1_96,
-            Key::AES256Key(_) => AES256_CTS_HMAC_SHA1_96,
+            Key::Secret(_) => {
+                vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC]
+            }
+            Key::RC4Key(_) => vec![RC4_HMAC],
+            Key::AES128Key(_) => vec![AES128_CTS_HMAC_SHA1_96],
+            Key::AES256Key(_) => vec![AES256_CTS_HMAC_SHA1_96],
         }
     }
 
