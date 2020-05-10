@@ -1,5 +1,5 @@
 use crate::aes_hmac_sha1;
-use crate::cryptography::{random_bytes, AesSizes};
+use crate::cryptography::AesSizes;
 
 use crate::KerberosCipher;
 use crate::Result;
@@ -29,7 +29,7 @@ impl AESCipher {
         if let Some(self_preamble) = &self.preamble {
             return self_preamble.clone();
         } else {
-            return random_bytes(self.aes_sizes.block_size());
+            return aes_hmac_sha1::generate_preamble(&self.aes_sizes);
         }
     }
 }
@@ -41,7 +41,7 @@ impl AESCipher {
     }
 
     fn preamble(&self) -> Vec<u8> {
-        return random_bytes(self.aes_sizes.block_size());
+        return aes_hmac_sha1::generate_preamble(&self.aes_sizes);
     }
 }
 

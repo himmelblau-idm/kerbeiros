@@ -10,4 +10,7 @@ pub use keys::{
 mod decrypt;
 pub use decrypt::{decrypt, encrypt};
 
+mod preamble;
+pub use preamble::generate_preamble;
+
 mod nfold_dk;
