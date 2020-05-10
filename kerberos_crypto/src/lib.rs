@@ -8,11 +8,12 @@
 //! - AES128-CTS-HMAC-SHA1-96
 //! - AES256-CTS-HMAC-SHA1-96
 
-pub mod aes_hmac_sha1;
+mod algorithms;
+pub use algorithms::aes_hmac_sha1;
+pub use algorithms::rc4_hmac_md5;
+
 mod cryptography;
 pub use cryptography::AesSizes;
-
-pub mod rc4_hmac_md5;
 
 mod byteparser;
 

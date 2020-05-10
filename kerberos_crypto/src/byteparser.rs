@@ -1,4 +1,4 @@
-//! Helper module with functions to handle byyes
+//! Helper module
 
 pub fn u16_array_to_le_bytes(u16_array: &[u16]) -> Vec<u8> {
     let mut u8_vec: Vec<u8> = Vec::with_capacity(u16_array.len() * 2);
