@@ -1,4 +1,5 @@
-use crate::cryptography::{random_bytes, AesSizes};
+use crate::cryptography::{AesSizes};
+use crate::utils::random_bytes;
 
 /// Generate an aleatory preamble to insert at the beginning of the
 /// plaintext before AES encryption

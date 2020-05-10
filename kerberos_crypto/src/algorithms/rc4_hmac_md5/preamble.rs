@@ -1,4 +1,4 @@
-use crate::cryptography::random_bytes;
+use crate::utils::random_bytes;
 
 /// Generate an aleatory preamble to insert at the beginning of the
 /// plaintext before RC4 encryption

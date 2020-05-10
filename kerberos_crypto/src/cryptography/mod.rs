@@ -1,8 +1,7 @@
-use crate::byteparser;
 use crypto::rc4::Rc4;
 use crypto::symmetriccipher::SynchronousStreamCipher;
 use md4::{Digest, Md4};
-use rand::RngCore;
+
 
 mod aes;
 pub use aes::{decrypt_aes_ecb, encrypt_aes_cbc, pbkdf2_sha1, AesSizes};
@@ -12,11 +11,6 @@ pub use hmac::{hmac_md5, hmac_sha1};
 
 pub fn md4(bytes: &[u8]) -> Vec<u8> {
     return Md4::digest(&bytes).to_vec();
-}
-
-pub fn string_unicode_bytes(s: &str) -> Vec<u8> {
-    let s_utf16: Vec<u16> = s.encode_utf16().collect();
-    return byteparser::u16_array_to_le_bytes(&s_utf16);
 }
 
 pub fn rc4_encrypt(key: &[u8], data: &[u8]) -> Vec<u8> {
@@ -30,23 +24,7 @@ pub fn rc4_decrypt(key: &[u8], ciphertext: &[u8]) -> Vec<u8> {
     return rc4_encrypt(key, ciphertext);
 }
 
-pub fn random_bytes(size: usize) -> Vec<u8> {
-    let mut rng = rand::thread_rng();
-    let mut bytes: Vec<u8> = vec![0; size];
-    rng.fill_bytes(&mut bytes);
 
-    return bytes;
-}
-
-pub fn xorbytes(v1: &[u8], v2: &[u8]) -> Vec<u8> {
-    let mut v_xored = Vec::with_capacity(v1.len());
-
-    for i in 0..v1.len() {
-        v_xored.push(v1[i] ^ v2[i])
-    }
-
-    return v_xored;
-}
 
 #[cfg(test)]
 mod test {

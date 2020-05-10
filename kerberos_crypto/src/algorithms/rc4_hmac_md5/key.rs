@@ -1,4 +1,5 @@
-use crate::cryptography::{md4, string_unicode_bytes};
+use crate::cryptography::md4;
+use crate::utils::string_unicode_bytes;
 
 /// Derive the RC4 key used to encrypt/decrypt from the
 /// user secret (password)
@@ -13,11 +14,10 @@ pub fn generate_key_from_string(string: &str) -> Vec<u8> {
     return generate_key(&raw_key);
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
-    
+
     fn rc4_key_gen(password: &str) -> Vec<u8> {
         return generate_key_from_string(password);
     }

@@ -1,5 +1,34 @@
 //! Helper module
 
+use rand::RngCore;
+
+
+/// Generates an vector with random bytes
+pub fn random_bytes(size: usize) -> Vec<u8> {
+    let mut rng = rand::thread_rng();
+    let mut bytes: Vec<u8> = vec![0; size];
+    rng.fill_bytes(&mut bytes);
+
+    return bytes;
+}
+
+/// Helper to xorbytes of two arrays and produce a new one
+pub fn xorbytes(v1: &[u8], v2: &[u8]) -> Vec<u8> {
+    let mut v_xored = Vec::with_capacity(v1.len());
+
+    for i in 0..v1.len() {
+        v_xored.push(v1[i] ^ v2[i])
+    }
+
+    return v_xored;
+}
+
+
+pub fn string_unicode_bytes(s: &str) -> Vec<u8> {
+    let s_utf16: Vec<u16> = s.encode_utf16().collect();
+    return u16_array_to_le_bytes(&s_utf16);
+}
+
 pub fn u16_array_to_le_bytes(u16_array: &[u16]) -> Vec<u8> {
     let mut u8_vec: Vec<u8> = Vec::with_capacity(u16_array.len() * 2);
 

@@ -15,7 +15,7 @@ pub use algorithms::rc4_hmac_md5;
 mod cryptography;
 pub use cryptography::AesSizes;
 
-mod byteparser;
+mod utils;
 
 mod error;
 pub use error::{Error, Result};
