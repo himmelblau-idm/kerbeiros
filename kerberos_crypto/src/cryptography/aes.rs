@@ -5,10 +5,16 @@ use crypto::hmac::Hmac;
 use crypto::pbkdf2::pbkdf2;
 use crypto::sha1::Sha1;
 
-const AES_BLOCKSIZE: usize = 16;
-const AES_MACSIZE: usize = 12;
-const AES_128_SEEDSIZE: usize = 16;
-const AES_256_SEEDSIZE: usize = 32;
+pub const AES_BLOCK_SIZE: usize = 16;
+pub const AES_MAC_SIZE: usize = 12;
+pub const AES_128_SEED_SIZE: usize = 16;
+pub const AES_256_SEED_SIZE: usize = 32;
+
+/// Size of AES-128 key, 16 bytes
+pub const AES_128_KEY_SIZE: usize = 16;
+
+/// Size of AES-256 key, 32 bytes
+pub const AES_256_KEY_SIZE: usize = 32;
 
 /// Enum to provide asociated parameters with each size of the AES algorithm
 pub enum AesSizes {
@@ -19,13 +25,13 @@ pub enum AesSizes {
 impl AesSizes {
     pub fn seed_size(&self) -> usize {
         match &self {
-            AesSizes::Aes128 => return AES_128_SEEDSIZE,
-            AesSizes::Aes256 => return AES_256_SEEDSIZE,
+            AesSizes::Aes128 => return AES_128_SEED_SIZE,
+            AesSizes::Aes256 => return AES_256_SEED_SIZE,
         }
     }
 
     pub fn block_size(&self) -> usize {
-        return AES_BLOCKSIZE;
+        return AES_BLOCK_SIZE;
     }
 
     pub fn key_size(&self) -> aes::KeySize {
@@ -36,7 +42,7 @@ impl AesSizes {
     }
 
     pub fn mac_size(&self) -> usize {
-        return AES_MACSIZE;
+        return AES_MAC_SIZE;
     }
 }
 

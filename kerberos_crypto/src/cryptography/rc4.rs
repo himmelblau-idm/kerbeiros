@@ -1,6 +1,9 @@
 use crypto::rc4::Rc4;
 use crypto::symmetriccipher::SynchronousStreamCipher;
 
+/// Size of RC4 key , 16 bytes
+pub const RC4_KEY_SIZE: usize = 16;
+
 pub fn rc4_encrypt(key: &[u8], data: &[u8]) -> Vec<u8> {
     let mut rc4_cipher = Rc4::new(key);
     let mut result: Vec<u8> = vec![0; data.len()];
@@ -11,8 +14,6 @@ pub fn rc4_encrypt(key: &[u8], data: &[u8]) -> Vec<u8> {
 pub fn rc4_decrypt(key: &[u8], ciphertext: &[u8]) -> Vec<u8> {
     return rc4_encrypt(key, ciphertext);
 }
-
-
 
 #[cfg(test)]
 mod test {

@@ -14,15 +14,6 @@ use kerberos_constants::etypes::{
 
 use crate::{Error, Result};
 
-/// Size of RC4 key , 16 bytes
-pub const RC4_KEY_SIZE: usize = 16;
-
-/// Size of AES-128 key, 16 bytes
-pub const AES128_KEY_SIZE: usize = 16;
-
-/// Size of AES-256 key, 32 bytes
-pub const AES256_KEY_SIZE: usize = 32;
-
 /// Creates the appropiate cipher based on the encryption type specified
 pub fn new_kerberos_cipher(etype: i32) -> Result<Box<dyn KerberosCipher>> {
     match etype {

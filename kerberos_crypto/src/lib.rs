@@ -13,7 +13,10 @@ pub use algorithms::aes_hmac_sha1;
 pub use algorithms::rc4_hmac_md5;
 
 mod cryptography;
-pub use cryptography::AesSizes;
+pub use cryptography::{
+    AesSizes, AES_128_KEY_SIZE, AES_128_SEED_SIZE, AES_256_KEY_SIZE,
+    AES_256_SEED_SIZE, AES_BLOCK_SIZE, AES_MAC_SIZE, RC4_KEY_SIZE
+};
 
 mod utils;
 
@@ -21,10 +24,7 @@ mod error;
 pub use error::{Error, Result};
 
 mod ciphers;
-pub use ciphers::{
-    new_kerberos_cipher, AESCipher, KerberosCipher, RC4Cipher, AES128_KEY_SIZE,
-    AES256_KEY_SIZE, RC4_KEY_SIZE,
-};
+pub use ciphers::{new_kerberos_cipher, AESCipher, KerberosCipher, RC4Cipher};
 
 mod helpers;
 pub use helpers::is_supported_etype;
