@@ -12,10 +12,10 @@ use std::result;
 pub const RC4_KEY_SIZE: usize = kerberos_crypto::RC4_KEY_SIZE;
 
 /// Size of [`Key::AES128Key`](./enum.Key.html#variant.AES128Key).
-pub const AES128_KEY_SIZE: usize = kerberos_crypto::AES128_KEY_SIZE;
+pub const AES128_KEY_SIZE: usize = kerberos_crypto::AES_128_KEY_SIZE;
 
 /// Size of [`Key::AES256Key`](./enum.Key.html#variant.AES256Key).
-pub const AES256_KEY_SIZE: usize = kerberos_crypto::AES256_KEY_SIZE;
+pub const AES256_KEY_SIZE: usize = kerberos_crypto::AES_256_KEY_SIZE;
 
 /// Encapsules the possible keys used by this Kerberos implementation.
 /// Each key can be used by a different cryptographic algorithm.

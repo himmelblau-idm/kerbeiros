@@ -76,7 +76,7 @@ impl CredentialKrbInfoMapper {
         kdc_rep: &AsRep,
     ) -> Result<Vec<u8>> {
         let cipher = new_kerberos_cipher(kdc_rep.enc_part.etype)?;
-        return Ok(cipher.generate_key_from_password_and_decrypt(
+        return Ok(cipher.generate_key_from_string_and_decrypt(
             password,
             &Self::as_rep_encryption_salt(kdc_rep),
             KEY_USAGE_AS_REP_ENC_PART,

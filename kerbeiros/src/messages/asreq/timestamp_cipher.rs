@@ -123,7 +123,7 @@ impl<'a> AsReqTimestampCipher<'a> {
         let cipher = new_kerberos_cipher(etype)?;
         return Ok((
             etype,
-            cipher.generate_key_from_password_and_encrypt(
+            cipher.generate_key_from_string_and_encrypt(
                 password,
                 salt,
                 KEY_USAGE_AS_REQ_TIMESTAMP,
@@ -330,7 +330,7 @@ mod test {
         assert_eq!(AES256_CTS_HMAC_SHA1_96, result_etype);
         new_kerberos_cipher(AES256_CTS_HMAC_SHA1_96)
             .unwrap()
-            .generate_key_from_password_and_decrypt(
+            .generate_key_from_string_and_decrypt(
                 &password,
                 &"KINGDOM.HEARTSmickey".as_bytes(),
                 KEY_USAGE_AS_REQ_TIMESTAMP,
@@ -357,7 +357,7 @@ mod test {
         assert_eq!(AES128_CTS_HMAC_SHA1_96, result_etype);
         new_kerberos_cipher(AES128_CTS_HMAC_SHA1_96)
             .unwrap()
-            .generate_key_from_password_and_decrypt(
+            .generate_key_from_string_and_decrypt(
                 &password,
                 &"KINGDOM.HEARTSmickey".as_bytes(),
                 KEY_USAGE_AS_REQ_TIMESTAMP,
@@ -383,7 +383,7 @@ mod test {
         assert_eq!(RC4_HMAC, result_etype);
         new_kerberos_cipher(RC4_HMAC)
             .unwrap()
-            .generate_key_from_password_and_decrypt(
+            .generate_key_from_string_and_decrypt(
                 &password,
                 &"".as_bytes(),
                 KEY_USAGE_AS_REQ_TIMESTAMP,
