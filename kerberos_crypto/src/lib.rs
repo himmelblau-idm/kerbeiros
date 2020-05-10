@@ -24,7 +24,7 @@ mod error;
 pub use error::{Error, Result};
 
 mod ciphers;
-pub use ciphers::{new_kerberos_cipher, AESCipher, KerberosCipher, RC4Cipher};
+pub use ciphers::{new_kerberos_cipher, AesCipher, KerberosCipher, RC4Cipher};
 
 mod helpers;
 pub use helpers::is_supported_etype;

@@ -5,7 +5,7 @@ use crate::KerberosCipher;
 use crate::Result;
 
 /// Cipher for the AES algorithm, used by the encryption types AES128_CTS_HMAC_SHA1_96 and AES256_CTS_HMAC_SHA1_96
-pub struct AESCipher {
+pub struct AesCipher {
     aes_sizes: AesSizes,
 
     #[cfg(test)]
@@ -13,7 +13,7 @@ pub struct AESCipher {
 }
 
 #[cfg(test)]
-impl AESCipher {
+impl AesCipher {
     pub fn new(aes_sizes: AesSizes) -> Self {
         return Self {
             aes_sizes,
@@ -35,7 +35,7 @@ impl AESCipher {
 }
 
 #[cfg(not(test))]
-impl AESCipher {
+impl AesCipher {
     pub fn new(aes_sizes: AesSizes) -> Self {
         return Self { aes_sizes };
     }
@@ -45,7 +45,7 @@ impl AESCipher {
     }
 }
 
-impl KerberosCipher for AESCipher {
+impl KerberosCipher for AesCipher {
     fn generate_key(&self, key: &[u8], salt: &[u8]) -> Vec<u8> {
         return aes_hmac_sha1::generate_key(key, salt, &self.aes_sizes);
     }
@@ -94,7 +94,7 @@ mod test {
 
     #[test]
     fn test_aes_256_hmac_sh1_encrypt() {
-        let mut aes256_cipher = AESCipher::new(AesSizes::Aes256);
+        let mut aes256_cipher = AesCipher::new(AesSizes::Aes256);
         aes256_cipher.set_preamble(&[0; 16]);
 
         assert_eq!(
@@ -217,7 +217,7 @@ mod test {
 
     #[test]
     fn test_aes_256_hmac_sh1_decrypt() {
-        let aes256_cipher = AESCipher::new(AesSizes::Aes256);
+        let aes256_cipher = AesCipher::new(AesSizes::Aes256);
 
         assert_eq!(
             vec![
@@ -352,7 +352,7 @@ mod test {
 
     #[test]
     fn test_aes_128_hmac_sh1_encrypt() {
-        let mut aes128_cipher = AESCipher::new(AesSizes::Aes128);
+        let mut aes128_cipher = AesCipher::new(AesSizes::Aes128);
         aes128_cipher.set_preamble(&[0; 16]);
 
         assert_eq!(
@@ -475,7 +475,7 @@ mod test {
 
     #[test]
     fn test_aes_128_hmac_sh1_decrypt() {
-        let aes128_cipher = AESCipher::new(AesSizes::Aes128);
+        let aes128_cipher = AesCipher::new(AesSizes::Aes128);
 
         assert_eq!(
             vec![

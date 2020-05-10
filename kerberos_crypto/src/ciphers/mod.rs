@@ -2,7 +2,7 @@ mod cipher_trait;
 pub use cipher_trait::KerberosCipher;
 
 mod aes;
-pub use aes::AESCipher;
+pub use aes::AesCipher;
 
 mod rc4;
 pub use rc4::RC4Cipher;
