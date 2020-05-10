@@ -28,3 +28,6 @@ pub use ciphers::{new_kerberos_cipher, AesCipher, KerberosCipher, Rc4Cipher};
 
 mod helpers;
 pub use helpers::{is_supported_etype, supported_etypes};
+
+mod key;
+pub use key::Key;

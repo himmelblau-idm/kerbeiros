@@ -1,37 +1,32 @@
 //! Exports the types of user keys available for this implementation.
 
 use kerberos_constants::etypes::{
-    RC4_HMAC, AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96
+    AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
-use kerberos_crypto;
 
-use crate::{Result, Error};
+use crate::{RC4_KEY_SIZE, AES_128_KEY_SIZE, AES_256_KEY_SIZE};
+
+use crate::{Error, Result};
 use std::result;
-
-/// Size of [`Key::RC4Key`](./enum.Key.html#variant.RC4Key).
-pub const RC4_KEY_SIZE: usize = kerberos_crypto::RC4_KEY_SIZE;
-
-/// Size of [`Key::AES128Key`](./enum.Key.html#variant.AES128Key).
-pub const AES128_KEY_SIZE: usize = kerberos_crypto::AES_128_KEY_SIZE;
-
-/// Size of [`Key::AES256Key`](./enum.Key.html#variant.AES256Key).
-pub const AES256_KEY_SIZE: usize = kerberos_crypto::AES_256_KEY_SIZE;
 
 /// Encapsules the possible keys used by this Kerberos implementation.
 /// Each key can be used by a different cryptographic algorithm.
 #[derive(Debug, PartialEq, Clone)]
 pub enum Key {
-    /// The password of the user, it is the most versatile key, since can it can be use for obtain the rest of the keys, and therefore, being used by any cryptographic algotithm.
+    /// The password of the user, it is the most versatile key,
+    /// since can it can be use for obtain the rest of the keys,
+    /// and therefore, being used by any cryptographic algotithm.
     Password(String),
 
-    /// RC4 key used by RC4-HMAC algorithm. In Windows is the NTLM hash of the user password.
+    /// RC4 key used by RC4-HMAC algorithm. In Windows is the NTLM
+    /// hash of the user password.
     RC4Key([u8; RC4_KEY_SIZE]),
 
     /// AES key used by AES128-CTS-HMAC-SHA1-96 algorithm.
-    AES128Key([u8; AES128_KEY_SIZE]),
+    AES128Key([u8; AES_128_KEY_SIZE]),
 
     /// AES key used by AES256-CTS-HMAC-SHA1-96 algorithm.
-    AES256Key([u8; AES256_KEY_SIZE]),
+    AES256Key([u8; AES_256_KEY_SIZE]),
 }
 
 impl Key {
@@ -39,13 +34,13 @@ impl Key {
     ///
     /// # Examples
     /// ```
-    /// use kerbeiros::key;
+    /// use kerberos_crypto::*;
     /// use kerberos_constants::etypes::*;
     ///
-    /// assert_eq!(0, key::Key::Password("".to_string()).etype());
-    /// assert_eq!(RC4_HMAC, key::Key::RC4Key([0; key::RC4_KEY_SIZE]).etype());
-    /// assert_eq!(AES128_CTS_HMAC_SHA1_96, key::Key::AES128Key([0; key::AES128_KEY_SIZE]).etype());
-    /// assert_eq!(AES256_CTS_HMAC_SHA1_96, key::Key::AES256Key([0; key::AES256_KEY_SIZE]).etype());
+    /// assert_eq!(0, Key::Password("".to_string()).etype());
+    /// assert_eq!(RC4_HMAC, Key::RC4Key([0; RC4_KEY_SIZE]).etype());
+    /// assert_eq!(AES128_CTS_HMAC_SHA1_96, Key::AES128Key([0; AES_128_KEY_SIZE]).etype());
+    /// assert_eq!(AES256_CTS_HMAC_SHA1_96, Key::AES256Key([0; AES_256_KEY_SIZE]).etype());
     /// ```
     pub fn etype(&self) -> i32 {
         match self {
@@ -60,12 +55,12 @@ impl Key {
     ///
     /// # Examples
     /// ```
-    /// use kerbeiros::key;
+    /// use kerberos_crypto::*;
     ///
-    /// assert_eq!(&[0x73, 0x65, 0x63, 0x72, 0x65, 0x74], key::Key::Password("secret".to_string()).as_bytes());
-    /// assert_eq!(&[0; key::RC4_KEY_SIZE], key::Key::RC4Key([0; key::RC4_KEY_SIZE]).as_bytes());
-    /// assert_eq!(&[0; key::AES128_KEY_SIZE], key::Key::AES128Key([0; key::AES128_KEY_SIZE]).as_bytes());
-    /// assert_eq!(&[0; key::AES256_KEY_SIZE], key::Key::AES256Key([0; key::AES256_KEY_SIZE]).as_bytes());
+    /// assert_eq!(&[0x73, 0x65, 0x63, 0x72, 0x65, 0x74], Key::Password("secret".to_string()).as_bytes());
+    /// assert_eq!(&[0; RC4_KEY_SIZE], Key::RC4Key([0; RC4_KEY_SIZE]).as_bytes());
+    /// assert_eq!(&[0; AES_128_KEY_SIZE], Key::AES128Key([0; AES_128_KEY_SIZE]).as_bytes());
+    /// assert_eq!(&[0; AES_256_KEY_SIZE], Key::AES256Key([0; AES_256_KEY_SIZE]).as_bytes());
     /// ```
     pub fn as_bytes(&self) -> &[u8] {
         match self {
@@ -80,7 +75,7 @@ impl Key {
     /// # Example
     ///
     /// ```
-    /// use kerbeiros::Key;
+    /// use kerberos_crypto::Key;
     /// assert_eq!(
     ///     Key::RC4Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]),
     ///     Key::from_rc4_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
@@ -103,7 +98,7 @@ impl Key {
     /// # Example
     ///
     /// ```
-    /// use kerbeiros::Key;
+    /// use kerberos_crypto::Key;
     /// assert_eq!(
     ///     Key::AES128Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]),
     ///     Key::from_aes_128_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
@@ -115,11 +110,11 @@ impl Key {
     pub fn from_aes_128_key_string(hex_str: &str) -> Result<Self> {
         let ntlm = Self::check_size_and_convert_in_byte_array(
             hex_str,
-            AES128_KEY_SIZE,
+            AES_128_KEY_SIZE,
         )?;
 
-        let mut key = [0; AES128_KEY_SIZE];
-        key.copy_from_slice(&ntlm[0..AES128_KEY_SIZE]);
+        let mut key = [0; AES_128_KEY_SIZE];
+        key.copy_from_slice(&ntlm[0..AES_128_KEY_SIZE]);
 
         return Ok(Key::AES128Key(key));
     }
@@ -128,7 +123,7 @@ impl Key {
     /// # Example
     ///
     /// ```
-    /// use kerbeiros::Key;
+    /// use kerberos_crypto::Key;
     /// assert_eq!(
     ///     Key::AES256Key([
     ///         0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef,
@@ -143,11 +138,11 @@ impl Key {
     pub fn from_aes_256_key_string(hex_str: &str) -> Result<Self> {
         let ntlm = Self::check_size_and_convert_in_byte_array(
             hex_str,
-            AES256_KEY_SIZE,
+            AES_256_KEY_SIZE,
         )?;
 
-        let mut key = [0; AES256_KEY_SIZE];
-        key.copy_from_slice(&ntlm[0..AES256_KEY_SIZE]);
+        let mut key = [0; AES_256_KEY_SIZE];
+        key.copy_from_slice(&ntlm[0..AES_256_KEY_SIZE]);
 
         return Ok(Key::AES256Key(key));
     }
@@ -208,9 +203,7 @@ mod test {
         Key::from_rc4_key_string("0").unwrap();
     }
 
-    #[should_panic(
-        expected = "InvalidKeyCharset"
-    )]
+    #[should_panic(expected = "InvalidKeyCharset")]
     #[test]
     fn invalid_chars_hex_string_to_rc4_key() {
         Key::from_rc4_key_string("ERROR_0123456789ABCDEF0123456789").unwrap();
@@ -219,7 +212,7 @@ mod test {
     #[test]
     fn hex_string_to_aes_128_key() {
         assert_eq!(
-            Key::AES128Key([0; AES128_KEY_SIZE]),
+            Key::AES128Key([0; AES_128_KEY_SIZE]),
             Key::from_aes_128_key_string("00000000000000000000000000000000")
                 .unwrap()
         );
@@ -239,9 +232,7 @@ mod test {
         Key::from_aes_128_key_string("0").unwrap();
     }
 
-    #[should_panic(
-        expected = "InvalidKeyCharset"
-    )]
+    #[should_panic(expected = "InvalidKeyCharset")]
     #[test]
     fn invalid_chars_hex_string_to_aes_128_key() {
         Key::from_aes_128_key_string("ERROR_0123456789ABCDEF0123456789")
@@ -251,7 +242,7 @@ mod test {
     #[test]
     fn hex_string_to_aes_256_key() {
         assert_eq!(
-            Key::AES256Key([0; AES256_KEY_SIZE]),
+            Key::AES256Key([0; AES_256_KEY_SIZE]),
             Key::from_aes_256_key_string(
                 "0000000000000000000000000000000000000000000000000000000000000000"
             )
@@ -276,9 +267,7 @@ mod test {
         Key::from_aes_256_key_string("0").unwrap();
     }
 
-    #[should_panic(
-        expected = "InvalidKeyCharset"
-    )]
+    #[should_panic(expected = "InvalidKeyCharset")]
     #[test]
     fn invalid_chars_hex_string_to_aes_256_key() {
         Key::from_aes_256_key_string(
