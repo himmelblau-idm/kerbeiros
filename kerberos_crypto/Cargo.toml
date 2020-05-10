@@ -1,7 +1,7 @@
 [package]
 name = "kerberos_crypto"
 description = "Cryptography algorithms for Kerberos"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Eloy Perez  <zer1t0ps@protonmail.com>"]
 edition = "2018"
 license = "AGPL-3.0"
