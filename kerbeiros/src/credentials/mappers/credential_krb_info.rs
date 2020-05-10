@@ -109,11 +109,11 @@ impl CredentialKrbInfoMapper {
     ) -> Result<Vec<u8>> {
         match Self::try_decrypt_enc_kdc_rep_part_with_cipher_key(key, kdc_rep) {
             Err(error) => {
-                if key.etype() != kdc_rep.enc_part.etype {
+                if key.etypes()[0] != kdc_rep.enc_part.etype {
                     return Err(kerberos_crypto::Error::DecryptionError(
                         format!(
                         "Key etype = {} doesn't match with message etype = {}",
-                        key.etype(),
+                        key.etypes()[0],
                         &kdc_rep.enc_part.etype
                     ),
                     ))?;
@@ -129,7 +129,7 @@ impl CredentialKrbInfoMapper {
         key: &Key,
         kdc_rep: &AsRep,
     ) -> Result<Vec<u8>> {
-        let cipher = new_kerberos_cipher(key.etype()).unwrap();
+        let cipher = new_kerberos_cipher(key.etypes()[0]).unwrap();
         return Ok(cipher.decrypt(
             key.as_bytes(),
             KEY_USAGE_AS_REP_ENC_PART,
