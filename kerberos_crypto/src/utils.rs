@@ -1,4 +1,4 @@
-//! Helper module
+//! Useful internal functions
 
 use rand::RngCore;
 
