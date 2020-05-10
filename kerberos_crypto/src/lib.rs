@@ -12,7 +12,7 @@ pub mod aes_hmac_sha1;
 mod cryptography;
 pub use cryptography::AesSizes;
 
-mod rc4_hmac_md5;
+pub mod rc4_hmac_md5;
 
 mod byteparser;
 

@@ -1,5 +1,5 @@
 use crate::cryptography::{md4, random_bytes, string_unicode_bytes};
-use crate::rc4_hmac_md5::{decrypt_rc4_hmac_md5, encrypt_rc4_hmac_md5};
+use crate::rc4_hmac_md5;
 use crate::KerberosCipher;
 
 use crate::Result;
@@ -66,7 +66,7 @@ impl KerberosCipher for RC4Cipher {
         } else {
             real_key_usage = key_usage;
         }
-        return decrypt_rc4_hmac_md5(key, real_key_usage, ciphertext);
+        return rc4_hmac_md5::decrypt(key, real_key_usage, ciphertext);
     }
 
     fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8> {
@@ -77,8 +77,7 @@ impl KerberosCipher for RC4Cipher {
         } else {
             real_key_usage = key_usage;
         }
-
-        return encrypt_rc4_hmac_md5(key, real_key_usage, plaintext, &preamble);
+        return rc4_hmac_md5::encrypt(key, real_key_usage, plaintext, &preamble);
     }
 }
 

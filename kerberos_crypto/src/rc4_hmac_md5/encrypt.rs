@@ -1,7 +1,9 @@
 use crate::cryptography::{hmac_md5, rc4_decrypt, rc4_encrypt};
 use crate::{Error, Result};
 
-pub fn encrypt_rc4_hmac_md5(
+
+/// Encrypt plaintext by using the RC4 algorithm with HMAC-MD5
+pub fn encrypt(
     key: &[u8],
     key_usage: i32,
     timestamp: &[u8],
@@ -22,7 +24,8 @@ pub fn encrypt_rc4_hmac_md5(
     return cksum;
 }
 
-pub fn decrypt_rc4_hmac_md5(
+/// Decrypt ciphertext by using the RC4 algorithm with HMAC-MD5
+pub fn decrypt(
     key: &[u8],
     key_usage: i32,
     ciphertext: &[u8],
