@@ -1,3 +1,7 @@
+//! This module provides routines to encrypt/decrypt by using the AES
+//! algorithms required by AES128_CTS_HMAC_SHA1_96 and AES256_CTS_HMAC_SHA1_96
+//!
+
 mod keys;
 pub use keys::{
     generate_key, generate_key_from_string

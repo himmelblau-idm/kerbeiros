@@ -1,6 +1,7 @@
 use super::nfold_dk::dk;
 use crate::cryptography::{pbkdf2_sha1, AesSizes};
 
+/// Derive the AES key used to encrypt/decrypt from the user secret (password)
 pub fn generate_key(
     passphrase: &[u8],
     salt: &[u8],
@@ -10,6 +11,7 @@ pub fn generate_key(
     return dk(&key, "kerberos".as_bytes(), aes_sizes);
 }
 
+/// Derive the key used to encrypt/decrypt from the string representation of the user secret (password)
 pub fn generate_key_from_string(
     string: &str,
     salt: &[u8],

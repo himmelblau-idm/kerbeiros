@@ -8,7 +8,7 @@
 //! - AES128-CTS-HMAC-SHA1-96
 //! - AES256-CTS-HMAC-SHA1-96
 
-mod aes_hmac_sha1;
+pub mod aes_hmac_sha1;
 mod cryptography;
 pub use cryptography::AesSizes;
 

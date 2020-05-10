@@ -4,6 +4,7 @@ use crate::cryptography::{
 };
 use crate::{Error, Result};
 
+/// Encrypt plaintext by using the AES algorithm with HMAC-SHA1
 pub fn encrypt(
     key: &[u8],
     key_usage: i32,
@@ -67,6 +68,7 @@ fn basic_encrypt(
     return swapped_ciphertext;
 }
 
+/// Decrypt ciphertext by using the AES algorithm with HMAC-SHA1
 pub fn decrypt(
     key: &[u8],
     key_usage: i32,
