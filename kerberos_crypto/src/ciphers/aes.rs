@@ -46,11 +46,15 @@ impl AesCipher {
 }
 
 impl KerberosCipher for AesCipher {
+    fn generate_salt(&self, realm: &str, client_name: &str) -> Vec<u8> {
+        return aes_hmac_sha1::generate_salt(realm, client_name);
+    }
+    
     fn generate_key(&self, key: &[u8], salt: &[u8]) -> Vec<u8> {
         return aes_hmac_sha1::generate_key(key, salt, &self.aes_sizes);
     }
 
-    fn generate_key_from_password(
+    fn generate_key_from_string(
         &self,
         password: &str,
         salt: &[u8],
@@ -106,7 +110,7 @@ mod test {
                 0x1e, 0xa0, 0x16, 0x5e, 0xbb, 0x27, 0xc0, 0xd7, 0xce, 0x9b,
                 0x5a, 0xec, 0x7a
             ],
-            aes256_cipher.generate_key_from_password_and_encrypt(
+            aes256_cipher.generate_key_from_string_and_encrypt(
                 "admin",
                 "admin1234".as_bytes(),
                 1,
@@ -126,7 +130,7 @@ mod test {
                 0x1f, 0x99, 0x0d, 0xe2, 0xc0, 0x27, 0x66, 0x1c, 0x98, 0x33,
                 0xbc, 0xce, 0xd3
             ],
-            aes256_cipher.generate_key_from_password_and_encrypt(
+            aes256_cipher.generate_key_from_string_and_encrypt(
                 "test",
                 "test1234".as_bytes(),
                 2,
@@ -145,7 +149,7 @@ mod test {
                 0xb5, 0x59, 0xb3, 0xdf, 0x3f, 0xa1, 0xe4, 0x33, 0x5f, 0x82,
                 0xbd, 0xd3, 0x33, 0x1b, 0x60
             ],
-            aes256_cipher.generate_key_from_password_and_encrypt(
+            aes256_cipher.generate_key_from_string_and_encrypt(
                 "1337",
                 "13371234".as_bytes(),
                 3,
@@ -163,7 +167,7 @@ mod test {
                 0x05, 0x22, 0xf1, 0x83, 0x95, 0x18, 0xbf, 0x62, 0x46, 0xbb,
                 0xec, 0x0d, 0x4c, 0x89, 0xb0, 0xc5, 0xb5, 0x81, 0xae
             ],
-            aes256_cipher.generate_key_from_password_and_encrypt(
+            aes256_cipher.generate_key_from_string_and_encrypt(
                 "",
                 "1234".as_bytes(),
                 4,
@@ -182,7 +186,7 @@ mod test {
                 0x3f, 0x3d, 0x93, 0x26, 0x7c, 0xbd, 0x69, 0xa6, 0x24, 0x48,
                 0x09, 0x3d
             ],
-            aes256_cipher.generate_key_from_password_and_encrypt(
+            aes256_cipher.generate_key_from_string_and_encrypt(
                 "12345678",
                 "123456781234".as_bytes(),
                 5,
@@ -202,7 +206,7 @@ mod test {
                 0x6e, 0xf8, 0x5d, 0x09, 0xc9, 0xb8, 0x34, 0x0b, 0x93, 0xa0,
                 0xd8
             ],
-            aes256_cipher.generate_key_from_password_and_encrypt(
+            aes256_cipher.generate_key_from_string_and_encrypt(
                 "123456789",
                 "1234567891234".as_bytes(),
                 6,
@@ -226,7 +230,7 @@ mod test {
                 0x6f, 0x69, 0x36, 0x73, 0x49
             ],
             aes256_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "admin",
                     "admin1234".as_bytes(),
                     1,
@@ -248,7 +252,7 @@ mod test {
                 0x52, 0x35, 0x32, 0x32, 0x4f
             ],
             aes256_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "test",
                     "test1234".as_bytes(),
                     2,
@@ -269,7 +273,7 @@ mod test {
                 0x72, 0x35, 0x59, 0x4a, 0x62, 0x6c, 0x4e
             ],
             aes256_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "1337",
                     "13371234".as_bytes(),
                     3,
@@ -290,7 +294,7 @@ mod test {
                 0x37
             ],
             aes256_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "",
                     "1234".as_bytes(),
                     4,
@@ -311,7 +315,7 @@ mod test {
                 0x5a, 0x68, 0x6d, 0x78
             ],
             aes256_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "12345678",
                     "123456781234".as_bytes(),
                     5,
@@ -333,7 +337,7 @@ mod test {
                 0x77, 0x32, 0x56
             ],
             aes256_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "123456789",
                     "1234567891234".as_bytes(),
                     6,
@@ -363,7 +367,7 @@ mod test {
                 0x8c, 0xcd, 0x27, 0xf4, 0x27, 0x78, 0x19, 0xa2, 0x6b, 0x27,
                 0xd9
             ],
-            aes128_cipher.generate_key_from_password_and_encrypt(
+            aes128_cipher.generate_key_from_string_and_encrypt(
                 "admin",
                 "admin1234".as_bytes(),
                 1,
@@ -382,7 +386,7 @@ mod test {
                 0x5e, 0x66, 0x24, 0xc5, 0xa5, 0x99, 0x84, 0x6a, 0x9f, 0xed,
                 0x46, 0xfe, 0xf5, 0xd5
             ],
-            aes128_cipher.generate_key_from_password_and_encrypt(
+            aes128_cipher.generate_key_from_string_and_encrypt(
                 "test",
                 "test1234".as_bytes(),
                 2,
@@ -400,7 +404,7 @@ mod test {
                 0x9d, 0x5b, 0x03, 0xe1, 0x8a, 0x9f, 0x29, 0xd8, 0x64, 0xb6,
                 0x6c, 0xf9, 0x16, 0xc3, 0x62, 0x61, 0xd4, 0xa3
             ],
-            aes128_cipher.generate_key_from_password_and_encrypt(
+            aes128_cipher.generate_key_from_string_and_encrypt(
                 "1337",
                 "13371234".as_bytes(),
                 3,
@@ -417,7 +421,7 @@ mod test {
                 0xfb, 0x57, 0xb1, 0x01, 0xa1, 0x2f, 0xde, 0xc9, 0x56, 0x76,
                 0x7a, 0xe2, 0x3c, 0x56, 0x71, 0xd7, 0xf0, 0x91, 0x80
             ],
-            aes128_cipher.generate_key_from_password_and_encrypt(
+            aes128_cipher.generate_key_from_string_and_encrypt(
                 "",
                 "1234".as_bytes(),
                 4,
@@ -439,7 +443,7 @@ mod test {
                 0xca, 0x62, 0xef, 0x26, 0x24, 0x54, 0x95, 0xca, 0x0c, 0x01,
                 0xfd, 0x07, 0xf1
             ],
-            aes128_cipher.generate_key_from_password_and_encrypt(
+            aes128_cipher.generate_key_from_string_and_encrypt(
                 "12345678",
                 "123456781234".as_bytes(),
                 5,
@@ -460,7 +464,7 @@ mod test {
                 0xf2, 0x52, 0x34, 0x18, 0x58, 0x32, 0xff, 0x29, 0x2f, 0x0d,
                 0x26, 0x32, 0x6b, 0x2b, 0x01, 0xd2, 0xe3
             ],
-            aes128_cipher.generate_key_from_password_and_encrypt(
+            aes128_cipher.generate_key_from_string_and_encrypt(
                 "123456789",
                 "1234567891234".as_bytes(),
                 6,
@@ -483,7 +487,7 @@ mod test {
                 0x77, 0x68, 0x67
             ],
             aes128_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "admin",
                     "admin1234".as_bytes(),
                     1,
@@ -504,7 +508,7 @@ mod test {
                 0x54, 0x47, 0x75, 0x6f, 0x6f, 0x4e
             ],
             aes128_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "test",
                     "test1234".as_bytes(),
                     2,
@@ -522,7 +526,7 @@ mod test {
         assert_eq!(
             vec![0x39, 0x4e, 0x72, 0x46, 0x64, 0x74, 0x74, 0x68, 0x4d, 0x38],
             aes128_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "1337",
                     "13371234".as_bytes(),
                     3,
@@ -545,7 +549,7 @@ mod test {
                 0x6b
             ],
             aes128_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "",
                     "1234".as_bytes(),
                     4,
@@ -569,7 +573,7 @@ mod test {
                 0x51, 0x4c, 0x70, 0x5a, 0x78
             ],
             aes128_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "12345678",
                     "123456781234".as_bytes(),
                     5,
@@ -592,7 +596,7 @@ mod test {
                 0x77, 0x51, 0x37, 0x42, 0x69, 0x30, 0x6a, 0x48, 0x70
             ],
             aes128_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "123456789",
                     "1234567891234".as_bytes(),
                     6,

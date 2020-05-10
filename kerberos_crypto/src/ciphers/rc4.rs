@@ -40,11 +40,15 @@ impl Rc4Cipher {
 }
 
 impl KerberosCipher for Rc4Cipher {
+    fn generate_salt(&self, _: &str, _: &str) -> Vec<u8> {
+        Vec::new()
+    }
+    
     fn generate_key(&self, key: &[u8], _: &[u8]) -> Vec<u8> {
         return rc4_hmac_md5::generate_key(key);
     }
 
-    fn generate_key_from_password(&self, password: &str, _: &[u8]) -> Vec<u8> {
+    fn generate_key_from_string(&self, password: &str, _: &[u8]) -> Vec<u8> {
         return rc4_hmac_md5::generate_key_from_string(password);
     }
 
@@ -98,7 +102,7 @@ mod test {
                 0xc2, 0xea, 0xa4, 0xf9, 0x0b, 0xc9, 0x14, 0x5a, 0x18, 0x8c,
                 0x85, 0xed, 0x0b, 0xfa, 0x0f, 0x00
             ],
-            rc4_cipher.generate_key_from_password_and_encrypt(
+            rc4_cipher.generate_key_from_string_and_encrypt(
                 "admin",
                 &Vec::new(),
                 1,
@@ -118,7 +122,7 @@ mod test {
                 0x12, 0x40, 0x5b, 0x87, 0x31, 0xaa, 0xf2, 0x51, 0x86, 0x9e,
                 0xdb, 0xbc
             ],
-            rc4_cipher.generate_key_from_password_and_encrypt(
+            rc4_cipher.generate_key_from_string_and_encrypt(
                 "test",
                 &Vec::new(),
                 2,
@@ -137,7 +141,7 @@ mod test {
                 0x54, 0x61, 0x58, 0xfc, 0xee, 0xa8, 0x93, 0xd3, 0xb8, 0x6e,
                 0xc7, 0x5a, 0xf6, 0xf0, 0xdb
             ],
-            rc4_cipher.generate_key_from_password_and_encrypt(
+            rc4_cipher.generate_key_from_string_and_encrypt(
                 "1337",
                 &Vec::new(),
                 3,
@@ -156,7 +160,7 @@ mod test {
                 0x1c, 0x1f, 0x07, 0x6e, 0x98, 0x45, 0x65, 0x2c, 0xbf, 0xe7,
                 0x29, 0x13, 0x2f, 0xb6, 0x65, 0x9b, 0xf2, 0x89, 0x11
             ],
-            rc4_cipher.generate_key_from_password_and_encrypt(
+            rc4_cipher.generate_key_from_string_and_encrypt(
                 "",
                 &Vec::new(),
                 4,
@@ -174,7 +178,7 @@ mod test {
                 0x99, 0x82, 0x05, 0x6a, 0x58, 0x6b, 0x66, 0xe9, 0xde, 0xbe,
                 0xe9, 0xb5, 0xbc, 0x53, 0x72, 0xdf, 0xa3, 0x9d, 0xea, 0x8d
             ],
-            rc4_cipher.generate_key_from_password_and_encrypt(
+            rc4_cipher.generate_key_from_string_and_encrypt(
                 "12345678",
                 &Vec::new(),
                 5,
@@ -194,7 +198,7 @@ mod test {
                 0xd3, 0xfe, 0x24, 0xa4, 0x04, 0x4b, 0xc2, 0x79, 0xb9, 0x33,
                 0x39, 0xe7, 0x9c, 0x14
             ],
-            rc4_cipher.generate_key_from_password_and_encrypt(
+            rc4_cipher.generate_key_from_string_and_encrypt(
                 "123456789",
                 &Vec::new(),
                 6,
@@ -220,7 +224,7 @@ mod test {
                 0x62, 0x47
             ],
             rc4_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "admin",
                     &Vec::new(),
                     1,
@@ -242,7 +246,7 @@ mod test {
                 0x4c, 0x4e, 0x39, 0x54, 0x6f, 0x7a, 0x42, 0x47
             ],
             rc4_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "test",
                     &Vec::new(),
                     2,
@@ -264,7 +268,7 @@ mod test {
                 0x63
             ],
             rc4_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "1337",
                     &Vec::new(),
                     3,
@@ -285,7 +289,7 @@ mod test {
                 0x31, 0x52, 0x44, 0x66, 0x75
             ],
             rc4_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "",
                     &Vec::new(),
                     4,
@@ -306,7 +310,7 @@ mod test {
                 0x39, 0x32, 0x68, 0x68, 0x70, 0x59
             ],
             rc4_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "12345678",
                     &Vec::new(),
                     5,
@@ -328,7 +332,7 @@ mod test {
                 0x53, 0x42, 0x63, 0x46, 0x6b, 0x6e, 0x59, 0x78, 0x41, 0x53
             ],
             rc4_cipher
-                .generate_key_from_password_and_decrypt(
+                .generate_key_from_string_and_decrypt(
                     "123456789",
                     &Vec::new(),
                     6,
