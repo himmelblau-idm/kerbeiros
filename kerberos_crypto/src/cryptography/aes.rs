@@ -7,14 +7,14 @@ use crypto::sha1::Sha1;
 
 pub const AES_BLOCK_SIZE: usize = 16;
 pub const AES_MAC_SIZE: usize = 12;
-pub const AES_128_SEED_SIZE: usize = 16;
-pub const AES_256_SEED_SIZE: usize = 32;
+pub const AES128_SEED_SIZE: usize = 16;
+pub const AES256_SEED_SIZE: usize = 32;
 
 /// Size of AES-128 key, 16 bytes
-pub const AES_128_KEY_SIZE: usize = 16;
+pub const AES128_KEY_SIZE: usize = 16;
 
 /// Size of AES-256 key, 32 bytes
-pub const AES_256_KEY_SIZE: usize = 32;
+pub const AES256_KEY_SIZE: usize = 32;
 
 /// Enum to provide asociated parameters with each size of the AES algorithm
 pub enum AesSizes {
@@ -25,8 +25,8 @@ pub enum AesSizes {
 impl AesSizes {
     pub fn seed_size(&self) -> usize {
         match &self {
-            AesSizes::Aes128 => return AES_128_SEED_SIZE,
-            AesSizes::Aes256 => return AES_256_SEED_SIZE,
+            AesSizes::Aes128 => return AES128_SEED_SIZE,
+            AesSizes::Aes256 => return AES256_SEED_SIZE,
         }
     }
 

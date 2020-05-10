@@ -14,8 +14,8 @@ pub use algorithms::rc4_hmac_md5;
 
 mod cryptography;
 pub use cryptography::{
-    AesSizes, AES_128_KEY_SIZE, AES_128_SEED_SIZE, AES_256_KEY_SIZE,
-    AES_256_SEED_SIZE, AES_BLOCK_SIZE, AES_MAC_SIZE, RC4_KEY_SIZE
+    AesSizes, AES128_KEY_SIZE, AES128_SEED_SIZE, AES256_KEY_SIZE,
+    AES256_SEED_SIZE, AES_BLOCK_SIZE, AES_MAC_SIZE, RC4_KEY_SIZE
 };
 
 mod utils;

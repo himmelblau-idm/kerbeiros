@@ -2,8 +2,8 @@
 
 mod aes;
 pub use aes::{
-    decrypt_aes_ecb, encrypt_aes_cbc, pbkdf2_sha1, AesSizes, AES_128_KEY_SIZE,
-    AES_128_SEED_SIZE, AES_256_KEY_SIZE, AES_256_SEED_SIZE, AES_BLOCK_SIZE,
+    decrypt_aes_ecb, encrypt_aes_cbc, pbkdf2_sha1, AesSizes, AES128_KEY_SIZE,
+    AES128_SEED_SIZE, AES256_KEY_SIZE, AES256_SEED_SIZE, AES_BLOCK_SIZE,
     AES_MAC_SIZE,
 };
 

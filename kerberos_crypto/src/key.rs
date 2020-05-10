@@ -4,7 +4,7 @@ use kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
 
-use crate::{RC4_KEY_SIZE, AES_128_KEY_SIZE, AES_256_KEY_SIZE};
+use crate::{RC4_KEY_SIZE, AES128_KEY_SIZE, AES256_KEY_SIZE};
 
 use crate::{Error, Result};
 use std::result;
@@ -23,10 +23,10 @@ pub enum Key {
     RC4Key([u8; RC4_KEY_SIZE]),
 
     /// AES key used by AES128-CTS-HMAC-SHA1-96 algorithm.
-    AES128Key([u8; AES_128_KEY_SIZE]),
+    AES128Key([u8; AES128_KEY_SIZE]),
 
     /// AES key used by AES256-CTS-HMAC-SHA1-96 algorithm.
-    AES256Key([u8; AES_256_KEY_SIZE]),
+    AES256Key([u8; AES256_KEY_SIZE]),
 }
 
 impl Key {
@@ -39,8 +39,8 @@ impl Key {
     ///
     /// assert_eq!(0, Key::Password("".to_string()).etype());
     /// assert_eq!(RC4_HMAC, Key::RC4Key([0; RC4_KEY_SIZE]).etype());
-    /// assert_eq!(AES128_CTS_HMAC_SHA1_96, Key::AES128Key([0; AES_128_KEY_SIZE]).etype());
-    /// assert_eq!(AES256_CTS_HMAC_SHA1_96, Key::AES256Key([0; AES_256_KEY_SIZE]).etype());
+    /// assert_eq!(AES128_CTS_HMAC_SHA1_96, Key::AES128Key([0; AES128_KEY_SIZE]).etype());
+    /// assert_eq!(AES256_CTS_HMAC_SHA1_96, Key::AES256Key([0; AES256_KEY_SIZE]).etype());
     /// ```
     pub fn etype(&self) -> i32 {
         match self {
@@ -59,8 +59,8 @@ impl Key {
     ///
     /// assert_eq!(&[0x73, 0x65, 0x63, 0x72, 0x65, 0x74], Key::Password("secret".to_string()).as_bytes());
     /// assert_eq!(&[0; RC4_KEY_SIZE], Key::RC4Key([0; RC4_KEY_SIZE]).as_bytes());
-    /// assert_eq!(&[0; AES_128_KEY_SIZE], Key::AES128Key([0; AES_128_KEY_SIZE]).as_bytes());
-    /// assert_eq!(&[0; AES_256_KEY_SIZE], Key::AES256Key([0; AES_256_KEY_SIZE]).as_bytes());
+    /// assert_eq!(&[0; AES128_KEY_SIZE], Key::AES128Key([0; AES128_KEY_SIZE]).as_bytes());
+    /// assert_eq!(&[0; AES256_KEY_SIZE], Key::AES256Key([0; AES256_KEY_SIZE]).as_bytes());
     /// ```
     pub fn as_bytes(&self) -> &[u8] {
         match self {
@@ -110,11 +110,11 @@ impl Key {
     pub fn from_aes_128_key_string(hex_str: &str) -> Result<Self> {
         let ntlm = Self::check_size_and_convert_in_byte_array(
             hex_str,
-            AES_128_KEY_SIZE,
+            AES128_KEY_SIZE,
         )?;
 
-        let mut key = [0; AES_128_KEY_SIZE];
-        key.copy_from_slice(&ntlm[0..AES_128_KEY_SIZE]);
+        let mut key = [0; AES128_KEY_SIZE];
+        key.copy_from_slice(&ntlm[0..AES128_KEY_SIZE]);
 
         return Ok(Key::AES128Key(key));
     }
@@ -138,11 +138,11 @@ impl Key {
     pub fn from_aes_256_key_string(hex_str: &str) -> Result<Self> {
         let ntlm = Self::check_size_and_convert_in_byte_array(
             hex_str,
-            AES_256_KEY_SIZE,
+            AES256_KEY_SIZE,
         )?;
 
-        let mut key = [0; AES_256_KEY_SIZE];
-        key.copy_from_slice(&ntlm[0..AES_256_KEY_SIZE]);
+        let mut key = [0; AES256_KEY_SIZE];
+        key.copy_from_slice(&ntlm[0..AES256_KEY_SIZE]);
 
         return Ok(Key::AES256Key(key));
     }
@@ -212,7 +212,7 @@ mod test {
     #[test]
     fn hex_string_to_aes_128_key() {
         assert_eq!(
-            Key::AES128Key([0; AES_128_KEY_SIZE]),
+            Key::AES128Key([0; AES128_KEY_SIZE]),
             Key::from_aes_128_key_string("00000000000000000000000000000000")
                 .unwrap()
         );
@@ -242,7 +242,7 @@ mod test {
     #[test]
     fn hex_string_to_aes_256_key() {
         assert_eq!(
-            Key::AES256Key([0; AES_256_KEY_SIZE]),
+            Key::AES256Key([0; AES256_KEY_SIZE]),
             Key::from_aes_256_key_string(
                 "0000000000000000000000000000000000000000000000000000000000000000"
             )
