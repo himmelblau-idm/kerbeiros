@@ -1,7 +1,7 @@
 use crate::cryptography::{random_bytes, AesSizes};
 
 /// Generate an aleatory preamble to insert at the beginning of the
-/// plaintext before encryption
+/// plaintext before AES encryption
 pub fn generate_preamble(
     aes_sizes: &AesSizes
 ) -> Vec<u8> {

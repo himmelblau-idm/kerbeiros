@@ -1,4 +1,3 @@
-use crate::cryptography::{md4, random_bytes, string_unicode_bytes};
 use crate::rc4_hmac_md5;
 use crate::KerberosCipher;
 
@@ -24,7 +23,7 @@ impl RC4Cipher {
         if let Some(self_preamble) = &self.preamble {
             return self_preamble.clone();
         } else {
-            return random_bytes(8);
+            return rc4_hmac_md5::generate_preamble();
         }
     }
 }
@@ -36,22 +35,17 @@ impl RC4Cipher {
     }
 
     fn preamble(&self) -> Vec<u8> {
-        return random_bytes(8);
+        return rc4_hmac_md5::generate_preamble();
     }
 }
 
 impl KerberosCipher for RC4Cipher {
-    fn generate_key(&self, key: &[u8], _salt: &[u8]) -> Vec<u8> {
-        return md4(key);
+    fn generate_key(&self, key: &[u8], _: &[u8]) -> Vec<u8> {
+        return rc4_hmac_md5::generate_key(key);
     }
 
-    fn generate_key_from_password(
-        &self,
-        password: &str,
-        salt: &[u8],
-    ) -> Vec<u8> {
-        let raw_key = string_unicode_bytes(password);
-        return self.generate_key(&raw_key, salt);
+    fn generate_key_from_password(&self, password: &str, _: &[u8]) -> Vec<u8> {
+        return rc4_hmac_md5::generate_key_from_string(password);
     }
 
     fn decrypt(
@@ -77,7 +71,12 @@ impl KerberosCipher for RC4Cipher {
         } else {
             real_key_usage = key_usage;
         }
-        return rc4_hmac_md5::encrypt(key, real_key_usage, plaintext, &preamble);
+        return rc4_hmac_md5::encrypt(
+            key,
+            real_key_usage,
+            plaintext,
+            &preamble,
+        );
     }
 }
 
@@ -345,5 +344,4 @@ mod test {
                 .unwrap()
         );
     }
-
 }
