@@ -1,5 +1,6 @@
 use crate::rc4_hmac_md5;
 use crate::KerberosCipher;
+use kerberos_constants::etypes::RC4_HMAC;
 
 use crate::Result;
 
@@ -40,10 +41,13 @@ impl Rc4Cipher {
 }
 
 impl KerberosCipher for Rc4Cipher {
+    fn etype(&self) -> i32 {
+        return RC4_HMAC;
+    }
     fn generate_salt(&self, _: &str, _: &str) -> Vec<u8> {
         Vec::new()
     }
-    
+
     fn generate_key(&self, key: &[u8], _: &[u8]) -> Vec<u8> {
         return rc4_hmac_md5::generate_key(key);
     }

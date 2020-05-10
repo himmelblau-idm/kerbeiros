@@ -2,6 +2,7 @@ use crate::Result;
 
 /// Trait implemented by the ciphers of this library
 pub trait KerberosCipher {
+    fn etype(&self) -> i32;
     fn generate_salt(&self, realm: &str, client_name: &str) -> Vec<u8>;
     fn generate_key(&self, raw_key: &[u8], salt: &[u8]) -> Vec<u8>;
     fn generate_key_from_string(

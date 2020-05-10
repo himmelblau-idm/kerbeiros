@@ -1,5 +1,8 @@
 use crate::aes_hmac_sha1;
 use crate::cryptography::AesSizes;
+use kerberos_constants::etypes::{
+    AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96,
+};
 
 use crate::KerberosCipher;
 use crate::Result;
@@ -46,19 +49,22 @@ impl AesCipher {
 }
 
 impl KerberosCipher for AesCipher {
+    fn etype(&self) -> i32 {
+        match self.aes_sizes {
+            AesSizes::Aes128 => AES128_CTS_HMAC_SHA1_96,
+            AesSizes::Aes256 => AES256_CTS_HMAC_SHA1_96,
+        }
+    }
+
     fn generate_salt(&self, realm: &str, client_name: &str) -> Vec<u8> {
         return aes_hmac_sha1::generate_salt(realm, client_name);
     }
-    
+
     fn generate_key(&self, key: &[u8], salt: &[u8]) -> Vec<u8> {
         return aes_hmac_sha1::generate_key(key, salt, &self.aes_sizes);
     }
 
-    fn generate_key_from_string(
-        &self,
-        password: &str,
-        salt: &[u8],
-    ) -> Vec<u8> {
+    fn generate_key_from_string(&self, password: &str, salt: &[u8]) -> Vec<u8> {
         return aes_hmac_sha1::generate_key_from_string(
             password,
             salt,
