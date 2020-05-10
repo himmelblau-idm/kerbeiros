@@ -1,7 +1,7 @@
 use super::nfold_dk::dk;
 use crate::cryptography::{pbkdf2_sha1, AesSizes};
 
-pub fn generate_aes_key(
+pub fn generate_key(
     passphrase: &[u8],
     salt: &[u8],
     aes_sizes: &AesSizes,
@@ -10,16 +10,24 @@ pub fn generate_aes_key(
     return dk(&key, "kerberos".as_bytes(), aes_sizes);
 }
 
+pub fn generate_key_from_string(
+    string: &str,
+    salt: &[u8],
+    aes_sizes: &AesSizes,
+) -> Vec<u8> {
+    return generate_key(string.as_bytes(), salt, aes_sizes)
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
 
     fn generate_aes_128_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
-        return generate_aes_key(passphrase, salt, &AesSizes::Aes128);
+        return generate_key(passphrase, salt, &AesSizes::Aes128);
     }
 
     fn generate_aes_256_key(passphrase: &[u8], salt: &[u8]) -> Vec<u8> {
-        return generate_aes_key(passphrase, salt, &AesSizes::Aes256);
+        return generate_key(passphrase, salt, &AesSizes::Aes256);
     }
 
     #[test]
@@ -120,6 +128,36 @@ mod test {
             generate_aes_256_key(
                 "Roxas1234".as_bytes(),
                 "KINGDOM.HEARTSxion".as_bytes()
+            )
+        );
+    }
+
+
+    #[test]
+    fn test_generate_key_from_string() {
+        assert_eq!(
+            vec![
+                0x61, 0x7f, 0x72, 0xfd, 0xbc, 0x85, 0x1c, 0x45, 0x9a, 0x1c,
+                0x39, 0xbf, 0x83, 0x23, 0x56, 0x09
+            ],
+            generate_key_from_string(
+                "Minnie1234",
+                "KINGDOM.HEARTSmickey".as_bytes(),
+                &AesSizes::Aes128
+            )
+        );
+
+        assert_eq!(
+            vec![
+                0xd3, 0x30, 0x1f, 0x0f, 0x25, 0x39, 0xcc, 0x40, 0x26, 0xa5,
+                0x69, 0xf8, 0xb7, 0xc3, 0x67, 0x15, 0xc8, 0xda, 0xef, 0x10,
+                0x9f, 0xa3, 0xd8, 0xb2, 0xe1, 0x46, 0x16, 0xaa, 0xca, 0xb5,
+                0x49, 0xfd
+            ],
+            generate_key_from_string(
+                "Minnie1234",
+                "KINGDOM.HEARTSmickey".as_bytes(),
+                &AesSizes::Aes256
             )
         );
     }
