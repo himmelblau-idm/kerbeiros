@@ -67,7 +67,7 @@ fn basic_encrypt(
     return swapped_ciphertext;
 }
 
-pub fn aes_hmac_sh1_decrypt(
+pub fn aes_hmac_sha1_decrypt(
     key: &[u8],
     key_usage: i32,
     ciphertext: &[u8],

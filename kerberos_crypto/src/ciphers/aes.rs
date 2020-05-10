@@ -1,5 +1,5 @@
 use crate::aes_hmac_sha1::{
-    aes_hmac_sh1_decrypt, aes_hmac_sha1_encrypt, generate_aes_key,
+    aes_hmac_sha1_decrypt, aes_hmac_sha1_encrypt, generate_aes_key,
 };
 use crate::cryptography::{random_bytes, AesSizes};
 
@@ -66,7 +66,7 @@ impl KerberosCipher for AESCipher {
         key_usage: i32,
         ciphertext: &[u8],
     ) -> Result<Vec<u8>> {
-        return aes_hmac_sh1_decrypt(
+        return aes_hmac_sha1_decrypt(
             key,
             key_usage,
             ciphertext,
