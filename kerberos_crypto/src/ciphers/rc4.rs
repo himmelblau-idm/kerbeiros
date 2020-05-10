@@ -4,13 +4,13 @@ use crate::KerberosCipher;
 use crate::Result;
 
 /// Cipher for the RC4 algorithm, used by the encryption type RC4_HMAC
-pub struct RC4Cipher {
+pub struct Rc4Cipher {
     #[cfg(test)]
     preamble: Option<Vec<u8>>,
 }
 
 #[cfg(test)]
-impl RC4Cipher {
+impl Rc4Cipher {
     pub fn new() -> Self {
         return Self { preamble: None };
     }
@@ -29,7 +29,7 @@ impl RC4Cipher {
 }
 
 #[cfg(not(test))]
-impl RC4Cipher {
+impl Rc4Cipher {
     pub fn new() -> Self {
         return Self {};
     }
@@ -39,7 +39,7 @@ impl RC4Cipher {
     }
 }
 
-impl KerberosCipher for RC4Cipher {
+impl KerberosCipher for Rc4Cipher {
     fn generate_key(&self, key: &[u8], _: &[u8]) -> Vec<u8> {
         return rc4_hmac_md5::generate_key(key);
     }
@@ -86,7 +86,7 @@ mod test {
 
     #[test]
     fn test_encrypt_rc4_hmac_md5() {
-        let mut rc4_cipher = RC4Cipher::new();
+        let mut rc4_cipher = Rc4Cipher::new();
         rc4_cipher
             .set_preamble(&[0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38]);
 
@@ -209,7 +209,7 @@ mod test {
 
     #[test]
     fn test_decrypt_rc4_hmac_md5() {
-        let mut rc4_cipher = RC4Cipher::new();
+        let mut rc4_cipher = Rc4Cipher::new();
         rc4_cipher
             .set_preamble(&[0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38]);
 
