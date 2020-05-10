@@ -4,7 +4,7 @@ use crate::cryptography::{
 };
 use crate::{Error, Result};
 
-pub fn aes_hmac_sha1_encrypt(
+pub fn encrypt(
     key: &[u8],
     key_usage: i32,
     plaintext: &[u8],
@@ -67,7 +67,7 @@ fn basic_encrypt(
     return swapped_ciphertext;
 }
 
-pub fn aes_hmac_sha1_decrypt(
+pub fn decrypt(
     key: &[u8],
     key_usage: i32,
     ciphertext: &[u8],

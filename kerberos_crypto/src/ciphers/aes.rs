@@ -1,7 +1,4 @@
-use crate::aes_hmac_sha1::{
-    aes_hmac_sha1_decrypt, aes_hmac_sha1_encrypt, generate_key,
-    generate_key_from_string,
-};
+use crate::aes_hmac_sha1;
 use crate::cryptography::{random_bytes, AesSizes};
 
 use crate::KerberosCipher;
@@ -50,7 +47,7 @@ impl AESCipher {
 
 impl KerberosCipher for AESCipher {
     fn generate_key(&self, key: &[u8], salt: &[u8]) -> Vec<u8> {
-        return generate_key(key, salt, &self.aes_sizes);
+        return aes_hmac_sha1::generate_key(key, salt, &self.aes_sizes);
     }
 
     fn generate_key_from_password(
@@ -58,7 +55,11 @@ impl KerberosCipher for AESCipher {
         password: &str,
         salt: &[u8],
     ) -> Vec<u8> {
-        return generate_key_from_string(password, salt, &self.aes_sizes);
+        return aes_hmac_sha1::generate_key_from_string(
+            password,
+            salt,
+            &self.aes_sizes,
+        );
     }
 
     fn decrypt(
@@ -67,7 +68,7 @@ impl KerberosCipher for AESCipher {
         key_usage: i32,
         ciphertext: &[u8],
     ) -> Result<Vec<u8>> {
-        return aes_hmac_sha1_decrypt(
+        return aes_hmac_sha1::decrypt(
             key,
             key_usage,
             ciphertext,
@@ -77,7 +78,7 @@ impl KerberosCipher for AESCipher {
 
     fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8> {
         let preamble = self.preamble();
-        return aes_hmac_sha1_encrypt(
+        return aes_hmac_sha1::encrypt(
             key,
             key_usage,
             plaintext,

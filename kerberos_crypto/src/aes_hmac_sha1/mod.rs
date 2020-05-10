@@ -4,6 +4,6 @@ pub use keys::{
 };
 
 mod decrypt;
-pub use decrypt::{aes_hmac_sha1_decrypt, aes_hmac_sha1_encrypt};
+pub use decrypt::{decrypt, encrypt};
 
 mod nfold_dk;
