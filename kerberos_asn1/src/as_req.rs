@@ -1,6 +1,6 @@
 use red_asn1::{SequenceOf, Asn1Object};
 use red_asn1_derive::Sequence;
-use crate::{Int32, PaData, KdcReqBody};
+use crate::{Int32, PaData, KdcReqBody, KdcReq};
 
 /// (*AS-REQ*) Message used to request a TGT.
 /// ```asn1
@@ -36,6 +36,17 @@ impl Default for AsReq {
             msg_type: 10,
             padata: Option::default(),
             req_body: KdcReqBody::default()
+        }
+    }
+}
+
+impl From<KdcReq> for AsReq {
+    fn from(req: KdcReq) -> Self {
+        Self {
+            pvno: req.pvno,
+            msg_type: 10,
+            padata: req.padata,
+            req_body: req.req_body
         }
     }
 }

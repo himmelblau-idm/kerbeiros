@@ -84,6 +84,9 @@ pub use krb_cred_info::KrbCredInfo;
 mod krb_priv;
 pub use krb_priv::KrbPriv;
 
+mod kdc_req;
+pub use kdc_req::KdcReq;
+
 mod krb_safe;
 pub use krb_safe::KrbSafe;
 

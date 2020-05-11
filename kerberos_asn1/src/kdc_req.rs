@@ -1,10 +1,10 @@
 use red_asn1::{SequenceOf, Asn1Object};
 use red_asn1_derive::Sequence;
-use crate::{Int32, PaData, KdcReqBody, KdcReq};
+use crate::{Int32, PaData, KdcReqBody};
+use crate::{AsReq, TgsReq};
 
-/// (*TGS-REQ*) Message used to request a TGS.
+/// (*KDC-REQ*) Base for AS-REQ and TGS-REQ
 /// ```asn1
-/// TGS-REQ         ::= [APPLICATION 12] KDC-REQ
 ///
 /// KDC-REQ         ::= SEQUENCE {
 ///        -- NOTE: first tag is [1], not [0]
@@ -17,8 +17,7 @@ use crate::{Int32, PaData, KdcReqBody, KdcReq};
 /// ```
 
 #[derive(Sequence, Debug, PartialEq, Clone)]
-#[seq(application_tag = 12)]
-pub struct TgsReq {
+pub struct KdcReq {
     #[seq_field(context_tag = 1)]
     pub pvno: Int32,
     #[seq_field(context_tag = 2)]
@@ -29,22 +28,33 @@ pub struct TgsReq {
     pub req_body: KdcReqBody,
 }
 
-impl Default for TgsReq {
+impl Default for KdcReq {
     fn default() -> Self {
         return Self {
             pvno: 5,
-            msg_type: 12,
+            msg_type: Int32::default(),
             padata: Option::default(),
             req_body: KdcReqBody::default()
         }
     }
 }
 
-impl From<KdcReq> for TgsReq {
-    fn from(req: KdcReq) -> Self {
+impl From<AsReq> for KdcReq {
+    fn from(req: AsReq) -> Self {
         Self {
             pvno: req.pvno,
-            msg_type: 12,
+            msg_type: req.msg_type,
+            padata: req.padata,
+            req_body: req.req_body
+        }
+    }
+}
+
+impl From<TgsReq> for KdcReq {
+    fn from(req: TgsReq) -> Self {
+        Self {
+            pvno: req.pvno,
+            msg_type: req.msg_type,
             padata: req.padata,
             req_body: req.req_body
         }
