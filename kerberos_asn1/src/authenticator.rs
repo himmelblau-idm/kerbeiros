@@ -2,6 +2,7 @@ use crate::{
     AuthorizationData, Checksum, EncryptionKey, Int32, KerberosTime,
     Microseconds, PrincipalName, Realm, UInt32,
 };
+use chrono::{Timelike, Utc};
 use red_asn1::Asn1Object;
 use red_asn1_derive::Sequence;
 
@@ -21,7 +22,7 @@ use red_asn1_derive::Sequence;
 ///        authorization-data      [8] AuthorizationData OPTIONAL
 /// }
 /// ```
-#[derive(Sequence, Default, Debug, Clone, PartialEq)]
+#[derive(Sequence, Debug, Clone, PartialEq)]
 #[seq(application_tag = 2)]
 pub struct Authenticator {
     #[seq_field(context_tag = 0)]
@@ -42,4 +43,21 @@ pub struct Authenticator {
     pub seq_number: Option<UInt32>,
     #[seq_field(context_tag = 8)]
     pub authorization_data: Option<AuthorizationData>,
+}
+
+impl Default for Authenticator {
+    fn default() -> Authenticator {
+        let now = Utc::now();
+        Self {
+            authenticator_vno: 5,
+            crealm: Realm::default(),
+            cname: PrincipalName::default(),
+            cksum: Option::default(),
+            cusec: (now.nanosecond() / 1000) as i32,
+            ctime: now.into(),
+            subkey: Option::default(),
+            seq_number: Option::default(),
+            authorization_data: Option::default(),
+        }
+    }
 }
