@@ -12,7 +12,7 @@ use std::fmt;
 /// }
 /// ```
 /// Used for client name and service name.
-#[derive(Sequence, Default, Debug, Clone, PartialEq)]
+#[derive(Sequence, Default, Debug, Clone)]
 pub struct PrincipalName {
     #[seq_field(context_tag = 0)]
     pub name_type: Int32,
@@ -50,6 +50,28 @@ impl PrincipalName {
     }
 }
 
+impl PartialEq<PrincipalName> for PrincipalName {
+
+    /// String case insensitive comparison
+    fn eq(&self, other: &PrincipalName) -> bool {
+        if self.name_type != other.name_type {
+            return false;
+        }
+
+        if self.name_string.len() != other.name_string.len() {
+            return false;
+        }
+
+        for (s1, s2) in self.name_string.iter().zip(other.name_string.iter()) {
+            if s1.as_str().to_lowercase() != s2.as_str().to_lowercase() {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
 impl fmt::Display for PrincipalName {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.to_string())
@@ -61,6 +83,33 @@ mod tests {
     use super::*;
     use kerberos_constants::principal_names::*;
 
+    #[test]
+    fn test_principal_name_partial_eq() {
+        let pn1 = PrincipalName {
+            name_type: 0,
+            name_string: vec!["AAA".into()]
+        };
+
+        let pn2 = PrincipalName {
+            name_type: 0,
+            name_string: vec!["AAA".into(), "BBB".into()]
+        };
+
+        let pn3 = PrincipalName {
+            name_type: 0,
+            name_string: vec!["aaa".into()]
+        };
+
+        let pn4 = PrincipalName {
+            name_type: 0,
+            name_string: vec!["bbb".into()]
+        };
+
+        assert_ne!(pn1, pn2);
+        assert_eq!(pn1, pn3);
+        assert_ne!(pn1, pn4);
+    }
+    
     #[test]
     fn test_encode_principal_name() {
         let principal_name =
