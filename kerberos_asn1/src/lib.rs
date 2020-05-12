@@ -48,6 +48,12 @@ pub use checksum::Checksum;
 mod enc_ap_rep_part;
 pub use enc_ap_rep_part::EncApRepPart;
 
+mod enc_as_rep_part;
+pub use enc_as_rep_part::EncAsRepPart;
+
+mod enc_kdc_rep_part;
+pub use enc_kdc_rep_part::EncKdcRepPart;
+
 mod enc_krb_cred_part;
 pub use enc_krb_cred_part::EncKrbCredPart;
 
@@ -165,9 +171,6 @@ pub use as_rep::AsRep;
 
 mod last_req;
 pub use last_req::{LastReq, LastReqEntry};
-
-mod enc_as_rep_part;
-pub use enc_as_rep_part::EncAsRepPart;
 
 mod krb_error;
 pub use krb_error::KrbError;

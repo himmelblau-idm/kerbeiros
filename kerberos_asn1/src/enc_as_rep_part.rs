@@ -1,12 +1,12 @@
 use crate::{
     EncryptionKey, HostAddresses, KerberosTime, LastReq, PrincipalName, Realm,
-    TicketFlags, UInt32, PaData
+    TicketFlags, UInt32, PaData, EncKdcRepPart, EncTgsRepPart
 };
 use red_asn1::{SequenceOf, Asn1Object};
 use red_asn1_derive::Sequence;
 
-/// (*EncKdcRepPart*) Holds the data that is encrypted
-/// in [KdcRep](./struct.KdcRep.html)
+/// (*EncAsRepPart*) Holds the data that is encrypted
+/// in [AsRep](./struct.AsRep.html)
 ///
 /// ```asn1
 /// EncASRepPart    ::= [APPLICATION 25] EncKDCRepPart
@@ -55,6 +55,46 @@ pub struct EncAsRepPart {
     pub caddr: Option<HostAddresses>,
     #[seq_field(context_tag = 12)]
     pub encrypted_pa_data: Option<SequenceOf<PaData>>,
+}
+
+impl From<EncKdcRepPart> for EncAsRepPart {
+    fn from(rep_part: EncKdcRepPart) -> Self {
+        Self {
+            key: rep_part.key,
+            last_req: rep_part.last_req,
+            nonce: rep_part.nonce,
+            key_expiration: rep_part.key_expiration,
+            flags: rep_part.flags,
+            authtime: rep_part.authtime,
+            starttime: rep_part.starttime,
+            endtime: rep_part.endtime,
+            renew_till: rep_part.renew_till,
+            srealm: rep_part.srealm,
+            sname: rep_part.sname,
+            caddr: rep_part.caddr,
+            encrypted_pa_data: rep_part.encrypted_pa_data,
+        }
+    }
+}
+
+impl From<EncTgsRepPart> for EncAsRepPart {
+    fn from(rep_part: EncTgsRepPart) -> Self {
+        Self {
+            key: rep_part.key,
+            last_req: rep_part.last_req,
+            nonce: rep_part.nonce,
+            key_expiration: rep_part.key_expiration,
+            flags: rep_part.flags,
+            authtime: rep_part.authtime,
+            starttime: rep_part.starttime,
+            endtime: rep_part.endtime,
+            renew_till: rep_part.renew_till,
+            srealm: rep_part.srealm,
+            sname: rep_part.sname,
+            caddr: rep_part.caddr,
+            encrypted_pa_data: rep_part.encrypted_pa_data,
+        }
+    }
 }
 
 #[cfg(test)]

@@ -1,15 +1,14 @@
 use crate::{
-    EncryptionKey, HostAddresses, KerberosTime, LastReq, PrincipalName, Realm,
-    TicketFlags, UInt32, PaData, EncKdcRepPart, EncAsRepPart
+    EncAsRepPart, EncTgsRepPart, EncryptionKey, HostAddresses, KerberosTime,
+    LastReq, PaData, PrincipalName, Realm, TicketFlags, UInt32,
 };
-use red_asn1::{SequenceOf, Asn1Object};
+use red_asn1::{Asn1Object, SequenceOf};
 use red_asn1_derive::Sequence;
 
-/// (*EncTgsRepPart*) Holds the data that is encrypted
-/// in [TgsRep](./struct.TgsRep.html)
+/// (*EncKdcRepPart*) Holds the data that is encrypted
+/// in [KdcRep](./struct.KdcRep.html)
 ///
 /// ```asn1
-/// EncTGSRepPart   ::= [APPLICATION 26] EncKDCRepPart
 /// EncKDCRepPart   ::= SEQUENCE {
 ///        key                [0] EncryptionKey,
 ///        last-req           [1] LastReq,
@@ -27,8 +26,7 @@ use red_asn1_derive::Sequence;
 /// }
 /// ```
 #[derive(Sequence, Default, Debug, PartialEq, Clone)]
-#[seq(application_tag = 26)]
-pub struct EncTgsRepPart {
+pub struct EncKdcRepPart {
     #[seq_field(context_tag = 0)]
     pub key: EncryptionKey,
     #[seq_field(context_tag = 1)]
@@ -57,10 +55,8 @@ pub struct EncTgsRepPart {
     pub encrypted_pa_data: Option<SequenceOf<PaData>>,
 }
 
-
-
-impl From<EncKdcRepPart> for EncTgsRepPart {
-    fn from(rep_part: EncKdcRepPart) -> Self {
+impl From<EncAsRepPart> for EncKdcRepPart {
+    fn from(rep_part: EncAsRepPart) -> Self {
         Self {
             key: rep_part.key,
             last_req: rep_part.last_req,
@@ -79,8 +75,8 @@ impl From<EncKdcRepPart> for EncTgsRepPart {
     }
 }
 
-impl From<EncAsRepPart> for EncTgsRepPart {
-    fn from(rep_part: EncAsRepPart) -> Self {
+impl From<EncTgsRepPart> for EncKdcRepPart {
+    fn from(rep_part: EncTgsRepPart) -> Self {
         Self {
             key: rep_part.key,
             last_req: rep_part.last_req,
