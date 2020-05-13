@@ -25,6 +25,7 @@
 //! - [RFC 4120, The Kerberos Network Authentication Service (V5)](https://tools.ietf.org/html/rfc4120)
 //! - [RFC 6806, Kerberos Principal Name Canonicalization and Cross-Realm Referrals](https://tools.ietf.org/html/rfc6806)
 //! - [MS-KILE](https://docs.microsoft.com/en-us/openspecs/windows_protocols/MS-KILE/2a32282e-dd48-4ad9-a542-609804b02cc9)
+//! - [MS-SFU](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-sfu/3bff5864-8135-400e-bdd9-33b552051d94)
 //!
 
 mod ap_options;
@@ -142,7 +143,8 @@ mod pa_data;
 pub use pa_data::{
     AdAndOr, AdIfRelevant, AdKdcIssued, AdMandatoryForKdc, EtypeInfo,
     EtypeInfo2, EtypeInfo2Entry, EtypeInfoEntry, KerbPaPacRequest, MethodData,
-    PaData, PaEncTimestamp, PaEncTsEnc, PaSupportedEnctypes, PaPacOptions
+    PaData, PaEncTimestamp, PaEncTsEnc, PaForUser, PaPacOptions,
+    PaSupportedEnctypes, S4uUserId, PaS4uX509User
 };
 
 mod encrypted_data;
@@ -175,8 +177,7 @@ pub use last_req::{LastReq, LastReqEntry};
 mod krb_error;
 pub use krb_error::KrbError;
 
-
-pub use red_asn1::Error as Error;
-pub use red_asn1::TagClass as TagClass;
-pub use red_asn1::Asn1Object as Asn1Object;
-pub use red_asn1::Result as Result;
+pub use red_asn1::Asn1Object;
+pub use red_asn1::Error;
+pub use red_asn1::Result;
+pub use red_asn1::TagClass;

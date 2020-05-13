@@ -40,6 +40,7 @@ pub const TD_APP_DEFINED_ERROR: i32 = 106;
 pub const TD_REQ_NONCE: i32 = 107;
 pub const TD_REQ_SEQ: i32 = 108;
 pub const PA_PAC_REQUEST: i32 = 128;
+pub const PA_FOR_USER: i32 = 129;
 pub const PA_FX_COOKIE: i32 = 133;
 pub const PA_FX_FAST: i32 = 136;
 pub const PA_FX_ERROR: i32 = 137;

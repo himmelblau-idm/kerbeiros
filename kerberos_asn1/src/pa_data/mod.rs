@@ -38,8 +38,17 @@ pub use pa_enc_timestamp::PaEncTimestamp;
 mod pa_enc_ts_enc;
 pub use pa_enc_ts_enc::PaEncTsEnc;
 
+mod pa_for_user;
+pub use pa_for_user::PaForUser;
+
 mod pa_pac_options;
 pub use pa_pac_options::PaPacOptions;
 
+mod pa_s4u_x509_user;
+pub use pa_s4u_x509_user::PaS4uX509User;
+
 mod pa_supported_enctypes;
 pub use pa_supported_enctypes::PaSupportedEnctypes;
+
+mod s4userid;
+pub use s4userid::S4uUserId;
