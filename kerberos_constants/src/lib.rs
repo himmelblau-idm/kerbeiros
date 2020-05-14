@@ -4,6 +4,7 @@
 pub mod ad_types;
 pub mod address_types;
 pub mod ap_options;
+pub mod checksum_types;
 pub mod error_codes;
 pub mod etypes;
 pub mod kdc_options;
