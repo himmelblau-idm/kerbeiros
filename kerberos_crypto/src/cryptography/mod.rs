@@ -15,3 +15,6 @@ pub use rc4::{rc4_decrypt, rc4_encrypt, RC4_KEY_SIZE};
 
 mod md4lib;
 pub use md4lib::md4;
+
+mod md5;
+pub use md5::md5;
