@@ -2,15 +2,18 @@ use crypto::hmac::Hmac;
 use crypto::mac::Mac;
 use crypto::md5::Md5;
 use crypto::sha1::Sha1;
+use crypto::digest::Digest;
 
 pub fn hmac_md5(key: &[u8], data: &[u8]) -> Vec<u8> {
-    let mut hmacker = Hmac::new(Md5::new(), key);
-    hmacker.input(data);
-    return hmacker.result().code().to_vec();
+    return hmac(key, data, Md5::new());
 }
 
 pub fn hmac_sha1(key: &[u8], data: &[u8]) -> Vec<u8> {
-    let mut hmacker = Hmac::new(Sha1::new(), key);
+    return hmac(key, data, Sha1::new());
+}
+
+pub fn hmac<D: Digest>(key: &[u8], data: &[u8], d: D) -> Vec<u8> {
+    let mut hmacker = Hmac::new(d, key);
     hmacker.input(data);
     return hmacker.result().code().to_vec();
 }
