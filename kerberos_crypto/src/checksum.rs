@@ -5,10 +5,8 @@ pub fn checksum_hmac_md5(key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8
     keyword.push(0);
 
     let ksign = hmac_md5(key, &keyword);
-    println!("{:?}", ksign);
     let mut bs = key_usage.to_le_bytes().to_vec();
     bs.append(&mut plaintext.to_vec());
-    println!("{:?}", bs);
     let tmp = md5(&bs);
 
     return hmac_md5(&ksign, &tmp);
