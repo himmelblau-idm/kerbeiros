@@ -41,7 +41,7 @@ pub struct EncTicketPart {
     #[seq_field(context_tag = 6)]
     pub starttime: Option<KerberosTime>,
     #[seq_field(context_tag = 7)]
-    pub endtme: KerberosTime,
+    pub endtime: KerberosTime,
     #[seq_field(context_tag = 8)]
     pub renew_till: Option<KerberosTime>,
     #[seq_field(context_tag = 9)]
