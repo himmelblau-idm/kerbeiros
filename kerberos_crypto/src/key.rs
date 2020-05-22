@@ -1,12 +1,11 @@
 //! Exports the types of user keys available for this implementation.
 
+use crate::utils::random_bytes;
+use crate::{Error, Result};
+use crate::{AES128_KEY_SIZE, AES256_KEY_SIZE, RC4_KEY_SIZE};
 use kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
-
-use crate::{AES128_KEY_SIZE, AES256_KEY_SIZE, RC4_KEY_SIZE};
-
-use crate::{Error, Result};
 use std::result;
 
 /// Encapsules the possible keys used by this Kerberos implementation.
@@ -30,6 +29,24 @@ pub enum Key {
 }
 
 impl Key {
+    /// Generates a random key of the given etype
+    /// # Error
+    /// Returns error if the etype is not supported
+    pub fn random(etype: i32) -> Result<Self> {
+        match etype {
+            RC4_HMAC => Ok(Self::RC4Key(from_slice_to_rc4_key(&random_bytes(
+                RC4_KEY_SIZE,
+            )))),
+            AES128_CTS_HMAC_SHA1_96 => Ok(Self::AES128Key(
+                from_slice_to_aes128_key(&random_bytes(AES128_KEY_SIZE)),
+            )),
+            AES256_CTS_HMAC_SHA1_96 => Ok(Self::AES256Key(
+                from_slice_to_aes256_key(&random_bytes(AES256_KEY_SIZE)),
+            )),
+            _ => Err(Error::UnsupportedAlgorithm(etype)),
+        }
+    }
+
     /// Return the etypes associated with the type of key.
     ///
     /// # Examples
@@ -185,6 +202,27 @@ impl Key {
 
         return Ok(bytes);
     }
+}
+
+fn from_slice_to_rc4_key(bytes: &[u8]) -> [u8; RC4_KEY_SIZE] {
+    let mut array = [0; RC4_KEY_SIZE];
+    let bytes = &bytes[..array.len()]; // panics if not enough data
+    array.copy_from_slice(bytes);
+    array
+}
+
+fn from_slice_to_aes128_key(bytes: &[u8]) -> [u8; AES128_KEY_SIZE] {
+    let mut array = [0; AES128_KEY_SIZE];
+    let bytes = &bytes[..array.len()]; // panics if not enough data
+    array.copy_from_slice(bytes);
+    array
+}
+
+fn from_slice_to_aes256_key(bytes: &[u8]) -> [u8; AES256_KEY_SIZE] {
+    let mut array = [0; AES256_KEY_SIZE];
+    let bytes = &bytes[..array.len()]; // panics if not enough data
+    array.copy_from_slice(bytes);
+    array
 }
 
 #[cfg(test)]
