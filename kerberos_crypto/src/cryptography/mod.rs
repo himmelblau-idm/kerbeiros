@@ -18,3 +18,6 @@ pub use md4lib::md4;
 
 mod md5;
 pub use md5::md5;
+
+mod nfold_dk;
+pub use nfold_dk::dk;

@@ -24,7 +24,7 @@ mod error;
 pub use error::{Error, Result};
 
 mod checksum;
-pub use checksum::checksum_hmac_md5;
+pub use checksum::{checksum_hmac_md5, checksum_sha_aes};
 
 mod ciphers;
 pub use ciphers::{new_kerberos_cipher, AesCipher, KerberosCipher, Rc4Cipher};

@@ -1,6 +1,10 @@
-use crate::cryptography::{hmac_md5, md5};
+use crate::cryptography::{dk, hmac_md5, hmac_sha1, md5, AesSizes};
 
-pub fn checksum_hmac_md5(key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8> {
+pub fn checksum_hmac_md5(
+    key: &[u8],
+    key_usage: i32,
+    plaintext: &[u8],
+) -> Vec<u8> {
     let mut keyword = "signaturekey".to_string().into_bytes();
     keyword.push(0);
 
@@ -10,6 +14,22 @@ pub fn checksum_hmac_md5(key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8
     let tmp = md5(&bs);
 
     return hmac_md5(&ksign, &tmp);
+}
+
+pub fn checksum_sha_aes(
+    key: &[u8],
+    key_usage: i32,
+    plaintext: &[u8],
+    aes_sizes: &AesSizes,
+) -> Vec<u8> {
+    let mut key_usage_bytes = key_usage.to_be_bytes().to_vec();
+    key_usage_bytes.push(0x99);
+
+    let kc = dk(key, &key_usage_bytes, aes_sizes);
+
+    let mac = hmac_sha1(&kc, &plaintext);
+
+    return mac[..12].to_vec();
 }
 
 #[cfg(test)]
@@ -37,5 +57,48 @@ mod test {
         ];
 
         assert_eq!(result, checksum_hmac_md5(session_key, 17, s4u_byte_array))
+    }
+
+    #[test]
+    fn test_checksum_sha_aes256() {
+        let key = &[
+            0x25, 0xB2, 0x07, 0x6C, 0xDA, 0x3B, 0xFD, 0x62, 0x09, 0x16, 0x1A,
+            0x6C, 0x78, 0xA6, 0x9C, 0x1C, 0x25, 0xB2, 0x07, 0x6C, 0xDA, 0x3B,
+            0xFD, 0x62, 0x09, 0x16, 0x1A, 0x6C, 0x78, 0xA6, 0x9C, 0x1C,
+        ];
+
+        let blob: &'static [u8] = &[
+            0xFF, 0xFF, 0xFF, 0x7F, 0x80, 0x23, 0xB8, 0xA3, 0x10, 0x31, 0xD6,
+            0x01, 0x00, 0x00, 0x00, 0x00, 0x45,
+        ];
+
+        assert_eq!(
+            vec![
+                0xA8, 0x4D, 0x32, 0x1D, 0x23, 0x24, 0xFF, 0xA0, 0x62, 0x44,
+                0xB7, 0x87
+            ],
+            checksum_sha_aes(key, 17, blob, &AesSizes::Aes256)
+        );
+    }
+
+    #[test]
+    fn test_checksum_sha_aes128() {
+        let key = &[
+            0x25, 0xB2, 0x07, 0x6C, 0xDA, 0x3B, 0xFD, 0x62, 0x09, 0x16, 0x1A,
+            0x6C, 0x78, 0xA6, 0x9C, 0x1C,
+        ];
+
+        let blob: &'static [u8] = &[
+            0xFF, 0xFF, 0xFF, 0x7F, 0x80, 0x23, 0xB8, 0xA3, 0x10, 0x31, 0xD6,
+            0x01, 0x00, 0x00, 0x00, 0x00, 0x45,
+        ];
+
+        assert_eq!(
+            vec![
+                0xF0, 0x5F, 0xEF, 0x82, 0x1E, 0xCD, 0x6D, 0x62, 0xAD, 0x3A,
+                0x38, 0x94
+            ],
+            checksum_sha_aes(key, 17, blob, &AesSizes::Aes128)
+        );
     }
 }

@@ -13,7 +13,5 @@ pub use decrypt::{decrypt, encrypt};
 mod preamble;
 pub use preamble::generate_preamble;
 
-mod nfold_dk;
-
 mod salt;
 pub use salt::generate_salt;
