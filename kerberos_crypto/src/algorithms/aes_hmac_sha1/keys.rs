@@ -1,5 +1,4 @@
-use super::nfold_dk::dk;
-use crate::cryptography::{pbkdf2_sha1, AesSizes};
+use crate::cryptography::{pbkdf2_sha1, AesSizes, dk};
 
 /// Derive the AES key used to encrypt/decrypt from the user secret (password)
 pub fn generate_key(

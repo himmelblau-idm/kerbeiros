@@ -1,6 +1,5 @@
-use super::nfold_dk::dk;
 use crate::cryptography::{
-    decrypt_aes_ecb, encrypt_aes_cbc, hmac_sha1, AesSizes,
+    decrypt_aes_ecb, encrypt_aes_cbc, hmac_sha1, AesSizes, dk
 };
 use crate::utils::xorbytes;
 use crate::{Error, Result};
