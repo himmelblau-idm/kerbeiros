@@ -2,66 +2,176 @@
 //!
 //! Defined in RFC4120, section 7.5.9.
 
+/// No error
 pub const KDC_ERR_NONE: i32 = 0;
+
+/// Client's entry in database has expired
 pub const KDC_ERR_NAME_EXP: i32 = 1;
+
+/// Server's entry in database has expired
 pub const KDC_ERR_SERVICE_EXP: i32 = 2;
+
+/// Requested protocol version number not supported
 pub const KDC_ERR_BAD_PVNO: i32 = 3;
+
+/// Client's key encrypted in old master key
 pub const KDC_ERR_C_OLD_MAST_KVNO: i32 = 4;
+
+/// Server's key encrypted in old master key
 pub const KDC_ERR_S_OLD_MAST_KVNO: i32 = 5;
+
+/// Client not found in Kerberos database
 pub const KDC_ERR_C_PRINCIPAL_UNKNOWN: i32 = 6;
+
+/// Server not found in Kerberos database
 pub const KDC_ERR_S_PRINCIPAL_UNKNOWN: i32 = 7;
+
+/// Multiple principal entries in database
 pub const KDC_ERR_PRINCIPAL_NOT_UNIQUE: i32 = 8;
+
+/// The client or server has a null key
 pub const KDC_ERR_NULL_KEY: i32 = 9;
+
+/// Ticket not eligible for postdating
 pub const KDC_ERR_CANNOT_POSTDATE: i32 = 10;
+
+/// Requested starttime is later than end time
 pub const KDC_ERR_NEVER_VALID: i32 = 11;
+
+/// KDC policy rejects request
 pub const KDC_ERR_POLICY: i32 = 12;
+
+/// KDC cannot accommodate requested option
 pub const KDC_ERR_BADOPTION: i32 = 13;
+
+/// KDC has no support for encryption type
 pub const KDC_ERR_ETYPE_NOSUPP: i32 = 14;
+
+/// KDC has no support for checksum type
 pub const KDC_ERR_SUMTYPE_NOSUPP: i32 = 15;
+
+/// KDC has no support for padata type
 pub const KDC_ERR_PADATA_TYPE_NOSUPP: i32 = 16;
+
+/// KDC has no support for transited type
 pub const KDC_ERR_TRTYPE_NOSUPP: i32 = 17;
+
+/// Clients credentials have been revoked
 pub const KDC_ERR_CLIENT_REVOKED: i32 = 18;
+
+/// Credentials for server have been revoked
 pub const KDC_ERR_SERVICE_REVOKED: i32 = 19;
+
+/// TGT has been revoked
 pub const KDC_ERR_TGT_REVOKED: i32 = 20;
+
+/// Client not yet valid; try again later
 pub const KDC_ERR_CLIENT_NOTYET: i32 = 21;
+
+/// Server not yet valid; try again later
 pub const KDC_ERR_SERVICE_NOTYET: i32 = 22;
+
+/// Password has expired; change password to reset
 pub const KDC_ERR_KEY_EXPIRED: i32 = 23;
+
+/// Pre-authentication information was invalid
 pub const KDC_ERR_PREAUTH_FAILED: i32 = 24;
+
+/// Additional pre- authentication required
 pub const KDC_ERR_PREAUTH_REQUIRED: i32 = 25;
+
+/// Requested server and ticket don't match
 pub const KDC_ERR_SERVER_NOMATCH: i32 = 26;
+
+/// Server principal valid for user2user only
 pub const KDC_ERR_MUST_USE_USER2USER: i32 = 27;
+
+/// KDC Policy rejects transited path
 pub const KDC_ERR_PATH_NOT_ACCEPTED: i32 = 28;
+
+/// A service is not available
 pub const KDC_ERR_SVC_UNAVAILABLE: i32 = 29;
+
+/// Integrity check on decrypted field failed
 pub const KRB_AP_ERR_BAD_INTEGRITY: i32 = 31;
+
+/// Ticket expired
 pub const KRB_AP_ERR_TKT_EXPIRED: i32 = 32;
+
+/// Ticket not yet valid
 pub const KRB_AP_ERR_TKT_NYV: i32 = 33;
+
+/// Request is a replay
 pub const KRB_AP_ERR_REPEAT: i32 = 34;
+
+/// The ticket isn't for us
 pub const KRB_AP_ERR_NOT_US: i32 = 35;
+
+/// Ticket and authenticator don't match
 pub const KRB_AP_ERR_BADMATCH: i32 = 36;
+
+/// Clock skew too great
 pub const KRB_AP_ERR_SKEW: i32 = 37;
+
+/// Incorrect net address
 pub const KRB_AP_ERR_BADADDR: i32 = 38;
+
+/// Protocol version mismatch
 pub const KRB_AP_ERR_BADVERSION: i32 = 39;
+
+/// Invalid msg type
 pub const KRB_AP_ERR_MSG_TYPE: i32 = 40;
+
+/// Message stream modified
 pub const KRB_AP_ERR_MODIFIED: i32 = 41;
+
+/// Message out of order
 pub const KRB_AP_ERR_BADORDER: i32 = 42;
+
+/// Specified version of key is not available
 pub const KRB_AP_ERR_BADKEYVER: i32 = 44;
+
+/// Service key not available
 pub const KRB_AP_ERR_NOKEY: i32 = 45;
+
+/// Mutual authentication failed
 pub const KRB_AP_ERR_MUT_FAIL: i32 = 46;
+
+/// Incorrect message direction
 pub const KRB_AP_ERR_BADDIRECTION: i32 = 47;
+
+/// Alternative authentication method required
 pub const KRB_AP_ERR_METHOD: i32 = 48;
+
+/// Incorrect sequence number in message
 pub const KRB_AP_ERR_BADSEQ: i32 = 49;
+
+/// Inappropriate type of checksum in message
 pub const KRB_AP_ERR_INAPP_CKSUM: i32 = 50;
+
+/// Policy rejects transited path
 pub const KRB_AP_PATH_NOT_ACCEPTED: i32 = 51;
+
+/// Response too big for UDP; retry with TCP
 pub const KRB_ERR_RESPONSE_TOO_BIG: i32 = 52;
+
+/// Generic error (description in e-text)
 pub const KRB_ERR_GENERIC: i32 = 60;
+
+/// Field is too long for this implementation
 pub const KRB_ERR_FIELD_TOOLONG: i32 = 61;
+
 pub const KDC_ERROR_CLIENT_NOT_TRUSTED: i32 = 62;
 pub const KDC_ERROR_KDC_NOT_TRUSTED: i32 = 63;
 pub const KDC_ERROR_INVALID_SIG: i32 = 64;
 pub const KDC_ERR_KEY_TOO_WEAK: i32 = 65;
 pub const KDC_ERR_CERTIFICATE_MISMATCH: i32 = 66;
+
+/// No TGT available to validate USER-TO-USER
 pub const KRB_AP_ERR_NO_TGT: i32 = 67;
 pub const KDC_ERR_WRONG_REALM: i32 = 68;
+
+/// Ticket must be for USER-TO-USER
 pub const KRB_AP_ERR_USER_TO_USER_REQUIRED: i32 = 69;
 pub const KDC_ERR_CANT_VERIFY_CERTIFICATE: i32 = 70;
 pub const KDC_ERR_INVALID_CERTIFICATE: i32 = 71;
