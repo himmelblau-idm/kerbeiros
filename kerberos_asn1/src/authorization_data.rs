@@ -11,8 +11,11 @@ use red_asn1_derive::Sequence;
 ///        ad-data         [1] OCTET STRING
 /// }
 /// ```
+pub type AuthorizationData = Vec<AuthorizationDataEntry>;
+
+/// Entry of the AuthorizationData
 #[derive(Sequence, Default, Debug, Clone, PartialEq)]
-pub struct AuthorizationData {
+pub struct AuthorizationDataEntry {
     #[seq_field(context_tag = 0)]
     pub ad_type: Int32,
     #[seq_field(context_tag = 1)]

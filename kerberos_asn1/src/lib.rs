@@ -41,7 +41,7 @@ mod authenticator;
 pub use authenticator::Authenticator;
 
 mod authorization_data;
-pub use authorization_data::AuthorizationData;
+pub use authorization_data::{AuthorizationData, AuthorizationDataEntry};
 
 mod checksum;
 pub use checksum::Checksum;
