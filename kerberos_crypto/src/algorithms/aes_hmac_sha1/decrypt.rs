@@ -17,7 +17,7 @@ pub fn encrypt(
     let mut basic_plaintext = preamble.to_vec();
     basic_plaintext.append(&mut plaintext.to_vec());
 
-    let mut hmac = hmac_sha1(&ki, &basic_plaintext);
+    let hmac = hmac_sha1(&ki, &basic_plaintext);
 
     let mut ciphertext = basic_encrypt(&ke, &basic_plaintext, aes_sizes);
     ciphertext.append(&mut hmac[..aes_sizes.mac_size()].to_vec());
