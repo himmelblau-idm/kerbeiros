@@ -2,6 +2,7 @@
 //!
 //! # References
 //! * RFC 4120, Section 5.3.
+//! * RFC 6806, Section 11
 
 pub const RESERVED: u32 = 0x80000000;
 pub const FORWARDABLE: u32 = 0x40000000;
@@ -17,3 +18,6 @@ pub const PRE_AUTHENT: u32 = 0x00200000;
 pub const HW_AUTHENT: u32 = 0x00100000;
 pub const TRANSITED_POLICY_CHECKED: u32 = 0x00080000;
 pub const OK_AS_DELEGATE: u32 = 0x00040000;
+
+pub const REQUEST_ANONYMOUS: u32 = 0x00020000;
+pub const NAME_CANONICALIZE: u32 = 0x00010000;
