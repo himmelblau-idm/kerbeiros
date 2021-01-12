@@ -32,6 +32,6 @@ pub const NT_ENTERPRISE: i32 = 10;
 
 pub const NT_MS_PRINCIPAL: i32 = -128;
 
-pub const NT_MS_PRINCIPAL_AND_IS: i32 = -129;
+pub const NT_MS_PRINCIPAL_AND_ID: i32 = -129;
 
 pub const NT_ENT_PRINCIPAL_AND_ID: i32 = -130;
