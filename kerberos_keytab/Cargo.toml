@@ -1,0 +1,13 @@
+[package]
+name = "kerberos_keytab"
+version = "0.1.0"
+authors = ["Eloy Pérez <zer1t0ps@protonmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+nom = "6.0"
+
+[dev-dependencies]
+kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
