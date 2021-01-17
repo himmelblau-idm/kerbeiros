@@ -18,6 +18,10 @@
 //! # References
 //! * [ccache definition](https://web.mit.edu/kerberos/krb5-1.12/doc/basic/ccache_def.html)
 //! * [ccache types definition](https://repo.or.cz/w/krb5dissect.git/blob_plain/HEAD:/ccache.txt)
+//! * [keytab definition](https://web.mit.edu/kerberos/www/krb5-latest/doc/formats/keytab_file_format.html)
+//! * [keytab types definition](https://repo.or.cz/w/krb5dissect.git/blob_plain/HEAD:/keytab.txt)
+//!
+//!
 
 mod header;
 pub use header::*;
