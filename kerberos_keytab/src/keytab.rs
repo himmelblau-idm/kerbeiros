@@ -88,7 +88,7 @@ mod tests {
                             0xad, 0x06, 0xbd, 0xd8, 0x30, 0xb7, 0x58, 0x6c,
                         ],
                     ),
-                    vno: 0x00000001,
+                    vno: Some(0x00000001),
                 },
                 KeytabEntry {
                     realm: CountedOctetString::new(
@@ -107,7 +107,7 @@ mod tests {
                             0x2f, 0x12, 0x19, 0xc4, 0xf3, 0x12, 0x52, 0xf4,
                         ],
                     ),
-                    vno: 0x00000001,
+                    vno: Some(0x00000001),
                 },
             ],
         };
@@ -139,7 +139,7 @@ mod tests {
                             0xad, 0x06, 0xbd, 0xd8, 0x30, 0xb7, 0x58, 0x6c,
                         ],
                     ),
-                    vno: 0x00000001,
+                    vno: Some(0x00000001),
                 },
                 KeytabEntry {
                     realm: CountedOctetString::new(
@@ -158,7 +158,7 @@ mod tests {
                             0x2f, 0x12, 0x19, 0xc4, 0xf3, 0x12, 0x52, 0xf4,
                         ],
                     ),
-                    vno: 0x00000001,
+                    vno: Some(0x00000001),
                 },
             ],
         };
