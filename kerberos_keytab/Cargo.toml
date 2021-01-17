@@ -1,5 +1,6 @@
 [package]
 name = "kerberos_keytab"
+description = "Library to parse keytab kerberos files"
 version = "0.0.1"
 authors = ["Eloy Pérez <zer1t0ps@protonmail.com>"]
 edition = "2018"
