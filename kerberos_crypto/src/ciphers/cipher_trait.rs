@@ -5,11 +5,7 @@ pub trait KerberosCipher {
     fn etype(&self) -> i32;
     fn generate_salt(&self, realm: &str, client_name: &str) -> Vec<u8>;
     fn generate_key(&self, raw_key: &[u8], salt: &[u8]) -> Vec<u8>;
-    fn generate_key_from_string(
-        &self,
-        password: &str,
-        salt: &[u8],
-    ) -> Vec<u8>;
+    fn generate_key_from_string(&self, password: &str, salt: &[u8]) -> Vec<u8>;
     fn decrypt(
         &self,
         key: &[u8],

@@ -1,7 +1,6 @@
 use crate::cryptography::{hmac_md5, rc4_decrypt, rc4_encrypt};
 use crate::{Error, Result};
 
-
 /// Encrypt plaintext by using the RC4 algorithm with HMAC-MD5
 pub fn encrypt(
     key: &[u8],

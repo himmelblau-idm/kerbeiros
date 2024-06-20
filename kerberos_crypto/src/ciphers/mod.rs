@@ -9,5 +9,3 @@ pub use rc4::Rc4Cipher;
 
 mod factory;
 pub use factory::new_kerberos_cipher;
-
-

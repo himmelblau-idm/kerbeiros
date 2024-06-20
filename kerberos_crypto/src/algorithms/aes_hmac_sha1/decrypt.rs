@@ -1,5 +1,5 @@
 use crate::cryptography::{
-    decrypt_aes_ecb, encrypt_aes_cbc, hmac_sha1, AesSizes, dk
+    decrypt_aes_ecb, dk, encrypt_aes_cbc, hmac_sha1, AesSizes,
 };
 use crate::utils::xorbytes;
 use crate::{Error, Result};
