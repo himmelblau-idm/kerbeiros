@@ -168,14 +168,18 @@ mod test {
             ],
         );
 
-        let auth_time =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let starttime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let endtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap());
-        let renew_till =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap());
+        let auth_time = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let starttime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let endtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap(),
+        );
+        let renew_till = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap(),
+        );
 
         let caddr = vec![HostAddress::new(
             NETBIOS,
@@ -453,7 +457,9 @@ mod test {
         let mut last_req = LastReq::default();
         last_req.push(LastReqEntry::new(
             0,
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap()),
+            KerberosTime::from(
+                Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+            ),
         ));
 
         let ticket_flags = TicketFlags::from(
@@ -480,13 +486,22 @@ mod test {
             last_req,
             nonce: 104645460,
             key_expiration: Some(
-                Utc.with_ymd_and_hms(2037, 9, 14, 02, 48, 05).unwrap().into(),
+                Utc.with_ymd_and_hms(2037, 9, 14, 02, 48, 05)
+                    .unwrap()
+                    .into(),
             ),
             flags: ticket_flags,
             authtime: kerb_time.clone().into(),
             starttime: Some(kerb_time.into()),
-            endtime: Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap().into(),
-            renew_till: Some(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap().into()),
+            endtime: Utc
+                .with_ymd_and_hms(2019, 4, 18, 16, 00, 31)
+                .unwrap()
+                .into(),
+            renew_till: Some(
+                Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31)
+                    .unwrap()
+                    .into(),
+            ),
             srealm: Realm::from("KINGDOM.HEARTS"),
             sname,
             caddr: None,

@@ -85,14 +85,18 @@ mod test {
 
     #[test]
     fn test_authtime_starttime_endtime_renew_till_to_times() {
-        let authtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let starttime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 19, 06, 00, 31).unwrap());
-        let endtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 20, 16, 00, 31).unwrap());
-        let renew_till =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap());
+        let authtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let starttime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 19, 06, 00, 31).unwrap(),
+        );
+        let endtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 20, 16, 00, 31).unwrap(),
+        );
+        let renew_till = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap(),
+        );
 
         let time = Times::new(
             authtime.timestamp() as u32,
@@ -114,10 +118,12 @@ mod test {
 
     #[test]
     fn test_authtime_endtime_to_times() {
-        let authtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let endtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 20, 16, 00, 31).unwrap());
+        let authtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let endtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 20, 16, 00, 31).unwrap(),
+        );
 
         let time = Times::new(
             authtime.timestamp() as u32,
@@ -139,14 +145,18 @@ mod test {
 
     #[test]
     fn test_times_to_authtime_starttime_endtime_renew_till() {
-        let authtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let starttime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 19, 06, 00, 31).unwrap());
-        let endtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 20, 16, 00, 31).unwrap());
-        let renew_till =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap());
+        let authtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let starttime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 19, 06, 00, 31).unwrap(),
+        );
+        let endtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 20, 16, 00, 31).unwrap(),
+        );
+        let renew_till = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap(),
+        );
 
         let time = Times::new(
             authtime.timestamp() as u32,
@@ -168,10 +178,12 @@ mod test {
 
     #[test]
     fn test_times_to_authtime_endtime() {
-        let authtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let endtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 20, 16, 00, 31).unwrap());
+        let authtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let endtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 20, 16, 00, 31).unwrap(),
+        );
 
         let time = Times::new(
             authtime.timestamp() as u32,

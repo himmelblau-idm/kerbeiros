@@ -144,10 +144,18 @@ mod test {
             | ticket_flags::PRE_AUTHENT;
 
         let time = Times::new(
-            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31)
+                .unwrap()
+                .timestamp() as u32,
         );
 
         let ticket = create_ticket(
@@ -196,14 +204,18 @@ mod test {
         let encryption_key =
             EncryptionKey::new(AES256_CTS_HMAC_SHA1_96, vec![0x77]);
 
-        let auth_time =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let starttime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let endtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap());
-        let renew_till =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap());
+        let auth_time = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let starttime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let endtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap(),
+        );
+        let renew_till = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap(),
+        );
 
         let caddr = vec![HostAddress::new(
             NETBIOS,
