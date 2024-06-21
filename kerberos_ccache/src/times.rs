@@ -72,10 +72,18 @@ mod test {
                 0x8d, 0x05, 0x5d, 0x23, 0x51, 0xe2
             ],
             Times::new(
-                Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
-                Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
-                Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33).unwrap().timestamp() as u32,
-                Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30).unwrap().timestamp() as u32,
+                Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33)
+                    .unwrap()
+                    .timestamp() as u32,
+                Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33)
+                    .unwrap()
+                    .timestamp() as u32,
+                Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33)
+                    .unwrap()
+                    .timestamp() as u32,
+                Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30)
+                    .unwrap()
+                    .timestamp() as u32,
             )
             .build()
         )
@@ -85,10 +93,18 @@ mod test {
     fn test_parse_times_from_bytes() {
         assert_eq!(
             Times::new(
-                Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
-                Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
-                Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33).unwrap().timestamp() as u32,
-                Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30).unwrap().timestamp() as u32,
+                Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33)
+                    .unwrap()
+                    .timestamp() as u32,
+                Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33)
+                    .unwrap()
+                    .timestamp() as u32,
+                Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33)
+                    .unwrap()
+                    .timestamp() as u32,
+                Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30)
+                    .unwrap()
+                    .timestamp() as u32,
             ),
             Times::parse(&[
                 0x5d, 0x22, 0x00, 0x65, 0x5d, 0x22, 0x00, 0x65, 0x5d, 0x22,

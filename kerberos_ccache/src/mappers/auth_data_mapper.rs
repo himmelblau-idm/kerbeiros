@@ -1,5 +1,5 @@
 use crate::{AuthData, CountedOctetString};
-use kerberos_asn1::{MethodData, PaData};
+use himmelblau_kerberos_asn1::{MethodData, PaData};
 
 pub fn padata_to_auth_data(padata: &PaData) -> AuthData {
     return AuthData::new(
@@ -32,8 +32,8 @@ pub fn auth_data_vector_to_method_data(
 mod test {
     use super::*;
     use crate::Address;
-    use kerberos_asn1::{Asn1Object, KerbPaPacRequest};
-    use kerberos_constants::pa_data_types::*;
+    use himmelblau_kerberos_asn1::{Asn1Object, KerbPaPacRequest};
+    use himmelblau_kerberos_constants::pa_data_types::*;
 
     #[test]
     fn test_padata_to_auth_data() {

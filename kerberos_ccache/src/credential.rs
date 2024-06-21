@@ -139,9 +139,9 @@ mod test {
     use super::super::*;
     use super::*;
     use chrono::prelude::*;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::ticket_flags;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::ticket_flags;
 
     static RAW_CREDENTIAL: &'static [u8] = &[
         0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0e,
@@ -377,10 +377,18 @@ mod test {
             | ticket_flags::PRE_AUTHENT;
 
         let time = Times::new(
-            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30)
+                .unwrap()
+                .timestamp() as u32,
         );
 
         let credential = Credential::new(
@@ -436,10 +444,18 @@ mod test {
             | ticket_flags::PRE_AUTHENT;
 
         let time = Times::new(
-            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30)
+                .unwrap()
+                .timestamp() as u32,
         );
 
         let credential = Credential::new(

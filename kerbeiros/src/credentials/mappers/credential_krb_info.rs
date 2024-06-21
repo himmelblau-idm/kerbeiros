@@ -1,12 +1,12 @@
 use super::super::credential::*;
 use crate::Result;
-use kerberos_asn1::{
+use himmelblau_kerberos_asn1::{
     AsRep, Asn1Object, EncAsRepPart, EtypeInfo2, KrbCredInfo, Ticket,
 };
-use kerberos_constants::key_usages::KEY_USAGE_AS_REP_ENC_PART;
-use kerberos_constants::pa_data_types::PA_ETYPE_INFO2;
-use kerberos_crypto::new_kerberos_cipher;
-use kerberos_crypto::Key;
+use himmelblau_kerberos_constants::key_usages::KEY_USAGE_AS_REP_ENC_PART;
+use himmelblau_kerberos_constants::pa_data_types::PA_ETYPE_INFO2;
+use himmelblau_kerberos_crypto::new_kerberos_cipher;
+use himmelblau_kerberos_crypto::Key;
 
 pub struct CredentialKrbInfoMapper {}
 
@@ -107,13 +107,15 @@ impl CredentialKrbInfoMapper {
         match Self::try_decrypt_enc_kdc_rep_part_with_cipher_key(key, kdc_rep) {
             Err(error) => {
                 if key.etypes()[0] != kdc_rep.enc_part.etype {
-                    return Err(kerberos_crypto::Error::DecryptionError(
-                        format!(
+                    return Err(
+                        himmelblau_kerberos_crypto::Error::DecryptionError(
+                            format!(
                         "Key etype = {} doesn't match with message etype = {}",
                         key.etypes()[0],
                         &kdc_rep.enc_part.etype
                     ),
-                    ))?;
+                        ),
+                    )?;
                 }
 
                 return Err(error);
@@ -140,12 +142,12 @@ impl CredentialKrbInfoMapper {
 mod test {
     use super::*;
     use chrono::prelude::*;
-    use kerberos_asn1::*;
-    use kerberos_constants::address_types::NETBIOS;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::pa_data_types::*;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::ticket_flags;
+    use himmelblau_kerberos_asn1::*;
+    use himmelblau_kerberos_constants::address_types::NETBIOS;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::pa_data_types::*;
+    use himmelblau_kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::ticket_flags;
 
     #[test]
     fn convert_to_krb_info() {
@@ -168,14 +170,18 @@ mod test {
             ],
         );
 
-        let auth_time =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let starttime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let endtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap());
-        let renew_till =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap());
+        let auth_time = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let starttime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let endtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap(),
+        );
+        let renew_till = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap(),
+        );
 
         let caddr = vec![HostAddress::new(
             NETBIOS,
@@ -453,7 +459,9 @@ mod test {
         let mut last_req = LastReq::default();
         last_req.push(LastReqEntry::new(
             0,
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap()),
+            KerberosTime::from(
+                Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+            ),
         ));
 
         let ticket_flags = TicketFlags::from(
@@ -480,13 +488,22 @@ mod test {
             last_req,
             nonce: 104645460,
             key_expiration: Some(
-                Utc.with_ymd_and_hms(2037, 9, 14, 02, 48, 05).unwrap().into(),
+                Utc.with_ymd_and_hms(2037, 9, 14, 02, 48, 05)
+                    .unwrap()
+                    .into(),
             ),
             flags: ticket_flags,
             authtime: kerb_time.clone().into(),
             starttime: Some(kerb_time.into()),
-            endtime: Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap().into(),
-            renew_till: Some(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap().into()),
+            endtime: Utc
+                .with_ymd_and_hms(2019, 4, 18, 16, 00, 31)
+                .unwrap()
+                .into(),
+            renew_till: Some(
+                Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31)
+                    .unwrap()
+                    .into(),
+            ),
             srealm: Realm::from("KINGDOM.HEARTS"),
             sname,
             caddr: None,

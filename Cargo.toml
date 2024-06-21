@@ -1,5 +1,4 @@
 [workspace]
-
 members = [
   "kerbeiros",
   "kerberos_ccache",
@@ -8,3 +7,16 @@ members = [
   "kerberos_constants",
   "kerberos_keytab",
 ]
+
+[workspace.package]
+version = "0.4.0"
+authors = ["Eloy Perez  <zer1t0ps@protonmail.com>", "David Mulder <dmulder@samba.org>"]
+edition = "2018"
+license = "AGPL-3.0"
+repository = "https://github.com/himmelblau-idm/kerbeiros"
+
+[workspace.dependencies]
+himmelblau_kerberos_asn1 = { path = "./kerberos_asn1" }
+himmelblau_kerberos_ccache = { path = "./kerberos_ccache" }
+himmelblau_kerberos_crypto = { path = "./kerberos_crypto" }
+himmelblau_kerberos_constants = { path = "./kerberos_constants" }

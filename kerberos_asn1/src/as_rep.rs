@@ -76,9 +76,9 @@ impl AsRep {
 mod test {
     use super::*;
     use crate::{EtypeInfo2Entry, KerberosString};
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::pa_data_types::PA_ETYPE_INFO2;
-    use kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::pa_data_types::PA_ETYPE_INFO2;
+    use himmelblau_kerberos_constants::principal_names::*;
 
     #[test]
     fn decode_as_rep() {

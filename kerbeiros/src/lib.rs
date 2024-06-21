@@ -10,10 +10,10 @@
 //! Asking for a TGT:
 //!
 //! ```no_run
-//! use kerbeiros::*;
+//! use himmelblau_kerbeiros::*;
 //! use ascii::AsciiString;
 //! use std::net::*;
-//! use kerberos_crypto::Key;
+//! use himmelblau_kerberos_crypto::Key;
 //!
 //! // Prepare the arguments
 //! let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();

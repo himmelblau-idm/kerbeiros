@@ -3,13 +3,17 @@ use super::timestamp_cipher::*;
 use crate::error::*;
 use ascii::AsciiString;
 use chrono::{Duration, Utc};
-use kerberos_asn1::{
+use himmelblau_kerberos_asn1::{
     AsReq, Asn1Object, EncryptedData, KerbPaPacRequest, KerberosString, PaData,
     PrincipalName,
 };
-use kerberos_constants::pa_data_types::{PA_ENC_TIMESTAMP, PA_PAC_REQUEST};
-use kerberos_constants::principal_names::{NT_PRINCIPAL, NT_SRV_INST};
-use kerberos_crypto::Key;
+use himmelblau_kerberos_constants::pa_data_types::{
+    PA_ENC_TIMESTAMP, PA_PAC_REQUEST,
+};
+use himmelblau_kerberos_constants::principal_names::{
+    NT_PRINCIPAL, NT_SRV_INST,
+};
+use himmelblau_kerberos_crypto::Key;
 use rand::Rng;
 
 pub(crate) struct AsReqBuilder<'a> {
@@ -119,7 +123,7 @@ impl<'a> AsReqBuilder<'a> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::etypes::*;
 
     #[test]
     fn as_req_with_supported_rc4_and_aes_by_default() {

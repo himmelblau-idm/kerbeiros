@@ -104,11 +104,11 @@ mod test {
         padd_netbios_string, HostAddress, KerberosString, LastReqEntry,
     };
     use chrono::prelude::*;
-    use kerberos_constants::address_types::*;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::pa_data_types::*;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::ticket_flags::*;
+    use himmelblau_kerberos_constants::address_types::*;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::pa_data_types::*;
+    use himmelblau_kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::ticket_flags::*;
 
     #[test]
     fn parse_enc_as_rep_part() {

@@ -1,5 +1,5 @@
-use kerberos_asn1::EncryptionKey;
-use kerberos_ccache::KeyBlock;
+use himmelblau_kerberos_asn1::EncryptionKey;
+use himmelblau_kerberos_ccache::KeyBlock;
 
 pub struct KeyBlockMapper {}
 
@@ -24,7 +24,7 @@ impl KeyBlockMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::etypes::*;
 
     #[test]
     fn encryption_key_to_key_block() {

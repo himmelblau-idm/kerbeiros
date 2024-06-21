@@ -1,5 +1,5 @@
-use kerberos_asn1::{MethodData, PaData};
-use kerberos_ccache::{AuthData, CountedOctetString};
+use himmelblau_kerberos_asn1::{MethodData, PaData};
+use himmelblau_kerberos_ccache::{AuthData, CountedOctetString};
 
 pub struct AuthDataMapper {}
 
@@ -38,9 +38,9 @@ impl AuthDataMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_asn1::{Asn1Object, KerbPaPacRequest};
-    use kerberos_ccache::Address;
-    use kerberos_constants::pa_data_types::*;
+    use himmelblau_kerberos_asn1::{Asn1Object, KerbPaPacRequest};
+    use himmelblau_kerberos_ccache::Address;
+    use himmelblau_kerberos_constants::pa_data_types::*;
 
     #[test]
     fn padata_to_auth_data() {

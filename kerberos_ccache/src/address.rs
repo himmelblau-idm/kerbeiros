@@ -42,7 +42,7 @@ impl Address {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::address_types::*;
+    use himmelblau_kerberos_constants::address_types::*;
 
     #[test]
     fn address_to_bytes() {

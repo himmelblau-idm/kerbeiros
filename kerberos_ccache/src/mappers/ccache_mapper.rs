@@ -5,8 +5,10 @@ use super::{
 };
 use crate::{CCache, Header};
 use crate::{ConvertError, ConvertResult};
-use kerberos_asn1::{Asn1Object, EncKrbCredPart, EncryptedData, KrbCred};
-use kerberos_constants::etypes::NO_ENCRYPTION;
+use himmelblau_kerberos_asn1::{
+    Asn1Object, EncKrbCredPart, EncryptedData, KrbCred,
+};
+use himmelblau_kerberos_constants::etypes::NO_ENCRYPTION;
 
 pub fn ccache_to_krb_cred(ccache: CCache) -> ConvertResult<KrbCred> {
     let mut infos = Vec::new();
@@ -94,11 +96,11 @@ mod test {
         Address, CountedOctetString, Credential, KeyBlock, Principal, Times,
     };
     use chrono::prelude::*;
-    use kerberos_asn1::*;
-    use kerberos_constants::address_types::NETBIOS;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::ticket_flags;
+    use himmelblau_kerberos_asn1::*;
+    use himmelblau_kerberos_constants::address_types::NETBIOS;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::ticket_flags;
 
     #[test]
     fn test_ccache_to_krb_cred() {
@@ -144,10 +146,18 @@ mod test {
             | ticket_flags::PRE_AUTHENT;
 
         let time = Times::new(
-            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap().timestamp() as u32,
-            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31)
+                .unwrap()
+                .timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31)
+                .unwrap()
+                .timestamp() as u32,
         );
 
         let ticket = create_ticket(
@@ -196,14 +206,18 @@ mod test {
         let encryption_key =
             EncryptionKey::new(AES256_CTS_HMAC_SHA1_96, vec![0x77]);
 
-        let auth_time =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let starttime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
-        let endtime =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap());
-        let renew_till =
-            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap());
+        let auth_time = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let starttime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
+        );
+        let endtime = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap(),
+        );
+        let renew_till = KerberosTime::from(
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap(),
+        );
 
         let caddr = vec![HostAddress::new(
             NETBIOS,

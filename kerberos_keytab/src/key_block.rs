@@ -52,7 +52,7 @@ impl KeyBlock {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::etypes::*;
 
     #[test]
     fn keyblock_to_bytes() {

@@ -3,7 +3,7 @@
 //! # Example
 //! Load and save into a file:
 //! ```no_run
-//! use kerberos_ccache::CCache;
+//! use himmelblau_kerberos_ccache::CCache;
 //! use std::fs;
 //!
 //! let data = fs::read("./bob_tgt.ccache").expect("Unable to read file");

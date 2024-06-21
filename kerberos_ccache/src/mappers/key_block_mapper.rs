@@ -1,5 +1,5 @@
 use crate::KeyBlock;
-use kerberos_asn1::EncryptionKey;
+use himmelblau_kerberos_asn1::EncryptionKey;
 
 pub fn encryption_key_to_keyblock(encryption_key: EncryptionKey) -> KeyBlock {
     return KeyBlock::new(
@@ -15,7 +15,7 @@ pub fn keyblock_to_encryption_key(key_block: KeyBlock) -> EncryptionKey {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::etypes::*;
 
     #[test]
     fn test_encryption_key_to_key_block() {

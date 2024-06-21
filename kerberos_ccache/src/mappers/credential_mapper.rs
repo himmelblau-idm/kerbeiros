@@ -8,7 +8,7 @@ use super::{
 };
 use crate::Credential;
 use crate::{ConvertError, ConvertResult};
-use kerberos_asn1::{Asn1Object, KrbCredInfo, Ticket};
+use himmelblau_kerberos_asn1::{Asn1Object, KrbCredInfo, Ticket};
 
 pub fn credential_to_krb_cred_info_and_ticket(
     credential: Credential,

@@ -14,11 +14,11 @@ pub type Result<T> = result::Result<T, Error>;
 pub enum Error {
     /// Error handlening asn1 entities.
     #[fail(display = "Asn1 error: {}", _0)]
-    Asn1Error(kerberos_asn1::Error),
+    Asn1Error(himmelblau_kerberos_asn1::Error),
 
     /// Error produced in the application of cryptographic algorithms.
     #[fail(display = "Cryptography error: {}", _0)]
-    CryptographyError(kerberos_crypto::Error),
+    CryptographyError(himmelblau_kerberos_crypto::Error),
 
     /// Invalid ascii string.
     #[fail(display = "Invalid ascii string")]
@@ -91,8 +91,8 @@ pub enum Error {
     BinaryParseError,
 }
 
-impl From<kerberos_crypto::Error> for Error {
-    fn from(kind: kerberos_crypto::Error) -> Error {
+impl From<himmelblau_kerberos_crypto::Error> for Error {
+    fn from(kind: himmelblau_kerberos_crypto::Error) -> Error {
         return Self::CryptographyError(kind);
     }
 }
@@ -115,14 +115,14 @@ impl From<FromUtf8Error> for Error {
     }
 }
 
-impl From<kerberos_asn1::Error> for Error {
-    fn from(error: kerberos_asn1::Error) -> Self {
+impl From<himmelblau_kerberos_asn1::Error> for Error {
+    fn from(error: himmelblau_kerberos_asn1::Error) -> Self {
         return Self::Asn1Error(error);
     }
 }
 
-impl<E> From<kerberos_ccache::Error<E>> for Error {
-    fn from(_error: kerberos_ccache::Error<E>) -> Self {
+impl<E> From<himmelblau_kerberos_ccache::Error<E>> for Error {
+    fn from(_error: himmelblau_kerberos_ccache::Error<E>) -> Self {
         return Self::BinaryParseError;
     }
 }

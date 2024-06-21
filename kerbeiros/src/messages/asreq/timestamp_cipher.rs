@@ -1,13 +1,13 @@
 use crate::{Error, Result};
 use ascii::AsciiString;
 use chrono::Utc;
-use kerberos_asn1::{Asn1Object, PaEncTsEnc};
-use kerberos_constants::etypes::{
+use himmelblau_kerberos_asn1::{Asn1Object, PaEncTsEnc};
+use himmelblau_kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
-use kerberos_constants::key_usages::KEY_USAGE_AS_REQ_TIMESTAMP;
-use kerberos_crypto::new_kerberos_cipher;
-use kerberos_crypto::Key;
+use himmelblau_kerberos_constants::key_usages::KEY_USAGE_AS_REQ_TIMESTAMP;
+use himmelblau_kerberos_crypto::new_kerberos_cipher;
+use himmelblau_kerberos_crypto::Key;
 
 pub struct AsReqTimestampCipher<'a> {
     realm: &'a AsciiString,

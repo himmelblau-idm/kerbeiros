@@ -4,15 +4,15 @@ use super::mappers::CredentialWarehouseKrbCredMapper;
 use crate::error;
 use crate::mappers::PrincipalMapper;
 use getset::Getters;
-use kerberos_asn1::{KrbCred, PrincipalName, Realm};
-use kerberos_ccache::{CCache, Header};
+use himmelblau_kerberos_asn1::{KrbCred, PrincipalName, Realm};
+use himmelblau_kerberos_ccache::{CCache, Header};
 use std::convert::TryFrom;
 ///
 /// # Example
 /// Load from ccache file:
 /// ```no_run
-/// use kerbeiros::credentials::CredentialWarehouse;
-/// use kerberos_ccache::CCache;
+/// use himmelblau_kerbeiros::credentials::CredentialWarehouse;
+/// use himmelblau_kerberos_ccache::CCache;
 /// use std::convert::TryFrom;
 /// use std::fs;
 ///
@@ -118,11 +118,11 @@ impl From<CredentialWarehouse> for CCache {
 mod test {
     use super::*;
     use chrono::prelude::*;
-    use kerberos_asn1::*;
-    use kerberos_ccache as ccache;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::ticket_flags;
+    use himmelblau_kerberos_asn1::*;
+    use himmelblau_kerberos_ccache as ccache;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::ticket_flags;
 
     fn create_credential(
         encryption_key: EncryptionKey,

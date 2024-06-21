@@ -3,9 +3,9 @@ use crate::credentials::*;
 use crate::transporter::*;
 use crate::{Error, Result};
 use ascii::AsciiString;
-use kerberos_asn1::{AsRep, KrbError};
-use kerberos_constants::error_codes::KDC_ERR_PREAUTH_REQUIRED;
-use kerberos_crypto::Key;
+use himmelblau_kerberos_asn1::{AsRep, KrbError};
+use himmelblau_kerberos_constants::error_codes::KDC_ERR_PREAUTH_REQUIRED;
+use himmelblau_kerberos_crypto::Key;
 use std::collections::HashSet;
 use std::net::IpAddr;
 
@@ -13,10 +13,10 @@ use std::net::IpAddr;
 /// # Examples
 ///
 /// ```no_run
-/// use kerbeiros::*;
+/// use himmelblau_kerbeiros::*;
 /// use ascii::AsciiString;
 /// use std::net::*;
-/// use kerberos_crypto::Key;
+/// use himmelblau_kerberos_crypto::Key;
 ///
 /// // Prepare the arguments
 /// let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();

@@ -1,6 +1,6 @@
 use crate::error;
-use kerberos_asn1::KerberosString;
-use kerberos_ccache::CountedOctetString;
+use himmelblau_kerberos_asn1::KerberosString;
+use himmelblau_kerberos_ccache::CountedOctetString;
 
 pub struct CountedOctetStringMapper {}
 

@@ -1,6 +1,6 @@
 use crate::rc4_hmac_md5;
 use crate::KerberosCipher;
-use kerberos_constants::etypes::RC4_HMAC;
+use himmelblau_kerberos_constants::etypes::RC4_HMAC;
 
 use crate::Result;
 

@@ -50,7 +50,7 @@ pub type HostAddresses = SequenceOf<HostAddress>;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use kerberos_constants::address_types;
+    use himmelblau_kerberos_constants::address_types;
 
     #[test]
     fn test_encode_netbios_host_address() {

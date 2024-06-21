@@ -2,8 +2,8 @@ use crate::error::*;
 use crate::messages::*;
 use crate::transporter::*;
 use ascii::AsciiString;
-use kerberos_asn1::{AsRep, Asn1Object, KrbError};
-use kerberos_crypto::Key;
+use himmelblau_kerberos_asn1::{AsRep, Asn1Object, KrbError};
+use himmelblau_kerberos_crypto::Key;
 use std::collections::HashSet;
 use std::net::IpAddr;
 
@@ -19,11 +19,11 @@ pub enum AsReqResponse {
 /// # Examples
 ///
 /// ```no_run
-/// use kerbeiros::*;
+/// use himmelblau_kerbeiros::*;
 /// use ascii::AsciiString;
 /// use std::net::*;
-/// use kerberos_constants::etypes::AES256_CTS_HMAC_SHA1_96;
-/// use kerberos_crypto::Key;
+/// use himmelblau_kerberos_constants::etypes::AES256_CTS_HMAC_SHA1_96;
+/// use himmelblau_kerberos_crypto::Key;
 ///
 /// // Prepare the arguments
 /// let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();
@@ -31,7 +31,7 @@ pub enum AsReqResponse {
 /// let username = AsciiString::from_ascii("Bob").unwrap();
 /// let user_key = Key::Secret("S3cr3t".to_string());
 ///
-/// let mut as_requester = kerbeiros::AsRequester::new(realm, kdc_address);
+/// let mut as_requester = himmelblau_kerbeiros::AsRequester::new(realm, kdc_address);
 ///
 /// // Use AES-256 cipher
 /// as_requester.set_etype(AES256_CTS_HMAC_SHA1_96).unwrap();

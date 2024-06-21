@@ -1,7 +1,9 @@
 use crate::{Error, Result};
-use kerberos_asn1::{padd_netbios_string, HostAddress, HostAddresses};
-use kerberos_ccache::{Address, CountedOctetString};
-use kerberos_constants::address_types::NETBIOS;
+use himmelblau_kerberos_asn1::{
+    padd_netbios_string, HostAddress, HostAddresses,
+};
+use himmelblau_kerberos_ccache::{Address, CountedOctetString};
+use himmelblau_kerberos_constants::address_types::NETBIOS;
 use std::convert::TryInto;
 
 pub struct AddressMapper {}
