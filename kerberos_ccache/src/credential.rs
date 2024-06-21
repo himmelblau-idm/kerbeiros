@@ -456,7 +456,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "[0], Eof")]
+    #[should_panic(expected = "input: [0], code: Eof")]
     fn test_parse_ccache_credential_panic() {
         Credential::parse(&[0x0]).unwrap();
     }

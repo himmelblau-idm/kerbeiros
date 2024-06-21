@@ -433,7 +433,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "[0], Tag")]
+    #[should_panic(expected = "input: [0], code: Tag")]
     fn test_parse_ccache_error() {
         CCache::parse(&[0]).unwrap();
     }

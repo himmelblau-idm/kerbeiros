@@ -109,7 +109,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "[0], Eof")]
+    #[should_panic(expected = "input: [0], code: Eof")]
     fn test_parse_principal_from_bytes_panic() {
         Principal::parse(&[0x00]).unwrap();
     }

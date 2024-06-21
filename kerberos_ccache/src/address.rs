@@ -76,7 +76,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "[0], Eof")]
+    #[should_panic(expected = "input: [0], code: Eof")]
     fn test_parse_address_from_bytes_panic() {
         Address::parse(&[0x0]).unwrap();
     }
