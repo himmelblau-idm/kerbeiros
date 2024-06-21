@@ -13,7 +13,7 @@ kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
 
 chrono = "0.4"
 rand = "0.8.5"
-md4 = "0.8"
+md4 = "0.10"
 num = "0.2"
 failure = "0.1"
 pbkdf2 = "0.12.2"
