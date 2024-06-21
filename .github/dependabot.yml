@@ -11,3 +11,6 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "deps(rust)"
+    ignore:
+      - dependency-name: "nom"
+        versions: [ ">=7.0.0" ]

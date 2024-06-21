@@ -16,7 +16,7 @@ kerberos_asn1 = { version = "0.2", path = "../kerberos_asn1"}
 failure = "0.1"
 failure_derive = "0.1"
 
-nom = "5"
+nom = "6.2.2"
 chrono = "0.4"
 
 [lints.clippy]

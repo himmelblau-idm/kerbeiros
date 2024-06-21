@@ -9,7 +9,7 @@ repository = "https://gitlab.com/Zer1t0/kerbeiros/kerberos_keytab"
 
 
 [dependencies]
-nom = "6.0"
+nom = "6.2.2"
 
 [dev-dependencies]
 kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
