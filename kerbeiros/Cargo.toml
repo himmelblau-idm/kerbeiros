@@ -19,7 +19,7 @@ chrono = "0.4"
 failure = "0.1.5"
 failure_derive = "0.1.5"
 rand = "0.8.5"
-dns-lookup = "1.0"
+dns-lookup = "2.0"
 getset = "0.1"
 
 [lints.clippy]
