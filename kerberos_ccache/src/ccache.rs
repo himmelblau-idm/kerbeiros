@@ -3,7 +3,7 @@ use super::header::Header;
 use super::principal::Principal;
 use crate::mappers::{ccache_to_krb_cred, krb_cred_to_ccache};
 use crate::{ConvertError, ConvertResult};
-use kerberos_asn1::KrbCred;
+use himmelblau_kerberos_asn1::KrbCred;
 use nom::number::complete::be_u16;
 use nom::{many0, named, tag, IResult};
 use std::convert::{TryFrom, TryInto};
@@ -100,9 +100,9 @@ mod test {
     use super::super::*;
     use super::*;
     use chrono::prelude::*;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::ticket_flags;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::ticket_flags;
 
     static RAW_CCACHE: &'static [u8] = &[
         0x05, 0x04, 0x00, 0x0c, 0x00, 0x01, 0x00, 0x08, 0xff, 0xff, 0xff, 0xff,

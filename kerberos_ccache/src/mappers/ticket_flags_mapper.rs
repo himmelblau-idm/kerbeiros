@@ -1,4 +1,4 @@
-use kerberos_asn1::TicketFlags;
+use himmelblau_kerberos_asn1::TicketFlags;
 
 pub fn ticket_flags_to_tktflags(ticket_flags: &TicketFlags) -> u32 {
     return **ticket_flags;
@@ -10,7 +10,7 @@ pub fn tktflags_to_ticket_flags(tktflags: u32) -> TicketFlags {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::ticket_flags;
+    use himmelblau_kerberos_constants::ticket_flags;
 
     #[test]
     fn test_ticket_flags_to_tktflags() {

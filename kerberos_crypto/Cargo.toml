@@ -1,15 +1,14 @@
 [package]
-name = "kerberos_crypto"
+name = "himmelblau_kerberos_crypto"
 description = "Cryptography algorithms for Kerberos"
-version = "0.3.6"
-authors = ["Eloy Perez  <zer1t0ps@protonmail.com>"]
-edition = "2018"
-license = "AGPL-3.0"
-repository = "https://gitlab.com/Zer1t0/kerbeiros"
-
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [dependencies]
-kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
+himmelblau_kerberos_constants = { workspace = true }
 
 chrono = "0.4"
 rand = "0.8.5"

@@ -38,7 +38,7 @@ impl EtypeInfo2Entry {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::etypes::*;
 
     #[test]
     fn test_parse_etypeinfo2entry() {

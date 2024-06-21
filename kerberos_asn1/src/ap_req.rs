@@ -1,6 +1,6 @@
 use crate::{ApOptions, EncryptedData, Int32, Ticket};
-use kerberos_constants::message_types::KRB_AP_REQ;
-use kerberos_constants::protocol_version::PVNO;
+use himmelblau_kerberos_constants::message_types::KRB_AP_REQ;
+use himmelblau_kerberos_constants::protocol_version::PVNO;
 use red_asn1::Asn1Object;
 use red_asn1_derive::Sequence;
 

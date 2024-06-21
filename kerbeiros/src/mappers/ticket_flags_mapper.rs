@@ -1,4 +1,4 @@
-use kerberos_asn1::TicketFlags;
+use himmelblau_kerberos_asn1::TicketFlags;
 
 pub struct TicketFlagsMapper {}
 
@@ -14,7 +14,7 @@ impl TicketFlagsMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::ticket_flags;
+    use himmelblau_kerberos_constants::ticket_flags;
 
     #[test]
     fn ticket_flags_to_tktflags() {

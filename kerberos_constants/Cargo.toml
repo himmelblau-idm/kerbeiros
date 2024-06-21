@@ -1,11 +1,11 @@
 [package]
-name = "kerberos_constants"
-description = "Constants used by differente objects and actors of the Kerberos protocol"
-version = "0.0.9"
-authors = ["Eloy <zer1t0ps@protonmail.com>"]
-edition = "2018"
-license = "AGPL-3.0"
-repository = "https://gitlab.com/Zer1t0/kerbeiros"
+name = "himmelblau_kerberos_constants"
+description = "Constants used by different objects and actors of the Kerberos protocol"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [lints.clippy]
 needless_return = "allow"

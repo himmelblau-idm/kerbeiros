@@ -4,7 +4,7 @@ use super::{
 };
 use crate::Principal;
 use crate::{ConvertError, ConvertResult};
-use kerberos_asn1::{PrincipalName, Realm};
+use himmelblau_kerberos_asn1::{PrincipalName, Realm};
 
 pub fn realm_and_principal_name_to_principal(
     realm: &Realm,
@@ -53,8 +53,8 @@ pub fn principal_to_realm_and_principal_name(
 mod test {
     use super::*;
     use crate::CountedOctetString;
-    use kerberos_asn1::KerberosString;
-    use kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_asn1::KerberosString;
+    use himmelblau_kerberos_constants::principal_names::*;
 
     #[test]
     fn test_realm_and_principal_name_to_principal() {

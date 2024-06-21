@@ -1,6 +1,6 @@
 use crate::aes_hmac_sha1;
 use crate::cryptography::AesSizes;
-use kerberos_constants::etypes::{
+use himmelblau_kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96,
 };
 

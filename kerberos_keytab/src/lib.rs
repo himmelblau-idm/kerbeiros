@@ -3,7 +3,7 @@
 //! # Example
 //! Load and save into a file:
 //! ```no_run
-//! use kerberos_keytab::Keytab;
+//! use himmelblau_kerberos_keytab::Keytab;
 //! use std::fs;
 //!
 //! let data = fs::read("./user.keytab").expect("Unable to read file");

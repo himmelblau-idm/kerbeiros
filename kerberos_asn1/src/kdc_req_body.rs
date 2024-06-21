@@ -63,10 +63,10 @@ mod test {
     use super::*;
     use crate::{padd_netbios_string, HostAddress};
     use chrono::prelude::*;
-    use kerberos_constants::address_types::NETBIOS;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::kdc_options::*;
-    use kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::address_types::NETBIOS;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::kdc_options::*;
+    use himmelblau_kerberos_constants::principal_names::*;
 
     #[test]
     fn test_encode_kdc_req_body() {

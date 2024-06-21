@@ -1,7 +1,9 @@
 use crate::{Address, CountedOctetString};
 use crate::{ConvertError, ConvertResult};
-use kerberos_asn1::{padd_netbios_string, HostAddress, HostAddresses};
-use kerberos_constants::address_types::NETBIOS;
+use himmelblau_kerberos_asn1::{
+    padd_netbios_string, HostAddress, HostAddresses,
+};
+use himmelblau_kerberos_constants::address_types::NETBIOS;
 use std::convert::TryInto;
 
 pub fn host_address_to_address(host_address: HostAddress) -> Address {

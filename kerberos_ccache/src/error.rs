@@ -12,7 +12,7 @@ pub type ConvertResult<T> = result::Result<T, ConvertError>;
 pub enum ConvertError {
     /// Error handlening asn1 entities.
     #[fail(display = "Asn1 error: {}", _0)]
-    Asn1Error(kerberos_asn1::Error),
+    Asn1Error(himmelblau_kerberos_asn1::Error),
 
     /// Invalid ascii string.
     #[fail(display = "Invalid ascii string")]
@@ -49,8 +49,8 @@ impl From<FromUtf8Error> for ConvertError {
     }
 }
 
-impl From<kerberos_asn1::Error> for ConvertError {
-    fn from(error: kerberos_asn1::Error) -> Self {
+impl From<himmelblau_kerberos_asn1::Error> for ConvertError {
+    fn from(error: himmelblau_kerberos_asn1::Error) -> Self {
         return Self::Asn1Error(error);
     }
 }

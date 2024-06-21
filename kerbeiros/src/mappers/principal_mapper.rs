@@ -1,7 +1,7 @@
 use crate::mappers::CountedOctetStringMapper;
 use crate::{Error, Result};
-use kerberos_asn1::{PrincipalName, Realm};
-use kerberos_ccache::Principal;
+use himmelblau_kerberos_asn1::{PrincipalName, Realm};
+use himmelblau_kerberos_ccache::Principal;
 
 pub struct PrincipalMapper {}
 
@@ -63,9 +63,9 @@ impl PrincipalMapper {
 
 mod test {
     use super::*;
-    use kerberos_asn1::KerberosString;
-    use kerberos_ccache::CountedOctetString;
-    use kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_asn1::KerberosString;
+    use himmelblau_kerberos_ccache::CountedOctetString;
+    use himmelblau_kerberos_constants::principal_names::*;
 
     #[test]
     fn realm_and_principal_name_to_principal() {

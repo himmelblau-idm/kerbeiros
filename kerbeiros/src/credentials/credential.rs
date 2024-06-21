@@ -5,12 +5,14 @@ use crate::mappers::{
     AddressMapper, AuthDataMapper, KeyBlockMapper, PrincipalMapper,
     TicketFlagsMapper, TimesMapper,
 };
-use kerberos_asn1::{
+use himmelblau_kerberos_asn1::{
     Asn1Object, EncAsRepPart, EncryptionKey, HostAddresses, KerberosString,
     KerberosTime, LastReq, MethodData, PrincipalName, Realm, Ticket,
     TicketFlags,
 };
-use kerberos_ccache::{CountedOctetString, Credential as CredentialEntry};
+use himmelblau_kerberos_ccache::{
+    CountedOctetString, Credential as CredentialEntry,
+};
 use std::convert::TryFrom;
 
 /// Represents a Kerberos credential, which includes one Ticket and session information.
@@ -224,19 +226,19 @@ impl From<Credential> for CredentialEntry {
 mod test {
     use super::*;
     use chrono::prelude::*;
-    use kerberos_asn1::{
+    use himmelblau_kerberos_asn1::{
         padd_netbios_string, EncAsRepPart, EncryptedData, EncryptionKey,
         HostAddress, HostAddresses, KerbPaPacRequest, KerberosString,
         KerberosTime, LastReq, MethodData, PaData, PrincipalName, Realm,
         Ticket, TicketFlags,
     };
-    use kerberos_ccache as ccache;
-    use kerberos_ccache::{Address, AuthData};
-    use kerberos_constants::address_types::*;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::pa_data_types::*;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::ticket_flags;
+    use himmelblau_kerberos_ccache as ccache;
+    use himmelblau_kerberos_ccache::{Address, AuthData};
+    use himmelblau_kerberos_constants::address_types::*;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::pa_data_types::*;
+    use himmelblau_kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::ticket_flags;
 
     fn create_credential(
         encryption_key: EncryptionKey,

@@ -10,7 +10,7 @@
 //!
 //! Decoding a string of Kerberos:
 //! ```rust
-//! use kerberos_asn1::KerberosString;
+//! use himmelblau_kerberos_asn1::KerberosString;
 //! use red_asn1::Asn1Object;
 //!
 //! let raw_string = &[

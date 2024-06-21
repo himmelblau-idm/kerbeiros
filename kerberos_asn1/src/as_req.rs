@@ -59,11 +59,11 @@ mod test {
         KdcOptions, KerbPaPacRequest, KerberosTime, PaData, PrincipalName,
     };
     use chrono::prelude::*;
-    use kerberos_constants::address_types::NETBIOS;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::kdc_options::*;
-    use kerberos_constants::pa_data_types::PA_PAC_REQUEST;
-    use kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::address_types::NETBIOS;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::kdc_options::*;
+    use himmelblau_kerberos_constants::pa_data_types::PA_PAC_REQUEST;
+    use himmelblau_kerberos_constants::principal_names::*;
 
     #[test]
     fn test_build_as_req() {

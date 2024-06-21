@@ -69,7 +69,7 @@ impl Principal {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::principal_names::*;
 
     #[test]
     fn principal_to_bytes() {

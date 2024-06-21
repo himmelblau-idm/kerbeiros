@@ -1,6 +1,6 @@
 use crate::Times;
 use chrono::{TimeZone, Utc};
-use kerberos_asn1::KerberosTime;
+use himmelblau_kerberos_asn1::KerberosTime;
 
 pub fn authtime_starttime_endtime_renew_till_to_times(
     authtime: Option<&KerberosTime>,

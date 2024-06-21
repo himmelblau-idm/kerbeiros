@@ -37,7 +37,7 @@ impl EncryptedData {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::etypes::*;
 
     #[test]
     fn test_build_encrypted_data() {

@@ -1,6 +1,6 @@
 //! Useful public functions
 
-use kerberos_constants::etypes::{
+use himmelblau_kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
 
@@ -18,7 +18,7 @@ pub fn supported_etypes() -> Vec<i32> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::etypes::*;
 
     #[test]
     fn supported_etypes() {

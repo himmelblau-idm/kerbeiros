@@ -3,7 +3,7 @@
 use crate::utils::random_bytes;
 use crate::{Error, Result};
 use crate::{AES128_KEY_SIZE, AES256_KEY_SIZE, RC4_KEY_SIZE};
-use kerberos_constants::etypes::{
+use himmelblau_kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
 use std::result;
@@ -51,8 +51,8 @@ impl Key {
     ///
     /// # Examples
     /// ```
-    /// use kerberos_crypto::*;
-    /// use kerberos_constants::etypes::*;
+    /// use himmelblau_kerberos_crypto::*;
+    /// use himmelblau_kerberos_constants::etypes::*;
     ///
     /// assert_eq!(
     ///     vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC],
@@ -83,7 +83,7 @@ impl Key {
     ///
     /// # Examples
     /// ```
-    /// use kerberos_crypto::*;
+    /// use himmelblau_kerberos_crypto::*;
     ///
     /// assert_eq!(&[0x73, 0x65, 0x63, 0x72, 0x65, 0x74], Key::Secret("secret".to_string()).as_bytes());
     /// assert_eq!(&[0; RC4_KEY_SIZE], Key::RC4Key([0; RC4_KEY_SIZE]).as_bytes());
@@ -103,7 +103,7 @@ impl Key {
     /// # Example
     ///
     /// ```
-    /// use kerberos_crypto::Key;
+    /// use himmelblau_kerberos_crypto::Key;
     /// assert_eq!(
     ///     Key::RC4Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]),
     ///     Key::from_rc4_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
@@ -126,7 +126,7 @@ impl Key {
     /// # Example
     ///
     /// ```
-    /// use kerberos_crypto::Key;
+    /// use himmelblau_kerberos_crypto::Key;
     /// assert_eq!(
     ///     Key::AES128Key([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]),
     ///     Key::from_aes_128_key_string("0123456789ABCDEF0123456789abcdef").unwrap()
@@ -151,7 +151,7 @@ impl Key {
     /// # Example
     ///
     /// ```
-    /// use kerberos_crypto::Key;
+    /// use himmelblau_kerberos_crypto::Key;
     /// assert_eq!(
     ///     Key::AES256Key([
     ///         0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef,

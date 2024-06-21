@@ -1,18 +1,17 @@
 [package]
-name = "kerbeiros"
+name = "himmelblau_kerbeiros"
 description = "Kerberos client library"
-version = "0.2.2"
-authors = ["Eloy Perez  <zer1t0ps@protonmail.com>"]
-edition = "2018"
-license = "AGPL-3.0"
-repository = "https://gitlab.com/Zer1t0/kerbeiros"
-
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [dependencies]
-kerberos_asn1 = { version = "0.2", path = "../kerberos_asn1"}
-kerberos_ccache = { version = "0.0", path = "../kerberos_ccache"}
-kerberos_crypto = { version = "0.3", path = "../kerberos_crypto"}
-kerberos_constants = { version = "0.0", path = "../kerberos_constants"}
+himmelblau_kerberos_asn1 = { workspace = true }
+himmelblau_kerberos_ccache = { workspace = true }
+himmelblau_kerberos_crypto = { workspace = true }
+himmelblau_kerberos_constants = { workspace = true }
 
 ascii = "1.1.0"
 chrono = "0.4"

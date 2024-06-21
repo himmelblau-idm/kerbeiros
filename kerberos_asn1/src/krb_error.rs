@@ -59,10 +59,10 @@ mod test {
     use super::*;
     use crate::{EtypeInfo2Entry, PaData};
     use chrono::prelude::*;
-    use kerberos_constants::error_codes::*;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::pa_data_types::*;
-    use kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::error_codes::*;
+    use himmelblau_kerberos_constants::etypes::*;
+    use himmelblau_kerberos_constants::pa_data_types::*;
+    use himmelblau_kerberos_constants::principal_names::*;
 
     #[test]
     fn test_parse_krb_error() {

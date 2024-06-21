@@ -3,6 +3,6 @@
 mod asreq;
 pub(crate) use asreq::*;
 
-pub use kerberos_asn1::AsRep;
-pub use kerberos_asn1::AsReq;
-pub use kerberos_asn1::KrbError;
+pub use himmelblau_kerberos_asn1::AsRep;
+pub use himmelblau_kerberos_asn1::AsReq;
+pub use himmelblau_kerberos_asn1::KrbError;

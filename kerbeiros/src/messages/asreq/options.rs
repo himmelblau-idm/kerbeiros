@@ -1,12 +1,12 @@
 use crate::Result;
 use ascii::AsciiString;
-use kerberos_constants::etypes::{
+use himmelblau_kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
-use kerberos_constants::kdc_options::{
+use himmelblau_kerberos_constants::kdc_options::{
     CANONICALIZE, FORWARDABLE, RENEWABLE, RENEWABLE_OK,
 };
-use kerberos_crypto::is_supported_etype;
+use himmelblau_kerberos_crypto::is_supported_etype;
 use std::collections::HashSet;
 
 #[derive(Debug, PartialEq)]
@@ -61,7 +61,9 @@ impl AsReqOptions {
 
     fn error_if_unsupported_etype(&self, etype: i32) -> Result<()> {
         if !is_supported_etype(etype) {
-            return Err(kerberos_crypto::Error::UnsupportedAlgorithm(etype))?;
+            return Err(
+                himmelblau_kerberos_crypto::Error::UnsupportedAlgorithm(etype),
+            )?;
         }
         return Ok(());
     }
@@ -96,7 +98,7 @@ impl AsReqOptions {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::etypes::DES_CBC_MD5;
+    use himmelblau_kerberos_constants::etypes::DES_CBC_MD5;
 
     #[test]
     fn default_etypes() {

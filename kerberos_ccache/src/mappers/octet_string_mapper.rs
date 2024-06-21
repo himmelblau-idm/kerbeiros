@@ -1,6 +1,6 @@
 use crate::ConvertResult;
 use crate::CountedOctetString;
-use kerberos_asn1::KerberosString;
+use himmelblau_kerberos_asn1::KerberosString;
 
 pub fn kerberos_string_to_counted_octet_string(
     kerberos_string: &KerberosString,

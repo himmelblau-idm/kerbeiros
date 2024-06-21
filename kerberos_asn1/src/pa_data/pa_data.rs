@@ -31,7 +31,7 @@ impl PaData {
 mod test {
     use super::*;
     use crate::KerbPaPacRequest;
-    use kerberos_constants::pa_data_types::*;
+    use himmelblau_kerberos_constants::pa_data_types::*;
 
     #[test]
     fn test_build_padata_pac_request() {

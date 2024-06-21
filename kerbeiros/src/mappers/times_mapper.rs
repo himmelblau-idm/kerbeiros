@@ -1,6 +1,6 @@
 use chrono::{TimeZone, Utc};
-use kerberos_asn1::KerberosTime;
-use kerberos_ccache::Times;
+use himmelblau_kerberos_asn1::KerberosTime;
+use himmelblau_kerberos_ccache::Times;
 
 pub struct TimesMapper {}
 

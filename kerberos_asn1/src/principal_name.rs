@@ -76,7 +76,7 @@ impl fmt::Display for PrincipalName {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use kerberos_constants::principal_names::*;
+    use himmelblau_kerberos_constants::principal_names::*;
 
     #[test]
     fn test_principal_name_partial_eq() {
