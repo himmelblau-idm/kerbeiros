@@ -81,9 +81,9 @@ mod test {
             realm: "KINGDOM.HEARTS".to_string(),
             sname: Some(sname),
             from: None,
-            till: KerberosTime::from(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5)),
+            till: KerberosTime::from(Utc.with_ymd_and_hms(2037, 9, 13, 02, 48, 5).unwrap()),
             rtime: Some(KerberosTime::from(
-                Utc.ymd(2037, 9, 13).and_hms(02, 48, 5),
+                Utc.with_ymd_and_hms(2037, 9, 13, 02, 48, 5).unwrap(),
             )),
             nonce: 101225910,
             etypes: vec![

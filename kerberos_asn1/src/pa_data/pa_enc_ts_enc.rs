@@ -49,6 +49,12 @@ mod test {
 
     #[test]
     fn encode_timestamp() {
+        /* There doesn't appear to be a valid upgrade path for `and_hms_micro`
+         * in this situation. `ymd` is deprecated, so we should use
+         * `with_ymd_and_hms`, which returns the wrong type for calling
+         * `and_hms_micro_opt` (the replacement for `and_hms_micro`), nevermind
+         * that it duplicates arguments anyway. */
+        #[allow(deprecated)]
         let datetime = Utc.ymd(2019, 6, 4).and_hms_micro(05, 22, 12, 143725);
         assert_eq!(
             vec![

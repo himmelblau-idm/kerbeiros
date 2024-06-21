@@ -370,10 +370,10 @@ mod test {
             ],
         );
 
-        let authtime = Utc.ymd(2019, 7, 7).and_hms(14, 23, 33);
-        let starttime = Utc.ymd(2019, 7, 7).and_hms(14, 23, 33);
-        let endtime = Utc.ymd(2019, 7, 8).and_hms(0, 23, 33);
-        let renew_till = Utc.ymd(2019, 7, 8).and_hms(14, 23, 30);
+        let authtime = Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap();
+        let starttime = Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap();
+        let endtime = Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33).unwrap();
+        let renew_till = Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30).unwrap();
 
         let time = ccache::Times::new(
             authtime.timestamp() as u32,
@@ -496,10 +496,10 @@ mod test {
             ],
         );
 
-        let authtime = Utc.ymd(2019, 7, 7).and_hms(14, 23, 33);
-        let starttime = Utc.ymd(2019, 7, 7).and_hms(14, 23, 33);
-        let endtime = Utc.ymd(2019, 7, 8).and_hms(0, 23, 33);
-        let renew_till = Utc.ymd(2019, 7, 8).and_hms(14, 23, 30);
+        let authtime = Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap();
+        let starttime = Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap();
+        let endtime = Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33).unwrap();
+        let renew_till = Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30).unwrap();
 
         let time = ccache::Times::new(
             authtime.timestamp() as u32,

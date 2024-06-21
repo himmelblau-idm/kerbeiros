@@ -116,7 +116,7 @@ mod test {
             msg_type: 30,
             ctime: None,
             cusec: None,
-            stime: KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)),
+            stime: KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap()),
             susec: 341039,
             error_code: KDC_ERR_PREAUTH_REQUIRED,
             crealm: None,
