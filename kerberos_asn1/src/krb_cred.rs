@@ -1,5 +1,5 @@
-use crate::{Int32, Ticket, EncryptedData};
-use red_asn1::{SequenceOf, Asn1Object};
+use crate::{EncryptedData, Int32, Ticket};
+use red_asn1::{Asn1Object, SequenceOf};
 use red_asn1_derive::Sequence;
 
 /// (*KRB-CRED*) Message used to send Kerberos credentials form one principal to another.
@@ -25,13 +25,13 @@ pub struct KrbCred {
     pub enc_part: EncryptedData,
 }
 
-
 impl KrbCred {
     pub fn new(tickets: SequenceOf<Ticket>, enc_part: EncryptedData) -> Self {
-        let mut s = Self::default();
-        s.tickets = tickets;
-        s.enc_part = enc_part;
-        return s;
+        KrbCred {
+            tickets,
+            enc_part,
+            ..Default::default()
+        }
     }
 }
 
@@ -41,7 +41,7 @@ impl Default for KrbCred {
             pvno: 5,
             msg_type: 22,
             tickets: SequenceOf::default(),
-            enc_part: EncryptedData::default()
+            enc_part: EncryptedData::default(),
         };
     }
 }

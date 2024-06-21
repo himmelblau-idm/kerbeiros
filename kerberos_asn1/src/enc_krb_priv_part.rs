@@ -1,7 +1,6 @@
-use crate::{KerberosTime, Microseconds, UInt32, HostAddress};
-use red_asn1::{OctetString, Asn1Object};
+use crate::{HostAddress, KerberosTime, Microseconds, UInt32};
+use red_asn1::{Asn1Object, OctetString};
 use red_asn1_derive::Sequence;
-
 
 /// (*EncKrbPrivPart*) Encripted part of the *KRB-PRIV* message. Defined in RFC4120, section 5.7.1.
 /// ```asn1

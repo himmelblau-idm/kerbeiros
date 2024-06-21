@@ -1,4 +1,3 @@
-
 /// (*Int32*) Kerberos i32.
 /// Defined in RFC4120, section 5.2.4.
 /// ```asn1
@@ -37,5 +36,4 @@ mod test {
     fn test_decode_lower_value_than_int32() {
         Int32::parse(&[0x02, 0x05, 0xf1, 0x00, 0x00, 0x00, 0x00]).unwrap();
     }
-
 }

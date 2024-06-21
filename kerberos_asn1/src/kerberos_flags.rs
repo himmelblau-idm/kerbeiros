@@ -115,30 +115,62 @@ mod tests {
     fn test_decode_kerberos_flags() {
         assert_eq!(
             KerberosFlags::from(0x40000000),
-            KerberosFlags::parse(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x40, 0x0, 0x0, 0x0])
-                .unwrap()
-                .1
+            KerberosFlags::parse(&[
+                BIT_STRING_TAG_NUMBER,
+                0x5,
+                0x0,
+                0x40,
+                0x0,
+                0x0,
+                0x0
+            ])
+            .unwrap()
+            .1
         );
 
         assert_eq!(
             KerberosFlags::from(0x01),
-            KerberosFlags::parse(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0, 0x0, 0x0, 0x1])
-                .unwrap()
-                .1
+            KerberosFlags::parse(&[
+                BIT_STRING_TAG_NUMBER,
+                0x5,
+                0x0,
+                0x0,
+                0x0,
+                0x0,
+                0x1
+            ])
+            .unwrap()
+            .1
         );
 
         assert_eq!(
             KerberosFlags::from(0x0000800002),
-            KerberosFlags::parse(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x0, 0x80, 0x0, 0x2])
-                .unwrap()
-                .1
+            KerberosFlags::parse(&[
+                BIT_STRING_TAG_NUMBER,
+                0x5,
+                0x0,
+                0x0,
+                0x80,
+                0x0,
+                0x2
+            ])
+            .unwrap()
+            .1
         );
 
         assert_eq!(
             KerberosFlags::from(0x0028144812),
-            KerberosFlags::parse(&[BIT_STRING_TAG_NUMBER, 0x5, 0x0, 0x28, 0x14, 0x48, 0x12])
-                .unwrap()
-                .1
+            KerberosFlags::parse(&[
+                BIT_STRING_TAG_NUMBER,
+                0x5,
+                0x0,
+                0x28,
+                0x14,
+                0x48,
+                0x12
+            ])
+            .unwrap()
+            .1
         );
     }
 
@@ -153,9 +185,15 @@ mod tests {
 
         assert_eq!(
             KerberosFlags::from(0x28140000),
-            KerberosFlags::parse(&[BIT_STRING_TAG_NUMBER, 0x3, 0x0, 0x28, 0x14])
-                .unwrap()
-                .1
+            KerberosFlags::parse(&[
+                BIT_STRING_TAG_NUMBER,
+                0x3,
+                0x0,
+                0x28,
+                0x14
+            ])
+            .unwrap()
+            .1
         );
     }
 }

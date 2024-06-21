@@ -1,4 +1,4 @@
-use crate::{Result, Error};
+use crate::{Error, Result};
 use std::io;
 use std::io::{Read, Write};
 use std::net::*;
@@ -17,13 +17,17 @@ impl TCPTransporter {
         return Self { dst_addr };
     }
 
-    fn request_and_response_tcp(&self, raw_request: &[u8]) -> io::Result<Vec<u8>> {
-        let mut tcp_stream = TcpStream::connect_timeout(&self.dst_addr, Duration::new(5, 0))?;
+    fn request_and_response_tcp(
+        &self,
+        raw_request: &[u8],
+    ) -> io::Result<Vec<u8>> {
+        let mut tcp_stream =
+            TcpStream::connect_timeout(&self.dst_addr, Duration::new(5, 0))?;
 
         let raw_sized_request = Self::set_size_header_to_request(raw_request);
-        tcp_stream.write(&raw_sized_request)?;
+        tcp_stream.write_all(&raw_sized_request)?;
 
-        let mut len_data_bytes = [0 as u8; 4];
+        let mut len_data_bytes = [0_u8; 4];
         tcp_stream.read_exact(&mut len_data_bytes)?;
         let data_length = u32::from_be_bytes(len_data_bytes);
 
@@ -35,7 +39,8 @@ impl TCPTransporter {
 
     fn set_size_header_to_request(raw_request: &[u8]) -> Vec<u8> {
         let request_length = raw_request.len() as u32;
-        let mut raw_sized_request: Vec<u8> = request_length.to_be_bytes().to_vec();
+        let mut raw_sized_request: Vec<u8> =
+            request_length.to_be_bytes().to_vec();
         raw_sized_request.append(&mut raw_request.to_vec());
 
         return raw_sized_request;
@@ -58,8 +63,10 @@ mod tests {
     #[should_panic(expected = "NetworkError")]
     #[test]
     fn test_request_networks_error() {
-        let requester =
-            TCPTransporter::new(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 88));
+        let requester = TCPTransporter::new(SocketAddr::new(
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+            88,
+        ));
         requester.request_and_response(&vec![]).unwrap();
     }
 }

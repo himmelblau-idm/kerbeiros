@@ -1,13 +1,13 @@
-use kerberos_asn1::{PaEncTsEnc, Asn1Object};
-use kerberos_crypto::Key;
 use crate::{Error, Result};
 use ascii::AsciiString;
 use chrono::Utc;
+use kerberos_asn1::{Asn1Object, PaEncTsEnc};
 use kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
 use kerberos_constants::key_usages::KEY_USAGE_AS_REQ_TIMESTAMP;
 use kerberos_crypto::new_kerberos_cipher;
+use kerberos_crypto::Key;
 
 pub struct AsReqTimestampCipher<'a> {
     realm: &'a AsciiString,
@@ -136,7 +136,7 @@ impl<'a> AsReqTimestampCipher<'a> {
         let mut salt = self.realm.to_string().to_uppercase();
         let mut lowercase_username = self.username.to_string().to_lowercase();
 
-        if lowercase_username.ends_with("$") {
+        if lowercase_username.ends_with('$') {
             salt.push_str("host");
             lowercase_username.pop();
         }

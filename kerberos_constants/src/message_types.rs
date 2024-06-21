@@ -12,4 +12,3 @@ pub const KRB_SAFE: i32 = 20;
 pub const KRB_PRIV: i32 = 21;
 pub const KRB_CRED: i32 = 22;
 pub const KRB_ERROR: i32 = 30;
-

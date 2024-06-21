@@ -1,8 +1,8 @@
 use crate::{
-    EncryptionKey, HostAddresses, KerberosTime, LastReq, PrincipalName, Realm,
-    TicketFlags, UInt32, PaData, EncKdcRepPart, EncAsRepPart
+    EncAsRepPart, EncKdcRepPart, EncryptionKey, HostAddresses, KerberosTime,
+    LastReq, PaData, PrincipalName, Realm, TicketFlags, UInt32,
 };
-use red_asn1::{SequenceOf, Asn1Object};
+use red_asn1::{Asn1Object, SequenceOf};
 use red_asn1_derive::Sequence;
 
 /// (*EncTgsRepPart*) Holds the data that is encrypted
@@ -56,8 +56,6 @@ pub struct EncTgsRepPart {
     #[seq_field(context_tag = 12)]
     pub encrypted_pa_data: Option<SequenceOf<PaData>>,
 }
-
-
 
 impl From<EncKdcRepPart> for EncTgsRepPart {
     fn from(rep_part: EncKdcRepPart) -> Self {

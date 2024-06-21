@@ -19,7 +19,10 @@ pub struct PaEncTsEnc {
 }
 
 impl PaEncTsEnc {
-    pub fn new(patimestamp: KerberosTime, pausec: Option<Microseconds>) -> Self {
+    pub fn new(
+        patimestamp: KerberosTime,
+        pausec: Option<Microseconds>,
+    ) -> Self {
         return Self {
             patimestamp,
             pausec,
@@ -32,8 +35,7 @@ impl From<DateTime<Utc>> for PaEncTsEnc {
         let mut microseconds = datetime.timestamp_subsec_micros() as i32;
         if microseconds > MAX_MICROSECONDS {
             microseconds = MAX_MICROSECONDS;
-        }
-        else if microseconds < MIN_MICROSECONDS {
+        } else if microseconds < MIN_MICROSECONDS {
             microseconds = MIN_MICROSECONDS
         }
 
@@ -50,8 +52,9 @@ mod test {
         let datetime = Utc.ymd(2019, 6, 4).and_hms_micro(05, 22, 12, 143725);
         assert_eq!(
             vec![
-                0x30, 0x1a, 0xa0, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39, 0x30, 0x36, 0x30, 0x34,
-                0x30, 0x35, 0x32, 0x32, 0x31, 0x32, 0x5a, 0xa1, 0x05, 0x02, 0x03, 0x02, 0x31, 0x6d
+                0x30, 0x1a, 0xa0, 0x11, 0x18, 0x0f, 0x32, 0x30, 0x31, 0x39,
+                0x30, 0x36, 0x30, 0x34, 0x30, 0x35, 0x32, 0x32, 0x31, 0x32,
+                0x5a, 0xa1, 0x05, 0x02, 0x03, 0x02, 0x31, 0x6d
             ],
             PaEncTsEnc::from(datetime).build()
         );

@@ -78,23 +78,19 @@ pub fn decrypt(
     let (ki, ke) = generate_ki_ke(key, key_usage, aes_sizes);
 
     if ciphertext.len() < aes_sizes.block_size() + aes_sizes.mac_size() {
-        return Err(Error::DecryptionError(
-            "Ciphertext too short".to_string(),
-        ))?;
+        Err(Error::DecryptionError("Ciphertext too short".to_string()))?
     }
 
     let ciphertext_end_index = ciphertext.len() - aes_sizes.mac_size();
     let pure_ciphertext = &ciphertext[0..ciphertext_end_index];
     let mac = &ciphertext[ciphertext_end_index..];
 
-    let plaintext = basic_decrypt(&ke, &pure_ciphertext, aes_sizes)?;
+    let plaintext = basic_decrypt(&ke, pure_ciphertext, aes_sizes)?;
 
     let calculated_mac = hmac_sha1(&ki, &plaintext);
 
     if calculated_mac[..aes_sizes.mac_size()] != mac[..] {
-        return Err(Error::DecryptionError(
-            "Hmac integrity failure".to_string(),
-        ))?;
+        Err(Error::DecryptionError("Hmac integrity failure".to_string()))?;
     }
 
     return Ok(plaintext[aes_sizes.block_size()..].to_vec());
@@ -110,7 +106,7 @@ fn basic_decrypt(
         return Ok(plaintext);
     }
 
-    let blocks = divide_in_n_bytes_blocks(&ciphertext, aes_sizes.block_size());
+    let blocks = divide_in_n_bytes_blocks(ciphertext, aes_sizes.block_size());
 
     let second_last_index = blocks.len() - 2;
 
@@ -181,7 +177,7 @@ fn decrypt_several_blocks_xor_aes_ecb(
         block_plaintext = xorbytes(&block_plaintext, &previous_block);
 
         plaintext.append(&mut block_plaintext);
-        previous_block = block.clone();
+        previous_block.clone_from(block);
     }
 
     return (plaintext, previous_block);
@@ -211,7 +207,7 @@ fn decrypt_last_two_blocks(
     let last_block_plaintext = decrypt_aes_ecb(key, &last_block, aes_sizes);
 
     let mut plaintext = Vec::new();
-    plaintext.append(&mut xorbytes(&last_block_plaintext, &previous_block));
+    plaintext.append(&mut xorbytes(&last_block_plaintext, previous_block));
     plaintext.append(&mut last_plaintext);
 
     return plaintext;

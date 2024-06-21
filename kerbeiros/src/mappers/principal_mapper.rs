@@ -38,7 +38,7 @@ impl PrincipalMapper {
                );
         }
 
-        if names.len() == 0 {
+        if names.is_empty() {
             return Err(Error::NoPrincipalName)?;
         }
 
@@ -46,7 +46,7 @@ impl PrincipalMapper {
         let mut principal_name =
             PrincipalName::new(principal.name_type as i32, main_name);
 
-        while names.len() > 0 {
+        while !names.is_empty() {
             principal_name.push(names.remove(0));
         }
 
@@ -70,10 +70,8 @@ mod test {
     #[test]
     fn realm_and_principal_name_to_principal() {
         let realm = Realm::from("KINGDOM.HEARTS");
-        let principal_name = PrincipalName::new(
-            NT_PRINCIPAL,
-            KerberosString::from("mickey"),
-        );
+        let principal_name =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from("mickey"));
 
         let principal = Principal::new(
             NT_PRINCIPAL as u32,
@@ -93,10 +91,8 @@ mod test {
     #[test]
     fn test_principal_to_realm_and_principal_name() {
         let realm = Realm::from("KINGDOM.HEARTS");
-        let principal_name = PrincipalName::new(
-            NT_PRINCIPAL,
-            KerberosString::from("mickey"),
-        );
+        let principal_name =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from("mickey"));
 
         let principal = Principal::new(
             NT_PRINCIPAL as u32,
@@ -127,10 +123,8 @@ mod test {
     #[test]
     fn test_principal_to_realm_and_principal_name_multiple_names() {
         let realm = Realm::from("KINGDOM.HEARTS");
-        let mut principal_name = PrincipalName::new(
-            NT_PRINCIPAL,
-            KerberosString::from("mickey"),
-        );
+        let mut principal_name =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from("mickey"));
 
         principal_name.push(KerberosString::from("user2"));
 

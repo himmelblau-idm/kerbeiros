@@ -62,7 +62,7 @@ impl TryInto<String> for CountedOctetString {
     type Error = FromUtf8Error;
 
     fn try_into(self) -> Result<String, Self::Error> {
-        return Ok(String::from_utf8(self.data)?);
+        String::from_utf8(self.data)
     }
 }
 

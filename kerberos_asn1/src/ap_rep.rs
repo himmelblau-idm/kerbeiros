@@ -1,4 +1,4 @@
-use crate::{Int32, EncryptedData};
+use crate::{EncryptedData, Int32};
 use red_asn1::Asn1Object;
 use red_asn1_derive::Sequence;
 

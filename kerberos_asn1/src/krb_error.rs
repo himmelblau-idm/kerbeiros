@@ -57,12 +57,12 @@ pub struct KrbError {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::{EtypeInfo2Entry, PaData};
+    use chrono::prelude::*;
     use kerberos_constants::error_codes::*;
     use kerberos_constants::etypes::*;
     use kerberos_constants::pa_data_types::*;
     use kerberos_constants::principal_names::*;
-    use chrono::prelude::*;
-    use crate::{EtypeInfo2Entry, PaData};
 
     #[test]
     fn test_parse_krb_error() {
@@ -70,37 +70,36 @@ mod test {
             EtypeInfo2Entry {
                 etype: AES256_CTS_HMAC_SHA1_96,
                 salt: Some(KerberosString::from("KINGDOM.HEARTSmickey")),
-                s2kparams: None
+                s2kparams: None,
             },
             EtypeInfo2Entry {
                 etype: RC4_HMAC,
                 salt: None,
-                s2kparams: None
+                s2kparams: None,
             },
             EtypeInfo2Entry {
                 etype: DES_CBC_MD5,
                 salt: Some(KerberosString::from("KINGDOM.HEARTSmickey")),
-                s2kparams: None
+                s2kparams: None,
             },
-            
         ];
 
         let pa_datas = vec![
-            PaData{
+            PaData {
                 padata_type: PA_ETYPE_INFO2,
-                padata_value: info2.build()
+                padata_value: info2.build(),
             },
-            PaData{
+            PaData {
                 padata_type: PA_ENC_TIMESTAMP,
-                padata_value: vec![]
+                padata_value: vec![],
             },
-            PaData{
+            PaData {
                 padata_type: PA_PK_AS_REQ,
-                padata_value: vec![]
+                padata_value: vec![],
             },
-            PaData{
+            PaData {
                 padata_type: PA_PK_AS_REP_OLD,
-                padata_value: vec![]
+                padata_value: vec![],
             },
         ];
 
@@ -111,7 +110,7 @@ mod test {
                 KerberosString::from("KINGDOM.HEARTS"),
             ],
         };
-        
+
         let krb_error = KrbError {
             pvno: 5,
             msg_type: 30,
@@ -125,10 +124,12 @@ mod test {
             realm: Realm::from("KINGDOM.HEARTS"),
             sname,
             e_text: None,
-            e_data: Some(pa_datas.build())
+            e_data: Some(pa_datas.build()),
         };
 
-        assert_eq!(krb_error, KrbError::parse(&[
+        assert_eq!(
+            krb_error,
+            KrbError::parse(&[
                 0x7e, 0x81, 0xdc, 0x30, 0x81, 0xd9, 0xa0, 0x03, 0x02, 0x01,
                 0x05, 0xa1, 0x03, 0x02, 0x01, 0x1e, 0xa4, 0x11, 0x18, 0x0f,
                 0x32, 0x30, 0x31, 0x39, 0x30, 0x34, 0x31, 0x38, 0x30, 0x36,
@@ -152,7 +153,9 @@ mod test {
                 0x00, 0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x10, 0xa2, 0x02,
                 0x04, 0x00, 0x30, 0x09, 0xa1, 0x03, 0x02, 0x01, 0x0f, 0xa2,
                 0x02, 0x04, 0x00,
-            ]).unwrap().1);
+            ])
+            .unwrap()
+            .1
+        );
     }
-
 }

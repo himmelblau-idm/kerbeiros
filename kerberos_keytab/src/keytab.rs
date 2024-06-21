@@ -115,7 +115,6 @@ mod tests {
         assert_eq!(keytab, Keytab::parse(RAW_KEYTAB).unwrap().1);
     }
 
-
     #[test]
     fn test_build_keytab() {
         let keytab = Keytab {

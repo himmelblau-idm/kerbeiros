@@ -1,7 +1,7 @@
+use super::DeltaTime;
 use nom::number::complete::be_u16;
 use nom::IResult;
 use nom::{length_data, named};
-use super::DeltaTime;
 
 named!(parse_length_u16_array, length_data!(be_u16));
 

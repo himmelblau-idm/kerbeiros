@@ -44,6 +44,7 @@ impl CredentialWarehouse {
         };
     }
 
+    #[allow(clippy::wrong_self_convention)]
     pub(crate) fn into_krb_cred(&self) -> KrbCred {
         return CredentialWarehouseKrbCredMapper::credential_warehouse_to_krb_cred(self);
     }
@@ -90,16 +91,16 @@ impl TryFrom<CCache> for CredentialWarehouse {
     }
 }
 
-impl Into<CCache> for CredentialWarehouse {
-    fn into(self) -> CCache {
+impl From<CredentialWarehouse> for CCache {
+    fn from(val: CredentialWarehouse) -> Self {
         let header = Header::default();
         let primary_principal =
             PrincipalMapper::realm_and_principal_name_to_principal(
-                self.realm(),
-                self.client(),
+                val.realm(),
+                val.client(),
             );
 
-        let credentials = self.credentials();
+        let credentials = val.credentials();
 
         let mut ccache_credentials = Vec::with_capacity(credentials.len());
 
@@ -342,16 +343,12 @@ mod test {
     fn convert_credential_warehouse_to_ccache() {
         let realm = Realm::from("KINGDOM.HEARTS");
 
-        let mut sname = PrincipalName::new(
-            NT_PRINCIPAL,
-            KerberosString::from("krbtgt"),
-        );
+        let mut sname =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from("krbtgt"));
         sname.push(KerberosString::from("KINGDOM.HEARTS"));
 
-        let pname = PrincipalName::new(
-            NT_PRINCIPAL,
-            KerberosString::from("mickey"),
-        );
+        let pname =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from("mickey"));
 
         let encryption_key = EncryptionKey::new(
             AES256_CTS_HMAC_SHA1_96,
@@ -472,16 +469,12 @@ mod test {
     fn convert_ccache_to_credential_warehouse() {
         let realm = Realm::from("KINGDOM.HEARTS");
 
-        let mut sname = PrincipalName::new(
-            NT_PRINCIPAL,
-            KerberosString::from("krbtgt"),
-        );
+        let mut sname =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from("krbtgt"));
         sname.push(KerberosString::from("KINGDOM.HEARTS"));
 
-        let pname = PrincipalName::new(
-            NT_PRINCIPAL,
-            KerberosString::from("mickey"),
-        );
+        let pname =
+            PrincipalName::new(NT_PRINCIPAL, KerberosString::from("mickey"));
 
         let encryption_key = EncryptionKey::new(
             AES256_CTS_HMAC_SHA1_96,

@@ -1,4 +1,3 @@
-use aes;
 use aes::cipher::block_padding::NoPadding;
 use aes::cipher::BlockDecryptMut;
 use aes::cipher::BlockEncryptMut;

@@ -1,7 +1,6 @@
 use super::options::AsReqOptions;
 use super::timestamp_cipher::*;
 use crate::error::*;
-use kerberos_crypto::Key;
 use ascii::AsciiString;
 use chrono::{Duration, Utc};
 use kerberos_asn1::{
@@ -10,6 +9,7 @@ use kerberos_asn1::{
 };
 use kerberos_constants::pa_data_types::{PA_ENC_TIMESTAMP, PA_PAC_REQUEST};
 use kerberos_constants::principal_names::{NT_PRINCIPAL, NT_SRV_INST};
+use kerberos_crypto::Key;
 use rand::Rng;
 
 pub(crate) struct AsReqBuilder<'a> {
@@ -109,7 +109,7 @@ impl<'a> AsReqBuilder<'a> {
     ) -> Result<(i32, Vec<u8>)> {
         return AsReqTimestampCipher::build_encrypted_timestamp(
             self.options.realm(),
-            &self.username,
+            self.username,
             user_key,
             &self.options.sorted_etypes(),
         );

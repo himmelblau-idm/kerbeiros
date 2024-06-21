@@ -28,4 +28,3 @@ use crate::KerberosFlags;
 ///        -- validate(31)
 /// ```
 pub type KdcOptions = KerberosFlags;
-

@@ -1,7 +1,6 @@
-use crate::{Int32, KrbSafeBody, Checksum};
+use crate::{Checksum, Int32, KrbSafeBody};
 use red_asn1::Asn1Object;
 use red_asn1_derive::Sequence;
-
 
 /// (*KRB-SAFE*) Used to send a tamper-proof message to a peer.
 /// Defined in RFC4120, section 5.6.1.
@@ -23,6 +22,5 @@ pub struct KrbSafe {
     #[seq_field(context_tag = 2)]
     pub safe_body: KrbSafeBody,
     #[seq_field(context_tag = 3)]
-    pub cksum: Checksum
-
+    pub cksum: Checksum,
 }

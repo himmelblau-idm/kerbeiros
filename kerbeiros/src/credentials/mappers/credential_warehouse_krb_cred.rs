@@ -1,6 +1,6 @@
 use super::super::*;
 use super::*;
-use kerberos_asn1::{EncKrbCredPart, EncryptedData, KrbCred, Asn1Object};
+use kerberos_asn1::{Asn1Object, EncKrbCredPart, EncryptedData, KrbCred};
 use kerberos_constants::etypes::NO_ENCRYPTION;
 
 pub struct CredentialWarehouseKrbCredMapper {}
@@ -169,7 +169,7 @@ mod test {
         sname: PrincipalName,
         caddr: HostAddresses,
     ) -> KrbCredInfo {
-        return  KrbCredInfo {
+        return KrbCredInfo {
             key: encryption_key,
             prealm: Some(prealm),
             pname: Some(pname),

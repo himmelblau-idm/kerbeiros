@@ -1,4 +1,3 @@
-
 /// (*UInt32*) Kerberos u32.
 /// Defined RFC4120, section 5.2.4.
 /// ```asn1

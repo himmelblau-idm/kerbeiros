@@ -1,13 +1,13 @@
 use super::{
     address_vector_to_host_addresses,
     authtime_starttime_endtime_renew_till_to_times, encryption_key_to_keyblock,
-    keyblock_to_encryption_key, principal_to_realm_and_principal_name,
+    host_addresses_to_address_vector, keyblock_to_encryption_key,
+    principal_to_realm_and_principal_name,
     realm_and_principal_name_to_principal, ticket_flags_to_tktflags,
     times_to_authtime_starttime_endtime_renew_till, tktflags_to_ticket_flags,
-    host_addresses_to_address_vector
 };
-use crate::{ConvertError, ConvertResult};
 use crate::Credential;
+use crate::{ConvertError, ConvertResult};
 use kerberos_asn1::{Asn1Object, KrbCredInfo, Ticket};
 
 pub fn credential_to_krb_cred_info_and_ticket(
@@ -36,10 +36,10 @@ pub fn credential_to_krb_cred_info_and_ticket(
         prealm: Some(crealm),
         pname: Some(cname),
         flags: Some(ticket_flags),
-        authtime: authtime,
-        starttime: starttime,
-        endtime: endtime,
-        renew_till: renew_till,
+        authtime,
+        starttime,
+        endtime,
+        renew_till,
         srealm: Some(srealm),
         sname: Some(sname),
         caddr: None,
@@ -96,7 +96,7 @@ pub fn krb_cred_info_and_ticket_to_credential(
     } else {
         Vec::new()
     };
-     
+
     return Ok(Credential {
         client,
         server,
@@ -107,6 +107,6 @@ pub fn krb_cred_info_and_ticket_to_credential(
         addrs,
         authdata: Vec::new(),
         ticket: ticket.build().into(),
-        second_ticket: Vec::new().into()
+        second_ticket: Vec::new().into(),
     });
 }

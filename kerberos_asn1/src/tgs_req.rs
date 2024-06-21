@@ -1,6 +1,6 @@
-use red_asn1::{SequenceOf, Asn1Object};
+use crate::{Int32, KdcReq, KdcReqBody, PaData};
+use red_asn1::{Asn1Object, SequenceOf};
 use red_asn1_derive::Sequence;
-use crate::{Int32, PaData, KdcReqBody, KdcReq};
 
 /// (*TGS-REQ*) Message used to request a TGS.
 /// ```asn1
@@ -35,8 +35,8 @@ impl Default for TgsReq {
             pvno: 5,
             msg_type: 12,
             padata: Option::default(),
-            req_body: KdcReqBody::default()
-        }
+            req_body: KdcReqBody::default(),
+        };
     }
 }
 
@@ -46,7 +46,7 @@ impl From<KdcReq> for TgsReq {
             pvno: req.pvno,
             msg_type: 12,
             padata: req.padata,
-            req_body: req.req_body
+            req_body: req.req_body,
         }
     }
 }

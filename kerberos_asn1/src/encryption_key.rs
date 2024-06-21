@@ -56,7 +56,6 @@ mod test {
         );
     }
 
-
     #[test]
     fn test_build_encryption_key() {
         let encryption_key = EncryptionKey::new(

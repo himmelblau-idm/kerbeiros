@@ -143,8 +143,8 @@ mod pa_data;
 pub use pa_data::{
     AdAndOr, AdIfRelevant, AdKdcIssued, AdMandatoryForKdc, EtypeInfo,
     EtypeInfo2, EtypeInfo2Entry, EtypeInfoEntry, KerbPaPacRequest, MethodData,
-    PaData, PaEncTimestamp, PaEncTsEnc, PaForUser, PaPacOptions,
-    PaSupportedEnctypes, S4uUserId, PaS4uX509User
+    PaData, PaEncTimestamp, PaEncTsEnc, PaForUser, PaPacOptions, PaS4uX509User,
+    PaSupportedEnctypes, S4uUserId,
 };
 
 mod encrypted_data;

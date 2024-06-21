@@ -1,6 +1,5 @@
-use crate::{Result, Error};
+use crate::{Error, Result};
 use std::io;
-pub use std::net::IpAddr;
 use std::net::*;
 
 use super::transporter_trait::*;
@@ -16,7 +15,10 @@ impl UDPTransporter {
         return Self { dst_addr };
     }
 
-    fn request_and_response_udp(&self, raw_request: &[u8]) -> io::Result<Vec<u8>> {
+    fn request_and_response_udp(
+        &self,
+        raw_request: &[u8],
+    ) -> io::Result<Vec<u8>> {
         let udp_socket = UdpSocket::bind("0.0.0.0:0")?;
         udp_socket.connect(self.dst_addr)?;
 
@@ -24,13 +26,16 @@ impl UDPTransporter {
 
         let data_length = self.calculate_response_size(&udp_socket)?;
 
-        let mut raw_response = vec![0; data_length as usize];
+        let mut raw_response = vec![0; data_length];
         udp_socket.recv(&mut raw_response)?;
 
         return Ok(raw_response);
     }
 
-    fn calculate_response_size(&self, udp_socket: &UdpSocket) -> io::Result<usize> {
+    fn calculate_response_size(
+        &self,
+        udp_socket: &UdpSocket,
+    ) -> io::Result<usize> {
         let mut raw_response = vec![0; 2048];
         let mut data_length = udp_socket.peek(&mut raw_response)?;
         while data_length == raw_response.len() {
@@ -57,8 +62,10 @@ mod tests {
     #[should_panic(expected = "NetworkError")]
     #[test]
     fn test_request_networks_error() {
-        let requester =
-            UDPTransporter::new(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 88));
+        let requester = UDPTransporter::new(SocketAddr::new(
+            IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+            88,
+        ));
         requester.request_and_response(&vec![]).unwrap();
     }
 }

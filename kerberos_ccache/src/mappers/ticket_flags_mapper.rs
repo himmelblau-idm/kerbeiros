@@ -28,10 +28,7 @@ mod test {
             | ticket_flags::INITIAL
             | ticket_flags::PRE_AUTHENT;
 
-        assert_eq!(
-            tktflags,
-            ticket_flags_to_tktflags(&ticket_flags)
-        );
+        assert_eq!(tktflags, ticket_flags_to_tktflags(&ticket_flags));
     }
 
     #[test]
@@ -50,9 +47,6 @@ mod test {
             | ticket_flags::INITIAL
             | ticket_flags::PRE_AUTHENT;
 
-        assert_eq!(
-            ticket_flags,
-            tktflags_to_ticket_flags(tktflags)
-        );
+        assert_eq!(ticket_flags, tktflags_to_ticket_flags(tktflags));
     }
 }

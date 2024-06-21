@@ -20,4 +20,3 @@ use crate::KerberosFlags;
 ///         -- ok-as-delegate(13)
 /// ```
 pub type TicketFlags = KerberosFlags;
-

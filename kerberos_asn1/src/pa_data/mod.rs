@@ -1,4 +1,3 @@
-
 mod ad_and_or;
 pub use ad_and_or::AdAndOr;
 
@@ -29,6 +28,7 @@ pub use kerb_pa_pac_request::KerbPaPacRequest;
 mod method_data;
 pub use method_data::MethodData;
 
+#[allow(clippy::module_inception)]
 mod pa_data;
 pub use pa_data::PaData;
 

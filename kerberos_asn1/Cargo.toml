@@ -14,3 +14,5 @@ red_asn1 = "0.3"
 red_asn1_derive = "0.2"
 chrono = "0.4"
 
+[lints.clippy]
+needless_return = "allow"

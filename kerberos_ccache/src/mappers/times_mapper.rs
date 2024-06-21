@@ -51,29 +51,28 @@ pub fn times_to_authtime_starttime_endtime_renew_till(
     let authtime = match times.authtime {
         0 => None,
         _ => Some(KerberosTime::from(
-            Utc.timestamp(times.authtime as i64, 0),
-        )),
-    };
-    
-    let starttime = match times.starttime {
-        0 => None,
-        _ => Some(KerberosTime::from(
-            Utc.timestamp(times.starttime as i64, 0),
-        )),
-    };
-    
-    let endtime = match times.endtime {
-        0 => None,
-        _ => Some(KerberosTime::from(
-            Utc.timestamp(times.endtime as i64, 0),
+            Utc.timestamp_opt(times.authtime as i64, 0).unwrap(),
         )),
     };
 
-    
+    let starttime = match times.starttime {
+        0 => None,
+        _ => Some(KerberosTime::from(
+            Utc.timestamp_opt(times.starttime as i64, 0).unwrap(),
+        )),
+    };
+
+    let endtime = match times.endtime {
+        0 => None,
+        _ => Some(KerberosTime::from(
+            Utc.timestamp_opt(times.endtime as i64, 0).unwrap(),
+        )),
+    };
+
     let renew_till = match times.renew_till {
         0 => None,
         _ => Some(KerberosTime::from(
-            Utc.timestamp(times.renew_till as i64, 0),
+            Utc.timestamp_opt(times.renew_till as i64, 0).unwrap(),
         )),
     };
 

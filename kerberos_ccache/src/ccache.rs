@@ -2,11 +2,11 @@ use super::credential::Credential;
 use super::header::Header;
 use super::principal::Principal;
 use crate::mappers::{ccache_to_krb_cred, krb_cred_to_ccache};
+use crate::{ConvertError, ConvertResult};
 use kerberos_asn1::KrbCred;
 use nom::number::complete::be_u16;
 use nom::{many0, named, tag, IResult};
 use std::convert::{TryFrom, TryInto};
-use crate::{ConvertResult, ConvertError};
 
 named!(parse_version, tag!(&[0x05, 0x04]));
 named!(parse_credentials<&[u8], Vec<Credential>>, many0!(Credential::parse));
@@ -86,7 +86,6 @@ impl TryFrom<KrbCred> for CCache {
         return krb_cred_to_ccache(krb_cred);
     }
 }
-
 
 impl TryInto<KrbCred> for CCache {
     type Error = ConvertError;
