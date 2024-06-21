@@ -144,10 +144,10 @@ mod test {
             | ticket_flags::PRE_AUTHENT;
 
         let time = Times::new(
-            Utc.ymd(2019, 4, 18).and_hms(06, 00, 31).timestamp() as u32,
-            Utc.ymd(2019, 4, 18).and_hms(06, 00, 31).timestamp() as u32,
-            Utc.ymd(2019, 4, 18).and_hms(16, 00, 31).timestamp() as u32,
-            Utc.ymd(2019, 4, 25).and_hms(06, 00, 31).timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap().timestamp() as u32,
         );
 
         let ticket = create_ticket(
@@ -197,13 +197,13 @@ mod test {
             EncryptionKey::new(AES256_CTS_HMAC_SHA1_96, vec![0x77]);
 
         let auth_time =
-            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
         let starttime =
-            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
         let endtime =
-            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(16, 00, 31));
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap());
         let renew_till =
-            KerberosTime::from(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31));
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap());
 
         let caddr = vec![HostAddress::new(
             NETBIOS,

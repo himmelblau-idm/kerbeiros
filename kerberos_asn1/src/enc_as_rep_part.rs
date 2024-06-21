@@ -156,7 +156,7 @@ mod test {
         let last_req = vec![LastReqEntry {
             lr_type: 0,
             lr_value: KerberosTime::from(
-                Utc.ymd(2019, 4, 18).and_hms(06, 00, 31),
+                Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
             ),
         }];
 
@@ -186,20 +186,20 @@ mod test {
             last_req,
             nonce: 104645460,
             key_expiration: Some(KerberosTime::from(
-                Utc.ymd(2037, 9, 14).and_hms(02, 48, 05),
+                Utc.with_ymd_and_hms(2037, 9, 14, 02, 48, 05).unwrap(),
             )),
             flags: ticket_flags,
             authtime: KerberosTime::from(
-                Utc.ymd(2019, 4, 18).and_hms(06, 00, 31),
+                Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
             ),
             starttime: Some(KerberosTime::from(
-                Utc.ymd(2019, 4, 18).and_hms(06, 00, 31),
+                Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
             )),
             endtime: KerberosTime::from(
-                Utc.ymd(2019, 4, 18).and_hms(16, 00, 31),
+                Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap(),
             ),
             renew_till: Some(KerberosTime::from(
-                Utc.ymd(2019, 4, 25).and_hms(06, 00, 31),
+                Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap(),
             )),
             srealm: Realm::from("KINGDOM.HEARTS"),
             sname,

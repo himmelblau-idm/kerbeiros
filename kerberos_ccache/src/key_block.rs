@@ -108,7 +108,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "[0], Eof")]
+    #[should_panic(expected = "input: [0], code: Eof")]
     fn test_parse_keyblock_from_bytes_panic() {
         KeyBlock::parse(&[0x00]).unwrap();
     }

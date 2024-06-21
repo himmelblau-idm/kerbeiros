@@ -74,7 +74,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "[0], Eof")]
+    #[should_panic(expected = "input: [0], code: Eof")]
     fn parse_deltatime_from_bytes_error() {
         DeltaTime::parse(&[0x0]).unwrap();
     }

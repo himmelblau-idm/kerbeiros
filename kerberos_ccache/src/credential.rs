@@ -377,10 +377,10 @@ mod test {
             | ticket_flags::PRE_AUTHENT;
 
         let time = Times::new(
-            Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,
-            Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,
-            Utc.ymd(2019, 7, 8).and_hms(0, 23, 33).timestamp() as u32,
-            Utc.ymd(2019, 7, 8).and_hms(14, 23, 30).timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30).unwrap().timestamp() as u32,
         );
 
         let credential = Credential::new(
@@ -436,10 +436,10 @@ mod test {
             | ticket_flags::PRE_AUTHENT;
 
         let time = Times::new(
-            Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,
-            Utc.ymd(2019, 7, 7).and_hms(14, 23, 33).timestamp() as u32,
-            Utc.ymd(2019, 7, 8).and_hms(0, 23, 33).timestamp() as u32,
-            Utc.ymd(2019, 7, 8).and_hms(14, 23, 30).timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 7, 14, 23, 33).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 8, 0, 23, 33).unwrap().timestamp() as u32,
+            Utc.with_ymd_and_hms(2019, 7, 8, 14, 23, 30).unwrap().timestamp() as u32,
         );
 
         let credential = Credential::new(
@@ -456,7 +456,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "[0], Eof")]
+    #[should_panic(expected = "input: [0], code: Eof")]
     fn test_parse_ccache_credential_panic() {
         Credential::parse(&[0x0]).unwrap();
     }

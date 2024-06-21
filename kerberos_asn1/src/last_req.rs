@@ -51,7 +51,7 @@ mod test {
         let last_req = vec![LastReqEntry {
             lr_type: 0,
             lr_value: KerberosTime::from(
-                Utc.ymd(2019, 4, 18).and_hms(06, 00, 31),
+                Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap(),
             ),
         }];
 

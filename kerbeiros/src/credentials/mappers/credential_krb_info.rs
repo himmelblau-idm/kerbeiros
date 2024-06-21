@@ -169,13 +169,13 @@ mod test {
         );
 
         let auth_time =
-            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
         let starttime =
-            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31));
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap());
         let endtime =
-            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(16, 00, 31));
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap());
         let renew_till =
-            KerberosTime::from(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31));
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap());
 
         let caddr = vec![HostAddress::new(
             NETBIOS,
@@ -344,7 +344,7 @@ mod test {
     }
 
     #[should_panic(
-        expected = "Key etype = 17 doesn\\\'t match with message etype = 18"
+        expected = "Key etype = 17 doesn't match with message etype = 18"
     )]
     #[test]
     fn decode_and_decrypt_enc_part_aes256_with_key_of_aes128() {
@@ -453,7 +453,7 @@ mod test {
         let mut last_req = LastReq::default();
         last_req.push(LastReqEntry::new(
             0,
-            KerberosTime::from(Utc.ymd(2019, 4, 18).and_hms(06, 00, 31)),
+            KerberosTime::from(Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap()),
         ));
 
         let ticket_flags = TicketFlags::from(
@@ -463,7 +463,7 @@ mod test {
                 | ticket_flags::RENEWABLE,
         );
 
-        let kerb_time = Utc.ymd(2019, 4, 18).and_hms(06, 00, 31);
+        let kerb_time = Utc.with_ymd_and_hms(2019, 4, 18, 06, 00, 31).unwrap();
 
         let mut sname =
             PrincipalName::new(NT_SRV_INST, KerberosString::from("krbtgt"));
@@ -480,13 +480,13 @@ mod test {
             last_req,
             nonce: 104645460,
             key_expiration: Some(
-                Utc.ymd(2037, 9, 14).and_hms(02, 48, 05).into(),
+                Utc.with_ymd_and_hms(2037, 9, 14, 02, 48, 05).unwrap().into(),
             ),
             flags: ticket_flags,
             authtime: kerb_time.clone().into(),
             starttime: Some(kerb_time.into()),
-            endtime: Utc.ymd(2019, 4, 18).and_hms(16, 00, 31).into(),
-            renew_till: Some(Utc.ymd(2019, 4, 25).and_hms(06, 00, 31).into()),
+            endtime: Utc.with_ymd_and_hms(2019, 4, 18, 16, 00, 31).unwrap().into(),
+            renew_till: Some(Utc.with_ymd_and_hms(2019, 4, 25, 06, 00, 31).unwrap().into()),
             srealm: Realm::from("KINGDOM.HEARTS"),
             sname,
             caddr: None,

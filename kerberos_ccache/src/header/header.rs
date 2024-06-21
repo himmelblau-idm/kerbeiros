@@ -82,7 +82,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "[0], Eof")]
+    #[should_panic(expected = "input: [0], code: Eof")]
     fn test_parse_header_panic() {
         Header::parse(&[0x00]).unwrap();
     }
