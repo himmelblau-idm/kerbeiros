@@ -20,18 +20,20 @@ pub fn ccache_to_krb_cred(ccache: CCache) -> ConvertResult<KrbCred> {
         tickets.push(ticket);
     }
 
-    let mut enc_krb_cred_part = EncKrbCredPart::default();
-    enc_krb_cred_part.ticket_info = infos;
-
-    let mut krb_cred = KrbCred::default();
-    krb_cred.tickets = tickets;
-    krb_cred.enc_part = EncryptedData {
-        etype: NO_ENCRYPTION,
-        kvno: None,
-        cipher: enc_krb_cred_part.build(),
+    let enc_krb_cred_part = EncKrbCredPart {
+        ticket_info: infos,
+        ..Default::default()
     };
 
-    return Ok(krb_cred);
+    Ok(KrbCred {
+        tickets,
+        enc_part: EncryptedData {
+            etype: NO_ENCRYPTION,
+            kvno: None,
+            cipher: enc_krb_cred_part.build(),
+        },
+        ..Default::default()
+    })
 }
 
 pub fn krb_cred_to_ccache(krb_cred: KrbCred) -> ConvertResult<CCache> {
@@ -44,7 +46,7 @@ pub fn krb_cred_to_ccache(krb_cred: KrbCred) -> ConvertResult<CCache> {
     let (_, enc_krb_cred_part) =
         EncKrbCredPart::parse(&krb_cred.enc_part.cipher)?;
 
-    if krb_cred.tickets.len() == 0 || enc_krb_cred_part.ticket_info.len() == 0 {
+    if krb_cred.tickets.is_empty() || enc_krb_cred_part.ticket_info.is_empty() {
         return Err(ConvertError::KrbCredError(
             "No credentials contained".into(),
         ));
@@ -52,12 +54,12 @@ pub fn krb_cred_to_ccache(krb_cred: KrbCred) -> ConvertResult<CCache> {
 
     let ticket_infos = enc_krb_cred_part.ticket_info;
 
-    let realm_primary = &(&ticket_infos[0])
+    let realm_primary = &(ticket_infos[0])
         .prealm
         .as_ref()
         .ok_or(ConvertError::MissingField("prealm".into()))?;
 
-    let principal_name_primary = &(&ticket_infos[0])
+    let principal_name_primary = &(ticket_infos[0])
         .pname
         .as_ref()
         .ok_or(ConvertError::MissingField("pname".into()))?;
@@ -288,5 +290,4 @@ mod test {
             EncryptedData::new(AES256_CTS_HMAC_SHA1_96, None, vec![0x0]),
         );
     }
-
 }

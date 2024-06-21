@@ -63,6 +63,5 @@ pub const KEY_USAGE_KRB_CRED_ENC_PART: i32 = 14;
 /// application
 pub const KEY_USAGE_KRB_SAFE_CKSUM: i32 = 15;
 
-
 pub const KEY_USAGE_KERB_NON_KERB_SALT: i32 = 16;
 pub const KEY_USAGE_KERB_NON_KERB_CKSUM_SALT: i32 = 17;

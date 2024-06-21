@@ -1,7 +1,7 @@
-use red_asn1::{SequenceOf, Asn1Object};
-use red_asn1_derive::Sequence;
-use crate::{Int32, PaData, KdcReqBody};
 use crate::{AsReq, TgsReq};
+use crate::{Int32, KdcReqBody, PaData};
+use red_asn1::{Asn1Object, SequenceOf};
+use red_asn1_derive::Sequence;
 
 /// (*KDC-REQ*) Base for AS-REQ and TGS-REQ
 /// ```asn1
@@ -34,8 +34,8 @@ impl Default for KdcReq {
             pvno: 5,
             msg_type: Int32::default(),
             padata: Option::default(),
-            req_body: KdcReqBody::default()
-        }
+            req_body: KdcReqBody::default(),
+        };
     }
 }
 
@@ -45,7 +45,7 @@ impl From<AsReq> for KdcReq {
             pvno: req.pvno,
             msg_type: req.msg_type,
             padata: req.padata,
-            req_body: req.req_body
+            req_body: req.req_body,
         }
     }
 }
@@ -56,7 +56,7 @@ impl From<TgsReq> for KdcReq {
             pvno: req.pvno,
             msg_type: req.msg_type,
             padata: req.padata,
-            req_body: req.req_body
+            req_body: req.req_body,
         }
     }
 }

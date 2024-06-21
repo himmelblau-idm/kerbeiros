@@ -1,4 +1,4 @@
-use crate::{Int32, AuthorizationData};
+use crate::{AuthorizationData, Int32};
 use red_asn1::Asn1Object;
 use red_asn1_derive::Sequence;
 

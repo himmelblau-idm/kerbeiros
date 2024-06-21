@@ -2,7 +2,6 @@
 
 use rand::RngCore;
 
-
 /// Generates an vector with random bytes
 pub fn random_bytes(size: usize) -> Vec<u8> {
     let mut rng = rand::thread_rng();
@@ -22,7 +21,6 @@ pub fn xorbytes(v1: &[u8], v2: &[u8]) -> Vec<u8> {
 
     return v_xored;
 }
-
 
 pub fn string_unicode_bytes(s: &str) -> Vec<u8> {
     let s_utf16: Vec<u16> = s.encode_utf16().collect();

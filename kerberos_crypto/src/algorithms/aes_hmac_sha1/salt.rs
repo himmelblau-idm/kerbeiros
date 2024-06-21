@@ -3,7 +3,7 @@ pub fn generate_salt(realm: &str, client_name: &str) -> Vec<u8> {
     let mut salt = realm.to_uppercase();
     let mut lowercase_username = client_name.to_lowercase();
 
-    if lowercase_username.ends_with("$") {
+    if lowercase_username.ends_with('$') {
         // client name = "host<client_name>.lower.domain.com"
         salt.push_str("host");
         lowercase_username.pop();

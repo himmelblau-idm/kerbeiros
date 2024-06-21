@@ -5,7 +5,6 @@
 mod encrypt;
 pub use encrypt::{decrypt, encrypt};
 
-
 mod key;
 pub use key::{generate_key, generate_key_from_string};
 

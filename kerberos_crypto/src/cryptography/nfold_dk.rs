@@ -66,7 +66,7 @@ fn divide_in_exact_n_bytes_chunks(v: &[u8], nbytes: usize) -> Vec<Vec<u8>> {
     return nbytes_chunks;
 }
 
-fn add_chunks_with_1s_complement_addition(chunks: &Vec<Vec<u8>>) -> Vec<u8> {
+fn add_chunks_with_1s_complement_addition(chunks: &[Vec<u8>]) -> Vec<u8> {
     let mut result = chunks[0].clone();
     for chunk in chunks[1..].iter() {
         result = add_chunk_with_1s_complement(&result, chunk);
@@ -74,10 +74,7 @@ fn add_chunks_with_1s_complement_addition(chunks: &Vec<Vec<u8>>) -> Vec<u8> {
     return result;
 }
 
-fn add_chunk_with_1s_complement(
-    chunk_1: &Vec<u8>,
-    chunk_2: &Vec<u8>,
-) -> Vec<u8> {
+fn add_chunk_with_1s_complement(chunk_1: &[u8], chunk_2: &[u8]) -> Vec<u8> {
     let mut tmp_add = add_chunks_as_u16_vector(chunk_1, chunk_2);
 
     while tmp_add.iter().any(|&x| x > 0xff) {
@@ -87,7 +84,7 @@ fn add_chunk_with_1s_complement(
     return convert_u16_vector_to_u8_vector(&tmp_add);
 }
 
-fn add_chunks_as_u16_vector(chunk_1: &Vec<u8>, chunk_2: &Vec<u8>) -> Vec<u16> {
+fn add_chunks_as_u16_vector(chunk_1: &[u8], chunk_2: &[u8]) -> Vec<u16> {
     let mut tmp_add: Vec<u16> = vec![0; chunk_1.len()];
 
     for j in 0..chunk_1.len() {
@@ -97,7 +94,7 @@ fn add_chunks_as_u16_vector(chunk_1: &Vec<u8>, chunk_2: &Vec<u8>) -> Vec<u16> {
     return tmp_add;
 }
 
-fn propagate_carry_bits(tmp_add: &mut Vec<u16>) {
+fn propagate_carry_bits(tmp_add: &mut [u16]) {
     let mut aux_vector: Vec<u16> = vec![0; tmp_add.len()];
 
     for i in 0..tmp_add.len() {
@@ -107,12 +104,10 @@ fn propagate_carry_bits(tmp_add: &mut Vec<u16>) {
             % tmp_add.len();
         aux_vector[i] = (tmp_add[index] >> 8) + (tmp_add[i] & 0xff)
     }
-    for i in 0..tmp_add.len() {
-        tmp_add[i] = aux_vector[i];
-    }
+    tmp_add.copy_from_slice(&aux_vector[..tmp_add.len()]);
 }
 
-fn convert_u16_vector_to_u8_vector(v: &Vec<u16>) -> Vec<u8> {
+fn convert_u16_vector_to_u8_vector(v: &[u16]) -> Vec<u8> {
     return v.iter().map(|&x| x as u8).collect();
 }
 

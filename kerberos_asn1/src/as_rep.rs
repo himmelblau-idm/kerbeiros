@@ -75,10 +75,10 @@ impl AsRep {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::{EtypeInfo2Entry, KerberosString};
     use kerberos_constants::etypes::*;
     use kerberos_constants::pa_data_types::PA_ETYPE_INFO2;
     use kerberos_constants::principal_names::*;
-    use crate::{EtypeInfo2Entry, KerberosString};
 
     #[test]
     fn decode_as_rep() {

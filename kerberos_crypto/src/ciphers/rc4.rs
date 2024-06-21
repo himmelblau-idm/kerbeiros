@@ -40,6 +40,12 @@ impl Rc4Cipher {
     }
 }
 
+impl Default for Rc4Cipher {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl KerberosCipher for Rc4Cipher {
     fn etype(&self) -> i32 {
         return RC4_HMAC;
@@ -62,23 +68,21 @@ impl KerberosCipher for Rc4Cipher {
         key_usage: i32,
         ciphertext: &[u8],
     ) -> Result<Vec<u8>> {
-        let real_key_usage;
-        if key_usage == 3 {
-            real_key_usage = 8; // RFC 4757 rules
+        let real_key_usage = if key_usage == 3 {
+            8 // RFC 4757 rules
         } else {
-            real_key_usage = key_usage;
-        }
+            key_usage
+        };
         return rc4_hmac_md5::decrypt(key, real_key_usage, ciphertext);
     }
 
     fn encrypt(&self, key: &[u8], key_usage: i32, plaintext: &[u8]) -> Vec<u8> {
         let preamble = self.preamble();
-        let real_key_usage;
-        if key_usage == 3 {
-            real_key_usage = 8; // RFC 4757 rules
+        let real_key_usage = if key_usage == 3 {
+            8 // RFC 4757 rules
         } else {
-            real_key_usage = key_usage;
-        }
+            key_usage
+        };
         return rc4_hmac_md5::encrypt(
             key,
             real_key_usage,

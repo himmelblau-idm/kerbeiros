@@ -21,3 +21,6 @@ failure_derive = "0.1.5"
 rand = "0.6.5"
 dns-lookup = "1.0"
 getset = "0.1"
+
+[lints.clippy]
+needless_return = "allow"

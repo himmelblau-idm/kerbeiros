@@ -30,7 +30,7 @@ impl AuthDataMapper {
     ) -> MethodData {
         return auth_datas
             .into_iter()
-            .map(|auth_data| Self::auth_data_to_padata(auth_data))
+            .map(Self::auth_data_to_padata)
             .collect();
     }
 }
@@ -38,7 +38,7 @@ impl AuthDataMapper {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_asn1::{KerbPaPacRequest, Asn1Object};
+    use kerberos_asn1::{Asn1Object, KerbPaPacRequest};
     use kerberos_ccache::Address;
     use kerberos_constants::pa_data_types::*;
 
@@ -70,8 +70,10 @@ mod test {
             .push(Address::new(9, CountedOctetString::new(vec![0x8, 0x9])));
 
         let mut method_data = MethodData::default();
-        method_data
-            .push(PaData::new(PA_PAC_REQUEST, KerbPaPacRequest::new(true).build()));
+        method_data.push(PaData::new(
+            PA_PAC_REQUEST,
+            KerbPaPacRequest::new(true).build(),
+        ));
         method_data.push(PaData::new(9, vec![0x8, 0x9]));
 
         assert_eq!(
@@ -82,7 +84,8 @@ mod test {
 
     #[test]
     fn auth_data_to_padata() {
-        let padata = PaData::new(PA_PAC_REQUEST, KerbPaPacRequest::new(true).build());
+        let padata =
+            PaData::new(PA_PAC_REQUEST, KerbPaPacRequest::new(true).build());
 
         let auth_data = AuthData::new(
             PA_PAC_REQUEST as u16,
@@ -107,7 +110,10 @@ mod test {
             .push(Address::new(9, CountedOctetString::new(vec![0x8, 0x9])));
 
         let mut method_data = MethodData::default();
-        method_data.push(PaData::new(PA_PAC_REQUEST, KerbPaPacRequest::new(true).build()));
+        method_data.push(PaData::new(
+            PA_PAC_REQUEST,
+            KerbPaPacRequest::new(true).build(),
+        ));
         method_data.push(PaData::new(9, vec![0x8, 0x9]));
 
         assert_eq!(

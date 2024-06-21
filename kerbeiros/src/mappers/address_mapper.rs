@@ -8,13 +8,15 @@ pub struct AddressMapper {}
 
 impl AddressMapper {
     pub fn host_address_to_address(host_address: &HostAddress) -> Address {
-
         let address = if host_address.addr_type == NETBIOS {
-            String::from_utf8_lossy(&host_address.address).trim_end().as_bytes().to_vec()
+            String::from_utf8_lossy(&host_address.address)
+                .trim_end()
+                .as_bytes()
+                .to_vec()
         } else {
             host_address.address.clone()
         };
-        
+
         return Address::new(
             host_address.addr_type as u16,
             CountedOctetString::new(address),
@@ -53,7 +55,7 @@ impl AddressMapper {
     pub fn address_vector_to_host_addresses(
         mut addresses: Vec<Address>,
     ) -> Result<HostAddresses> {
-        if addresses.len() == 0 {
+        if addresses.is_empty() {
             return Err(Error::NoAddress)?;
         }
         let main_address = addresses.remove(0);
@@ -61,7 +63,7 @@ impl AddressMapper {
         let mut host_addresses =
             vec![Self::address_to_host_address(main_address)?];
 
-        while addresses.len() > 0 {
+        while !addresses.is_empty() {
             host_addresses
                 .push(Self::address_to_host_address(addresses.remove(0))?);
         }
@@ -109,10 +111,7 @@ mod test {
                 NETBIOS,
                 padd_netbios_string("KINGDOM.HEARTS".to_string()).into_bytes(),
             ),
-            HostAddress::new(
-                7,
-                "HOLLOWBASTION".as_bytes().to_vec(),
-            ),
+            HostAddress::new(7, "HOLLOWBASTION".as_bytes().to_vec()),
         ];
 
         assert_eq!(
@@ -168,10 +167,7 @@ mod test {
                 NETBIOS,
                 padd_netbios_string("KINGDOM.HEARTS".to_string()).into_bytes(),
             ),
-            HostAddress::new(
-                7,
-                "HOLLOWBASTION".as_bytes().to_vec(),
-            ),
+            HostAddress::new(7, "HOLLOWBASTION".as_bytes().to_vec()),
         ];
 
         assert_eq!(

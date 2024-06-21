@@ -1,14 +1,14 @@
-use crypto::rc4::Rc4;
-use crypto::symmetriccipher::SynchronousStreamCipher;
+use rc4::{consts::*, Key, KeyInit, Rc4, StreamCipher};
 
 /// Size of RC4 key , 16 bytes
 pub const RC4_KEY_SIZE: usize = 16;
 
 pub fn rc4_encrypt(key: &[u8], data: &[u8]) -> Vec<u8> {
+    let key = Key::<U16>::from_slice(key);
     let mut rc4_cipher = Rc4::new(key);
     let mut result: Vec<u8> = vec![0; data.len()];
-    rc4_cipher.process(data, &mut result);
-    return result;
+    rc4_cipher.apply_keystream_b2b(data, &mut result).unwrap();
+    result
 }
 
 pub fn rc4_decrypt(key: &[u8], ciphertext: &[u8]) -> Vec<u8> {

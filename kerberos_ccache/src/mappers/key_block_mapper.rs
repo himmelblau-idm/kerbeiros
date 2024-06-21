@@ -39,10 +39,7 @@ mod test {
             ],
         );
 
-        assert_eq!(
-            keyblock,
-            encryption_key_to_keyblock(encryption_key)
-        );
+        assert_eq!(keyblock, encryption_key_to_keyblock(encryption_key));
     }
 
     #[test]
@@ -67,9 +64,6 @@ mod test {
             ],
         );
 
-        assert_eq!(
-            encryption_key,
-            keyblock_to_encryption_key(keyblock)
-        );
+        assert_eq!(encryption_key, keyblock_to_encryption_key(keyblock));
     }
 }

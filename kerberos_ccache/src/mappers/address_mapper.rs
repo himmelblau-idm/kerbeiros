@@ -1,8 +1,8 @@
+use crate::{Address, CountedOctetString};
+use crate::{ConvertError, ConvertResult};
 use kerberos_asn1::{padd_netbios_string, HostAddress, HostAddresses};
 use kerberos_constants::address_types::NETBIOS;
 use std::convert::TryInto;
-use crate::{Address, CountedOctetString};
-use crate::{ConvertResult, ConvertError};
 
 pub fn host_address_to_address(host_address: HostAddress) -> Address {
     let address = if host_address.addr_type == NETBIOS {
@@ -48,16 +48,15 @@ pub fn address_to_host_address(address: Address) -> ConvertResult<HostAddress> {
 pub fn address_vector_to_host_addresses(
     mut addresses: Vec<Address>,
 ) -> ConvertResult<HostAddresses> {
-    if addresses.len() == 0 {
+    if addresses.is_empty() {
         return Err(ConvertError::NoAddress);
     }
     let main_address = addresses.remove(0);
 
     let mut host_addresses = vec![address_to_host_address(main_address)?];
 
-    while addresses.len() > 0 {
-        host_addresses
-            .push(address_to_host_address(addresses.remove(0))?);
+    while !addresses.is_empty() {
+        host_addresses.push(address_to_host_address(addresses.remove(0))?);
     }
 
     return Ok(host_addresses);
@@ -79,10 +78,7 @@ mod test {
             CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
         );
 
-        assert_eq!(
-            address,
-            host_address_to_address(host_address)
-        );
+        assert_eq!(address, host_address_to_address(host_address));
     }
 
     #[test]
@@ -105,10 +101,7 @@ mod test {
             HostAddress::new(7, "HOLLOWBASTION".as_bytes().to_vec()),
         ];
 
-        assert_eq!(
-            addresses,
-            host_addresses_to_address_vector(host_addresses)
-        );
+        assert_eq!(addresses, host_addresses_to_address_vector(host_addresses));
     }
 
     #[test]
@@ -123,10 +116,7 @@ mod test {
             CountedOctetString::new("KINGDOM.HEARTS".as_bytes().to_vec()),
         );
 
-        assert_eq!(
-            host_address,
-            address_to_host_address(address).unwrap()
-        );
+        assert_eq!(host_address, address_to_host_address(address).unwrap());
     }
 
     #[test]
@@ -135,10 +125,7 @@ mod test {
 
         let address = Address::new(1, CountedOctetString::new(vec![1, 2, 3]));
 
-        assert_eq!(
-            host_address,
-            address_to_host_address(address).unwrap()
-        );
+        assert_eq!(host_address, address_to_host_address(address).unwrap());
     }
 
     #[test]

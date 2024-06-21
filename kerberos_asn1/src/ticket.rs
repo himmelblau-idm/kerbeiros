@@ -266,12 +266,9 @@ mod test {
 
     #[test]
     fn test_build_ticket() {
-        let mut principal_name = PrincipalName::new(
-            NT_SRV_INST,
-            "krbtgt".to_string(),
-        );
-        principal_name
-            .push("KINGDOM.HEARTS".to_string());
+        let mut principal_name =
+            PrincipalName::new(NT_SRV_INST, "krbtgt".to_string());
+        principal_name.push("KINGDOM.HEARTS".to_string());
 
         let mut encrypted_data = EncryptedData::new(
             AES256_CTS_HMAC_SHA1_96,

@@ -1,4 +1,3 @@
-
 /// (*Microseconds*) Kerberos Microseconds.
 /// Defined in RFC4120, section 5.2.4.
 /// ```asn1

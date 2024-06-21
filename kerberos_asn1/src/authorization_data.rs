@@ -1,5 +1,5 @@
 use crate::Int32;
-use red_asn1::{OctetString, Asn1Object};
+use red_asn1::{Asn1Object, OctetString};
 use red_asn1_derive::Sequence;
 
 /// (*AuthorizationData*) Defined in RFC4120, section 5.2.6.
@@ -19,5 +19,5 @@ pub struct AuthorizationDataEntry {
     #[seq_field(context_tag = 0)]
     pub ad_type: Int32,
     #[seq_field(context_tag = 1)]
-    pub ad_data: OctetString
+    pub ad_data: OctetString,
 }

@@ -14,8 +14,7 @@ mod tests {
 
     #[test]
     fn test_encode_kerberos_string() {
-        let kerberos_string =
-            KerberosString::from("KINGDOM.HEARTS");
+        let kerberos_string = KerberosString::from("KINGDOM.HEARTS");
 
         assert_eq!(
             vec![
@@ -38,5 +37,4 @@ mod tests {
             .1
         );
     }
-
 }

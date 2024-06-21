@@ -14,7 +14,7 @@
 //! use ascii::AsciiString;
 //! use std::net::*;
 //! use kerberos_crypto::Key;
-//! 
+//!
 //! // Prepare the arguments
 //! let realm = AsciiString::from_ascii("CONTOSO.COM").unwrap();
 //! let kdc_address = IpAddr::V4(Ipv4Addr::new(192, 168, 0, 1));
@@ -40,7 +40,7 @@
 mod transporter;
 
 mod error;
-pub use error::{Result, Error};
+pub use error::{Error, Result};
 
 pub mod messages;
 pub use messages::*;

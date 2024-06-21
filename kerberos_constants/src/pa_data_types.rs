@@ -49,4 +49,3 @@ pub const KERB_KEY_LIST_REQ: i32 = 161;
 pub const KERB_KEY_LIST_REP: i32 = 162;
 pub const PA_SUPPORTED_ENCTYPES: i32 = 165;
 pub const PA_PAC_OPTIONS: i32 = 167;
-

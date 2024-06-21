@@ -1,8 +1,8 @@
 use crate::{
-    EncryptionKey, HostAddresses, KerberosTime, LastReq, PrincipalName, Realm,
-    TicketFlags, UInt32, PaData, EncKdcRepPart, EncTgsRepPart
+    EncKdcRepPart, EncTgsRepPart, EncryptionKey, HostAddresses, KerberosTime,
+    LastReq, PaData, PrincipalName, Realm, TicketFlags, UInt32,
 };
-use red_asn1::{SequenceOf, Asn1Object};
+use red_asn1::{Asn1Object, SequenceOf};
 use red_asn1_derive::Sequence;
 
 /// (*EncAsRepPart*) Holds the data that is encrypted
@@ -100,15 +100,15 @@ impl From<EncTgsRepPart> for EncAsRepPart {
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_constants::address_types::*;
-    use kerberos_constants::etypes::*;
-    use kerberos_constants::principal_names::*;
-    use kerberos_constants::ticket_flags::*;
-    use kerberos_constants::pa_data_types::*;
     use crate::{
         padd_netbios_string, HostAddress, KerberosString, LastReqEntry,
     };
     use chrono::prelude::*;
+    use kerberos_constants::address_types::*;
+    use kerberos_constants::etypes::*;
+    use kerberos_constants::pa_data_types::*;
+    use kerberos_constants::principal_names::*;
+    use kerberos_constants::ticket_flags::*;
 
     #[test]
     fn parse_enc_as_rep_part() {
@@ -176,13 +176,11 @@ mod test {
             padd_netbios_string("HOLLOWBASTION".to_string()).into_bytes(),
         );
 
-        let encrypted_pa_datas = vec![
-            PaData {
-                padata_type: PA_SUPPORTED_ENCTYPES,
-                padata_value: vec![0x1f, 0x0, 0x0, 0x0],
-            }
-        ];
-        
+        let encrypted_pa_datas = vec![PaData {
+            padata_type: PA_SUPPORTED_ENCTYPES,
+            padata_value: vec![0x1f, 0x0, 0x0, 0x0],
+        }];
+
         let enc_as_rep_part = EncAsRepPart {
             key: encryption_key,
             last_req,
@@ -209,9 +207,6 @@ mod test {
             encrypted_pa_data: Some(encrypted_pa_datas),
         };
 
-        assert_eq!(
-            enc_as_rep_part,
-            EncAsRepPart::parse(&raw).unwrap().1
-        );
+        assert_eq!(enc_as_rep_part, EncAsRepPart::parse(&raw).unwrap().1);
     }
 }

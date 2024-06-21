@@ -1,7 +1,7 @@
 use super::{CountedOctetString, KeyBlock};
+use nom::bytes::complete::take;
 use nom::multi::many_m_n;
 use nom::number::complete::{be_i32, be_u16, be_u32, be_u8};
-use nom::bytes::complete::take;
 use nom::IResult;
 
 /// Definition:
@@ -64,7 +64,7 @@ impl KeytabEntry {
             return Ok((raw, Self::default()));
         }
 
-        let (raw, raw_entry) = take (size as usize)(raw)?;
+        let (raw, raw_entry) = take(size as usize)(raw)?;
 
         let (raw_entry, num_components) = be_u16(raw_entry)?;
         let (raw_entry, realm) = CountedOctetString::parse(raw_entry)?;
@@ -80,13 +80,12 @@ impl KeytabEntry {
         let (raw_entry, vno8) = be_u8(raw_entry)?;
         let (raw_entry, key) = KeyBlock::parse(raw_entry)?;
 
-        let vno;
-        if raw_entry.len() > 0 {
+        let vno = if !raw_entry.is_empty() {
             let (_, v) = be_u32(raw_entry)?;
-            vno = Some(v);
-        }else  {
-            vno = None;
-        }
+            Some(v)
+        } else {
+            None
+        };
 
         return Ok((
             raw,
@@ -126,11 +125,17 @@ impl KeytabEntry {
 }
 
 impl Default for KeytabEntry {
-
     fn default() -> Self {
-        return Self::new(CountedOctetString::default(), Vec::new(), 0, 0, 0, KeyBlock::default(), Some(0));
+        return Self::new(
+            CountedOctetString::default(),
+            Vec::new(),
+            0,
+            0,
+            0,
+            KeyBlock::default(),
+            Some(0),
+        );
     }
-
 }
 
 #[cfg(test)]

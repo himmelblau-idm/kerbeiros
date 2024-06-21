@@ -1,11 +1,11 @@
 use super::as_requester::*;
 use crate::credentials::*;
-use kerberos_crypto::Key;
 use crate::transporter::*;
 use crate::{Error, Result};
 use ascii::AsciiString;
 use kerberos_asn1::{AsRep, KrbError};
 use kerberos_constants::error_codes::KDC_ERR_PREAUTH_REQUIRED;
+use kerberos_crypto::Key;
 use std::collections::HashSet;
 use std::net::IpAddr;
 
@@ -124,8 +124,8 @@ impl<'a> TGTRequest<'a> {
             return Err(Error::KrbErrorResponse(krb_error))?;
         }
 
-        if let Some(user_key) = self.user_key.clone() {
-            return self.request_2nd_as_req(&user_key);
+        if let Some(user_key) = self.user_key {
+            return self.request_2nd_as_req(user_key);
         }
 
         return Err(Error::KrbErrorResponse(krb_error))?;

@@ -1,8 +1,8 @@
-use crate::{Int32, ApOptions, Ticket, EncryptedData};
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use crate::{ApOptions, EncryptedData, Int32, Ticket};
 use kerberos_constants::message_types::KRB_AP_REQ;
 use kerberos_constants::protocol_version::PVNO;
+use red_asn1::Asn1Object;
+use red_asn1_derive::Sequence;
 
 /// (*AP-REQ*) Message sent to the application server to authenticate the client.
 /// Defined in RFC4120, section 5.5.1.
@@ -27,7 +27,7 @@ pub struct ApReq {
     #[seq_field(context_tag = 3)]
     pub ticket: Ticket,
     #[seq_field(context_tag = 4)]
-    pub authenticator: EncryptedData
+    pub authenticator: EncryptedData,
 }
 
 impl Default for ApReq {
@@ -37,7 +37,7 @@ impl Default for ApReq {
             msg_type: KRB_AP_REQ,
             ap_options: ApOptions::default(),
             ticket: Ticket::default(),
-            authenticator: EncryptedData::default()
+            authenticator: EncryptedData::default(),
         }
     }
 }

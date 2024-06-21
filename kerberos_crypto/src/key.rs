@@ -183,8 +183,8 @@ impl Key {
             return Err(Error::InvalidKeyLength(size * 2))?;
         }
 
-        return Ok(Self::convert_hex_string_into_byte_array(hex_str)
-            .map_err(|_| Error::InvalidKeyCharset)?);
+        return Self::convert_hex_string_into_byte_array(hex_str)
+            .map_err(|_| Error::InvalidKeyCharset);
     }
 
     fn convert_hex_string_into_byte_array(

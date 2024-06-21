@@ -2,8 +2,8 @@ use super::{
     counted_octet_string_to_kerberos_string,
     kerberos_string_to_counted_octet_string,
 };
-use crate::{ConvertError, ConvertResult};
 use crate::Principal;
+use crate::{ConvertError, ConvertResult};
 use kerberos_asn1::{PrincipalName, Realm};
 
 pub fn realm_and_principal_name_to_principal(
@@ -32,7 +32,7 @@ pub fn principal_to_realm_and_principal_name(
         names.push(counted_octet_string_to_kerberos_string(component)?);
     }
 
-    if names.len() == 0 {
+    if names.is_empty() {
         return Err(ConvertError::NoPrincipalName);
     }
 
@@ -40,7 +40,7 @@ pub fn principal_to_realm_and_principal_name(
     let mut principal_name =
         PrincipalName::new(principal.name_type as i32, main_name);
 
-    while names.len() > 0 {
+    while !names.is_empty() {
         principal_name.push(names.remove(0));
     }
 
@@ -70,10 +70,7 @@ mod test {
 
         assert_eq!(
             principal,
-            realm_and_principal_name_to_principal(
-                &realm,
-                &principal_name
-            )
+            realm_and_principal_name_to_principal(&realm, &principal_name)
         );
     }
 
@@ -91,8 +88,7 @@ mod test {
 
         assert_eq!(
             (realm, principal_name),
-            principal_to_realm_and_principal_name(principal)
-                .unwrap(),
+            principal_to_realm_and_principal_name(principal).unwrap(),
         );
     }
 
@@ -105,8 +101,7 @@ mod test {
             vec![],
         );
 
-        principal_to_realm_and_principal_name(principal)
-            .unwrap();
+        principal_to_realm_and_principal_name(principal).unwrap();
     }
 
     #[test]
@@ -128,8 +123,7 @@ mod test {
 
         assert_eq!(
             (realm, principal_name),
-            principal_to_realm_and_principal_name(principal)
-                .unwrap(),
+            principal_to_realm_and_principal_name(principal).unwrap(),
         );
     }
 }

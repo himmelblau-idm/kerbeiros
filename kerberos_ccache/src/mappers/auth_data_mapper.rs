@@ -25,17 +25,14 @@ pub fn auth_data_to_padata(auth_data: AuthData) -> PaData {
 pub fn auth_data_vector_to_method_data(
     auth_datas: Vec<AuthData>,
 ) -> MethodData {
-    return auth_datas
-        .into_iter()
-        .map(|auth_data| auth_data_to_padata(auth_data))
-        .collect();
+    return auth_datas.into_iter().map(auth_data_to_padata).collect();
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use kerberos_asn1::{Asn1Object, KerbPaPacRequest};
     use crate::Address;
+    use kerberos_asn1::{Asn1Object, KerbPaPacRequest};
     use kerberos_constants::pa_data_types::*;
 
     #[test]
@@ -72,10 +69,7 @@ mod test {
         ));
         method_data.push(PaData::new(9, vec![0x8, 0x9]));
 
-        assert_eq!(
-            auth_datas,
-            method_data_to_auth_data_vector(&method_data)
-        );
+        assert_eq!(auth_datas, method_data_to_auth_data_vector(&method_data));
     }
 
     #[test]
@@ -112,9 +106,6 @@ mod test {
         ));
         method_data.push(PaData::new(9, vec![0x8, 0x9]));
 
-        assert_eq!(
-            method_data,
-            auth_data_vector_to_method_data(auth_datas)
-        );
+        assert_eq!(method_data, auth_data_vector_to_method_data(auth_datas));
     }
 }

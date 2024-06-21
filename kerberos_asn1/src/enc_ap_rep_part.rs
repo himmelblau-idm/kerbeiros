@@ -1,4 +1,4 @@
-use crate::{KerberosTime, Microseconds, EncryptionKey, UInt32};
+use crate::{EncryptionKey, KerberosTime, Microseconds, UInt32};
 use red_asn1::Asn1Object;
 use red_asn1_derive::Sequence;
 

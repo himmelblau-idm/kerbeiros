@@ -12,7 +12,6 @@ use red_asn1_derive::Sequence;
 /// ```
 pub type LastReq = SequenceOf<LastReqEntry>;
 
-
 /// Entry of *LastReq*.
 /// Pseudotype defined in this library.
 /// Defined in RFC4120, 5.4.2.

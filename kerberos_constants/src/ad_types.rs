@@ -14,4 +14,3 @@ pub const SESAME: i32 = 65;
 pub const AD_OSF_DCE_PKI_CERTID: i32 = 66;
 pub const AD_WIN2K_PACK: i32 = 128;
 pub const AD_ETYPE_NEGOTIATION: i32 = 129;
-

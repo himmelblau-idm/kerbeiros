@@ -1,4 +1,4 @@
-use crate::cryptography::{pbkdf2_sha1, AesSizes, dk};
+use crate::cryptography::{dk, pbkdf2_sha1, AesSizes};
 
 /// Derive the AES key used to encrypt/decrypt from the user secret (password)
 pub fn generate_key(
@@ -16,7 +16,7 @@ pub fn generate_key_from_string(
     salt: &[u8],
     aes_sizes: &AesSizes,
 ) -> Vec<u8> {
-    return generate_key(string.as_bytes(), salt, aes_sizes)
+    return generate_key(string.as_bytes(), salt, aes_sizes);
 }
 
 #[cfg(test)]
@@ -132,7 +132,6 @@ mod test {
             )
         );
     }
-
 
     #[test]
     fn test_generate_key_from_string() {

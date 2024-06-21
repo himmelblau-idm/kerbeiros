@@ -1,5 +1,5 @@
-use crate::{Int32};
-use red_asn1::{OctetString, Asn1Object};
+use crate::Int32;
+use red_asn1::{Asn1Object, OctetString};
 use red_asn1_derive::Sequence;
 
 /// (*TransitedEncoding*) Lists the names of the Kerberos realms that took part in the client authentication.
@@ -18,5 +18,3 @@ pub struct TransitedEncoding {
     #[seq_field(context_tag = 1)]
     pub contents: OctetString,
 }
-
-

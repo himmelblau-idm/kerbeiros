@@ -27,7 +27,7 @@ pub fn checksum_sha_aes(
 
     let kc = dk(key, &key_usage_bytes, aes_sizes);
 
-    let mac = hmac_sha1(&kc, &plaintext);
+    let mac = hmac_sha1(&kc, plaintext);
 
     return mac[..12].to_vec();
 }

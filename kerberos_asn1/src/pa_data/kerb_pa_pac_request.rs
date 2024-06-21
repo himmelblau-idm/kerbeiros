@@ -45,9 +45,11 @@ mod test {
     fn test_decode_pac_request_true() {
         assert_eq!(
             KerbPaPacRequest::new(true),
-            KerbPaPacRequest::parse(&[0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff])
-                .unwrap()
-                .1
+            KerbPaPacRequest::parse(&[
+                0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0xff
+            ])
+            .unwrap()
+            .1
         );
     }
 
@@ -55,9 +57,11 @@ mod test {
     fn test_decode_pac_request_false() {
         assert_eq!(
             KerbPaPacRequest::new(false),
-            KerbPaPacRequest::parse(&[0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0x00])
-                .unwrap()
-                .1
+            KerbPaPacRequest::parse(&[
+                0x30, 0x05, 0xa0, 0x03, 0x01, 0x01, 0x00
+            ])
+            .unwrap()
+            .1
         );
     }
 }

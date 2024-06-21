@@ -138,10 +138,10 @@ impl Credential {
 mod test {
     use super::super::*;
     use super::*;
+    use chrono::prelude::*;
     use kerberos_constants::etypes::*;
     use kerberos_constants::principal_names::*;
     use kerberos_constants::ticket_flags;
-    use chrono::prelude::*;
 
     static RAW_CREDENTIAL: &'static [u8] = &[
         0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0e,
@@ -452,10 +452,7 @@ mod test {
             ticket,
         );
 
-        assert_eq!(
-            credential,
-            Credential::parse(RAW_CREDENTIAL).unwrap().1
-        );
+        assert_eq!(credential, Credential::parse(RAW_CREDENTIAL).unwrap().1);
     }
 
     #[test]

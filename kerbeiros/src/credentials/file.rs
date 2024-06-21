@@ -1,9 +1,9 @@
 use super::credential_warehouse::*;
-use crate::{Result, Error};
+use crate::{Error, Result};
+use kerberos_asn1::Asn1Object;
+use kerberos_ccache::CCache;
 use std::fs::File;
 use std::io::Write;
-use kerberos_ccache::CCache;
-use kerberos_asn1::Asn1Object;
 
 pub struct CredentialFileConverter<'a> {
     credentials: &'a CredentialWarehouse,

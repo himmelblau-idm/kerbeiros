@@ -1,5 +1,4 @@
 use super::super::credential::*;
-use kerberos_crypto::Key;
 use crate::Result;
 use kerberos_asn1::{
     AsRep, Asn1Object, EncAsRepPart, EtypeInfo2, KrbCredInfo, Ticket,
@@ -7,6 +6,7 @@ use kerberos_asn1::{
 use kerberos_constants::key_usages::KEY_USAGE_AS_REP_ENC_PART;
 use kerberos_constants::pa_data_types::PA_ETYPE_INFO2;
 use kerberos_crypto::new_kerberos_cipher;
+use kerberos_crypto::Key;
 
 pub struct CredentialKrbInfoMapper {}
 
@@ -47,19 +47,16 @@ impl CredentialKrbInfoMapper {
         key: &Key,
         kdc_rep: AsRep,
     ) -> Result<Credential> {
-        let plaintext;
-        match key {
+        let plaintext = match key {
             Key::Secret(password) => {
-                plaintext = Self::decrypt_enc_kdc_rep_part_with_password(
+                Self::decrypt_enc_kdc_rep_part_with_password(
                     password, &kdc_rep,
-                )?;
+                )?
             }
-            cipher_key => {
-                plaintext = Self::decrypt_enc_kdc_rep_part_with_cipher_key(
-                    cipher_key, &kdc_rep,
-                )?;
-            }
-        }
+            cipher_key => Self::decrypt_enc_kdc_rep_part_with_cipher_key(
+                cipher_key, &kdc_rep,
+            )?,
+        };
 
         let (_, enc_kdc_rep_part) = EncAsRepPart::parse(&plaintext)?;
 

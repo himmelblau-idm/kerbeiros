@@ -3,7 +3,6 @@
 use failure::Fail;
 use std::result;
 use std::string::FromUtf8Error;
-use kerberos_asn1;
 
 /// Result to wrap kerbeiros error.
 pub type ConvertResult<T> = result::Result<T, ConvertError>;
@@ -35,16 +34,14 @@ pub enum ConvertError {
     #[fail(display = "Error parsing binary data")]
     BinaryParseError,
 
-
     /// The parsed struct doesn't have a required field.
     /// This could be due a Option field which is None.
     #[fail(display = "A required field is missing: {}", _0)]
     MissingField(String),
 
     #[fail(display = "KrbCredError: {}", _0)]
-    KrbCredError(String)
+    KrbCredError(String),
 }
-
 
 impl From<FromUtf8Error> for ConvertError {
     fn from(_error: FromUtf8Error) -> Self {
@@ -57,4 +54,3 @@ impl From<kerberos_asn1::Error> for ConvertError {
         return Self::Asn1Error(error);
     }
 }
-

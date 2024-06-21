@@ -1,9 +1,9 @@
-use crate::{Error, Result};
 use crate::cryptography::AesSizes;
+use crate::{AesCipher, KerberosCipher, Rc4Cipher};
+use crate::{Error, Result};
 use kerberos_constants::etypes::{
     AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
-use crate::{KerberosCipher, AesCipher, Rc4Cipher};
 
 /// Creates the appropiate cipher based on the encryption type specified
 pub fn new_kerberos_cipher(etype: i32) -> Result<Box<dyn KerberosCipher>> {
@@ -22,4 +22,3 @@ pub fn new_kerberos_cipher(etype: i32) -> Result<Box<dyn KerberosCipher>> {
         }
     }
 }
-

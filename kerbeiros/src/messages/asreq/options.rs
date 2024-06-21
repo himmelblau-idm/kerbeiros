@@ -1,13 +1,13 @@
+use crate::Result;
+use ascii::AsciiString;
 use kerberos_constants::etypes::{
-    RC4_HMAC, AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96
+    AES128_CTS_HMAC_SHA1_96, AES256_CTS_HMAC_SHA1_96, RC4_HMAC,
 };
 use kerberos_constants::kdc_options::{
-  FORWARDABLE, RENEWABLE, CANONICALIZE, RENEWABLE_OK  
+    CANONICALIZE, FORWARDABLE, RENEWABLE, RENEWABLE_OK,
 };
-use ascii::AsciiString;
-use std::collections::HashSet;
-use crate::{Result};
 use kerberos_crypto::is_supported_etype;
+use std::collections::HashSet;
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct AsReqOptions {
@@ -22,10 +22,14 @@ impl AsReqOptions {
         return Self {
             realm,
             kdc_options: FORWARDABLE | RENEWABLE | CANONICALIZE | RENEWABLE_OK,
-            etypes: [AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC]
-                .iter()
-                .cloned()
-                .collect(),
+            etypes: [
+                AES256_CTS_HMAC_SHA1_96,
+                AES128_CTS_HMAC_SHA1_96,
+                RC4_HMAC,
+            ]
+            .iter()
+            .cloned()
+            .collect(),
             pac: true,
         };
     }
@@ -97,10 +101,11 @@ mod test {
     #[test]
     fn default_etypes() {
         let options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
-        let etypes: HashSet<i32> = [AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC]
-            .iter()
-            .cloned()
-            .collect();
+        let etypes: HashSet<i32> =
+            [AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC]
+                .iter()
+                .cloned()
+                .collect();
 
         assert_eq!(&etypes, options.etypes());
     }
@@ -117,17 +122,19 @@ mod test {
 
     #[test]
     fn set_etypes() {
-        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
+        let mut options =
+            AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
         let etypes: HashSet<i32> = [RC4_HMAC].iter().cloned().collect();
 
         options.set_etypes(etypes.clone()).unwrap();
         assert_eq!(&etypes, options.etypes());
 
-        let etypes: HashSet<i32> = [AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96]
-            .iter()
-            .cloned()
-            .collect();
+        let etypes: HashSet<i32> =
+            [AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96]
+                .iter()
+                .cloned()
+                .collect();
 
         options.set_etypes(etypes.clone()).unwrap();
         assert_eq!(&etypes, options.etypes());
@@ -136,16 +143,19 @@ mod test {
     #[should_panic(expected = "UnsupportedAlgorithm(3)")]
     #[test]
     fn error_setting_unsupported_etypes() {
-        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
+        let mut options =
+            AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
-        let etypes: HashSet<i32> = [RC4_HMAC, DES_CBC_MD5].iter().cloned().collect();
+        let etypes: HashSet<i32> =
+            [RC4_HMAC, DES_CBC_MD5].iter().cloned().collect();
 
         options.set_etypes(etypes.clone()).unwrap();
     }
 
     #[test]
     fn sorted_etypes_by_strength() {
-        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
+        let mut options =
+            AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
         assert_eq!(
             vec![AES256_CTS_HMAC_SHA1_96, AES128_CTS_HMAC_SHA1_96, RC4_HMAC],
@@ -169,17 +179,20 @@ mod test {
 
     #[test]
     fn set_etype() {
-        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
+        let mut options =
+            AsReqOptions::new(AsciiString::from_ascii("").unwrap());
 
         let etypes: HashSet<i32> = [RC4_HMAC].iter().cloned().collect();
         options.set_etype(RC4_HMAC).unwrap();
         assert_eq!(&etypes, options.etypes());
 
-        let etypes: HashSet<i32> = [AES128_CTS_HMAC_SHA1_96].iter().cloned().collect();
+        let etypes: HashSet<i32> =
+            [AES128_CTS_HMAC_SHA1_96].iter().cloned().collect();
         options.set_etype(AES128_CTS_HMAC_SHA1_96).unwrap();
         assert_eq!(&etypes, options.etypes());
 
-        let etypes: HashSet<i32> = [AES256_CTS_HMAC_SHA1_96].iter().cloned().collect();
+        let etypes: HashSet<i32> =
+            [AES256_CTS_HMAC_SHA1_96].iter().cloned().collect();
         options.set_etype(AES256_CTS_HMAC_SHA1_96).unwrap();
         assert_eq!(&etypes, options.etypes());
     }
@@ -187,7 +200,8 @@ mod test {
     #[should_panic(expected = "UnsupportedAlgorithm(3)")]
     #[test]
     fn error_setting_unsupported_etype() {
-        let mut options = AsReqOptions::new(AsciiString::from_ascii("").unwrap());
+        let mut options =
+            AsReqOptions::new(AsciiString::from_ascii("").unwrap());
         options.set_etype(DES_CBC_MD5).unwrap();
     }
 }

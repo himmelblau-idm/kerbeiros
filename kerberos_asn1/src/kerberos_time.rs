@@ -37,12 +37,17 @@ impl Asn1Object for KerberosTime {
     // Overwrite function to produce an DER encoding
     // without fractional seconds, as specified in the RFC
     fn build_value(&self) -> Vec<u8> {
-        let time_no_nanos =
-            GeneralizedTime::from(Utc.ymd(self.year(), self.month(), self.day()).and_hms(
+        let time_no_nanos = GeneralizedTime::from(
+            Utc.with_ymd_and_hms(
+                self.year(),
+                self.month(),
+                self.day(),
                 self.hour(),
                 self.minute(),
                 self.second(),
-            ));
+            )
+            .unwrap(),
+        );
         return time_no_nanos.build_value();
     }
 }
@@ -64,8 +69,8 @@ mod tests {
     fn test_encode_kerberos_time() {
         assert_eq!(
             vec![
-                0x18, 0x0f, 0x32, 0x30, 0x33, 0x37, 0x30, 0x39, 0x31, 0x33, 0x30, 0x32, 0x34, 0x38,
-                0x30, 0x35, 0x5a
+                0x18, 0x0f, 0x32, 0x30, 0x33, 0x37, 0x30, 0x39, 0x31, 0x33,
+                0x30, 0x32, 0x34, 0x38, 0x30, 0x35, 0x5a
             ],
             KerberosTime::from(Utc.ymd(2037, 9, 13).and_hms(02, 48, 5)).build()
         );
@@ -76,8 +81,8 @@ mod tests {
         assert_eq!(
             Utc.ymd(2037, 9, 13).and_hms(02, 48, 5),
             **KerberosTime::parse(&[
-                0x18, 0x0f, 0x32, 0x30, 0x33, 0x37, 0x30, 0x39, 0x31, 0x33, 0x30, 0x32, 0x34, 0x38,
-                0x30, 0x35, 0x5a,
+                0x18, 0x0f, 0x32, 0x30, 0x33, 0x37, 0x30, 0x39, 0x31, 0x33,
+                0x30, 0x32, 0x34, 0x38, 0x30, 0x35, 0x5a,
             ])
             .unwrap()
             .1
