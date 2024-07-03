@@ -1,9 +1,12 @@
+use nom::multi::length_data;
 use nom::number::complete::be_u16;
-use nom::{length_data, named, IResult};
+use nom::IResult;
 use std::convert::{From, TryInto};
 use std::string::FromUtf8Error;
 
-named!(parse_length_array, length_data!(be_u16));
+fn parse_length_array(input: &[u8]) -> IResult<&[u8], &[u8]> {
+    length_data(be_u16)(input)
+}
 
 /// String used by keytab. Different from the one used by ccache
 /// since length is u16.

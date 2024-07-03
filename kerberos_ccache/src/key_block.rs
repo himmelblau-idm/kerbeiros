@@ -1,8 +1,10 @@
+use nom::multi::length_data;
 use nom::number::complete::be_u16;
 use nom::IResult;
-use nom::{length_data, named};
 
-named!(parse_length_array, length_data!(be_u16));
+fn parse_length_array(input: &[u8]) -> IResult<&[u8], &[u8]> {
+    length_data(be_u16)(input)
+}
 
 /// Represents the session key.
 /// # Definition

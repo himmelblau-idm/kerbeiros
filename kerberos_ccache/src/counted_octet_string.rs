@@ -1,9 +1,12 @@
+use nom::multi::length_data;
 use nom::number::complete::be_u32;
-use nom::{length_data, named, IResult};
+use nom::IResult;
 use std::convert::{From, TryInto};
 use std::string::FromUtf8Error;
 
-named!(parse_length_array, length_data!(be_u32));
+fn parse_length_array(input: &[u8]) -> IResult<&[u8], &[u8]> {
+    length_data(be_u32)(input)
+}
 
 /// String used by ccache.
 ///
