@@ -8,7 +8,7 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-nom = "6.2.2"
+nom = "7"
 
 [dev-dependencies]
 himmelblau_kerberos_constants = { workspace = true }

@@ -4,12 +4,19 @@ use super::principal::Principal;
 use crate::mappers::{ccache_to_krb_cred, krb_cred_to_ccache};
 use crate::{ConvertError, ConvertResult};
 use himmelblau_kerberos_asn1::KrbCred;
+use nom::bytes::complete::tag;
+use nom::multi::many0;
 use nom::number::complete::be_u16;
-use nom::{many0, named, tag, IResult};
+use nom::IResult;
 use std::convert::{TryFrom, TryInto};
 
-named!(parse_version, tag!(&[0x05, 0x04]));
-named!(parse_credentials<&[u8], Vec<Credential>>, many0!(Credential::parse));
+fn parse_version(input: &[u8]) -> IResult<&[u8], &[u8]> {
+    tag(&[0x05, 0x04])(input)
+}
+
+fn parse_credentials(input: &[u8]) -> IResult<&[u8], Vec<Credential>> {
+    many0(Credential::parse)(input)
+}
 
 /// To store an array of credentials.
 /// # Definition
