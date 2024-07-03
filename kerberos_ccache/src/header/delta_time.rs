@@ -47,7 +47,7 @@ impl DeltaTime {
 
 impl Default for DeltaTime {
     fn default() -> Self {
-        return DeltaTime::new(u32::max_value(), 0);
+        return DeltaTime::new(u32::MAX, 0);
     }
 }
 

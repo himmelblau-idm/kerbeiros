@@ -33,11 +33,7 @@ impl PaEncTsEnc {
 impl From<DateTime<Utc>> for PaEncTsEnc {
     fn from(datetime: DateTime<Utc>) -> Self {
         let mut microseconds = datetime.timestamp_subsec_micros() as i32;
-        if microseconds > MAX_MICROSECONDS {
-            microseconds = MAX_MICROSECONDS;
-        } else if microseconds < MIN_MICROSECONDS {
-            microseconds = MIN_MICROSECONDS
-        }
+        microseconds = microseconds.clamp(MIN_MICROSECONDS, MAX_MICROSECONDS);
 
         return Self::new(KerberosTime::from(datetime), Some(microseconds));
     }
