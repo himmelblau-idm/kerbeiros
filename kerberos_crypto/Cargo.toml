@@ -14,7 +14,6 @@ chrono = "0.4"
 rand = "0.8.5"
 md4 = "0.10"
 num = "0.4"
-failure = "0.1"
 pbkdf2 = "0.12.2"
 md-5 = "0.10.6"
 hmac = "0.12.1"
@@ -24,6 +23,7 @@ digest = "0.10.7"
 rc4 = "0.1.0"
 ecb = { version = "0.1.2", features = ["alloc"] }
 cbc = { version = "0.1.2", features = ["alloc"] }
+thiserror = "1.0.61"
 
 [lints.clippy]
 needless_return = "allow"

@@ -15,11 +15,10 @@ himmelblau_kerberos_constants = { workspace = true }
 
 ascii = "1.1.0"
 chrono = "0.4"
-failure = "0.1.5"
-failure_derive = "0.1.5"
 rand = "0.8.5"
 dns-lookup = "2.0"
 getset = "0.1"
+thiserror = "1.0.61"
 
 [lints.clippy]
 needless_return = "allow"
