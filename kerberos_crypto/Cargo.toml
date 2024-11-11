@@ -23,7 +23,7 @@ digest = "0.10.7"
 rc4 = "0.1.0"
 ecb = { version = "0.1.2", features = ["alloc"] }
 cbc = { version = "0.1.2", features = ["alloc"] }
-thiserror = "1.0.61"
+thiserror = "2.0.3"
 
 [lints.clippy]
 needless_return = "allow"
