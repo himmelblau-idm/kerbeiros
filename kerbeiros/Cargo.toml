@@ -18,7 +18,7 @@ chrono = "0.4"
 rand = "0.8.5"
 dns-lookup = "2.0"
 getset = "0.1"
-thiserror = "1.0.61"
+thiserror = "2.0.6"
 
 [lints.clippy]
 needless_return = "allow"
