@@ -15,7 +15,7 @@ failure_derive = "0.1"
 
 nom = "7"
 chrono = "0.4"
-thiserror = "1.0.61"
+thiserror = "2.0.9"
 
 [lints.clippy]
 needless_return = "allow"
