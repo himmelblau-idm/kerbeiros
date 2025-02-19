@@ -9,7 +9,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Eloy Perez  <zer1t0ps@protonmail.com>", "David Mulder <dmulder@samba.org>"]
 edition = "2018"
 license = "AGPL-3.0"
