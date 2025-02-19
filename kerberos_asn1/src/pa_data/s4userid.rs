@@ -1,6 +1,6 @@
 use crate::{PrincipalName, Realm, UInt32};
-use red_asn1::{Asn1Object, BitString, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, BitString, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*S4UUserID*) Used in *PA-S4U-X509-USER*, to specify the user certificate.
 /// Defined in MS-SFU, section 2.2.2.

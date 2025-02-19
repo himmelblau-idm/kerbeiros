@@ -1,5 +1,5 @@
 use chrono::prelude::{DateTime, Datelike, TimeZone, Timelike, Utc};
-use red_asn1::{Asn1Object, GeneralizedTime, Tag};
+use himmelblau_red_asn1::{Asn1Object, GeneralizedTime, Tag};
 use std::ops::{Deref, DerefMut};
 
 /// (*KerberosTime*) For time representations in Kerberos.
@@ -30,7 +30,7 @@ impl Asn1Object for KerberosTime {
         return GeneralizedTime::tag();
     }
 
-    fn parse_value(&mut self, raw: &[u8]) -> red_asn1::Result<()> {
+    fn parse_value(&mut self, raw: &[u8]) -> himmelblau_red_asn1::Result<()> {
         return self.time.parse_value(raw);
     }
 
@@ -63,7 +63,7 @@ impl From<DateTime<Utc>> for KerberosTime {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use red_asn1::Asn1Object;
+    use himmelblau_red_asn1::Asn1Object;
 
     #[test]
     fn test_encode_kerberos_time() {

@@ -1,6 +1,6 @@
 use crate::{Int32, KerberosTime};
-use red_asn1::{Asn1Object, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*LastReq*) Register of time of a request to KDC.
 /// Defined in RFC4120, 5.4.2.

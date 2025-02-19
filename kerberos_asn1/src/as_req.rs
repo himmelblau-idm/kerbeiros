@@ -1,6 +1,6 @@
 use crate::{Int32, KdcReq, KdcReqBody, PaData};
-use red_asn1::{Asn1Object, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*AS-REQ*) Message used to request a TGT.
 /// ```asn1

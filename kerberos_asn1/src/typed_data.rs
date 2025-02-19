@@ -1,6 +1,6 @@
 use crate::Int32;
-use red_asn1::{Asn1Object, OctetString, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*TYPED-DATA*) For add information to errors in *KRB-ERROR*.
 /// Defined in RFC4120, section 5.9.1.

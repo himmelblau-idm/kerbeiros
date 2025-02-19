@@ -1,6 +1,6 @@
 use crate::Int32;
-use red_asn1::{Asn1Object, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*ETYPE-INFO-ENTRY*) Entry of *ETYPE-INFO*.
 /// Defined RFC4120, section 5.2.7.4.

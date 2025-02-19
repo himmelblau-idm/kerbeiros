@@ -1,6 +1,6 @@
 use crate::Int32;
-use red_asn1::{Asn1Object, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*PA-DATA*) Container that encapsules different types of preauthentication data structures.
 /// ```asn1

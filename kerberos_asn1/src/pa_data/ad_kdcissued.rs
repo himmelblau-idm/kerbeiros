@@ -1,6 +1,6 @@
 use crate::{AuthorizationData, Checksum, PrincipalName, Realm};
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*AD-KDCIssued*) Type of *AuthorizationData*.
 /// Defined in RFC4120, section 5.2.6.2.

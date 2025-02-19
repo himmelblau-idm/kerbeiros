@@ -9,7 +9,7 @@ pub type Int32 = i32;
 #[cfg(test)]
 mod test {
     use super::*;
-    use red_asn1::Asn1Object;
+    use himmelblau_red_asn1::Asn1Object;
 
     #[test]
     fn test_encode_int32() {

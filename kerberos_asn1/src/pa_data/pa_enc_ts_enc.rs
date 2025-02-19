@@ -1,7 +1,7 @@
 use crate::{KerberosTime, Microseconds, MAX_MICROSECONDS, MIN_MICROSECONDS};
 use chrono::prelude::*;
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*PA-ENC-TS-ENC*) Timestamp that is encrypted with client [Key](../../key/enum.Key.html).
 /// ```asn1

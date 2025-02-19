@@ -2,8 +2,8 @@ use crate::{
     AuthorizationData, EncryptionKey, HostAddresses, KerberosTime,
     PrincipalName, Realm, TicketFlags, TransitedEncoding,
 };
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*EncTicketPart*) Encrypted part of a *Ticket*.
 /// Defined in RFC4120, section 5.3.

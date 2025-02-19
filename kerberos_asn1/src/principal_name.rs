@@ -1,6 +1,6 @@
 use super::{Int32, KerberosString};
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 use std::fmt;
 
 /// (*PrincipalName*) Name of some Kerberos entity.

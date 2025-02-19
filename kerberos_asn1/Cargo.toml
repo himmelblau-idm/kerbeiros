@@ -10,9 +10,8 @@ repository.workspace = true
 [dependencies]
 himmelblau_kerberos_constants = { workspace = true }
 
-red_asn1 = "0.3"
-# red_asn1_derive includes the failure crate in the Cargo.toml, but doesn't use it anywhere
-red_asn1_derive = "0.2"
+himmelblau_red_asn1 = "0.3"
+himmelblau_red_asn1_derive = "0.2"
 chrono = "0.4"
 
 [lints.clippy]

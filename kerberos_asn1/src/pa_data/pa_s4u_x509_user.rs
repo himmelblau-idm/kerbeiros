@@ -1,6 +1,6 @@
 use crate::{Checksum, S4uUserId};
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*PA-S4U-X509-USER*) Used in S4U2Self, to specify the user certificate.
 /// Defined MS-SFU, section 2.2.2.

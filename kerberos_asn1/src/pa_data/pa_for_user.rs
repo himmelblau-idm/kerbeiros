@@ -1,6 +1,6 @@
 use crate::{Checksum, KerberosString, PrincipalName, Realm};
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*PA-FOR-USER*) Used in S4U2Self, to specify user to impersonate.
 /// Defined in MS-SFU, section 2.2.1.

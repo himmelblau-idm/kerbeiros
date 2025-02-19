@@ -1,6 +1,6 @@
 use crate::{EncryptedData, Int32, Ticket};
-use red_asn1::{Asn1Object, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*KRB-CRED*) Message used to send Kerberos credentials form one principal to another.
 /// Defined in RFC4120, section 5.8.1.

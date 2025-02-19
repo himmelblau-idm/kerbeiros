@@ -2,8 +2,8 @@ use crate::{
     EncAsRepPart, EncTgsRepPart, EncryptionKey, HostAddresses, KerberosTime,
     LastReq, PaData, PrincipalName, Realm, TicketFlags, UInt32,
 };
-use red_asn1::{Asn1Object, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*EncKdcRepPart*) Holds the data that is encrypted
 /// in [KdcRep](./struct.KdcRep.html)

@@ -1,4 +1,4 @@
-use red_asn1::{Asn1Object, BitString, Tag};
+use himmelblau_red_asn1::{Asn1Object, BitString, Tag};
 use std::ops::{Deref, DerefMut};
 
 /// (*KerberosFlags*) Flags used for different entities.
@@ -36,7 +36,10 @@ impl Asn1Object for KerberosFlags {
         return BitString::new(flags_bytes, 0).build_value();
     }
 
-    fn parse_value(&mut self, raw: &[u8]) -> Result<(), red_asn1::Error> {
+    fn parse_value(
+        &mut self,
+        raw: &[u8],
+    ) -> Result<(), himmelblau_red_asn1::Error> {
         let mut bit_string = BitString::default();
         bit_string.parse_value(raw)?;
 
@@ -65,7 +68,7 @@ impl From<u32> for KerberosFlags {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use red_asn1::BIT_STRING_TAG_NUMBER;
+    use himmelblau_red_asn1::BIT_STRING_TAG_NUMBER;
     use std::u32;
 
     #[test]

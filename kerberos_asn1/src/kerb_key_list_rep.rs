@@ -1,5 +1,5 @@
 use crate::EncryptionKey;
-use red_asn1::SequenceOf;
+use himmelblau_red_asn1::SequenceOf;
 
 /// (*KERB-KEY-LIST-REP*) Contains a list of key types the KDC has
 /// supplied to the client to support single sign-on capabilities in

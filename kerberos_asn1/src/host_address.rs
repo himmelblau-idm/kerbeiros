@@ -1,6 +1,6 @@
 use super::Int32;
-use red_asn1::{Asn1Object, OctetString, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 static NETBIOS_PADDING_CHAR: char = 32 as char;
 

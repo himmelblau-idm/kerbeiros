@@ -1,5 +1,5 @@
-use red_asn1::{Asn1Object, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 use crate::{
     EncryptedData, HostAddresses, Int32, KdcOptions, KerberosTime,

@@ -1,6 +1,6 @@
 use crate::{EncryptedData, Int32, PrincipalName, Realm};
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*Ticket*) Represents a Kerberos ticket.
 /// ```asn1

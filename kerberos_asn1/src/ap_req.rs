@@ -1,8 +1,8 @@
 use crate::{ApOptions, EncryptedData, Int32, Ticket};
 use himmelblau_kerberos_constants::message_types::KRB_AP_REQ;
 use himmelblau_kerberos_constants::protocol_version::PVNO;
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*AP-REQ*) Message sent to the application server to authenticate the client.
 /// Defined in RFC4120, section 5.5.1.

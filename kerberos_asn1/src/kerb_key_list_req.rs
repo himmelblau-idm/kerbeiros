@@ -1,5 +1,5 @@
 use crate::Int32;
-use red_asn1::SequenceOf;
+use himmelblau_red_asn1::SequenceOf;
 
 /// (*KERB-KEY-LIST-REQ*) Used to request a list of key types the KDC
 /// can supply to the client to support single sign-on capabilities in

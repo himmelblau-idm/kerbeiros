@@ -1,4 +1,4 @@
-use red_asn1::GeneralString;
+use himmelblau_red_asn1::GeneralString;
 
 /// (*KerberosString*) String used in Kerberos.
 /// Defined in RFC4120, section 5.2.1.
@@ -10,7 +10,7 @@ pub type KerberosString = GeneralString;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use red_asn1::Asn1Object;
+    use himmelblau_red_asn1::Asn1Object;
 
     #[test]
     fn test_encode_kerberos_string() {

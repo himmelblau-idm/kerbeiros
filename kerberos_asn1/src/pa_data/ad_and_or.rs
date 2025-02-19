@@ -1,6 +1,6 @@
 use crate::{AuthorizationData, Int32};
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*AD-AND-OR*) Type of *AuthorizationData*.
 /// Defined in RFC4120, section 5.2.6.3.

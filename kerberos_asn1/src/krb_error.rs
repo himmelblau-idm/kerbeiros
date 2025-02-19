@@ -1,8 +1,8 @@
 use crate::{
     Int32, KerberosString, KerberosTime, Microseconds, PrincipalName, Realm,
 };
-use red_asn1::{Asn1Object, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*KRB-ERROR*) Message used to indicate an error.
 /// Defined in RFC4120, section 5.9.1.

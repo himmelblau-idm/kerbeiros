@@ -1,6 +1,6 @@
 use crate::KerberosFlags;
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*PA-PAC-OPTIONS*) To request options of the PAC.
 /// Defined in MS-KILE, section 2.2.10 and MS-SFU, section 2.2.5.

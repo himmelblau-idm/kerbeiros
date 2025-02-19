@@ -1,4 +1,4 @@
-use red_asn1::OctetString;
+use himmelblau_red_asn1::OctetString;
 
 /// (*KERB-LOCAL*) contain implementation-specific data used
 /// when the Kerberos client and application server are on the same host.

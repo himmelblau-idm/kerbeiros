@@ -1,6 +1,6 @@
 use crate::{EncryptedData, Int32, PaData, PrincipalName, Realm, Ticket};
-use red_asn1::{Asn1Object, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*TGS-REP*) Message returned by KDC in response to TGS-REQ.
 /// ```asn1

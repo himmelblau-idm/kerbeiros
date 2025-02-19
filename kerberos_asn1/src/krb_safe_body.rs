@@ -1,6 +1,6 @@
 use crate::{HostAddress, KerberosTime, Microseconds, UInt32};
-use red_asn1::{Asn1Object, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*KRB-SAFE-BODY*) Included in *KRB-SAFE*.
 /// Defined in RFC4120, section 5.6.1.

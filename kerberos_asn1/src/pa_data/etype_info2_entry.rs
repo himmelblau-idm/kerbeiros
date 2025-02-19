@@ -1,6 +1,6 @@
 use crate::{Int32, KerberosString};
-use red_asn1::{Asn1Object, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*ETYPE-INFO2-ENTRY*) Give information about an encryption algorithm.
 /// ```asn1

@@ -9,7 +9,7 @@ pub type UInt32 = u32;
 #[cfg(test)]
 mod test {
     use super::UInt32;
-    use red_asn1::Asn1Object;
+    use himmelblau_red_asn1::Asn1Object;
 
     #[test]
     fn test_encode_uint32() {

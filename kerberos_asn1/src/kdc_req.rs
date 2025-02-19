@@ -1,7 +1,7 @@
 use crate::{AsReq, TgsReq};
 use crate::{Int32, KdcReqBody, PaData};
-use red_asn1::{Asn1Object, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*KDC-REQ*) Base for AS-REQ and TGS-REQ
 /// ```asn1

@@ -1,5 +1,5 @@
 use crate::EtypeInfoEntry;
-use red_asn1::SequenceOf;
+use himmelblau_red_asn1::SequenceOf;
 
 /// (*ETYPE-INFO*) Sent in *KRB-ERROR* to require additional pre-authentication.
 /// Defined RFC4120, section 5.2.7.4.

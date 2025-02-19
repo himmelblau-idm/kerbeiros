@@ -11,7 +11,7 @@
 //! Decoding a string of Kerberos:
 //! ```rust
 //! use himmelblau_kerberos_asn1::KerberosString;
-//! use red_asn1::Asn1Object;
+//! use himmelblau_red_asn1::Asn1Object;
 //!
 //! let raw_string = &[
 //!                 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e,
@@ -177,7 +177,7 @@ pub use last_req::{LastReq, LastReqEntry};
 mod krb_error;
 pub use krb_error::KrbError;
 
-pub use red_asn1::Asn1Object;
-pub use red_asn1::Error;
-pub use red_asn1::Result;
-pub use red_asn1::TagClass;
+pub use himmelblau_red_asn1::Asn1Object;
+pub use himmelblau_red_asn1::Error;
+pub use himmelblau_red_asn1::Result;
+pub use himmelblau_red_asn1::TagClass;

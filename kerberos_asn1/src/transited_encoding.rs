@@ -1,6 +1,6 @@
 use crate::Int32;
-use red_asn1::{Asn1Object, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*TransitedEncoding*) Lists the names of the Kerberos realms that took part in the client authentication.
 /// Defined in RFC4120, section 5.3.

@@ -2,8 +2,8 @@ use crate::{
     EncryptionKey, HostAddresses, KerberosTime, PrincipalName, Realm,
     TicketFlags,
 };
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*KrbCredInfo*) Information of the ticket sent in *EncKrbCredPart*.
 /// Defined in RFC4120, section 5.8.1.

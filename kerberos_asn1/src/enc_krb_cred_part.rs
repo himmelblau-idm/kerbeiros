@@ -1,6 +1,6 @@
 use crate::{HostAddress, KerberosTime, KrbCredInfo, Microseconds, UInt32};
-use red_asn1::{Asn1Object, SequenceOf};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, SequenceOf};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*EncKrbCredPart*) The encrypted part of the *KRB-CRED* message. Defined in RFC4120, section 5.8.1.
 /// ```asn1

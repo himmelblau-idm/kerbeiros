@@ -1,6 +1,6 @@
 use crate::{Int32, UInt32};
-use red_asn1::{Asn1Object, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*EncryptedData*) Chunck of data that is encrypted in Kerberos exchanges.
 /// ```asn1

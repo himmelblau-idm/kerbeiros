@@ -1,6 +1,6 @@
 use crate::Int32;
-use red_asn1::{Asn1Object, OctetString};
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::{Asn1Object, OctetString};
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*KERB-ERROR-DATA*) returned in e-data field of *KRB-ERROR*.
 /// Defined in MS-KILE, section 2.2.2.

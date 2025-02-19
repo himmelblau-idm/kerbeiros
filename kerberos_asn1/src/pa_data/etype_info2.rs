@@ -1,5 +1,5 @@
 use crate::EtypeInfo2Entry;
-use red_asn1::SequenceOf;
+use himmelblau_red_asn1::SequenceOf;
 
 /// (*ETYPE-INFO2*) Array of [EtypeInfo2Entry](./struct.EtypeInfo2Entry.html)
 /// that indicates the available encryption algorithms.
@@ -14,7 +14,7 @@ mod test {
     use super::*;
     use crate::KerberosString;
     use himmelblau_kerberos_constants::etypes::*;
-    use red_asn1::Asn1Object;
+    use himmelblau_red_asn1::Asn1Object;
 
     #[test]
     fn test_parse_etypeinfo2() {

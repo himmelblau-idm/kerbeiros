@@ -1,5 +1,5 @@
 use crate::PaData;
-use red_asn1::SequenceOf;
+use himmelblau_red_asn1::SequenceOf;
 
 /// (*METHOD-DATA*) Sequence of *PA-DATA*.
 /// Defined in RFC4120, section 5.9.1.

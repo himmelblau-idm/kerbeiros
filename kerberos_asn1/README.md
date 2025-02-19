@@ -13,7 +13,7 @@ an array of bytes from the type and its values.
 Decoding a string of Kerberos:
 ```rust
 use kerberos_asn1::KerberosString;
-use red_asn1::Asn1Object;
+use himmelblau_red_asn1::Asn1Object;
 
 let raw_string = &[
                 0x1b, 0x0e, 0x4b, 0x49, 0x4e, 0x47, 0x44, 0x4f, 0x4d, 0x2e,

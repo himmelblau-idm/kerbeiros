@@ -1,5 +1,5 @@
-use red_asn1::Asn1Object;
-use red_asn1_derive::Sequence;
+use himmelblau_red_asn1::Asn1Object;
+use himmelblau_red_asn1_derive::Sequence;
 
 /// (*KERB-PA-PAC-REQUEST*) To indicate if PAC should be included in response.
 /// Defined in MS-KILE, section 2.2.3.
